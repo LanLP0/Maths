@@ -1,0 +1,19 @@
+﻿using System.Text;
+
+namespace Delta.Core;
+
+public class SimpleVariable
+{
+    public int NumberPart { get; set; } = 0;
+
+    public int Power { get; set; } = 0;
+
+    public int PowerOfA { get; set; } = 0;
+
+    public bool IsZero()
+    {
+        return NumberPart is 0;
+    }
+
+    public bool HasValue() => !IsZero();
+}
