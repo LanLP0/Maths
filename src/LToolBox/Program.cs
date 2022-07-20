@@ -1,6 +1,6 @@
 ﻿using LToolBox.Tools;
 using System.Text;
-using Common;
+using Common.Cli;
 using JetBrains.Annotations;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
@@ -23,6 +23,7 @@ class Program
         };
 
         var serviceProvider = new ServiceCollection()
+#if DEBUG
             .AddLogging(a =>
             {
                 var logger = new LoggerConfiguration()
@@ -31,12 +32,13 @@ class Program
                 
                 a.AddSerilog(logger.CreateLogger());
             })
-            .AddSingleton<Tool, ComplexMultiply>()
-            .AddSingleton<Tool, Tools.Delta>()
-            .AddSingleton<Tool, Tools.LCalc>()
-            .AddSingleton<Tool, Polynomial>()
-            .AddSingleton<Tool, Fact>()
-            .AddSingleton<Tool, IsPrime>()
+#endif
+            .AddSingleton<Tool, ComplexMultiplyTool>()
+            .AddSingleton<Tool, Tools.DeltaTool>()
+            .AddSingleton<Tool, Tools.LCalcTool>()
+            .AddSingleton<Tool, PolynomialTool>()
+            .AddSingleton<Tool, FactTool>()
+            .AddSingleton<Tool, IsPrimeTool>()
             .BuildServiceProvider();
 
         _tools = serviceProvider.GetServices<Tool>().ToArray();

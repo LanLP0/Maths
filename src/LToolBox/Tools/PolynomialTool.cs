@@ -1,8 +1,8 @@
-using Common;
+using Common.Cli;
 
 namespace LToolBox.Tools;
 
-internal class Polynomial : Tool
+internal class PolynomialTool : Tool
 {
     public override string ToolName { get; } = "polynomial";
 
@@ -39,9 +39,28 @@ internal class Polynomial : Tool
                     pos++;
                     break;
                 }
-                case ConsoleKey.Spacebar:
+                case ConsoleKey.D0:
+                case ConsoleKey.D1:
+                case ConsoleKey.D2:
+                case ConsoleKey.D3:
+                case ConsoleKey.D4:
+                case ConsoleKey.D5:
+                case ConsoleKey.D6:
+                case ConsoleKey.D7:
+                case ConsoleKey.D8:
+                case ConsoleKey.D9:
+                case ConsoleKey.NumPad0:
+                case ConsoleKey.NumPad1:
+                case ConsoleKey.NumPad2:
+                case ConsoleKey.NumPad3:
+                case ConsoleKey.NumPad4:
+                case ConsoleKey.NumPad5:
+                case ConsoleKey.NumPad6:
+                case ConsoleKey.NumPad7:
+                case ConsoleKey.NumPad8:
+                case ConsoleKey.NumPad9:
                 {
-                    var val = ConsoleHelpers.PromptIntAndClearLine("Value: ", row + 1);
+                    var val = ConsoleHelpers.PromptIntAndClearLine("Value: ", row + 1, defaultValue: EnumHelpers.FastConsoleKeyToNumberString(input.Key));
                     Console.CursorTop = row;
 
                     if (!val.HasValue)
@@ -92,7 +111,7 @@ internal class Polynomial : Tool
 
         Console.WriteLine();
         Console.Write("Result: ");
-        switch (Common.Maths.Polynomial.Calc2(a, b, c, out var result1, out var result2))
+        switch (Common.Cli.Maths.Polynomial.Calc2(a, b, c, out var result1, out var result2))
         {
             case -1:
             {

@@ -1,9 +1,9 @@
-using Common.Maths;
+using Common.Cli.Maths;
 using JetBrains.Annotations;
 
 namespace Delta.Core;
 
-public class FinalDelta
+internal class FinalDelta
 {
     [NotNull]
     public SimpleVariable T0 { get; set; }

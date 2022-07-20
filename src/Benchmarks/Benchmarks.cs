@@ -3,7 +3,7 @@ using BenchmarkDotNet.Attributes;
 namespace Benchmarks;
 
 [MemoryDiagnoser]
-public class Benchmarks
+internal class Benchmarks
 {
     // [Benchmark]
     // public void GetPrime1000()

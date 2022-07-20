@@ -2,7 +2,7 @@ using Xunit;
 
 namespace LCalc.Tests;
 
-public class CalculatorTest
+internal class CalculatorTest
 {
     [Theory]
     // Normal

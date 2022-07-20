@@ -1,9 +1,10 @@
 using System.Text;
-using Common;
+using Common.Cli;
+using Delta.Core;
 
-namespace Delta.Core.UI;
+namespace LToolBox.Delta.UI;
 
-public static class DeltaHelpers
+internal static class DeltaHelpers
 {
     public static DeltaFraction? PromptDelta(int? row = null)
     {
@@ -67,9 +68,28 @@ public static class DeltaHelpers
                     pos++;
                     break;
                 }
-                case ConsoleKey.Spacebar:
+                case ConsoleKey.D0:
+                case ConsoleKey.D1:
+                case ConsoleKey.D2:
+                case ConsoleKey.D3:
+                case ConsoleKey.D4:
+                case ConsoleKey.D5:
+                case ConsoleKey.D6:
+                case ConsoleKey.D7:
+                case ConsoleKey.D8:
+                case ConsoleKey.D9:
+                case ConsoleKey.NumPad0:
+                case ConsoleKey.NumPad1:
+                case ConsoleKey.NumPad2:
+                case ConsoleKey.NumPad3:
+                case ConsoleKey.NumPad4:
+                case ConsoleKey.NumPad5:
+                case ConsoleKey.NumPad6:
+                case ConsoleKey.NumPad7:
+                case ConsoleKey.NumPad8:
+                case ConsoleKey.NumPad9:
                 {
-                    var val = ConsoleHelpers.PromptIntAndClearLine("Value: ", row.Value + 3);
+                    var val = ConsoleHelpers.PromptIntAndClearLine("Value: ", row.Value + 3, defaultValue: EnumHelpers.FastConsoleKeyToNumberString(input.Key));
 
                     if (!val.HasValue)
                         break;
@@ -116,7 +136,7 @@ public static class DeltaHelpers
                             }
                         }
                     }
-                    
+
                     break;
                 }
                 case ConsoleKey.Q:

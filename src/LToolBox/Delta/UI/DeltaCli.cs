@@ -1,6 +1,8 @@
-namespace Delta.Core.UI;
+using Delta.Core;
 
-public class ConsoleEntry
+namespace LToolBox.Delta.UI;
+
+internal class DeltaCli
 {
     public static void Execute()
     {

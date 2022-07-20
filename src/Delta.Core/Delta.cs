@@ -1,6 +1,6 @@
 namespace Delta.Core;
 
-public class Delta
+internal class Delta
 {
     public (SimpleVariable APart, SimpleVariable NumPart) V0 { get; set; }
     public (SimpleVariable APart, SimpleVariable NumPart) V1 { get; set; }

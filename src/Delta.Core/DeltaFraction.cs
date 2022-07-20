@@ -1,6 +1,6 @@
 namespace Delta.Core;
 
-public class DeltaFraction
+internal class DeltaFraction
 {
     public SimpleVariable T0 { get; } = new() {Power = 2};
     public SimpleVariable T1 { get; } = new() {Power = 1};

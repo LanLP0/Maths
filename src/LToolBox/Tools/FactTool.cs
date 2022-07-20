@@ -1,8 +1,8 @@
-using Common;
+using Common.Cli;
 
 namespace LToolBox.Tools;
 
-public class Fact : Tool
+internal class FactTool : Tool
 {
     public override string ToolName { get; } = "fact";
 
@@ -10,11 +10,11 @@ public class Fact : Tool
 
     public override void Execute()
     {
-        var value = ConsoleHelpers.PromptInt("Number: ", null, 6, false);
+        var value = ConsoleHelpers.PromptInt("Number: ", null, 8, false);
         if (value is null)
             return;
 
         Console.Write("Result: ");
-        Console.WriteLine(string.Join(" * ",  Common.Maths.Maths.GetFact(value.Value)));
+        Console.WriteLine(string.Join(" * ",  Common.Cli.Maths.Maths.GetFact(value.Value)));
     }
 }

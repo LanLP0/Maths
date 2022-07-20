@@ -1,9 +1,9 @@
-using Common;
-using Common.Maths;
+using Common.Cli;
+using Common.Cli.Maths;
 
 namespace LToolBox.Tools;
 
-public class IsPrime : Tool
+internal class IsPrimeTool : Tool
 {
     public override string ToolName { get; } = "isprime";
 

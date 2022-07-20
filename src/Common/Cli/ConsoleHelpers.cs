@@ -1,7 +1,7 @@
 ﻿using System.Text;
 using System.Text.RegularExpressions;
 
-namespace Common;
+namespace Common.Cli;
 
 internal static class ConsoleHelpers
 {
@@ -17,7 +17,7 @@ internal static class ConsoleHelpers
     }
 
     public static int? PromptIntAndClearLine(string prompt, int? row = null, int? lengthLimit = 5,
-        bool isNegativeAllowed = true, string defaultValue = "")
+        bool isNegativeAllowed = true, string? defaultValue = null)
     {
         row ??= Console.CursorTop;
         
@@ -29,14 +29,19 @@ internal static class ConsoleHelpers
 
         StringBuilder buffer = new();
         var pos = 0;
+        var isNegative = false;
         if (!string.IsNullOrWhiteSpace(defaultValue))
         {
             buffer.Append(defaultValue);
             Console.Write(defaultValue);
             pos += defaultValue.Length;
+
+            if (defaultValue[0] is '-')
+            {
+                isNegative = true;
+            }
         }
         
-        var isNegative = false;
         for (;;)
         {
             var input = Console.ReadKey(true);
@@ -320,6 +325,71 @@ internal static class ConsoleHelpers
 
                     Console.WriteLine();
                     return int.Parse(buffer.ToString());
+                }
+            }
+        }
+    }
+
+    public static string? ChooseOption(string prompt, string[] options, int row, bool required = true)
+    {
+        Console.Write(prompt);
+
+        var (currLeft, currTop) = Console.GetCursorPosition();
+
+        var maxLength = options.Max(a => a.Length);
+        var buffer = new StringBuilder();
+        for (;;)
+        {
+            var input = Console.ReadKey(true);
+
+            switch (input)
+            {
+                case {Key: ConsoleKey.Enter}:
+                {
+                    if (buffer.Length is 0)
+                    {
+                        if (required)
+                        {
+                            continue;
+                        }
+
+                        Console.WriteLine();
+                        return null;
+                    }
+
+                    var selection = buffer.ToString();
+                    if (options.Contains(selection))
+                    {
+                        Console.WriteLine();
+                        return selection;
+                    }
+                    break;
+                }
+                default:
+                {
+                    if (input.KeyChar is '\0')
+                        continue;
+
+                    if (buffer.Length >= maxLength)
+                        continue;
+                    
+                    buffer.Append(char.ToLower(input.KeyChar));
+                    Console.Write(char.ToLower(input.KeyChar));
+
+                    break;
+                }
+                case {Key: ConsoleKey.Backspace}:
+                {
+                    if (buffer.Length is 0)
+                        continue;
+
+                    Console.CursorLeft--;
+                    Console.Write(' ');
+                    Console.CursorLeft--;
+
+                    buffer.Remove(buffer.Length - 1, 1);
+
+                    break;
                 }
             }
         }

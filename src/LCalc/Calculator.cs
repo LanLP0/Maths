@@ -1,6 +1,6 @@
 ﻿// ReSharper disable CommentTypo
 using System.Text;
-using Common.Maths.Extension;
+using Common.Cli.Maths.Extension;
 using LCalc.CustomFunction;
 
 namespace LCalc;

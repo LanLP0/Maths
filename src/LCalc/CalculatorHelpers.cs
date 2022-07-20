@@ -1,5 +1,5 @@
-﻿using Common.Maths;
-using Common.Maths.Extension;
+﻿using Common.Cli.Maths;
+using Common.Cli.Maths.Extension;
 using LCalc.CustomFunction;
 using LCalc.Extension;
 

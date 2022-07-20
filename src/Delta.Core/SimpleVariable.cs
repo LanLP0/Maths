@@ -2,7 +2,7 @@
 
 namespace Delta.Core;
 
-public class SimpleVariable
+internal class SimpleVariable
 {
     public int NumberPart { get; set; } = 0;
 

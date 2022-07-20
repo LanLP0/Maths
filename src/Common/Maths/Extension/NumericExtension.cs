@@ -1,4 +1,4 @@
-namespace Common.Maths.Extension;
+namespace Common.Cli.Maths.Extension;
 
 internal static class NumericExtension
 {

@@ -1,6 +1,6 @@
 using System.Text;
 
-namespace Common.Maths.Expressions;
+namespace Common.Cli.Maths.Expressions;
 
 internal class Expression
 {
@@ -21,6 +21,45 @@ internal class Expression
         return ex.Collapse();
     }
 
+    public static Expression operator -(Expression left, Expression right)
+    {
+        var ex = new Expression();
+        
+        ex.Elements = left.Clone().Elements;
+
+        var rightCloned = right.Clone();
+        foreach(var e in rightCloned.Elements)
+        {
+            e.Value = -e.Value;
+            ex.Elements.Add(e);
+        }
+
+        return ex.Collapse();
+    }
+
+    public static Expression operator +(Expression left, Expression right)
+    {
+        var ex = new Expression();
+        
+        ex.Elements = left.Clone().Elements;
+        
+        ex.Elements.AddRange(right.Clone().Elements);
+
+        return ex.Collapse();
+    }
+
+    public static Expression Pow (Expression left, int right)
+    {
+        var ex = left.Clone();
+
+        for (int i = 1; i < right; i++)
+        {
+            ex *= left;
+        }
+
+        return ex;
+    }
+
     public Expression Collapse()
     {
         if (Elements.Count <= 1)
@@ -33,11 +72,14 @@ internal class Expression
             for (var j = ++i; j < Elements.Count; j++)
             {
                 var e1 = Elements[j];
-                if (!e.Powers.SequenceEqual(e1.Powers))
+                if (!e.PowerEqual(e1))
                     continue;
 
                 e.Value += e1.Value;
                 Elements.RemoveAt(j);
+
+                if (e.Value is 0)
+                    Elements.RemoveAt(i - 1);
             }
         }
 
@@ -59,5 +101,16 @@ internal class Expression
         }
 
         return buffer.ToString();
+    }
+
+    private Expression Clone()
+    {
+        var ex = new Expression();
+        foreach (var e in Elements)
+        {
+            ex.Elements.Add(e.Clone());
+        }
+
+        return ex;
     }
 }
