@@ -92,10 +92,10 @@ internal class Element
 
         foreach (var e in Powers)
         {
-            if (!val.Powers.ContainsKey(e.Key))
+            if (!val.Powers.TryGetValue(e.Key, out var value))
                 return false;
 
-            if (e.Value != val.Powers[e.Key])
+            if (e.Value != value)
                 return false;
         }
 

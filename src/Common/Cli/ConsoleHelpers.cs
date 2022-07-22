@@ -189,14 +189,19 @@ internal static class ConsoleHelpers
 
         StringBuilder buffer = new();
         var pos = 0;
+        var isNegative = false;
         if (!string.IsNullOrWhiteSpace(defaultValue))
         {
             buffer.Append(defaultValue);
             Console.Write(defaultValue);
             pos += defaultValue.Length;
+
+            if (defaultValue[0] is '-')
+            {
+                isNegative = true;
+            }
         }
         
-        var isNegative = false;
         for (;;)
         {
             var input = Console.ReadKey(true);

@@ -132,7 +132,7 @@ internal class ComplexMultiplyTool : Tool
                 //     powers.Add(1);
                 //     break;
                 // }
-                case {KeyChar: '-'}:
+                case {KeyChar: '+'}:
                 {
                     if (result.Elements.Count <= 1)
                         continue;
@@ -237,6 +237,19 @@ internal class ComplexMultiplyTool : Tool
                 case {Key: ConsoleKey.NumPad9}:
                 {
                     var val = Common.Cli.ConsoleHelpers.PromptIntAndClearLine("Value: ", Console.CursorTop + 1, defaultValue: EnumHelpers.FastConsoleKeyToNumberString(input.Key));
+                    
+                    if (val is null)
+                    {
+                        Console.SetCursorPosition(currLeft, currTop);
+                        continue;
+                    }
+
+                    result.Elements[pos].Value = val.Value;
+                    break;
+                }
+                case {KeyChar: '-'}:
+                {
+                    var val = Common.Cli.ConsoleHelpers.PromptIntAndClearLine("Value: ", Console.CursorTop + 1, defaultValue: "-");
                     
                     if (val is null)
                     {

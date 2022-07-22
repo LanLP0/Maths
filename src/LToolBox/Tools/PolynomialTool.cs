@@ -19,10 +19,10 @@ internal class PolynomialTool : Tool
         {
             var input = Console.ReadKey(true);
 
-            switch (input.Key)
+            switch (input)
             {
-                case ConsoleKey.LeftArrow:
-                case ConsoleKey.H:
+                case {Key: ConsoleKey.LeftArrow}:
+                case {Key: ConsoleKey.H}:
                 {
                     if (pos is 0)
                         continue;
@@ -30,8 +30,8 @@ internal class PolynomialTool : Tool
                     pos--;
                     break;
                 }
-                case ConsoleKey.RightArrow:
-                case ConsoleKey.L:
+                case {Key: ConsoleKey.RightArrow}:
+                case {Key: ConsoleKey.L}:
                 {
                     if (pos >= 2)
                         continue;
@@ -39,26 +39,26 @@ internal class PolynomialTool : Tool
                     pos++;
                     break;
                 }
-                case ConsoleKey.D0:
-                case ConsoleKey.D1:
-                case ConsoleKey.D2:
-                case ConsoleKey.D3:
-                case ConsoleKey.D4:
-                case ConsoleKey.D5:
-                case ConsoleKey.D6:
-                case ConsoleKey.D7:
-                case ConsoleKey.D8:
-                case ConsoleKey.D9:
-                case ConsoleKey.NumPad0:
-                case ConsoleKey.NumPad1:
-                case ConsoleKey.NumPad2:
-                case ConsoleKey.NumPad3:
-                case ConsoleKey.NumPad4:
-                case ConsoleKey.NumPad5:
-                case ConsoleKey.NumPad6:
-                case ConsoleKey.NumPad7:
-                case ConsoleKey.NumPad8:
-                case ConsoleKey.NumPad9:
+                case {Key: ConsoleKey.D0}:
+                case {Key: ConsoleKey.D1}:
+                case {Key: ConsoleKey.D2}:
+                case {Key: ConsoleKey.D3}:
+                case {Key: ConsoleKey.D4}:
+                case {Key: ConsoleKey.D5}:
+                case {Key: ConsoleKey.D6}:
+                case {Key: ConsoleKey.D7}:
+                case {Key: ConsoleKey.D8}:
+                case {Key: ConsoleKey.D9}:
+                case {Key: ConsoleKey.NumPad0}:
+                case {Key: ConsoleKey.NumPad1}:
+                case {Key: ConsoleKey.NumPad2}:
+                case {Key: ConsoleKey.NumPad3}:
+                case {Key: ConsoleKey.NumPad4}:
+                case {Key: ConsoleKey.NumPad5}:
+                case {Key: ConsoleKey.NumPad6}:
+                case {Key: ConsoleKey.NumPad7}:
+                case {Key: ConsoleKey.NumPad8}:
+                case {Key: ConsoleKey.NumPad9}:
                 {
                     var val = ConsoleHelpers.PromptIntAndClearLine("Value: ", row + 1, defaultValue: EnumHelpers.FastConsoleKeyToNumberString(input.Key));
                     Console.CursorTop = row;
@@ -87,13 +87,42 @@ internal class PolynomialTool : Tool
                     
                     break;
                 }
-                case ConsoleKey.Q:
-                case ConsoleKey.Escape:
+                case {KeyChar: '-'}:
+                {
+                    var val = ConsoleHelpers.PromptIntAndClearLine("Value: ", row + 1, defaultValue: "-");
+                    Console.CursorTop = row;
+
+                    if (!val.HasValue)
+                        continue;
+                    
+                    switch (pos)
+                    {
+                        case 0:
+                        {
+                            a = val.Value;
+                            break;
+                        }
+                        case 1:
+                        {
+                            b = val.Value;
+                            break;
+                        }
+                        default:
+                        {
+                            c = val.Value;
+                            break;
+                        }
+                    }
+                    
+                    break;
+                }
+                case {Key: ConsoleKey.Q}:
+                case {Key: ConsoleKey.Escape}:
                 {
                     Console.WriteLine();
                     return;
                 }
-                case ConsoleKey.Enter:
+                case {Key: ConsoleKey.Enter}:
                 {
                     if (a is 0 && b is 0 && c is 0)
                         continue;

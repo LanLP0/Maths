@@ -48,7 +48,7 @@ internal class Expression
         return ex.Collapse();
     }
 
-    public static Expression Pow (Expression left, int right)
+    public static Expression Pow(Expression left, int right)
     {
         var ex = left.Clone();
 
@@ -57,7 +57,7 @@ internal class Expression
             ex *= left;
         }
 
-        return ex;
+        return ex.Collapse();
     }
 
     public Expression Collapse()
@@ -77,10 +77,10 @@ internal class Expression
 
                 e.Value += e1.Value;
                 Elements.RemoveAt(j);
-
-                if (e.Value is 0)
-                    Elements.RemoveAt(i - 1);
             }
+
+            if (e.Value is 0)
+                Elements.RemoveAt(--i);
         }
 
         return this;
