@@ -17,7 +17,7 @@ internal class ComplexMultiplyTool : Tool
 
     public override string ToolName { get; } = "complexcalc";
 
-    public override string? HelpMsg { get; } = "Calculate multiple expression of any size\nControls:\nArrow keys, `[` - `]`: Move around\n`1` - `9`: Change variable value\n`-`, `+`: decrease, increase amount of element\n`a` - `z`: Add/Remove power\nPress `\\` to quit";
+    public override string? HelpMsg { get; } = "Calculate multiple expression of any size\nControls:\nArrow keys, `[` - `]`: Move around\n`1` - `9`: Change variable value\n<Ctrl-Minus>, `+`: decrease, increase amount of element\n`a` - `z`: Add/Remove power\nPress `\\` to quit";
 
     public override void Execute()
     {
