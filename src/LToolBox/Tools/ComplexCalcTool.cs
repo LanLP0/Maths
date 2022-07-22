@@ -17,7 +17,7 @@ internal class ComplexMultiplyTool : Tool
 
     public override string ToolName { get; } = "complexcalc";
 
-    public override string? HelpMsg { get; } = "Calculate multiple expression of any size\nControls:\n`1` - `9`: Change variable value\n`-`, `+`: decrease, increase amount of element\n`a` - `z`: Add/Remove power\n`v`: change power value\nPress `q` to quit";
+    public override string? HelpMsg { get; } = "Calculate multiple expression of any size\nControls:\nArrow keys, `[` - `]`: Move around\n`1` - `9`: Change variable value\n`-`, `+`: decrease, increase amount of element\n`a` - `z`: Add/Remove power\nPress `\\` to quit";
 
     public override void Execute()
     {
@@ -112,6 +112,7 @@ internal class ComplexMultiplyTool : Tool
                         continue;
 
                     result.Elements.Add(new Element());
+                    pos = result.Elements.Count - 1;
                     break;
                 }
                 // case {KeyChar: '_'}:
@@ -143,7 +144,7 @@ internal class ComplexMultiplyTool : Tool
                     break;
                 }
                 case {Key: ConsoleKey.LeftArrow}:
-                case {KeyChar: 'h'}:
+                case {KeyChar: '['}:
                 {
                     if (pos is 0)
                         break;
@@ -152,7 +153,7 @@ internal class ComplexMultiplyTool : Tool
                     break;
                 }
                 case {Key: ConsoleKey.RightArrow}:
-                case {KeyChar: 'l'}:
+                case {KeyChar: ']'}:
                 {
                     if (pos + 1 >= result.Elements.Count)
                         break;
@@ -161,15 +162,10 @@ internal class ComplexMultiplyTool : Tool
                     break;
                 }
                 case {Key: ConsoleKey.Escape}:
-                case {KeyChar: 'q'}:
+                case {KeyChar: '\\'}:
                 {
                     Console.WriteLine();
                     return null;
-                }
-                case { KeyChar: 'v' }:
-                {
-                    PromptChangePower(result.Elements[pos]);
-                    break;
                 }
                 case {Key: ConsoleKey.A}:
                 case {Key: ConsoleKey.B}:
@@ -282,22 +278,5 @@ internal class ComplexMultiplyTool : Tool
         Console.Write(new string(' ', Math.Clamp(Console.WindowWidth - Console.CursorLeft - 1, 0, int.MaxValue)));
         
         Console.SetCursorPosition(currLeft, currTop);
-    }
-
-    private void PromptChangePower(Element element)
-    {
-        var (currLeft, currTop) = Console.GetCursorPosition();
-
-        Console.SetCursorPosition(0, currTop + 1);
-        for (var i = 0; i < element.Powers.Count; i++)
-        {
-            var val = ConsoleHelpers.PromptIntAndClearLine((char)(i % 26 + 97) + ": ",
-                defaultValue: element.Powers[i].ToString());
-            
-            if (val is null)
-                continue;
-
-            element.Powers[i] = val.Value;
-        }
     }
 }
