@@ -10,9 +10,9 @@ namespace LToolBox;
 class Program
 {
     [NotNull]
-    private static Tool[] _tools;
+    private static Tool[] _tools = null!;
     [NotNull]
-    private static string _promptTemplate;
+    private static string _promptTemplate = null!;
 
     public static void Main()
     {

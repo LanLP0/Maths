@@ -6,9 +6,9 @@ namespace LToolBox.Tools;
 
 internal class ComplexMultiplyTool : Tool
 {
+#if DEBUG
     private ILogger<ComplexMultiplyTool> _logger;
 
-#if DEBUG
     public ComplexMultiplyTool(ILogger<ComplexMultiplyTool> logger)
     {
         _logger = logger;
@@ -95,7 +95,6 @@ internal class ComplexMultiplyTool : Tool
         };
 
         const int argLimit = 7;
-        const int powerLimit = 5;
         var pos = 0;
         var (currLeft, currTop) = Console.GetCursorPosition();
         RenderExpression(result, pos);
