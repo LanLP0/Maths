@@ -1,5 +1,5 @@
 using Common.Cli;
-using Common.Cli.Maths;
+using Common.Maths;
 
 namespace LToolBox.Tools;
 
@@ -14,7 +14,7 @@ internal class IsPrimeTool : Tool
         var value = ConsoleHelpers.PromptInt("Number: ", null, 6, false);
         if (value is null)
             return;
-        
+
         Console.Write("Result: ");
         Console.WriteLine(Maths.IsPrime(value.Value));
     }

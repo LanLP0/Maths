@@ -59,10 +59,10 @@ public class CalculatorTest
     {
         // Arrange
         var output = $"Result: {result}";
-        
+
         // Act
         var result1 = Calculator.Calc(math);
-        
+
         // Assert
         Assert.Equal(output, result1);
     }
@@ -113,10 +113,10 @@ public class CalculatorTest
     {
         // Arrange
         var output = $"Error: {errorMsg}";
-        
+
         // Act
         var result = Calculator.Calc(math);
-        
+
         // Assert
         Assert.Equal(output, result);
     }
@@ -130,7 +130,7 @@ public class CalculatorTest
     {
         // Act
         var result = Calculator.Calc(math);
-        
+
         // Assert
         Assert.Equal(output, result);
     }
@@ -141,12 +141,12 @@ public class CalculatorTest
     [InlineData("random(5 10)", 5, 10)]
     public void Random_Should_BeInRange(string math, double lowerEnd, double upperEnd)
     {
-        for (int i = 0; i <= 25; i++) // Run the test 25 times
+        for (var i = 0; i <= 25; i++) // Run the test 25 times
         {
             // Act
             var result = Calculator.Calc(math);
             var resultNum = double.Parse(result.Substring(result.IndexOf(' ') + 1));
-        
+
             // Assert
             Assert.InRange(resultNum, lowerEnd, upperEnd);
         }

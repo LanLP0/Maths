@@ -37,7 +37,7 @@ internal static class EnumHelpers
 
     public static string FastConsoleKeyToNumberString(ConsoleKey value)
     {
-        return value switch 
+        return value switch
         {
             ConsoleKey.D0 => "0",
             ConsoleKey.D1 => "1",

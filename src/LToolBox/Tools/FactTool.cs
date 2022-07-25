@@ -1,4 +1,5 @@
 using Common.Cli;
+using Common.Maths;
 
 namespace LToolBox.Tools;
 
@@ -15,6 +16,6 @@ internal class FactTool : Tool
             return;
 
         Console.Write("Result: ");
-        Console.WriteLine(string.Join(" * ",  Common.Cli.Maths.Maths.GetFact(value.Value)));
+        Console.WriteLine(string.Join(" * ", Maths.GetFact(value.Value)));
     }
 }

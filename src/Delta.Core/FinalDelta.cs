@@ -1,17 +1,15 @@
-using Common.Cli.Maths;
-using JetBrains.Annotations;
+using Common.Maths;
 
 namespace Delta.Core;
 
 internal class FinalDelta
 {
-    [NotNull]
-    public SimpleVariable T0 { get; set; }
-    [NotNull]
-    public SimpleVariable T1 { get; set; }
-    [NotNull]
-    public SimpleVariable T2 { get; set; }
+    public SimpleVariable T0 { get; init; } = null!;
+    public SimpleVariable T1 { get; init; } = null!;
+    public SimpleVariable T2 { get; init; } = null!;
 
-    public int Calc(out double? result1, out double? result2) =>
-        Polynomial.Calc2(T0.NumberPart, T1.NumberPart, T2.NumberPart, out result1, out result2);
+    public int Calc(out double? result1, out double? result2)
+    {
+        return Polynomial.Calc2(T0.NumberPart, T1.NumberPart, T2.NumberPart, out result1, out result2);
+    }
 }

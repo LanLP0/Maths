@@ -1,11 +1,11 @@
-namespace Common.Cli.Maths;
+namespace Common.Maths;
 
 internal static class Maths
 {
     public static List<int> GetFact(int value)
     {
         var result = new List<int>();
-        
+
         for (var i = 2; i < value;)
         {
             while (value % i is 0)
@@ -13,15 +13,15 @@ internal static class Maths
                 value /= i;
                 result.Add(i);
             }
-            
+
             i = GetNextPrime(i);
         }
-        
+
         result.Add(value);
 
         return result;
     }
-    
+
     public static int GetNextPrime(int value = 0)
     {
         if (value < 2)
@@ -29,14 +29,14 @@ internal static class Maths
 
         if (value % 2 is 0)
             value++;
-        else 
+        else
             value += 2;
 
         for (;;)
         {
             if (IsPrimeInternal(value))
                 return value;
-            
+
             value += 2;
         }
     }
@@ -45,10 +45,8 @@ internal static class Maths
     {
         var root = (int)Math.Sqrt(value);
         for (var a = 3; a <= root; a += 2)
-        {
             if (value % a is 0)
                 return false;
-        }
 
         return true;
     }
@@ -63,10 +61,8 @@ internal static class Maths
 
         var root = (int)Math.Sqrt(value);
         for (var a = 3; a <= root; a += 2)
-        {
             if (value % a is 0)
                 return false;
-        }
 
         return true;
     }
@@ -83,7 +79,7 @@ internal static class Maths
             b = a % b;
             a = gcd;
         }
-        
+
         return gcd;
     }
 

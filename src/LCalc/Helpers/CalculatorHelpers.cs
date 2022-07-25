@@ -1,6 +1,6 @@
-﻿using Common.Cli.Maths;
-using Common.Cli.Maths.Extension;
-using LCalc.Helpers;
+﻿using Common.Maths;
+using Common.Maths.Extension;
+using Common.Results;
 using LCalc.Helpers.CustomFunction;
 
 namespace LCalc.Helpers;
@@ -14,9 +14,9 @@ internal static class CalculatorHelpers
         for (var i = 0; i < math.Count; i++)
         {
             var el = math[i];
-            if (!(el.IsString/* && el.StringForm.Length is not (1 or 2)*/))
+            if (!el.IsString)
                 continue;
-            
+
             switch (el.StringForm)
             {
                 case "&":
@@ -141,7 +141,7 @@ internal static class CalculatorHelpers
             var e = math[i];
             if (!(e.IsString && e.StringForm.Length is 1 && e.StringForm[0] is '^'))
                 continue;
-            
+
             var check = Guard.IndexInRange(math, i - 1, i + 1);
             if (check.IsFaulted)
                 return check;
@@ -379,7 +379,9 @@ internal static class CalculatorHelpers
             result = Rng.NextDouble() * (maxVal - min) + min;
         }
         else
+        {
             result = Rng.NextDouble();
+        }
 
         math.Clear();
         math.Add(result);
@@ -640,7 +642,7 @@ internal static class CalculatorHelpers
         {
             var chr = math[i];
 
-            switch ((int) chr)
+            switch ((int)chr)
             {
                 case 43: // +
                 case 42: // *
@@ -671,7 +673,7 @@ internal static class CalculatorHelpers
                         break;
                     }
 
-                    if ((int) prevChr is not (> 47 and < 58) and not (> 96 and < 123) and not (41 or 61))
+                    if ((int)prevChr is not (> 47 and < 58) and not (> 96 and < 123) and not (41 or 61))
                     {
                         buffer.Append('-', BufferContentType.Number);
                         break;
@@ -692,7 +694,8 @@ internal static class CalculatorHelpers
                         if (result1.IsFaulted) return result1;
                     }
 
-                    if ((int) nextChr is > 47 and < 58 && (int) prevChr is not (> 47 and < 58) and not (> 96 and < 123) and not 41)
+                    if ((int)nextChr is > 47 and < 58 &&
+                        (int)prevChr is not (> 47 and < 58) and not (> 96 and < 123) and not 41)
                     {
                         buffer.Append('-', BufferContentType.Number);
                         break;
@@ -747,14 +750,14 @@ internal static class CalculatorHelpers
                         if (result1.IsFaulted) return result1;
                     }
 
-                    if ((int) nextChr is not (> 96 and < 123))
+                    if ((int)nextChr is not (> 96 and < 123))
                     {
                         result.Add("&");
                         break;
                     }
 
                     buffer.Append('&');
-                    if ((int) nextChr is not (104 or 98 or 111))
+                    if ((int)nextChr is not (104 or 98 or 111))
                     {
                         buffer.Content = BufferContentType.Arg;
                         break;
@@ -766,12 +769,12 @@ internal static class CalculatorHelpers
                         break;
                     }
 
-                    if ((int) nextNextChr is not (> 47 and < 58) and not (> 96 and < 103))
+                    if ((int)nextNextChr is not (> 47 and < 58) and not (> 96 and < 103))
                     {
                         buffer.Content = BufferContentType.Arg;
                         break;
                     }
-                    
+
                     buffer.Append(nextChr);
                     buffer.Content = BufferContentType.SpecialNumber;
                     i++;
@@ -817,7 +820,7 @@ internal static class CalculatorHelpers
                         buffer.Append('.');
                         break;
                     }
-                
+
                     if (buffer.Content is not (BufferContentType.Empty or BufferContentType.Number))
                     {
                         result1 = buffer.ParseBufferAndClear(ref opts);
@@ -836,7 +839,7 @@ internal static class CalculatorHelpers
                     {
                         case BufferContentType.Number:
                         {
-                            if ((int) buffer[0] is 45)
+                            if ((int)buffer[0] is 45)
                                 break;
                             result1 = buffer.ParseBufferAndClear(ref opts);
                             if (result1.IsFaulted) return result1;
@@ -867,7 +870,7 @@ internal static class CalculatorHelpers
                         if (!math.TryGetValueAt(i + 1, out var nextChr))
                             return Err<List<CalcElement>>("Invalid operator: =");
 
-                        if ((int) nextChr is not 61)
+                        if ((int)nextChr is not 61)
                             return Err<List<CalcElement>>("Invalid operator: =");
 
                         result.Add("==");
@@ -875,7 +878,7 @@ internal static class CalculatorHelpers
                         break;
                     }
 
-                    if ((int) firstChr is 38)
+                    if ((int)firstChr is 38)
                     {
                         buffer.Append('=', BufferContentType.Variable);
                         break;
@@ -884,7 +887,7 @@ internal static class CalculatorHelpers
                     if (!math.TryGetValueAt(i + 1, out var nextChr1))
                         return Err<List<CalcElement>>("Invalid operator: =");
 
-                    if ((int) nextChr1 is not 61)
+                    if ((int)nextChr1 is not 61)
                         return Err<List<CalcElement>>("Invalid operator: =");
 
                     result1 = buffer.ParseBufferAndClear(ref opts);
@@ -900,7 +903,7 @@ internal static class CalculatorHelpers
 
                     if (i - 1 < 0)
                     {
-                        var op = (int) nextChr is 61 ? ">=" : (int) nextChr is 62 ? ">>" : ">";
+                        var op = (int)nextChr is 61 ? ">=" : (int)nextChr is 62 ? ">>" : ">";
                         return Err<List<CalcElement>>($"No value before {op}");
                     }
 
@@ -910,7 +913,7 @@ internal static class CalculatorHelpers
                         if (result1.IsFaulted) return result1;
                     }
 
-                    switch ((int) nextChr)
+                    switch ((int)nextChr)
                     {
                         case 62:
                         {
@@ -944,7 +947,7 @@ internal static class CalculatorHelpers
 
                     if (i - 1 < 0)
                     {
-                        var op = (int) nextChr is 61 ? "<=" : (int) nextChr is 60 ? "<<" : "<";
+                        var op = (int)nextChr is 61 ? "<=" : (int)nextChr is 60 ? "<<" : "<";
                         return Err<List<CalcElement>>($"No value before {op}");
                     }
 
@@ -954,7 +957,7 @@ internal static class CalculatorHelpers
                         if (result1.IsFaulted) return result1;
                     }
 
-                    switch ((int) nextChr)
+                    switch ((int)nextChr)
                     {
                         case 60:
                         {
@@ -986,7 +989,7 @@ internal static class CalculatorHelpers
                     if (i - 1 < 0)
                     {
                         math.TryGetValueAt(i + 1, out var nextChr);
-                        var op = (int) nextChr is 61 ? "!=" : "!";
+                        var op = (int)nextChr is 61 ? "!=" : "!";
                         return Err<List<CalcElement>>($"No value before {op}");
                     }
 
@@ -996,7 +999,7 @@ internal static class CalculatorHelpers
                         if (result1.IsFaulted) return result1;
                     }
 
-                    if (math.TryGetValueAt(i + 1, out chr) && (int) chr is 61)
+                    if (math.TryGetValueAt(i + 1, out chr) && (int)chr is 61)
                     {
                         result.Add("!=");
                         i++;
@@ -1013,7 +1016,7 @@ internal static class CalculatorHelpers
 
                     if (i - 1 < 0)
                     {
-                        var op = (int) nextChr is 94 ? "^^" : "^";
+                        var op = (int)nextChr is 94 ? "^^" : "^";
                         return Err<List<CalcElement>>($"No value before {op}");
                     }
 
@@ -1023,7 +1026,7 @@ internal static class CalculatorHelpers
                         if (result1.IsFaulted) return result1;
                     }
 
-                    switch ((int) nextChr)
+                    switch ((int)nextChr)
                     {
                         case 94:
                         {
@@ -1065,8 +1068,8 @@ internal static class CalculatorHelpers
                         return Err<List<CalcElement>>("No matching end square bracket");
 
                     var customFunction = CustomFunction.CustomFunction.Parse(math.AsSpan()[(i + 1)..pos], functions);
-                    if (customFunction.IsFaulted) return new (customFunction.Exception!);
-                    
+                    if (customFunction.IsFaulted) return new Result<List<CalcElement>>(customFunction.Exception!);
+
                     functions.Add(customFunction.Value!);
                     i = pos;
                     break;
@@ -1081,7 +1084,7 @@ internal static class CalculatorHelpers
                 }
             }
         }
-        
+
         functions.End();
 
         result1 = buffer.ParseBufferAndClear(ref opts);
@@ -1099,7 +1102,7 @@ internal static class CalculatorHelpers
         for (var i = 0; i < length; i++)
         {
             var chr = s[length - i - 1];
-            if ((int) chr is not (> 47 and < 56))
+            if ((int)chr is not (> 47 and < 56))
                 return Err<double>("Invalid octal number");
 
             result += (chr - 48) * pow;
@@ -1121,7 +1124,7 @@ internal static class CalculatorHelpers
 
             int val;
             // ReSharper disable once RedundantCast
-            switch ((int) chr)
+            switch ((int)chr)
             {
                 case > 96 and < 103:
                     val = chr - 87;
@@ -1149,7 +1152,7 @@ internal static class CalculatorHelpers
         for (var i = 0; i < length; i++)
         {
             var chr = s[length - i - 1];
-            if ((int) chr is not (48 or 49))
+            if ((int)chr is not (48 or 49))
                 return Err<double>("Invalid binary number");
 
             result += (chr - 48) * pow;

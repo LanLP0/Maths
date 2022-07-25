@@ -1,7 +1,7 @@
-namespace LCalc.Helpers.CustomFunction;
-
 using System.Text;
-using Helpers;
+using Common.Results;
+
+namespace LCalc.Helpers.CustomFunction;
 
 internal ref struct SpecialInputBuffer
 {
@@ -15,12 +15,12 @@ internal ref struct SpecialInputBuffer
 
     public StringBuilder Buffer { get; init; }
     public List<CalcElement> list { get; init; }
-    
+
     public Result ParseBufferAndClear()
     {
         if (Buffer.Length is 0)
-            return new();
-        
+            return new Result();
+
         switch (Content)
         {
             case BufferContentType.SpecialNumber:
@@ -31,14 +31,14 @@ internal ref struct SpecialInputBuffer
                 if (num.Length is 2)
                     return Err("Empty number");
 
-                switch ((int) num[1])
+                switch ((int)num[1])
                 {
                     case 104: // h
                     {
                         var result = CalculatorHelpers.HexStringToDouble(num.Substring(2));
                         if (result.IsFaulted)
                             return result;
-                        
+
                         list.Add(result.Value);
                         break;
                     }
@@ -47,7 +47,7 @@ internal ref struct SpecialInputBuffer
                         var result = CalculatorHelpers.BinaryStringToDouble(num.Substring(2));
                         if (result.IsFaulted)
                             return result;
-                        
+
                         list.Add(result.Value);
                         break;
                     }
@@ -56,7 +56,7 @@ internal ref struct SpecialInputBuffer
                         var result = CalculatorHelpers.OctalStringToDouble(num.Substring(2));
                         if (result.IsFaulted)
                             return result;
-                        
+
                         list.Add(result.Value);
                         break;
                     }
@@ -76,7 +76,10 @@ internal ref struct SpecialInputBuffer
         return Ok();
     }
 
-    public void Append(char c) => Buffer.Append(c);
+    public void Append(char c)
+    {
+        Buffer.Append(c);
+    }
 
     public void Append(char c, BufferContentType contentType)
     {
@@ -84,7 +87,10 @@ internal ref struct SpecialInputBuffer
         Content = contentType;
     }
 
-    public bool TryGetValueAt(int index, out char value) => Buffer.TryGetValueAt(index, out value);
+    public bool TryGetValueAt(int index, out char value)
+    {
+        return Buffer.TryGetValueAt(index, out value);
+    }
 
     public char this[int index] => Buffer[index];
 }

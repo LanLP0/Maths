@@ -1,6 +1,4 @@
-﻿using System.Text;
-
-namespace Delta.Core;
+﻿namespace Delta.Core;
 
 internal class SimpleVariable
 {
@@ -14,6 +12,4 @@ internal class SimpleVariable
     {
         return NumberPart is 0;
     }
-
-    public bool HasValue() => !IsZero();
 }

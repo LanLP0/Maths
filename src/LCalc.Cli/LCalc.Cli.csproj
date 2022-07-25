@@ -12,11 +12,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\LCalc\LCalc.Core.csproj" />
+        <ProjectReference Include="..\LCalc\LCalc.Core.csproj"/>
     </ItemGroup>
 
-<!--    <ItemGroup>-->
-<!--      <PackageReference Include="MathParser.org-mXparser" Version="5.0.6" />-->
-<!--    </ItemGroup>-->
+    <!--    <ItemGroup>-->
+    <!--      <PackageReference Include="MathParser.org-mXparser" Version="5.0.6" />-->
+    <!--    </ItemGroup>-->
 
 </Project>

@@ -1,6 +1,6 @@
 using System.Text;
 
-namespace Common.Cli.Maths.Expressions;
+namespace Common.Maths.Expressions;
 
 internal class Expression
 {
@@ -9,14 +9,10 @@ internal class Expression
     public static Expression operator *(Expression left, Expression right)
     {
         var ex = new Expression();
-        
+
         foreach (var element in left.Elements)
-        {
-            foreach (var element1 in right.Elements)
-            {
-                ex.Elements.Add(element * element1);
-            }
-        }
+        foreach (var element1 in right.Elements)
+            ex.Elements.Add(element * element1);
 
         return ex.Collapse();
     }
@@ -24,11 +20,11 @@ internal class Expression
     public static Expression operator -(Expression left, Expression right)
     {
         var ex = new Expression();
-        
+
         ex.Elements = left.Clone().Elements;
 
         var rightCloned = right.Clone();
-        foreach(var e in rightCloned.Elements)
+        foreach (var e in rightCloned.Elements)
         {
             e.Value = -e.Value;
             ex.Elements.Add(e);
@@ -40,9 +36,9 @@ internal class Expression
     public static Expression operator +(Expression left, Expression right)
     {
         var ex = new Expression();
-        
+
         ex.Elements = left.Clone().Elements;
-        
+
         ex.Elements.AddRange(right.Clone().Elements);
 
         return ex.Collapse();
@@ -52,10 +48,7 @@ internal class Expression
     {
         var ex = left.Clone();
 
-        for (int i = 1; i < right; i++)
-        {
-            ex *= left;
-        }
+        for (var i = 1; i < right; i++) ex *= left;
 
         return ex.Collapse();
     }
@@ -94,10 +87,7 @@ internal class Expression
         {
             Elements[i].RenderBufferWithColor(buffer, selectedPos == i);
 
-            if (++i < Elements.Count)
-            {
-                buffer.Append(" + ");
-            }
+            if (++i < Elements.Count) buffer.Append(" + ");
         }
 
         return buffer.ToString();
@@ -106,10 +96,7 @@ internal class Expression
     private Expression Clone()
     {
         var ex = new Expression();
-        foreach (var e in Elements)
-        {
-            ex.Elements.Add(e.Clone());
-        }
+        foreach (var e in Elements) ex.Elements.Add(e.Clone());
 
         return ex;
     }

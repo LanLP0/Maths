@@ -1,5 +1,6 @@
 // ReSharper disable MemberCanBePrivate.Global
-namespace LCalc.Helpers;
+
+namespace Common.Results;
 
 internal readonly ref struct Result<T>
 {
@@ -27,19 +28,37 @@ internal readonly ref struct Result<T>
         Value = value;
     }
 
-    public static implicit operator T?(Result<T> value) => value.Value;
-    
-    public static implicit operator Result<T>(T value) => new(value);
-    
-    public static implicit operator Result<T>(Result value) => new(value);
-    
-    public static implicit operator Result<T>(Exception exception) => new(exception);
-    
-    public static implicit operator Result(Result<T> value) => value._innerResult;
+    public static implicit operator T?(Result<T> value)
+    {
+        return value.Value;
+    }
 
-    public override string ToString() => Success
-        ? Value?.ToString() ?? "(null)"
-        : Exception?.ToString() ?? "(error)";
+    public static implicit operator Result<T>(T value)
+    {
+        return new Result<T>(value);
+    }
+
+    public static implicit operator Result<T>(Result value)
+    {
+        return new Result<T>(value);
+    }
+
+    public static implicit operator Result<T>(Exception exception)
+    {
+        return new Result<T>(exception);
+    }
+
+    public static implicit operator Result(Result<T> value)
+    {
+        return value._innerResult;
+    }
+
+    public override string ToString()
+    {
+        return Success
+            ? Value?.ToString() ?? "(null)"
+            : Exception?.ToString() ?? "(error)";
+    }
 }
 
 internal readonly ref struct Result
@@ -59,6 +78,9 @@ internal readonly ref struct Result
         Exception = exception;
         IsFaulted = true;
     }
-    
-    public static implicit operator Result(Exception exception) => new(exception);
+
+    public static implicit operator Result(Exception exception)
+    {
+        return new Result(exception);
+    }
 }

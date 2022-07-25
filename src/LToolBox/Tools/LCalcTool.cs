@@ -1,4 +1,4 @@
-using LCalc.Helpers;
+using LCalc;
 
 namespace LToolBox.Tools;
 
@@ -14,10 +14,10 @@ internal class LCalcTool : Tool
         {
             Console.Write("Expression: ");
             var input = Console.ReadLine()!;
-            
+
             if (input.Length is 1 && input is "q")
                 return;
-            
+
             Console.WriteLine(Calculator.Calc(input));
         }
     }

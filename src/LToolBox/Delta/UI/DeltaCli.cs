@@ -1,5 +1,3 @@
-using Delta.Core;
-
 namespace LToolBox.Delta.UI;
 
 internal class DeltaCli
@@ -13,7 +11,7 @@ internal class DeltaCli
         var top = Console.CursorTop;
 
         var deltaFraction = DeltaHelpers.PromptDelta(top);
-        
+
         if (deltaFraction is null)
             return;
 

@@ -1,10 +1,9 @@
-using LCalc.Helpers;
+using Common.Results;
 
 namespace LCalc.Helpers.CustomFunction;
 
 internal class CustomFunction
 {
-    public string Name { get; }
     private readonly List<string> _args;
     private readonly IReadOnlyList<CalcElement> _math;
 
@@ -14,6 +13,8 @@ internal class CustomFunction
         Name = name;
         _args = args;
     }
+
+    public string Name { get; }
 
     public static Result<CustomFunction> Parse(ReadOnlySpan<char> span, CustomFunctionCollection collection)
     {
@@ -27,7 +28,7 @@ internal class CustomFunction
         var pos = firstHalf.IndexOf('(');
         if (pos is -1)
             return Err<CustomFunction>("Invalid function signature");
-        
+
         var name = firstHalf[..pos].ToString();
         if (name.Length is 0)
             return Err<CustomFunction>("Function name is empty");
@@ -44,7 +45,7 @@ internal class CustomFunction
             {
                 var chr = argsSpan[i];
 
-                switch ((int) chr)
+                switch ((int)chr)
                 {
                     case > 96 and < 122: // a-z
                     {
@@ -72,7 +73,7 @@ internal class CustomFunction
         var secondHalf = span[(pos1 + 1)..];
         if (secondHalf.Length is 0)
             return Err<CustomFunction>("Missing function body");
-        
+
         var result = SplitInputSpecial(secondHalf.ToString());
         if (result.IsFaulted)
             return new Result<CustomFunction>(result.Exception!);
@@ -91,7 +92,7 @@ internal class CustomFunction
         {
             var chr = math[i];
 
-            switch ((int) chr)
+            switch ((int)chr)
             {
                 case 43: // +
                 case 42: // *
@@ -122,7 +123,7 @@ internal class CustomFunction
                         break;
                     }
 
-                    if ((int) prevChr is not (> 47 and < 58) and not (> 96 and < 123) and not (41 or 61))
+                    if ((int)prevChr is not (> 47 and < 58) and not (> 96 and < 123) and not (41 or 61))
                     {
                         buffer.Append('-', BufferContentType.Number);
                         break;
@@ -137,7 +138,8 @@ internal class CustomFunction
                         if (result1.IsFaulted) return result1;
                     }
 
-                    if ((int) nextChr is > 47 and < 58 && (int) prevChr is not (> 47 and < 58) and not (> 96 and < 123) and not 41)
+                    if ((int)nextChr is > 47 and < 58 &&
+                        (int)prevChr is not (> 47 and < 58) and not (> 96 and < 123) and not 41)
                     {
                         buffer.Append('-', BufferContentType.Number);
                         break;
@@ -192,22 +194,22 @@ internal class CustomFunction
                         if (result1.IsFaulted) return result1;
                     }
 
-                    if ((int) nextChr is not (> 96 and < 123))
+                    if ((int)nextChr is not (> 96 and < 123))
                     {
                         result.Add("&");
                         break;
                     }
 
                     buffer.Append('&');
-                    if ((int) nextChr is not (104 or 98 or 111))
+                    if ((int)nextChr is not (104 or 98 or 111))
                         return Err<List<CalcElement>>("Cannot have arg in function");
 
                     if (!math.TryGetValueAt(i + 2, out var nextNextChr))
                         return Err<List<CalcElement>>("Missing value");
 
-                    if ((int) nextNextChr is not (> 47 and < 58) and not (> 96 and < 103))
+                    if ((int)nextNextChr is not (> 47 and < 58) and not (> 96 and < 103))
                         return Err<List<CalcElement>>("Missing value");
-                    
+
                     buffer.Append(nextChr);
                     buffer.Content = BufferContentType.SpecialNumber;
                     i++;
@@ -259,7 +261,7 @@ internal class CustomFunction
                     {
                         case BufferContentType.Number:
                         {
-                            if ((int) buffer[0] is 45)
+                            if ((int)buffer[0] is 45)
                                 break;
                             result1 = buffer.ParseBufferAndClear();
                             if (result1.IsFaulted) return result1;
@@ -289,7 +291,7 @@ internal class CustomFunction
                         if (!math.TryGetValueAt(i + 1, out var nextChr))
                             return Err<List<CalcElement>>("Invalid operator: =");
 
-                        if ((int) nextChr is not 61)
+                        if ((int)nextChr is not 61)
                             return Err<List<CalcElement>>("Invalid operator: =");
 
                         result.Add("==");
@@ -300,7 +302,7 @@ internal class CustomFunction
                     if (!math.TryGetValueAt(i + 1, out var nextChr1))
                         return Err<List<CalcElement>>("Invalid operator: =");
 
-                    if ((int) nextChr1 is not 61)
+                    if ((int)nextChr1 is not 61)
                         return Err<List<CalcElement>>("Invalid operator: =");
 
                     result1 = buffer.ParseBufferAndClear();
@@ -316,7 +318,7 @@ internal class CustomFunction
 
                     if (i - 1 < 0)
                     {
-                        var op = (int) nextChr is 61 ? ">=" : (int) nextChr is 62 ? ">>" : ">";
+                        var op = (int)nextChr is 61 ? ">=" : (int)nextChr is 62 ? ">>" : ">";
                         return Err<List<CalcElement>>($"No value before {op}");
                     }
 
@@ -326,7 +328,7 @@ internal class CustomFunction
                         if (result1.IsFaulted) return result1;
                     }
 
-                    switch ((int) nextChr)
+                    switch ((int)nextChr)
                     {
                         case 62:
                         {
@@ -360,7 +362,7 @@ internal class CustomFunction
 
                     if (i - 1 < 0)
                     {
-                        var op = (int) nextChr is 61 ? "<=" : (int) nextChr is 60 ? "<<" : "<";
+                        var op = (int)nextChr is 61 ? "<=" : (int)nextChr is 60 ? "<<" : "<";
                         return Err<List<CalcElement>>($"No value before {op}");
                     }
 
@@ -370,7 +372,7 @@ internal class CustomFunction
                         if (result1.IsFaulted) return result1;
                     }
 
-                    switch ((int) nextChr)
+                    switch ((int)nextChr)
                     {
                         case 60:
                         {
@@ -402,7 +404,7 @@ internal class CustomFunction
                     if (i - 1 < 0)
                     {
                         math.TryGetValueAt(i + 1, out var nextChr);
-                        var op = (int) nextChr is 61 ? "!=" : "!";
+                        var op = (int)nextChr is 61 ? "!=" : "!";
                         return Err<List<CalcElement>>($"No value before {op}");
                     }
 
@@ -412,7 +414,7 @@ internal class CustomFunction
                         if (result1.IsFaulted) return result1;
                     }
 
-                    if (math.TryGetValueAt(i + 1, out chr) && (int) chr is 61)
+                    if (math.TryGetValueAt(i + 1, out chr) && (int)chr is 61)
                     {
                         result.Add("!=");
                         i++;
@@ -429,7 +431,7 @@ internal class CustomFunction
 
                     if (i - 1 < 0)
                     {
-                        var op = (int) nextChr is 94 ? "^^" : "^";
+                        var op = (int)nextChr is 94 ? "^^" : "^";
                         return Err<List<CalcElement>>($"No value before {op}");
                     }
 
@@ -439,7 +441,7 @@ internal class CustomFunction
                         if (result1.IsFaulted) return result1;
                     }
 
-                    switch ((int) nextChr)
+                    switch ((int)nextChr)
                     {
                         case 94:
                         {
@@ -488,15 +490,16 @@ internal class CustomFunction
             return Err("Invalid number of args");
 
         var math = new List<CalcElement>();
-        foreach (var m in _math) math.Add(_args.Contains(m.StringForm) ? args[_args.IndexOf(m.StringForm)] : m.CreateCopy());
+        foreach (var m in _math)
+            math.Add(_args.Contains(m.StringForm) ? args[_args.IndexOf(m.StringForm)] : m.CreateCopy());
 
         var result = Calculator.Calculate(math, functions);
         if (result.IsFaulted)
             return result;
-        
+
         if (args.Count > 1)
             args.RemoveRange(1, args.Count - 1);
-        
+
         if (args.Count is not 0)
             args[0].DoubleForm = result.Value;
         else

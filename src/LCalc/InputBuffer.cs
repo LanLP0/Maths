@@ -1,14 +1,15 @@
 using System.Text;
+using Common.Results;
 using LCalc.Helpers;
 
-namespace LCalc.Helpers;
+namespace LCalc;
 
 internal ref struct InputBuffer
 {
     public InputBuffer(List<CalcElement> list, Dictionary<string, CalcElement> args)
     {
         Buffer = new StringBuilder();
-        this.List = list;
+        List = list;
         Args = args;
     }
 
@@ -17,12 +18,12 @@ internal ref struct InputBuffer
     public StringBuilder Buffer { get; init; }
     public List<CalcElement> List { get; init; }
     public Dictionary<string, CalcElement> Args { get; init; }
-    
+
     public Result ParseBufferAndClear(ref CalcOptions opts)
     {
         if (Buffer.Length is 0)
-            return new();
-        
+            return new Result();
+
         switch (Content)
         {
             case BufferContentType.Arg:
@@ -31,7 +32,6 @@ internal ref struct InputBuffer
                 Buffer.Clear();
 
                 if (!arg.Contains('='))
-                {
                     switch (arg.Substring(1))
                     {
                         case "step":
@@ -41,7 +41,6 @@ internal ref struct InputBuffer
                             opts.Raw = true;
                             break;
                     }
-                }
 
                 break;
             }
@@ -54,10 +53,7 @@ internal ref struct InputBuffer
                 if (string.IsNullOrEmpty(tmp[1]))
                     return Err("Missing variable value");
 
-                if (!Args.TryAdd(tmp[0], tmp[1]))
-                {
-                    return Err("Variable has already been set");
-                }
+                if (!Args.TryAdd(tmp[0], tmp[1])) return Err("Variable has already been set");
 
                 break;
             }
@@ -66,14 +62,14 @@ internal ref struct InputBuffer
                 var num = Buffer.ToString();
                 Buffer.Clear();
 
-                switch ((int) num[1])
+                switch ((int)num[1])
                 {
                     case 104: // h
                     {
                         var result = CalculatorHelpers.HexStringToDouble(num.Substring(2));
                         if (result.IsFaulted)
                             return result;
-                        
+
                         List.Add(result.Value);
                         break;
                     }
@@ -82,7 +78,7 @@ internal ref struct InputBuffer
                         var result = CalculatorHelpers.BinaryStringToDouble(num.Substring(2));
                         if (result.IsFaulted)
                             return result;
-                        
+
                         List.Add(result.Value);
                         break;
                     }
@@ -91,7 +87,7 @@ internal ref struct InputBuffer
                         var result = CalculatorHelpers.OctalStringToDouble(num.Substring(2));
                         if (result.IsFaulted)
                             return result;
-                        
+
                         List.Add(result.Value);
                         break;
                     }
@@ -108,10 +104,13 @@ internal ref struct InputBuffer
         }
 
         Content = BufferContentType.Empty;
-        return new();
+        return new Result();
     }
 
-    public void Append(char c) => Buffer.Append(c);
+    public void Append(char c)
+    {
+        Buffer.Append(c);
+    }
 
     public void Append(char c, BufferContentType contentType)
     {
@@ -119,9 +118,15 @@ internal ref struct InputBuffer
         Content = contentType;
     }
 
-    public bool TryGetValueAt(int index, out char value) => Buffer.TryGetValueAt(index, out value);
+    public bool TryGetValueAt(int index, out char value)
+    {
+        return Buffer.TryGetValueAt(index, out value);
+    }
 #if DEBUG
-    public override string ToString() => Buffer.ToString();
+    public override string ToString()
+    {
+        return Buffer.ToString();
+    }
 #endif
 
     public char this[int index] => Buffer[index];

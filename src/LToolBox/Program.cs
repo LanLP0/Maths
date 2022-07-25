@@ -1,18 +1,16 @@
-﻿using LToolBox.Tools;
-using System.Text;
+﻿using System.Text;
 using Common.Cli;
 using JetBrains.Annotations;
+using LToolBox.Tools;
 using Microsoft.Extensions.DependencyInjection;
-using Serilog;
 
 namespace LToolBox;
 
-class Program
+internal class Program
 {
-    [NotNull]
-    private static Tool[] _tools = null!;
-    [NotNull]
-    private static string _promptTemplate = null!;
+    [NotNull] private static Tool[] _tools = null!;
+
+    [NotNull] private static string _promptTemplate = null!;
 
     public static void Main()
     {
@@ -29,13 +27,13 @@ class Program
                 var logger = new LoggerConfiguration()
                     .MinimumLevel.Verbose()
                     .WriteTo.Console();
-                
+
                 a.AddSerilog(logger.CreateLogger());
             })
 #endif
             .AddSingleton<Tool, ComplexMultiplyTool>()
-            .AddSingleton<Tool, Tools.DeltaTool>()
-            .AddSingleton<Tool, Tools.LCalcTool>()
+            .AddSingleton<Tool, DeltaTool>()
+            .AddSingleton<Tool, LCalcTool>()
             .AddSingleton<Tool, PolynomialTool>()
             .AddSingleton<Tool, FactTool>()
             .AddSingleton<Tool, IsPrimeTool>()
@@ -62,11 +60,8 @@ class Program
 
         Console.ForegroundColor = ConsoleColor.Yellow;
         Console.WriteLine("> Press `?` to get help about a tool, press <Ctrl-C> to exit");
-        
-        for (;;)
-        {
-            PromptTool();
-        }
+
+        for (;;) PromptTool();
     }
 
     private static void PromptTool()
@@ -96,7 +91,7 @@ class Program
 
                     Console.Write("> Help: ");
                     help = true;
-                    
+
                     continue;
                 }
                 case -1:
@@ -107,7 +102,7 @@ class Program
 
             if (id >= _tools.Length)
                 continue;
-            
+
             Console.ForegroundColor = ConsoleColor.White;
 
             var tool = _tools.ElementAt(id);

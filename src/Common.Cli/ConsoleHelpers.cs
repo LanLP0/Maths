@@ -5,6 +5,10 @@ namespace Common.Cli;
 
 internal static class ConsoleHelpers
 {
+    private static readonly Lazy<Regex> colorBlockRegEx = new(
+        () => new Regex("\\[(?<color>.*?)\\](?<text>[^[]*)\\[/\\k<color>\\]", RegexOptions.IgnoreCase),
+        true);
+
     public static void ClearLine(int? row = null)
     {
         var (currLeft, currTop) = Console.GetCursorPosition();
@@ -12,7 +16,7 @@ internal static class ConsoleHelpers
 
         Console.SetCursorPosition(0, row.Value);
         Console.Write(new string(' ', Console.WindowWidth));
-        
+
         Console.SetCursorPosition(currLeft, currTop);
     }
 
@@ -20,7 +24,7 @@ internal static class ConsoleHelpers
         bool isNegativeAllowed = true, string? defaultValue = null)
     {
         row ??= Console.CursorTop;
-        
+
         ClearLine(row);
 
         Console.SetCursorPosition(0, row.Value);
@@ -36,12 +40,9 @@ internal static class ConsoleHelpers
             Console.Write(defaultValue);
             pos += defaultValue.Length;
 
-            if (defaultValue[0] is '-')
-            {
-                isNegative = true;
-            }
+            if (defaultValue[0] is '-') isNegative = true;
         }
-        
+
         for (;;)
         {
             var input = Console.ReadKey(true);
@@ -52,7 +53,7 @@ internal static class ConsoleHelpers
                 {
                     if (pos is 0)
                         break;
-                    
+
                     Console.CursorLeft--;
                     pos--;
                     break;
@@ -118,7 +119,7 @@ internal static class ConsoleHelpers
                         if (buffer.Length >= lengthLimit)
                             break;
                     }
-                    
+
                     buffer.Insert(pos, input.KeyChar);
                     Console.CursorLeft++;
                     ReRender(buffer, left);
@@ -130,7 +131,7 @@ internal static class ConsoleHelpers
                 {
                     if (!isNegativeAllowed)
                         break;
-                    
+
                     if (isNegative)
                     {
                         isNegative = false;
@@ -175,12 +176,12 @@ internal static class ConsoleHelpers
             }
         }
     }
-    
+
     public static int? PromptInt(string prompt, int? row = null, int? lengthLimit = 5,
         bool isNegativeAllowed = true, string defaultValue = "")
     {
         row ??= Console.CursorTop;
-        
+
         ClearLine(row);
 
         Console.SetCursorPosition(0, row.Value);
@@ -196,12 +197,9 @@ internal static class ConsoleHelpers
             Console.Write(defaultValue);
             pos += defaultValue.Length;
 
-            if (defaultValue[0] is '-')
-            {
-                isNegative = true;
-            }
+            if (defaultValue[0] is '-') isNegative = true;
         }
-        
+
         for (;;)
         {
             var input = Console.ReadKey(true);
@@ -212,7 +210,7 @@ internal static class ConsoleHelpers
                 {
                     if (pos is 0)
                         break;
-                    
+
                     Console.CursorLeft--;
                     pos--;
                     break;
@@ -278,7 +276,7 @@ internal static class ConsoleHelpers
                         if (buffer.Length >= lengthLimit)
                             break;
                     }
-                    
+
                     buffer.Insert(pos, input.KeyChar);
                     Console.CursorLeft++;
                     ReRender(buffer, left);
@@ -290,7 +288,7 @@ internal static class ConsoleHelpers
                 {
                     if (!isNegativeAllowed)
                         break;
-                    
+
                     if (isNegative)
                     {
                         isNegative = false;
@@ -349,14 +347,11 @@ internal static class ConsoleHelpers
 
             switch (input)
             {
-                case {Key: ConsoleKey.Enter}:
+                case { Key: ConsoleKey.Enter }:
                 {
                     if (buffer.Length is 0)
                     {
-                        if (required)
-                        {
-                            continue;
-                        }
+                        if (required) continue;
 
                         Console.WriteLine();
                         return null;
@@ -368,6 +363,7 @@ internal static class ConsoleHelpers
                         Console.WriteLine();
                         return selection;
                     }
+
                     break;
                 }
                 default:
@@ -377,13 +373,13 @@ internal static class ConsoleHelpers
 
                     if (buffer.Length >= maxLength)
                         continue;
-                    
+
                     buffer.Append(char.ToLower(input.KeyChar));
                     Console.Write(char.ToLower(input.KeyChar));
 
                     break;
                 }
-                case {Key: ConsoleKey.Backspace}:
+                case { Key: ConsoleKey.Backspace }:
                 {
                     if (buffer.Length is 0)
                         continue;
@@ -399,26 +395,22 @@ internal static class ConsoleHelpers
             }
         }
     }
-    
+
     private static void ReRender(StringBuilder buffer, int left)
     {
         var (currLeft, currTop) = Console.GetCursorPosition();
         Console.CursorLeft = left;
-        
+
         Console.Write(new string(' ', Math.Clamp(Console.WindowWidth - left, 0, int.MaxValue)));
         Console.SetCursorPosition(left, currTop);
         Console.Write(buffer);
 
         Console.CursorLeft = currLeft;
     }
-    
-    private static Lazy<Regex> colorBlockRegEx = new(
-        ()=>  new Regex("\\[(?<color>.*?)\\](?<text>[^[]*)\\[/\\k<color>\\]", RegexOptions.IgnoreCase), 
-        isThreadSafe: true);
-    
+
     /// <summary>
-    /// Allows a string to be written with embedded color values using:
-    /// This is [red]Red[/red] text and this is [cyan]Blue[/blue] text
+    ///     Allows a string to be written with embedded color values using:
+    ///     This is [red]Red[/red] text and this is [cyan]Blue[/blue] text
     /// </summary>
     /// <param name="text">Text to display</param>
     /// <param name="baseTextColor">Base text color</param>
@@ -432,8 +424,8 @@ internal static class ConsoleHelpers
             return;
         }
 
-        int at = text.IndexOf('[');
-        int at2 = text.IndexOf(']');
+        var at = text.IndexOf('[');
+        var at2 = text.IndexOf(']');
         if (at is -1 || at2 <= at)
         {
             WriteLine(text, baseTextColor);
@@ -453,8 +445,8 @@ internal static class ConsoleHelpers
             Write(text.Substring(0, match.Index), baseTextColor);
 
             // strip out the expression
-            string highlightText = match.Groups["text"].Value;
-            string colorVal = match.Groups["color"].Value;
+            var highlightText = match.Groups["text"].Value;
+            var colorVal = match.Groups["color"].Value;
 
             Write(highlightText, colorVal);
 
@@ -464,10 +456,10 @@ internal static class ConsoleHelpers
 
         Console.WriteLine();
     }
-    
+
     /// <summary>
-    /// Allows a string to be written with embedded color values using:
-    /// This is [red]Red[/red] text and this is [cyan]Blue[/blue] text
+    ///     Allows a string to be written with embedded color values using:
+    ///     This is [red]Red[/red] text and this is [cyan]Blue[/blue] text
     /// </summary>
     /// <param name="text">Text to display</param>
     /// <param name="baseTextColor">Base text color</param>
@@ -481,8 +473,8 @@ internal static class ConsoleHelpers
             return;
         }
 
-        int at = text.IndexOf('[');
-        int at2 = text.IndexOf(']');
+        var at = text.IndexOf('[');
+        var at2 = text.IndexOf(']');
         if (at is -1 || at2 <= at)
         {
             WriteLine(text, baseTextColor);
@@ -502,8 +494,8 @@ internal static class ConsoleHelpers
             Write(text.Substring(0, match.Index), baseTextColor);
 
             // strip out the expression
-            string highlightText = match.Groups["text"].Value;
-            string colorVal = match.Groups["color"].Value;
+            var highlightText = match.Groups["text"].Value;
+            var colorVal = match.Groups["color"].Value;
 
             Write(highlightText, colorVal);
 
@@ -511,9 +503,9 @@ internal static class ConsoleHelpers
             text = text.Substring(match.Index + match.Value.Length);
         }
     }
-    
+
     /// <summary>
-    /// WriteLine with color
+    ///     WriteLine with color
     /// </summary>
     /// <param name="text"></param>
     /// <param name="color"></param>
@@ -523,7 +515,9 @@ internal static class ConsoleHelpers
         {
             var oldColor = Console.ForegroundColor;
             if (color == oldColor)
+            {
                 Console.WriteLine(text);
+            }
             else
             {
                 Console.ForegroundColor = color.Value;
@@ -532,11 +526,13 @@ internal static class ConsoleHelpers
             }
         }
         else
+        {
             Console.WriteLine(text);
+        }
     }
 
     /// <summary>
-    /// Write with color
+    ///     Write with color
     /// </summary>
     /// <param name="text"></param>
     /// <param name="color"></param>
@@ -546,7 +542,9 @@ internal static class ConsoleHelpers
         {
             var oldColor = Console.ForegroundColor;
             if (color == oldColor)
+            {
                 Console.Write(text);
+            }
             else
             {
                 Console.ForegroundColor = color.Value;
@@ -555,11 +553,13 @@ internal static class ConsoleHelpers
             }
         }
         else
+        {
             Console.Write(text);
+        }
     }
 
     /// <summary>
-    /// Writes out a line with color specified as a string
+    ///     Writes out a line with color specified as a string
     /// </summary>
     /// <param name="text">Text to write</param>
     /// <param name="color">A console color. Must match ConsoleColors collection names (case insensitive)</param>
@@ -572,12 +572,8 @@ internal static class ConsoleHelpers
         }
 
         if (!EnumHelpers.TryParseFast(color, out var col))
-        {
             Write(text);
-        }
         else
-        {
             Write(text, col);
-        }
     }
 }

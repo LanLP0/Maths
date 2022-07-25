@@ -1,12 +1,12 @@
 using System.Text;
 
-namespace Common.Cli.Maths.Expressions;
+namespace Common.Maths.Expressions;
 
 internal class Element
 {
     public Element()
     {
-        Powers = new();
+        Powers = new Dictionary<int, int>();
     }
 
     public Element(double value, Dictionary<int, int> powers)
@@ -17,7 +17,7 @@ internal class Element
 
     public double Value { get; set; }
 
-    public Dictionary<int, int> Powers { get; private set; }
+    public Dictionary<int, int> Powers { get; }
 
     public static Element operator *(Element left, Element right)
     {
@@ -31,7 +31,7 @@ internal class Element
     private static Dictionary<int, int> MulPowerFromElements(Element left, Element right)
     {
         var result = left.Powers.ToDictionary(e => e.Key, e => e.Value);
-        
+
         foreach (var e in right.Powers)
         {
             if (result.ContainsKey(e.Key))
@@ -63,7 +63,7 @@ internal class Element
         {
             if (e.Value is 0)
                 continue;
-            
+
             buffer.Append("[Cyan]");
 
             buffer.Append((char)(e.Key % 26 + 97)); // Turn i into character from a-z
@@ -104,6 +104,6 @@ internal class Element
 
     public Element Clone()
     {
-        return new(Value, Powers.ToDictionary(e => e.Key, e => e.Value));
+        return new Element(Value, Powers.ToDictionary(e => e.Key, e => e.Value));
     }
 }

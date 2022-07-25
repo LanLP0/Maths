@@ -1,4 +1,5 @@
 using Common.Cli;
+using Common.Maths;
 
 namespace LToolBox.Tools;
 
@@ -21,8 +22,8 @@ internal class PolynomialTool : Tool
 
             switch (input)
             {
-                case {Key: ConsoleKey.LeftArrow}:
-                case {Key: ConsoleKey.H}:
+                case { Key: ConsoleKey.LeftArrow }:
+                case { Key: ConsoleKey.H }:
                 {
                     if (pos is 0)
                         continue;
@@ -30,8 +31,8 @@ internal class PolynomialTool : Tool
                     pos--;
                     break;
                 }
-                case {Key: ConsoleKey.RightArrow}:
-                case {Key: ConsoleKey.L}:
+                case { Key: ConsoleKey.RightArrow }:
+                case { Key: ConsoleKey.L }:
                 {
                     if (pos >= 2)
                         continue;
@@ -39,33 +40,34 @@ internal class PolynomialTool : Tool
                     pos++;
                     break;
                 }
-                case {Key: ConsoleKey.D0}:
-                case {Key: ConsoleKey.D1}:
-                case {Key: ConsoleKey.D2}:
-                case {Key: ConsoleKey.D3}:
-                case {Key: ConsoleKey.D4}:
-                case {Key: ConsoleKey.D5}:
-                case {Key: ConsoleKey.D6}:
-                case {Key: ConsoleKey.D7}:
-                case {Key: ConsoleKey.D8}:
-                case {Key: ConsoleKey.D9}:
-                case {Key: ConsoleKey.NumPad0}:
-                case {Key: ConsoleKey.NumPad1}:
-                case {Key: ConsoleKey.NumPad2}:
-                case {Key: ConsoleKey.NumPad3}:
-                case {Key: ConsoleKey.NumPad4}:
-                case {Key: ConsoleKey.NumPad5}:
-                case {Key: ConsoleKey.NumPad6}:
-                case {Key: ConsoleKey.NumPad7}:
-                case {Key: ConsoleKey.NumPad8}:
-                case {Key: ConsoleKey.NumPad9}:
+                case { Key: ConsoleKey.D0 }:
+                case { Key: ConsoleKey.D1 }:
+                case { Key: ConsoleKey.D2 }:
+                case { Key: ConsoleKey.D3 }:
+                case { Key: ConsoleKey.D4 }:
+                case { Key: ConsoleKey.D5 }:
+                case { Key: ConsoleKey.D6 }:
+                case { Key: ConsoleKey.D7 }:
+                case { Key: ConsoleKey.D8 }:
+                case { Key: ConsoleKey.D9 }:
+                case { Key: ConsoleKey.NumPad0 }:
+                case { Key: ConsoleKey.NumPad1 }:
+                case { Key: ConsoleKey.NumPad2 }:
+                case { Key: ConsoleKey.NumPad3 }:
+                case { Key: ConsoleKey.NumPad4 }:
+                case { Key: ConsoleKey.NumPad5 }:
+                case { Key: ConsoleKey.NumPad6 }:
+                case { Key: ConsoleKey.NumPad7 }:
+                case { Key: ConsoleKey.NumPad8 }:
+                case { Key: ConsoleKey.NumPad9 }:
                 {
-                    var val = ConsoleHelpers.PromptIntAndClearLine("Value: ", row + 1, defaultValue: EnumHelpers.FastConsoleKeyToNumberString(input.Key));
+                    var val = ConsoleHelpers.PromptIntAndClearLine("Value: ", row + 1,
+                        defaultValue: EnumHelpers.FastConsoleKeyToNumberString(input.Key));
                     Console.CursorTop = row;
 
                     if (!val.HasValue)
                         continue;
-                    
+
                     switch (pos)
                     {
                         case 0:
@@ -84,17 +86,20 @@ internal class PolynomialTool : Tool
                             break;
                         }
                     }
-                    
+
+                    if (pos < 2)
+                        pos++;
+
                     break;
                 }
-                case {KeyChar: '-'}:
+                case { KeyChar: '-' }:
                 {
                     var val = ConsoleHelpers.PromptIntAndClearLine("Value: ", row + 1, defaultValue: "-");
                     Console.CursorTop = row;
 
                     if (!val.HasValue)
                         continue;
-                    
+
                     switch (pos)
                     {
                         case 0:
@@ -113,16 +118,19 @@ internal class PolynomialTool : Tool
                             break;
                         }
                     }
-                    
+
+                    if (pos < 2)
+                        pos++;
+
                     break;
                 }
-                case {Key: ConsoleKey.Q}:
-                case {Key: ConsoleKey.Escape}:
+                case { Key: ConsoleKey.Q }:
+                case { Key: ConsoleKey.Escape }:
                 {
                     Console.WriteLine();
                     return;
                 }
-                case {Key: ConsoleKey.Enter}:
+                case { Key: ConsoleKey.Enter }:
                 {
                     if (a is 0 && b is 0 && c is 0)
                         continue;
@@ -134,13 +142,13 @@ internal class PolynomialTool : Tool
 
             if (input.Key is ConsoleKey.Enter)
                 break;
-            
+
             ReRenderExp(a, b, c, pos);
         }
 
         Console.WriteLine();
         Console.Write("Result: ");
-        switch (Common.Cli.Maths.Polynomial.Calc2(a, b, c, out var result1, out var result2))
+        switch (Polynomial.Calc2(a, b, c, out var result1, out var result2))
         {
             case -1:
             {
@@ -173,7 +181,7 @@ internal class PolynomialTool : Tool
     {
         Console.CursorLeft = 0;
         ConsoleHelpers.ClearLine();
-        
+
         RenderVariable(a, 2, pos is 0);
         Console.Write(" + ");
         RenderVariable(b, 1, pos is 1);
@@ -189,13 +197,13 @@ internal class PolynomialTool : Tool
         Console.Write(val);
 
         Console.ForegroundColor = ConsoleColor.Cyan;
-        
+
         if (power <= 0)
         {
             Console.ForegroundColor = ConsoleColor.White;
             return;
         }
-        
+
         Console.Write('x');
 
         if (power <= 1)
@@ -203,7 +211,7 @@ internal class PolynomialTool : Tool
             Console.ForegroundColor = ConsoleColor.White;
             return;
         }
-        
+
         Console.Write('^');
         Console.Write(power);
 

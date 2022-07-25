@@ -1,4 +1,5 @@
 # LCalc
+
 A fast and efficient string calculator  
 **Usage**  
 lcalc {expression}  
@@ -9,7 +10,7 @@ Calculate an expression with optional arguments
 `&{name}`  Set calculator argument  
 Arguments:
 > `step` Show each step  
-> `raw` See raw value  
+> `raw` See raw value
 
 **__Comparison operators__**
 > `==` Equal  
@@ -18,12 +19,12 @@ Arguments:
 > `<=` Less than or equal  
 > `>` Greater than  
 > `<` Less than
-> 
-**__Calculation operators__**  
+>
+**__Calculation operators__**
 > `+` `-` `*` `/` `^` `%` `!` Standard operators  
 > `|` `&` `^^` `~` `>>` `<<` Bitwise operators
-> 
-**__Functions__**  
+>
+**__Functions__**
 > Use: `functionName([arguments])`  
 > Custom function: `[{functionName}([arg...])={body}]`  
 > `abs({value})` Absolute value  

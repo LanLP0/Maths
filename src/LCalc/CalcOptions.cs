@@ -1,4 +1,4 @@
-namespace LCalc.Helpers;
+namespace LCalc;
 
 internal ref struct CalcOptions
 {

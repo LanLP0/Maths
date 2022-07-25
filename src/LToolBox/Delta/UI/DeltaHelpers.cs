@@ -9,21 +9,21 @@ internal static class DeltaHelpers
     public static DeltaFraction? PromptDelta(int? row = null)
     {
         row ??= Console.CursorTop;
-        
+
         Console.SetCursorPosition(0, row.Value + 3);
-        
+
         var isUpper = true;
-        int pos = 0;
+        var pos = 0;
         var deltaFraction = new DeltaFraction
         {
-            T0 = { NumberPart = 0, Power = 2, PowerOfA = 0},
-            T1 = { NumberPart = 0, Power = 1, PowerOfA = 0},
-            T2 = { NumberPart = 0, Power = 0, PowerOfA = 0},
+            T0 = { NumberPart = 0, Power = 2, PowerOfA = 0 },
+            T1 = { NumberPart = 0, Power = 1, PowerOfA = 0 },
+            T2 = { NumberPart = 0, Power = 0, PowerOfA = 0 },
             B0 = { NumberPart = 0, Power = 2 },
             B1 = { NumberPart = 0, Power = 1 },
             B2 = { NumberPart = 0, Power = 0 }
         };
-        
+
         RenderDeltaFraction(deltaFraction, (isUpper, pos), row);
 
         for (;;)
@@ -32,8 +32,8 @@ internal static class DeltaHelpers
 
             switch (input)
             {
-                case {Key: ConsoleKey.DownArrow}:
-                case {Key: ConsoleKey.J}:
+                case { Key: ConsoleKey.DownArrow }:
+                case { Key: ConsoleKey.J }:
                 {
                     if (!isUpper)
                         break;
@@ -41,8 +41,8 @@ internal static class DeltaHelpers
                     isUpper = false;
                     break;
                 }
-                case {Key: ConsoleKey.UpArrow}:
-                case {Key: ConsoleKey.K}:
+                case { Key: ConsoleKey.UpArrow }:
+                case { Key: ConsoleKey.K }:
                 {
                     if (isUpper)
                         break;
@@ -50,8 +50,8 @@ internal static class DeltaHelpers
                     isUpper = true;
                     break;
                 }
-                case {Key: ConsoleKey.LeftArrow}:
-                case {Key: ConsoleKey.H}:
+                case { Key: ConsoleKey.LeftArrow }:
+                case { Key: ConsoleKey.H }:
                 {
                     if (pos is 0)
                         break;
@@ -59,8 +59,8 @@ internal static class DeltaHelpers
                     pos--;
                     break;
                 }
-                case {Key: ConsoleKey.RightArrow}:
-                case {Key: ConsoleKey.L}:
+                case { Key: ConsoleKey.RightArrow }:
+                case { Key: ConsoleKey.L }:
                 {
                     if (pos >= 2)
                         break;
@@ -68,28 +68,29 @@ internal static class DeltaHelpers
                     pos++;
                     break;
                 }
-                case {Key: ConsoleKey.D0}:
-                case {Key: ConsoleKey.D1}:
-                case {Key: ConsoleKey.D2}:
-                case {Key: ConsoleKey.D3}:
-                case {Key: ConsoleKey.D4}:
-                case {Key: ConsoleKey.D5}:
-                case {Key: ConsoleKey.D6}:
-                case {Key: ConsoleKey.D7}:
-                case {Key: ConsoleKey.D8}:
-                case {Key: ConsoleKey.D9}:
-                case {Key: ConsoleKey.NumPad0}:
-                case {Key: ConsoleKey.NumPad1}:
-                case {Key: ConsoleKey.NumPad2}:
-                case {Key: ConsoleKey.NumPad3}:
-                case {Key: ConsoleKey.NumPad4}:
-                case {Key: ConsoleKey.NumPad5}:
-                case {Key: ConsoleKey.NumPad6}:
-                case {Key: ConsoleKey.NumPad7}:
-                case {Key: ConsoleKey.NumPad8}:
-                case {Key: ConsoleKey.NumPad9}:
+                case { Key: ConsoleKey.D0 }:
+                case { Key: ConsoleKey.D1 }:
+                case { Key: ConsoleKey.D2 }:
+                case { Key: ConsoleKey.D3 }:
+                case { Key: ConsoleKey.D4 }:
+                case { Key: ConsoleKey.D5 }:
+                case { Key: ConsoleKey.D6 }:
+                case { Key: ConsoleKey.D7 }:
+                case { Key: ConsoleKey.D8 }:
+                case { Key: ConsoleKey.D9 }:
+                case { Key: ConsoleKey.NumPad0 }:
+                case { Key: ConsoleKey.NumPad1 }:
+                case { Key: ConsoleKey.NumPad2 }:
+                case { Key: ConsoleKey.NumPad3 }:
+                case { Key: ConsoleKey.NumPad4 }:
+                case { Key: ConsoleKey.NumPad5 }:
+                case { Key: ConsoleKey.NumPad6 }:
+                case { Key: ConsoleKey.NumPad7 }:
+                case { Key: ConsoleKey.NumPad8 }:
+                case { Key: ConsoleKey.NumPad9 }:
                 {
-                    var val = ConsoleHelpers.PromptIntAndClearLine("Value: ", row.Value + 3, defaultValue: EnumHelpers.FastConsoleKeyToNumberString(input.Key));
+                    var val = ConsoleHelpers.PromptIntAndClearLine("Value: ", row.Value + 3,
+                        defaultValue: EnumHelpers.FastConsoleKeyToNumberString(input.Key));
 
                     if (!val.HasValue)
                         break;
@@ -114,6 +115,16 @@ internal static class DeltaHelpers
                                 break;
                             }
                         }
+
+                        if (pos < 2)
+                        {
+                            pos++;
+                        }
+                        else
+                        {
+                            pos = 0;
+                            isUpper = false;
+                        }
                     }
                     else
                     {
@@ -135,11 +146,14 @@ internal static class DeltaHelpers
                                 break;
                             }
                         }
+
+                        if (pos < 2)
+                            pos++;
                     }
 
                     break;
                 }
-                case {KeyChar: '-'}:
+                case { KeyChar: '-' }:
                 {
                     var val = ConsoleHelpers.PromptIntAndClearLine("Value: ", row.Value + 3, defaultValue: "-");
 
@@ -147,7 +161,6 @@ internal static class DeltaHelpers
                         break;
 
                     if (isUpper)
-                    {
                         switch (pos)
                         {
                             case 0:
@@ -166,9 +179,7 @@ internal static class DeltaHelpers
                                 break;
                             }
                         }
-                    }
                     else
-                    {
                         switch (pos)
                         {
                             case 0:
@@ -187,23 +198,22 @@ internal static class DeltaHelpers
                                 break;
                             }
                         }
-                    }
 
                     break;
                 }
-                case {Key: ConsoleKey.Q}:
-                case {Key: ConsoleKey.Escape}:
+                case { Key: ConsoleKey.Q }:
+                case { Key: ConsoleKey.Escape }:
                 {
                     return null;
                 }
-                case {Key: ConsoleKey.Enter}:
+                case { Key: ConsoleKey.Enter }:
                 {
                     if ((deltaFraction.T0.IsZero() &&
-                        deltaFraction.T1.IsZero() &&
-                        deltaFraction.T2.IsZero()) ||
+                         deltaFraction.T1.IsZero() &&
+                         deltaFraction.T2.IsZero()) ||
                         (deltaFraction.B0.IsZero() &&
-                        deltaFraction.B1.IsZero() &&
-                        deltaFraction.B2.IsZero()))
+                         deltaFraction.B1.IsZero() &&
+                         deltaFraction.B2.IsZero()))
                         break;
 
                     return deltaFraction;
@@ -211,16 +221,17 @@ internal static class DeltaHelpers
                 default:
                     continue;
             }
-            
+
             RenderDeltaFraction(deltaFraction, (isUpper, pos), row);
         }
     }
 
-    public static void RenderDeltaFraction(DeltaFraction deltaFraction, (bool isUpper, int pos) selected, int? row = null)
+    public static void RenderDeltaFraction(DeltaFraction deltaFraction, (bool isUpper, int pos) selected,
+        int? row = null)
     {
         StringBuilder buffer1 = new();
         StringBuilder buffer2 = new();
-        
+
         if (selected.isUpper)
         {
             RenderSimpleVariableToBuffer(deltaFraction.T0, selected.pos is 0, buffer1);
@@ -278,7 +289,7 @@ internal static class DeltaHelpers
 
         buffer1.Insert(0, "      ");
         buffer1.Append(new string(' ', Math.Clamp(Console.WindowWidth - buffer1RealLength - 6, 0, int.MaxValue)));
-        
+
         buffer1.Append("\n A = ");
         buffer1.Append(new string('-', dashCharsCount));
         buffer1.Append(new string(' ', Math.Clamp(Console.WindowWidth - dashCharsCount - 5, 0, int.MaxValue)));
@@ -286,7 +297,7 @@ internal static class DeltaHelpers
         buffer1.Append("\n      ");
         buffer1.Append(buffer2);
         buffer1.Append(new string(' ', Math.Clamp(Console.WindowWidth - buffer2RealLength - 6, 0, int.MaxValue)));
-        
+
         ConsoleHelpers.WriteEmbeddedColorLine(buffer1.ToString());
         Console.SetCursorPosition(0, currTop);
     }
@@ -294,7 +305,7 @@ internal static class DeltaHelpers
     public static void RenderFinalDelta(FinalDelta finalDelta, int? row = null)
     {
         var strBuilder = new StringBuilder();
-        
+
         row ??= Console.CursorTop;
         var currTop = Console.CursorTop;
         var currLeft = Console.CursorLeft;
@@ -305,27 +316,30 @@ internal static class DeltaHelpers
         RenderSimpleVariableToBuffer(finalDelta.T1, strBuilder);
         strBuilder.Append("[Cyan]A[/Cyan] + ");
         RenderSimpleVariableToBuffer(finalDelta.T2, strBuilder);
-        
+
         ConsoleHelpers.WriteEmbeddedColorLine(strBuilder.ToString());
         Console.SetCursorPosition(currLeft, currTop);
     }
 
-    private static void RenderSimpleVariableToBuffer(SimpleVariable simpleVariable, StringBuilder buffer) =>
+    private static void RenderSimpleVariableToBuffer(SimpleVariable simpleVariable, StringBuilder buffer)
+    {
         RenderSimpleVariableToBuffer(simpleVariable, false, buffer);
+    }
 
-    private static void RenderSimpleVariableToBuffer(SimpleVariable simpleVariable, bool isSelected, StringBuilder buffer)
+    private static void RenderSimpleVariableToBuffer(SimpleVariable simpleVariable, bool isSelected,
+        StringBuilder buffer)
     {
         if (isSelected)
             buffer.Append("[Green]");
-        
+
         buffer.Append(simpleVariable.NumberPart);
 
         if (isSelected)
             buffer.Append("[/Green]");
-        
+
         if (simpleVariable.Power is 0)
             return;
-        
+
         buffer.Append("[Cyan]x");
         if (simpleVariable.Power is 1)
         {

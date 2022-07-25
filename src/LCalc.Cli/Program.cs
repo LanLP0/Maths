@@ -1,4 +1,5 @@
-﻿using LCalc.Helpers;
+﻿using LCalc;
+
 // using org.mariuszgromada.math.mxparser;
 
 internal class Program
@@ -6,18 +7,17 @@ internal class Program
     public static void Main(string[] args)
     {
         Console.CancelKeyPress += (_, _) => Environment.Exit(0);
-        
+
         var input = string.Join(' ', args);
         if (args.Length is not 0)
         {
             Console.WriteLine(Calculator.Calc(input));
             return;
         }
-        
+
         Console.WriteLine("Press ^C to exit");
-        
+
         for (;;)
-        {
             try
             {
                 Console.Write("Expression: ");
@@ -30,8 +30,7 @@ internal class Program
                 Console.WriteLine(e);
                 Console.ForegroundColor = ConsoleColor.Gray;
             }
-        }
-        
+
         // for(;;)
         // {
         //     try

@@ -1,17 +1,20 @@
 ﻿// ReSharper disable CommentTypo
+
 using System.Text;
-using Common.Cli.Maths.Extension;
+using Common.Maths.Extension;
+using Common.Results;
+using LCalc.Helpers;
 using LCalc.Helpers.CustomFunction;
 
-namespace LCalc.Helpers;
+namespace LCalc;
 
 /// <summary>
-///  A String Calculator
+///     A String Calculator
 /// </summary>
 public static class Calculator
 {
     /// <summary>
-    /// Calculate a string. This method shouldn't throw an error
+    ///     Calculate a string. This method shouldn't throw an error
     /// </summary>
     /// <param name="input">Expression</param>
     /// <returns>"Error: {error}" if there is an error. "Result: {result}" or "{steps}\nResult: {result}" otherwise</returns>
@@ -19,12 +22,13 @@ public static class Calculator
     {
         if (string.IsNullOrWhiteSpace(input))
             return "Error: No expression found";
-        
-        var splitResult = CalculatorHelpers.SplitInput(input.Trim().ToLower(), out var args, out var opts, out var functions);
+
+        var splitResult =
+            CalculatorHelpers.SplitInput(input.Trim().ToLower(), out var args, out var opts, out var functions);
         if (splitResult.IsFaulted)
             return HandleException(splitResult.Exception!);
         var math = splitResult.Value!;
-        
+
         InputHandler(ref math, args);
 
         var compare = TryCompare(math, functions, out var result1);
@@ -50,10 +54,11 @@ public static class Calculator
                 result = result2.ToString();
                 return $"Result: {result}";
             }
-            
+
             result = result2.Value.ToFraction();
             return $"Result: {result}";
         }
+
         result2 = Calculate(math, functions, out var stepsString);
         if (result2.IsFaulted)
             return HandleException(result2.Exception!);
@@ -63,7 +68,7 @@ public static class Calculator
             result = result2.ToString();
             return $"Result: {result}";
         }
-        
+
         result = result2.Value.ToFraction();
         return $"{stepsString}\nResult: {result}";
     }
@@ -160,7 +165,9 @@ public static class Calculator
                     maxLevel = level;
             }
             else if (str.StartsWith(')'))
+            {
                 level--;
+            }
 
         if (level is not 0)
             return Err<double>("Invalid number of brackets");
@@ -196,7 +203,8 @@ public static class Calculator
         return CalcByLevel(math, null, functions);
     }
 
-    private static Result<double> Calculate(List<CalcElement> math, CustomFunctionCollection functions, out string stepsString)
+    private static Result<double> Calculate(List<CalcElement> math, CustomFunctionCollection functions,
+        out string stepsString)
     {
         var maxLevel = 0;
         var level = 0;
@@ -208,7 +216,9 @@ public static class Calculator
                     maxLevel = level;
             }
             else if (str.StartsWith(')'))
+            {
                 level--;
+            }
 
         if (level is not 0)
         {
@@ -339,7 +349,7 @@ public static class Calculator
 
         if (math.Count is not 1)
             return Err<double>("Missing operator");
-        
+
         return math[0].GetValue();
     }
 }

@@ -1,4 +1,6 @@
-namespace LCalc.Helpers;
+using Common.Results;
+
+namespace LCalc;
 
 internal class CalcElement
 {
@@ -82,17 +84,23 @@ internal class CalcElement
 
     public static implicit operator CalcElement(string text)
     {
-        return new(text);
+        return new CalcElement(text);
     }
 
-    public static implicit operator CalcElement(char chr) => chr.ToString();
+    public static implicit operator CalcElement(char chr)
+    {
+        return chr.ToString();
+    }
 
     public static implicit operator CalcElement(double num)
     {
-        return new(num);
+        return new CalcElement(num);
     }
 
-    public double RiskyGetValue() => DoubleForm;
+    public double RiskyGetValue()
+    {
+        return DoubleForm;
+    }
 
     public Result<double> GetValue()
     {
@@ -109,7 +117,7 @@ internal class CalcElement
         if (DoubleForm is > long.MaxValue or < long.MinValue)
             return Err<long>(new OverflowException());
 
-        return Ok((long) DoubleForm);
+        return Ok((long)DoubleForm);
     }
 
     public Result<int> AsInt()
@@ -119,32 +127,47 @@ internal class CalcElement
         if (DoubleForm is > int.MaxValue or < int.MinValue)
             return Err<int>(new OverflowException());
 
-        return Ok<int>((int) DoubleForm);
+        return Ok((int)DoubleForm);
     }
 
-    public override string ToString() => StringForm;
+    public override string ToString()
+    {
+        return StringForm;
+    }
 
     public bool StartsWith(char value)
     {
         if (_doubleForm.HasValue)
             return false;
-        
+
         return StringForm.StartsWith(value);
     }
 
-    public bool Contains(char value) => StringForm.Contains(value);
+    public bool Contains(char value)
+    {
+        return StringForm.Contains(value);
+    }
 
-    public string Substring(int startIndex, int length) => StringForm.Substring(startIndex, length);
+    public string Substring(int startIndex, int length)
+    {
+        return StringForm.Substring(startIndex, length);
+    }
 
-    public int IndexOf(char value) => StringForm.IndexOf(value);
+    public int IndexOf(char value)
+    {
+        return StringForm.IndexOf(value);
+    }
 
     public bool EndsWith(char value)
     {
         if (_doubleForm.HasValue)
             return false;
-        
+
         return StringForm.EndsWith(value);
     }
 
-    public CalcElement CreateCopy() => new(_doubleForm, _stringForm);
+    public CalcElement CreateCopy()
+    {
+        return new CalcElement(_doubleForm, _stringForm);
+    }
 }

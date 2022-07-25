@@ -1,8 +1,11 @@
-namespace Common.Cli.Maths.Extension;
+namespace Common.Maths.Extension;
 
 internal static class NumericExtension
 {
-    public static double ToRadians(this double angle) => (Math.PI / 180) * angle;
+    public static double ToRadians(this double angle)
+    {
+        return Math.PI / 180 * angle;
+    }
 
     public static string ToFraction(this double num, short decimalPoints = 20)
     {
@@ -14,12 +17,13 @@ internal static class NumericExtension
             case double.NegativeInfinity:
                 return "∞";
         }
+
         var num1 = Math.Abs(num);
         double denominator = 1;
         for (var i = 0; i < decimalPoints; i++)
         {
             if (num1 % 1 < double.Epsilon * 1000) break;
-            
+
             num1 *= 10;
             denominator *= 10;
         }
