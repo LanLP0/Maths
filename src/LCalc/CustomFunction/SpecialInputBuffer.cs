@@ -1,7 +1,7 @@
-namespace LCalc.CustomFunction;
+namespace LCalc.Helpers.CustomFunction;
 
 using System.Text;
-using Extension;
+using Helpers;
 
 internal ref struct SpecialInputBuffer
 {

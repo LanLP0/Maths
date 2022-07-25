@@ -1,7 +1,7 @@
 using System.Text;
-using LCalc.Extension;
+using LCalc.Helpers;
 
-namespace LCalc;
+namespace LCalc.Helpers;
 
 internal ref struct InputBuffer
 {

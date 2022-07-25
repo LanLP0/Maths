@@ -1,4 +1,4 @@
-namespace LCalc;
+namespace LCalc.Helpers;
 
 internal class CalcElement
 {
@@ -20,6 +20,8 @@ internal class CalcElement
     {
         _doubleForm = num;
     }
+
+    public bool IsString => !_doubleForm.HasValue;
 
     public bool IsNumber
     {
@@ -122,7 +124,13 @@ internal class CalcElement
 
     public override string ToString() => StringForm;
 
-    public bool StartsWith(char value) => StringForm.StartsWith(value);
+    public bool StartsWith(char value)
+    {
+        if (_doubleForm.HasValue)
+            return false;
+        
+        return StringForm.StartsWith(value);
+    }
 
     public bool Contains(char value) => StringForm.Contains(value);
 
@@ -130,7 +138,13 @@ internal class CalcElement
 
     public int IndexOf(char value) => StringForm.IndexOf(value);
 
-    public bool EndsWith(char value) => StringForm.EndsWith(value);
+    public bool EndsWith(char value)
+    {
+        if (_doubleForm.HasValue)
+            return false;
+        
+        return StringForm.EndsWith(value);
+    }
 
     public CalcElement CreateCopy() => new(_doubleForm, _stringForm);
 }

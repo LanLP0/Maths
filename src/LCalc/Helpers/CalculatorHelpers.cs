@@ -1,9 +1,9 @@
 ﻿using Common.Cli.Maths;
 using Common.Cli.Maths.Extension;
-using LCalc.CustomFunction;
-using LCalc.Extension;
+using LCalc.Helpers;
+using LCalc.Helpers.CustomFunction;
 
-namespace LCalc;
+namespace LCalc.Helpers;
 
 internal static class CalculatorHelpers
 {
@@ -13,7 +13,11 @@ internal static class CalculatorHelpers
     {
         for (var i = 0; i < math.Count; i++)
         {
-            switch (math[i].StringForm)
+            var el = math[i];
+            if (!(el.IsString/* && el.StringForm.Length is not (1 or 2)*/))
+                continue;
+            
+            switch (el.StringForm)
             {
                 case "&":
                 {
@@ -128,12 +132,16 @@ internal static class CalculatorHelpers
 
     public static Result CalcExponent(List<CalcElement> math)
     {
-        var i = math.Count - 1;
-        for (;;)
+        // var i = math.Count - 1;
+        for (var i = math.Count - 1; i >= 0; i--)
         {
-            i = math.FindLastIndex(i, a => a.StringForm is "^");
-            if (i is -1)
-                return Ok();
+            // i = math.FindLastIndex(i, a => !a.IsString && a.StringForm is "^");
+            // if (i is -1)
+            //     return Ok();
+            var e = math[i];
+            if (!(e.IsString && e.StringForm.Length is 1 && e.StringForm[0] is '^'))
+                continue;
+            
             var check = Guard.IndexInRange(math, i - 1, i + 1);
             if (check.IsFaulted)
                 return check;
@@ -151,28 +159,35 @@ internal static class CalculatorHelpers
             math.RemoveRange(i - 1, 2);
             i--;
         }
+
+        return Ok();
     }
 
     public static Result CalcFactorial(List<CalcElement> math)
     {
-        var index = 0;
-        for (;;)
+        // var index = 0;
+        for (var i = 0; i < math.Count; i++)
         {
-            index = math.FindIndex(index, a => a.StringForm is "!");
-            if (index is -1)
-                return Ok();
+            // index = math.FindIndex(index, a => a.IsString && a.StringForm is "!");
+            var e = math[i];
+            // if (index is -1)
+            //     return Ok();
+            if (!(e.IsString && e.StringForm.Length is 1 && e.StringForm[0] is '!'))
+                continue;
 
-            var left = math[index - 1];
+            var left = math[i - 1];
             if (!left.IsInt)
                 return Err($"{left.StringForm} is not an integer");
 
             var val = left.RiskyGetValue();
 
-            for (var i = 1; i < val; i++)
-                left.DoubleForm = left.RiskyGetValue() * i;
+            for (var o = 1; o < val; o++)
+                left.DoubleForm = left.RiskyGetValue() * o;
 
-            math.RemoveAt(index);
+            math.RemoveAt(i);
         }
+
+        return Ok();
     }
 
     public static Result CalcCbrt(List<CalcElement> math)

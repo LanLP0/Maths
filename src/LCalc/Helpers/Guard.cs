@@ -1,4 +1,4 @@
-namespace LCalc;
+namespace LCalc.Helpers;
 
 internal static class Guard
 {

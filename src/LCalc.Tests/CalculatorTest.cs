@@ -1,8 +1,8 @@
 using Xunit;
 
-namespace LCalc.Tests;
+namespace LCalc.Helpers.Tests;
 
-internal class CalculatorTest
+public class CalculatorTest
 {
     [Theory]
     // Normal

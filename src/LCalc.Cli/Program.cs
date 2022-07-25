@@ -1,4 +1,4 @@
-﻿using LCalc;
+﻿using LCalc.Helpers;
 // using org.mariuszgromada.math.mxparser;
 
 internal class Program

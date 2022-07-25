@@ -1,9 +1,9 @@
 ﻿// ReSharper disable CommentTypo
 using System.Text;
 using Common.Cli.Maths.Extension;
-using LCalc.CustomFunction;
+using LCalc.Helpers.CustomFunction;
 
-namespace LCalc;
+namespace LCalc.Helpers;
 
 /// <summary>
 ///  A String Calculator
@@ -179,7 +179,7 @@ public static class Calculator
                 string? opt = null;
                 if (math[i].Length is not 1)
                     opt = math[i].Substring(0, math[i].Length - 1);
-                var count = math.FindIndex(i + 1, a => a.StringForm.EndsWith(')')) - i - 1;
+                var count = math.FindIndex(i + 1, a => a.EndsWith(')')) - i - 1;
                 var calculation = math.GetRange(i + 1, count);
                 math.RemoveRange(i, count + 1);
                 var result = CalcByLevel(calculation, opt, functions);
@@ -231,7 +231,7 @@ public static class Calculator
                 string? opt = null;
                 if (math[i].Length is not 1)
                     opt = math[i].Substring(0, math[i].Length - 1);
-                var count = math.FindIndex(i + 1, a => a.StringForm.EndsWith(')')) - i - 1;
+                var count = math.FindIndex(i + 1, a => a.EndsWith(')')) - i - 1;
                 var calculation = math.GetRange(i + 1, count);
                 math.RemoveRange(i, count + 1);
                 var result = CalcByLevel(calculation, opt, functions);

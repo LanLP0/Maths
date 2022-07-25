@@ -14,6 +14,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\Common.Cli\Common.Cli.csproj" />
       <ProjectReference Include="..\Delta.Core\Delta.Core.csproj" />
       <ProjectReference Include="..\LCalc\LCalc.Core.csproj" />
     </ItemGroup>

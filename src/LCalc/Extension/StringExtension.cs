@@ -1,4 +1,4 @@
-namespace LCalc.Extension;
+namespace LCalc.Helpers;
 
 internal static class StringExtension
 {

@@ -1,8 +1,6 @@
-using System.Reflection;
+namespace LCalc.Helpers;
 
-namespace LCalc.Extension;
-
-internal static class ResultExtension
+internal static class ResultHelpers
 {
     public static Result<T> Ok<T>(T value)
     {

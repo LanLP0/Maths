@@ -1,3 +1,4 @@
 ﻿using BenchmarkDotNet.Running;
+using Benchmarks;
 
-BenchmarkRunner.Run<Benchmarks.Benchmarks>();
+BenchmarkRunner.Run<LCalcBenchmarks>();

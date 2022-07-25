@@ -1,1 +1,1 @@
-global using static LCalc.Extension.ResultExtension;
+global using static LCalc.Helpers.ResultHelpers;

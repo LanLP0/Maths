@@ -1,5 +1,5 @@
 // ReSharper disable MemberCanBePrivate.Global
-namespace LCalc;
+namespace LCalc.Helpers;
 
 internal readonly ref struct Result<T>
 {

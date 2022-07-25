@@ -1,5 +1,5 @@
 
-namespace LCalc.CustomFunction;
+namespace LCalc.Helpers.CustomFunction;
 
 internal class CustomFunctionCollection
 {

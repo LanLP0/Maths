@@ -1,6 +1,6 @@
 using System.Text;
 
-namespace LCalc.Extension;
+namespace LCalc.Helpers;
 
 internal static class StringBuilderExtension
 {

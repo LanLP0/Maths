@@ -1,4 +1,4 @@
-using LCalc;
+using LCalc.Helpers;
 
 namespace LToolBox.Tools;
 

@@ -1,6 +1,6 @@
-using LCalc.Extension;
+using LCalc.Helpers;
 
-namespace LCalc.CustomFunction;
+namespace LCalc.Helpers.CustomFunction;
 
 internal class CustomFunction
 {
