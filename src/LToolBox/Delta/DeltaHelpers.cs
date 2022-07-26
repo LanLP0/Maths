@@ -2,7 +2,7 @@ using System.Text;
 using Common.Cli;
 using Delta.Core;
 
-namespace LToolBox.Delta.UI;
+namespace LToolBox.Delta;
 
 internal static class DeltaHelpers
 {
@@ -226,7 +226,7 @@ internal static class DeltaHelpers
         }
     }
 
-    public static void RenderDeltaFraction(DeltaFraction deltaFraction, (bool isUpper, int pos) selected,
+    private static void RenderDeltaFraction(DeltaFraction deltaFraction, (bool isUpper, int pos) selected,
         int? row = null)
     {
         StringBuilder buffer1 = new();

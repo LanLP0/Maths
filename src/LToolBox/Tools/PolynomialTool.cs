@@ -1,5 +1,6 @@
 using Common.Cli;
 using Common.Maths;
+using Common.Maths.Extension;
 
 namespace LToolBox.Tools;
 
@@ -162,14 +163,14 @@ internal class PolynomialTool : Tool
             }
             case 1:
             {
-                Console.Write(result1!.Value);
+                Console.Write(result1!.Value.ToFraction());
                 break;
             }
             case 2:
             {
-                Console.Write(result1!.Value);
+                Console.Write(result1!.Value.ToFraction());
                 Console.Write(", ");
-                Console.Write(result2!.Value);
+                Console.Write(result2!.Value.ToFraction());
                 break;
             }
         }

@@ -11,7 +11,7 @@ internal class IsPrimeTool : Tool
 
     public override void Execute()
     {
-        var value = ConsoleHelpers.PromptInt("Number: ", null, 6, false);
+        var value = ConsoleHelpers.PromptInt("Number: ", null, 9, false);
         if (value is null)
             return;
 

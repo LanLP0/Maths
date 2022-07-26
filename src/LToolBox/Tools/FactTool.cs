@@ -11,7 +11,7 @@ internal class FactTool : Tool
 
     public override void Execute()
     {
-        var value = ConsoleHelpers.PromptInt("Number: ", null, 8, false);
+        var value = ConsoleHelpers.PromptInt("Number: ", null, 9, false);
         if (value is null)
             return;
 
