@@ -1,6 +1,5 @@
 ﻿using System.Text;
 using Common.Cli;
-using JetBrains.Annotations;
 using LToolBox.Tools;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -8,9 +7,9 @@ namespace LToolBox;
 
 internal class Program
 {
-    [NotNull] private static Tool[] _tools = null!;
+    private static Tool[] _tools = null!;
 
-    [NotNull] private static string _promptTemplate = null!;
+    private static string _promptTemplate = null!;
 
     public static void Main()
     {
