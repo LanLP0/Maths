@@ -14,7 +14,7 @@ internal class PolynomialTool : Tool
     {
         double a = 0, b = 0, c = 0;
         var pos = 0;
-        var row = Console.CursorTop;
+        var top = Console.CursorTop;
         ReRenderExp(a, b, c, pos);
 
         for (;;)
@@ -62,9 +62,9 @@ internal class PolynomialTool : Tool
                 case { Key: ConsoleKey.NumPad8 }:
                 case { Key: ConsoleKey.NumPad9 }:
                 {
-                    var val = ConsoleHelpers.PromptIntAndClearLine("Value: ", row + 1,
+                    var val = ConsoleHelpers.PromptIntAndClearLine("Value: ", top + 1,
                         defaultValue: EnumHelpers.FastConsoleKeyToNumberString(input.Key));
-                    Console.CursorTop = row;
+                    Console.CursorTop = top;
 
                     if (!val.HasValue)
                         continue;
@@ -95,8 +95,8 @@ internal class PolynomialTool : Tool
                 }
                 case { KeyChar: '-' }:
                 {
-                    var val = ConsoleHelpers.PromptIntAndClearLine("Value: ", row + 1, defaultValue: "-");
-                    Console.CursorTop = row;
+                    var val = ConsoleHelpers.PromptIntAndClearLine("Value: ", top + 1, defaultValue: "-");
+                    Console.CursorTop = top;
 
                     if (!val.HasValue)
                         continue;

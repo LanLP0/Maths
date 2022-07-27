@@ -6,11 +6,11 @@ namespace LToolBox.Delta;
 
 internal static class DeltaHelpers
 {
-    public static DeltaFraction? PromptDelta(int? row = null)
+    public static DeltaFraction? PromptDelta(int? top = null)
     {
-        row ??= Console.CursorTop;
+        top ??= Console.CursorTop;
 
-        Console.SetCursorPosition(0, row.Value + 3);
+        Console.SetCursorPosition(0, top.Value + 3);
 
         var isUpper = true;
         var pos = 0;
@@ -24,7 +24,7 @@ internal static class DeltaHelpers
             B2 = { NumberPart = 0, Power = 0 }
         };
 
-        RenderDeltaFraction(deltaFraction, (isUpper, pos), row);
+        RenderDeltaFraction(deltaFraction, (isUpper, pos), top);
 
         for (;;)
         {
@@ -89,7 +89,7 @@ internal static class DeltaHelpers
                 case { Key: ConsoleKey.NumPad8 }:
                 case { Key: ConsoleKey.NumPad9 }:
                 {
-                    var val = ConsoleHelpers.PromptIntAndClearLine("Value: ", row.Value + 3,
+                    var val = ConsoleHelpers.PromptIntAndClearLine("Value: ", top.Value + 3,
                         defaultValue: EnumHelpers.FastConsoleKeyToNumberString(input.Key));
 
                     if (!val.HasValue)
@@ -155,7 +155,7 @@ internal static class DeltaHelpers
                 }
                 case { KeyChar: '-' }:
                 {
-                    var val = ConsoleHelpers.PromptIntAndClearLine("Value: ", row.Value + 3, defaultValue: "-");
+                    var val = ConsoleHelpers.PromptIntAndClearLine("Value: ", top.Value + 3, defaultValue: "-");
 
                     if (!val.HasValue)
                         break;
@@ -222,12 +222,12 @@ internal static class DeltaHelpers
                     continue;
             }
 
-            RenderDeltaFraction(deltaFraction, (isUpper, pos), row);
+            RenderDeltaFraction(deltaFraction, (isUpper, pos), top);
         }
     }
 
     private static void RenderDeltaFraction(DeltaFraction deltaFraction, (bool isUpper, int pos) selected,
-        int? row = null)
+        int? top = null)
     {
         StringBuilder buffer1 = new();
         StringBuilder buffer2 = new();
@@ -283,9 +283,9 @@ internal static class DeltaHelpers
             buffer1RealLength += offset;
         }
 
-        row ??= Console.CursorTop;
+        top ??= Console.CursorTop;
         var currTop = Console.CursorTop;
-        Console.SetCursorPosition(0, row.Value);
+        Console.SetCursorPosition(0, top.Value);
 
         buffer1.Insert(0, "      ");
         buffer1.Append(new string(' ', Math.Clamp(Console.WindowWidth - buffer1RealLength - 6, 0, int.MaxValue)));
@@ -302,14 +302,14 @@ internal static class DeltaHelpers
         Console.SetCursorPosition(0, currTop);
     }
 
-    public static void RenderFinalDelta(FinalDelta finalDelta, int? row = null)
+    public static void RenderFinalDelta(FinalDelta finalDelta, int? top = null)
     {
         var strBuilder = new StringBuilder();
 
-        row ??= Console.CursorTop;
+        top ??= Console.CursorTop;
         var currTop = Console.CursorTop;
         var currLeft = Console.CursorLeft;
-        Console.SetCursorPosition(0, row.Value);
+        Console.SetCursorPosition(0, top.Value);
 
         RenderSimpleVariableToBuffer(finalDelta.T0, strBuilder);
         strBuilder.Append("[Cyan]A^2[/Cyan] + ");

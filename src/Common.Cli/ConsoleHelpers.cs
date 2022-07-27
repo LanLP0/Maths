@@ -9,25 +9,25 @@ internal static class ConsoleHelpers
         () => new Regex("\\[(?<color>.*?)\\](?<text>[^[]*)\\[/\\k<color>\\]", RegexOptions.IgnoreCase),
         true);
 
-    public static void ClearLine(int? row = null)
+    public static void ClearLine(int? top = null)
     {
         var (currLeft, currTop) = Console.GetCursorPosition();
-        row ??= currTop;
+        top ??= currTop;
 
-        Console.SetCursorPosition(0, row.Value);
+        Console.SetCursorPosition(0, top.Value);
         Console.Write(new string(' ', Console.WindowWidth));
 
         Console.SetCursorPosition(currLeft, currTop);
     }
 
-    public static int? PromptIntAndClearLine(string prompt, int? row = null, int? lengthLimit = 5,
+    public static int? PromptIntAndClearLine(string prompt, int? top = null, int? lengthLimit = 5,
         bool isNegativeAllowed = true, string? defaultValue = null)
     {
-        row ??= Console.CursorTop;
+        top ??= Console.CursorTop;
 
-        ClearLine(row);
+        ClearLine(top);
 
-        Console.SetCursorPosition(0, row.Value);
+        Console.SetCursorPosition(0, top.Value);
         Console.Write(prompt);
         var left = Console.CursorLeft;
 
@@ -152,7 +152,7 @@ internal static class ConsoleHelpers
                 case ConsoleKey.Escape:
                 case ConsoleKey.Q:
                 {
-                    ClearLine(row);
+                    ClearLine(top);
                     Console.CursorLeft = 0;
                     return null;
                 }
@@ -169,7 +169,7 @@ internal static class ConsoleHelpers
                             break;
                     }
 
-                    ClearLine(row);
+                    ClearLine(top);
                     Console.CursorLeft = 0;
                     return int.Parse(buffer.ToString());
                 }
@@ -177,14 +177,14 @@ internal static class ConsoleHelpers
         }
     }
 
-    public static int? PromptInt(string prompt, int? row = null, int? lengthLimit = 5,
+    public static int? PromptInt(string prompt, int? top = null, int? lengthLimit = 5,
         bool isNegativeAllowed = true, string defaultValue = "")
     {
-        row ??= Console.CursorTop;
+        top ??= Console.CursorTop;
 
-        ClearLine(row);
+        ClearLine(top);
 
-        Console.SetCursorPosition(0, row.Value);
+        Console.SetCursorPosition(0, top.Value);
         Console.Write(prompt);
         var left = Console.CursorLeft;
 
@@ -309,7 +309,7 @@ internal static class ConsoleHelpers
                 case ConsoleKey.Escape:
                 case ConsoleKey.Q:
                 {
-                    ClearLine(row);
+                    ClearLine(top);
                     Console.CursorLeft = 0;
                     return null;
                 }
@@ -333,7 +333,7 @@ internal static class ConsoleHelpers
         }
     }
 
-    public static string? ChooseOption(string prompt, string[] options, int row, bool required = true)
+    public static string? ChooseOption(string prompt, string[] options, int top, bool required = true)
     {
         Console.Write(prompt);
 
