@@ -40,11 +40,10 @@ internal class Delta
 
     private void HandlePower2(SimpleVariable aPart, SimpleVariable numPart)
     {
-        var middle = new SimpleVariable { PowerOfA = 1, NumberPart = aPart.NumberPart * numPart.NumberPart * 2 };
+        var middle = new SimpleVariable { NumberPart = aPart.NumberPart * numPart.NumberPart * 2 };
 
         numPart.NumberPart = (int)Math.Pow(numPart.NumberPart, 2);
         aPart.NumberPart = (int)Math.Pow(aPart.NumberPart, 2);
-        aPart.PowerOfA = 2;
 
         _l2.Add(aPart);
         _l0.Add(numPart);

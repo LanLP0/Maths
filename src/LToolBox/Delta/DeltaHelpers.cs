@@ -16,12 +16,12 @@ internal static class DeltaHelpers
         var pos = 0;
         var deltaFraction = new DeltaFraction
         {
-            T0 = { NumberPart = 0, Power = 2, PowerOfA = 0 },
-            T1 = { NumberPart = 0, Power = 1, PowerOfA = 0 },
-            T2 = { NumberPart = 0, Power = 0, PowerOfA = 0 },
-            B0 = { NumberPart = 0, Power = 2 },
-            B1 = { NumberPart = 0, Power = 1 },
-            B2 = { NumberPart = 0, Power = 0 }
+            T0 = { NumberPart = 0},
+            T1 = { NumberPart = 0},
+            T2 = { NumberPart = 0},
+            B0 = { NumberPart = 0},
+            B1 = { NumberPart = 0},
+            B2 = { NumberPart = 0}
         };
 
         RenderDeltaFraction(deltaFraction, (isUpper, pos), top);
@@ -235,27 +235,27 @@ internal static class DeltaHelpers
         if (selected.isUpper)
         {
             RenderSimpleVariableToBuffer(deltaFraction.T0, selected.pos is 0, buffer1);
-            buffer1.Append(" + ");
+            buffer1.Append("[Cyan]x^2[/Cyan] + ");
             RenderSimpleVariableToBuffer(deltaFraction.T1, selected.pos is 1, buffer1);
-            buffer1.Append(" + ");
+            buffer1.Append("[Cyan]x[/Cyan] + ");
             RenderSimpleVariableToBuffer(deltaFraction.T2, selected.pos is 2, buffer1);
             RenderSimpleVariableToBuffer(deltaFraction.B0, buffer2);
-            buffer2.Append(" + ");
+            buffer2.Append("[Cyan]x^2[/Cyan] + ");
             RenderSimpleVariableToBuffer(deltaFraction.B1, buffer2);
-            buffer2.Append(" + ");
+            buffer2.Append("[Cyan]x[/Cyan] + ");
             RenderSimpleVariableToBuffer(deltaFraction.B2, buffer2);
         }
         else
         {
             RenderSimpleVariableToBuffer(deltaFraction.T0, buffer1);
-            buffer1.Append(" + ");
+            buffer1.Append("[Cyan]x^2[/Cyan] + ");
             RenderSimpleVariableToBuffer(deltaFraction.T1, buffer1);
-            buffer1.Append(" + ");
+            buffer1.Append("[Cyan]x[/Cyan] + ");
             RenderSimpleVariableToBuffer(deltaFraction.T2, buffer1);
             RenderSimpleVariableToBuffer(deltaFraction.B0, selected.pos is 0, buffer2);
-            buffer2.Append(" + ");
+            buffer2.Append("[Cyan]x^2[/Cyan] + ");
             RenderSimpleVariableToBuffer(deltaFraction.B1, selected.pos is 1, buffer2);
-            buffer2.Append(" + ");
+            buffer2.Append("[Cyan]x[/Cyan] + ");
             RenderSimpleVariableToBuffer(deltaFraction.B2, selected.pos is 2, buffer2);
         }
 
@@ -337,18 +337,18 @@ internal static class DeltaHelpers
         if (isSelected)
             buffer.Append("[/Green]");
 
-        if (simpleVariable.Power is 0)
-            return;
-
-        buffer.Append("[Cyan]x");
-        if (simpleVariable.Power is 1)
-        {
-            buffer.Append("[/Cyan]");
-            return;
-        }
-
-        buffer.Append('^');
-        buffer.Append(simpleVariable.Power);
-        buffer.Append("[/Cyan]");
+        // if (simpleVariable.Power is 0)
+        //     return;
+        //
+        // buffer.Append("[Cyan]x");
+        // if (simpleVariable.Power is 1)
+        // {
+        //     buffer.Append("[/Cyan]");
+        //     return;
+        // }
+        //
+        // buffer.Append('^');
+        // buffer.Append(simpleVariable.Power);
+        // buffer.Append("[/Cyan]");
     }
 }

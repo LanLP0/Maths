@@ -2,12 +2,12 @@ namespace Delta.Core;
 
 internal class DeltaFraction
 {
-    public SimpleVariable T0 { get; } = new() { Power = 2 };
-    public SimpleVariable T1 { get; } = new() { Power = 1 };
-    public SimpleVariable T2 { get; } = new() { Power = 0 };
-    public SimpleVariable B0 { get; } = new() { Power = 2 };
-    public SimpleVariable B1 { get; } = new() { Power = 1 };
-    public SimpleVariable B2 { get; } = new() { Power = 0 };
+    public SimpleVariable T0 { get; } = new();
+    public SimpleVariable T1 { get; } = new();
+    public SimpleVariable T2 { get; } = new();
+    public SimpleVariable B0 { get; } = new();
+    public SimpleVariable B1 { get; } = new();
+    public SimpleVariable B2 { get; } = new();
 
     /// <summary>
     ///     Calculate the fraction into a delta, after this, the variables is modified
@@ -17,10 +17,6 @@ internal class DeltaFraction
         T0.NumberPart = -T0.NumberPart;
         T1.NumberPart = -T1.NumberPart;
         T2.NumberPart = -T2.NumberPart;
-
-        B0.PowerOfA = 1;
-        B1.PowerOfA = 1;
-        B2.PowerOfA = 1;
 
         return new Delta
         {
