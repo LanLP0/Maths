@@ -32,7 +32,7 @@ internal class CalcElement
             _doubleForm ??= double.TryParse(_stringForm, out var num)
                 ? num
                 : null;
-            return _doubleForm is not null;
+            return _doubleForm.HasValue;
         }
     }
 
@@ -65,7 +65,7 @@ internal class CalcElement
     {
         get
         {
-            _stringForm ??= _doubleForm.ToString();
+            _stringForm ??= _doubleForm!.Value.ToString();
             return _stringForm!;
         }
         set

@@ -91,8 +91,10 @@ public static class Calculator
         for (var i = 0; i < math.Count; i++)
         {
             var m = math[i];
-            if (args.TryGetValue(!m.Contains('.') ? m : m.Substring(0, m.IndexOf('.')), out var val))
-                math[i] = val;
+            if (!m.IsString)
+                return;
+            if (args.TryGetValue(m.StringForm, out var val))
+                math[i] = val.CreateCopy();
         }
     }
 
