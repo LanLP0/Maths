@@ -288,15 +288,15 @@ internal static class DeltaHelpers
         Console.SetCursorPosition(0, top.Value);
 
         buffer1.Insert(0, "      ");
-        buffer1.Append(new string(' ', Math.Clamp(Console.WindowWidth - buffer1RealLength - 6, 0, int.MaxValue)));
+        buffer1.Append(new string(' ', Math.Clamp(Console.WindowWidth - buffer1RealLength - 7, 0, int.MaxValue)));
 
         buffer1.Append("\n A = ");
         buffer1.Append(new string('-', dashCharsCount));
-        buffer1.Append(new string(' ', Math.Clamp(Console.WindowWidth - dashCharsCount - 5, 0, int.MaxValue)));
+        buffer1.Append(new string(' ', Math.Clamp(Console.WindowWidth - dashCharsCount - 6, 0, int.MaxValue)));
 
         buffer1.Append("\n      ");
         buffer1.Append(buffer2);
-        buffer1.Append(new string(' ', Math.Clamp(Console.WindowWidth - buffer2RealLength - 6, 0, int.MaxValue)));
+        buffer1.Append(new string(' ', Math.Clamp(Console.WindowWidth - buffer2RealLength - 7, 0, int.MaxValue)));
 
         ConsoleHelpers.WriteEmbeddedColorLine(buffer1.ToString());
         Console.SetCursorPosition(0, currTop);
