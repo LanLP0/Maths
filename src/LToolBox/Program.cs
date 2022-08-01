@@ -2,6 +2,7 @@
 using Common.Cli;
 using LToolBox.Tools;
 using Microsoft.Extensions.DependencyInjection;
+using Serilog;
 
 namespace LToolBox;
 

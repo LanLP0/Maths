@@ -6,11 +6,11 @@ namespace LToolBox.Delta;
 
 internal static class DeltaHelpers
 {
-    public static DeltaFraction? PromptDelta(int? top = null)
+    public static (DeltaFraction?, int top) PromptDelta(int? top = null)
     {
         top ??= Console.CursorTop;
 
-        Console.SetCursorPosition(0, top.Value + 3);
+        top += ConsoleHelpers.SafeSetCursorPosition(0, top.Value + 3);
 
         var isUpper = true;
         var pos = 0;
@@ -24,7 +24,7 @@ internal static class DeltaHelpers
             B2 = { NumberPart = 0}
         };
 
-        RenderDeltaFraction(deltaFraction, (isUpper, pos), top);
+        RenderDeltaFraction(deltaFraction, isUpper, pos, top);
 
         for (;;)
         {
@@ -89,8 +89,10 @@ internal static class DeltaHelpers
                 case { Key: ConsoleKey.NumPad8 }:
                 case { Key: ConsoleKey.NumPad9 }:
                 {
-                    var val = ConsoleHelpers.PromptIntAndClearLine("Value: ", top.Value + 3,
+                    var (val, adj) = ConsoleHelpers.PromptIntAndClearLine("Value: ", top.Value + 3,
                         defaultValue: EnumHelpers.FastConsoleKeyToNumberString(input.Key));
+
+                    top += adj;
 
                     if (!val.HasValue)
                         break;
@@ -155,8 +157,10 @@ internal static class DeltaHelpers
                 }
                 case { KeyChar: '-' }:
                 {
-                    var val = ConsoleHelpers.PromptIntAndClearLine("Value: ", top.Value + 3, defaultValue: "-");
+                    var (val, adj) = ConsoleHelpers.PromptIntAndClearLine("Value: ", top + 3, defaultValue: "-");
 
+                    top += adj;
+                    
                     if (!val.HasValue)
                         break;
 
@@ -204,7 +208,7 @@ internal static class DeltaHelpers
                 case { Key: ConsoleKey.Q }:
                 case { Key: ConsoleKey.Escape }:
                 {
-                    return null;
+                    return (null, top.Value);
                 }
                 case { Key: ConsoleKey.Enter }:
                 {
@@ -216,29 +220,29 @@ internal static class DeltaHelpers
                          deltaFraction.B2.IsZero()))
                         break;
 
-                    return deltaFraction;
+                    return (deltaFraction, top.Value);
                 }
                 default:
                     continue;
             }
 
-            RenderDeltaFraction(deltaFraction, (isUpper, pos), top);
+            RenderDeltaFraction(deltaFraction, isUpper, pos, top);
         }
     }
 
-    private static void RenderDeltaFraction(DeltaFraction deltaFraction, (bool isUpper, int pos) selected,
+    private static void RenderDeltaFraction(DeltaFraction deltaFraction, bool isUpper, int pos,
         int? top = null)
     {
         StringBuilder buffer1 = new();
         StringBuilder buffer2 = new();
 
-        if (selected.isUpper)
+        if (isUpper)
         {
-            RenderSimpleVariableToBuffer(deltaFraction.T0, selected.pos is 0, buffer1);
+            RenderSimpleVariableToBuffer(deltaFraction.T0, pos is 0, buffer1);
             buffer1.Append("[Cyan]x^2[/Cyan] + ");
-            RenderSimpleVariableToBuffer(deltaFraction.T1, selected.pos is 1, buffer1);
+            RenderSimpleVariableToBuffer(deltaFraction.T1, pos is 1, buffer1);
             buffer1.Append("[Cyan]x[/Cyan] + ");
-            RenderSimpleVariableToBuffer(deltaFraction.T2, selected.pos is 2, buffer1);
+            RenderSimpleVariableToBuffer(deltaFraction.T2, pos is 2, buffer1);
             RenderSimpleVariableToBuffer(deltaFraction.B0, buffer2);
             buffer2.Append("[Cyan]x^2[/Cyan] + ");
             RenderSimpleVariableToBuffer(deltaFraction.B1, buffer2);
@@ -252,15 +256,15 @@ internal static class DeltaHelpers
             RenderSimpleVariableToBuffer(deltaFraction.T1, buffer1);
             buffer1.Append("[Cyan]x[/Cyan] + ");
             RenderSimpleVariableToBuffer(deltaFraction.T2, buffer1);
-            RenderSimpleVariableToBuffer(deltaFraction.B0, selected.pos is 0, buffer2);
+            RenderSimpleVariableToBuffer(deltaFraction.B0, pos is 0, buffer2);
             buffer2.Append("[Cyan]x^2[/Cyan] + ");
-            RenderSimpleVariableToBuffer(deltaFraction.B1, selected.pos is 1, buffer2);
+            RenderSimpleVariableToBuffer(deltaFraction.B1, pos is 1, buffer2);
             buffer2.Append("[Cyan]x[/Cyan] + ");
-            RenderSimpleVariableToBuffer(deltaFraction.B2, selected.pos is 2, buffer2);
+            RenderSimpleVariableToBuffer(deltaFraction.B2, pos is 2, buffer2);
         }
 
-        var buffer1RealLength = buffer1.Length - 26 - (selected.isUpper ? 15 : 0);
-        var buffer2RealLength = buffer2.Length - 26 - (selected.isUpper ? 0 : 15);
+        var buffer1RealLength = buffer1.Length - 26 - (isUpper ? 15 : 0);
+        var buffer2RealLength = buffer2.Length - 26 - (isUpper ? 0 : 15);
 
         int dashCharsCount;
         if (buffer1RealLength >= buffer2RealLength)
@@ -285,7 +289,7 @@ internal static class DeltaHelpers
 
         top ??= Console.CursorTop;
         var currTop = Console.CursorTop;
-        Console.SetCursorPosition(0, top.Value);
+        ConsoleHelpers.SafeSetCursorPosition(0, top.Value);
 
         buffer1.Insert(0, "      ");
         buffer1.Append(new string(' ', Math.Clamp(Console.WindowWidth - buffer1RealLength - 7, 0, int.MaxValue)));
@@ -299,17 +303,12 @@ internal static class DeltaHelpers
         buffer1.Append(new string(' ', Math.Clamp(Console.WindowWidth - buffer2RealLength - 7, 0, int.MaxValue)));
 
         ConsoleHelpers.WriteEmbeddedColorLine(buffer1.ToString());
-        Console.SetCursorPosition(0, currTop);
+        ConsoleHelpers.SafeSetCursorPosition(0, currTop);
     }
 
-    public static void RenderFinalDelta(FinalDelta finalDelta, int? top = null)
+    public static void RenderFinalDelta(FinalDelta finalDelta)
     {
         var strBuilder = new StringBuilder();
-
-        top ??= Console.CursorTop;
-        var currTop = Console.CursorTop;
-        var currLeft = Console.CursorLeft;
-        Console.SetCursorPosition(0, top.Value);
 
         RenderSimpleVariableToBuffer(finalDelta.T0, strBuilder);
         strBuilder.Append("[Cyan]A^2[/Cyan] + ");
@@ -318,7 +317,6 @@ internal static class DeltaHelpers
         RenderSimpleVariableToBuffer(finalDelta.T2, strBuilder);
 
         ConsoleHelpers.WriteEmbeddedColorLine(strBuilder.ToString());
-        Console.SetCursorPosition(currLeft, currTop);
     }
 
     private static void RenderSimpleVariableToBuffer(SimpleVariable simpleVariable, StringBuilder buffer)

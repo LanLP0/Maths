@@ -5,186 +5,57 @@ namespace Common.Cli;
 
 internal static class ConsoleHelpers
 {
-    private static readonly Lazy<Regex> colorBlockRegEx = new(
+    private static readonly Lazy<Regex> ColorBlockRegEx = new(
         () => new Regex("\\[(?<color>.*?)\\](?<text>[^[]*)\\[/\\k<color>\\]", RegexOptions.IgnoreCase),
         true);
 
-    public static void ClearLine(int? top = null)
+    public static int ClearLine(int? top = null)
     {
         var (currLeft, currTop) = Console.GetCursorPosition();
         top ??= currTop;
 
-        Console.SetCursorPosition(0, top.Value);
+        var adj = SafeSetCursorPosition(0, top.Value);
         Console.Write(new string(' ', Console.WindowWidth));
 
-        Console.SetCursorPosition(currLeft, currTop);
+        SafeSetCursorPosition(currLeft, currTop);
+
+        return adj;
     }
 
-    public static int? PromptIntAndClearLine(string prompt, int? top = null, int? lengthLimit = 5,
+    public static (int? result, int adj) PromptIntAndClearLine(string prompt, int? top = null, int? lengthLimit = 5,
         bool isNegativeAllowed = true, string? defaultValue = null)
     {
         top ??= Console.CursorTop;
+        var (currLeft, currTop) = Console.GetCursorPosition();
 
-        ClearLine(top);
+        var result = PromptIntInternal(prompt, top, lengthLimit, isNegativeAllowed, defaultValue!);
 
-        Console.SetCursorPosition(0, top.Value);
-        Console.Write(prompt);
-        var left = Console.CursorLeft;
+        Console.CursorTop--;
+        ClearLine();
+        
+        Console.SetCursorPosition(currLeft, currTop + result.adj);
 
-        StringBuilder buffer = new();
-        var pos = 0;
-        var isNegative = false;
-        if (!string.IsNullOrWhiteSpace(defaultValue))
-        {
-            buffer.Append(defaultValue);
-            Console.Write(defaultValue);
-            pos += defaultValue.Length;
-
-            if (defaultValue[0] is '-') isNegative = true;
-        }
-
-        for (;;)
-        {
-            var input = Console.ReadKey(true);
-            switch (input.Key)
-            {
-                case ConsoleKey.LeftArrow:
-                case ConsoleKey.H:
-                {
-                    if (pos is 0)
-                        break;
-
-                    Console.CursorLeft--;
-                    pos--;
-                    break;
-                }
-                case ConsoleKey.RightArrow:
-                case ConsoleKey.L:
-                {
-                    if (pos == buffer.Length)
-                        break;
-
-                    Console.CursorLeft++;
-                    pos++;
-                    break;
-                }
-                case ConsoleKey.Backspace:
-                {
-                    if (pos is 0)
-                        break;
-
-                    if (pos is 1 && isNegative)
-                    {
-                        isNegative = false;
-                        buffer.Remove(0, 1);
-                        pos--;
-                        Console.CursorLeft--;
-                        ReRender(buffer, left);
-                        break;
-                    }
-
-                    buffer.Remove(--pos, 1);
-                    Console.CursorLeft--;
-                    ReRender(buffer, left);
-                    break;
-                }
-                case ConsoleKey.D0:
-                case ConsoleKey.D1:
-                case ConsoleKey.D2:
-                case ConsoleKey.D3:
-                case ConsoleKey.D4:
-                case ConsoleKey.D5:
-                case ConsoleKey.D6:
-                case ConsoleKey.D7:
-                case ConsoleKey.D8:
-                case ConsoleKey.D9:
-                case ConsoleKey.NumPad0:
-                case ConsoleKey.NumPad1:
-                case ConsoleKey.NumPad2:
-                case ConsoleKey.NumPad3:
-                case ConsoleKey.NumPad4:
-                case ConsoleKey.NumPad5:
-                case ConsoleKey.NumPad6:
-                case ConsoleKey.NumPad7:
-                case ConsoleKey.NumPad8:
-                case ConsoleKey.NumPad9:
-                {
-                    if (isNegative)
-                    {
-                        if (buffer.Length >= lengthLimit + 1)
-                            break;
-                    }
-                    else
-                    {
-                        if (buffer.Length >= lengthLimit)
-                            break;
-                    }
-
-                    buffer.Insert(pos, input.KeyChar);
-                    Console.CursorLeft++;
-                    ReRender(buffer, left);
-                    pos++;
-                    break;
-                }
-                case ConsoleKey.Subtract:
-                case ConsoleKey.OemMinus:
-                {
-                    if (!isNegativeAllowed)
-                        break;
-
-                    if (isNegative)
-                    {
-                        isNegative = false;
-                        buffer.Remove(0, 1);
-                        pos--;
-                        Console.CursorLeft--;
-                        ReRender(buffer, left);
-                        break;
-                    }
-
-                    isNegative = true;
-                    buffer.Insert(0, '-');
-                    pos++;
-                    Console.CursorLeft++;
-                    ReRender(buffer, left);
-                    break;
-                }
-                case ConsoleKey.Escape:
-                case ConsoleKey.Q:
-                {
-                    ClearLine(top);
-                    Console.CursorLeft = 0;
-                    return null;
-                }
-                case ConsoleKey.Enter:
-                {
-                    if (isNegative)
-                    {
-                        if (buffer.Length is 1)
-                            break;
-                    }
-                    else
-                    {
-                        if (buffer.Length is 0)
-                            break;
-                    }
-
-                    ClearLine(top);
-                    Console.CursorLeft = 0;
-                    return int.Parse(buffer.ToString());
-                }
-            }
-        }
+        return (result.result, result.adj);
     }
 
     public static int? PromptInt(string prompt, int? top = null, int? lengthLimit = 5,
-        bool isNegativeAllowed = true, string defaultValue = "")
+        bool isNegativeAllowed = true, string defaultValue = "") =>
+        PromptIntInternal(prompt, top, lengthLimit, isNegativeAllowed, defaultValue).Item1;
+
+    private static (int? result, int adj) PromptIntInternal(string prompt, int? top = null, int? lengthLimit = 5,
+        bool isNegativeAllowed = true, string? defaultValue = null)
     {
         top ??= Console.CursorTop;
+        var adj = 0;
 
-        ClearLine(top);
+        var adjTmp = ClearLine(top);
+        adj += adjTmp;
+        top += adjTmp;
 
-        Console.SetCursorPosition(0, top.Value);
+        adjTmp = SafeSetCursorPosition(0, top.Value);
+        adj += adjTmp;
+        top += adjTmp;
+        
         Console.Write(prompt);
         var left = Console.CursorLeft;
 
@@ -311,7 +182,7 @@ internal static class ConsoleHelpers
                 {
                     ClearLine(top);
                     Console.CursorLeft = 0;
-                    return null;
+                    return (null, adj);
                 }
                 case ConsoleKey.Enter:
                 {
@@ -326,18 +197,19 @@ internal static class ConsoleHelpers
                             break;
                     }
 
+                    if (Console.CursorTop + 1 == Console.BufferHeight)
+                        adj--;
+                    
                     Console.WriteLine();
-                    return int.Parse(buffer.ToString());
+                    return (int.Parse(buffer.ToString()), adj);
                 }
             }
         }
     }
 
-    public static string? ChooseOption(string prompt, string[] options, int top, bool required = true)
+    public static string? ChooseOption(string prompt, string[] options, bool required = true)
     {
         Console.Write(prompt);
-
-        var (currLeft, currTop) = Console.GetCursorPosition();
 
         var maxLength = options.Max(a => a.Length);
         var buffer = new StringBuilder();
@@ -402,10 +274,46 @@ internal static class ConsoleHelpers
         Console.CursorLeft = left;
 
         Console.Write(new string(' ', Math.Clamp(Console.WindowWidth - left, 0, int.MaxValue)));
-        Console.SetCursorPosition(left, currTop);
+        SafeSetCursorPosition(left, currTop);
         Console.Write(buffer);
 
         Console.CursorLeft = currLeft;
+    }
+
+    /// <summary>
+    /// Safely set the cursor position
+    /// </summary>
+    /// <returns>The offset of <c>top</c></returns>
+    public static int SafeSetCursorPosition(int left, int top)
+    {
+        left = Math.Clamp(left, 0, Console.BufferWidth - 1);
+        top = top < 0 ? 0 : top;
+        
+        var adj = SafeGoToTop(top);
+        Console.CursorLeft = left;
+        
+        return adj;
+    }
+
+    private static int SafeGoToTop(int top)
+    {
+        top = top < 0 ? 0 : top;
+
+        if (top < Console.BufferHeight)
+        {
+            Console.CursorTop = top;
+            return 0;
+        }
+
+        var adj = top - Console.CursorTop;
+        
+        if (adj <= 0)
+        {
+            return 0;
+        }
+
+        Console.Write(new string('\n', adj));
+        return -adj;
     }
 
     /// <summary>
@@ -434,7 +342,7 @@ internal static class ConsoleHelpers
 
         while (true)
         {
-            var match = colorBlockRegEx.Value.Match(text);
+            var match = ColorBlockRegEx.Value.Match(text);
             if (match.Length < 1)
             {
                 Write(text, baseTextColor);
@@ -483,7 +391,7 @@ internal static class ConsoleHelpers
 
         while (true)
         {
-            var match = colorBlockRegEx.Value.Match(text);
+            var match = ColorBlockRegEx.Value.Match(text);
             if (match.Length < 1)
             {
                 Write(text, baseTextColor);

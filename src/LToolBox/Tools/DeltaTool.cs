@@ -1,3 +1,4 @@
+using Common.Cli;
 using Common.Maths.Extension;
 using LToolBox.Delta;
 
@@ -12,19 +13,19 @@ internal class DeltaTool : Tool
     public override void Execute()
     {
         var top = Console.CursorTop;
-
-        var deltaFraction = DeltaHelpers.PromptDelta(top);
+        var (deltaFraction, afterTop) = DeltaHelpers.PromptDelta(top);
 
         if (deltaFraction is null)
             return;
 
+        top = afterTop;
+        
         var delta = deltaFraction.Calc();
         var finalDelta = delta.Calc();
-
-        Console.SetCursorPosition(0, top + 3);
+        
+        ConsoleHelpers.SafeSetCursorPosition(0, top + 3);
         DeltaHelpers.RenderFinalDelta(finalDelta);
-        Console.SetCursorPosition(0, top + 4);
-
+        
         Console.Write("Result: ");
         switch (finalDelta.Calc(out var result1, out var result2))
         {

@@ -1,5 +1,8 @@
 using Common.Cli;
 using Common.Maths.Expressions;
+#if DEBUG
+using Microsoft.Extensions.Logging;
+#endif
 
 namespace LToolBox.Tools;
 
@@ -19,7 +22,7 @@ internal class ComplexMultiplyTool : Tool
         var firstPrompt = true;
         for (;;)
         {
-            var op = ConsoleHelpers.ChooseOption("Op (*/^/+/-): ", new[] { "*", "^", "+", "-" }, Console.CursorTop + 1,
+            var op = ConsoleHelpers.ChooseOption("Op (*/^/+/-): ", new[] { "*", "^", "+", "-" },
                 false)!;
 
             if (op is null)
@@ -120,24 +123,6 @@ internal class ComplexMultiplyTool : Tool
                     pos = result.Elements.Count - 1;
                     break;
                 }
-                // case {KeyChar: '_'}:
-                // {
-                //     var powers = result.Elements[pos].Powers;
-                //     if (powers.Count <= 0)
-                //         continue;
-
-                //     powers.RemoveAt(powers.Count - 1);
-                //     break;
-                // }
-                // case {KeyChar: '+'}:
-                // {
-                //     var powers = result.Elements[pos].Powers;
-                //     if (powers.Count > powerLimit)
-                //         continue;
-
-                //     powers.Add(1);
-                //     break;
-                // }
                 case { KeyChar: '+' }:
                 {
                     if (result.Elements.Count <= 1)
@@ -210,7 +195,8 @@ internal class ComplexMultiplyTool : Tool
                         break;
                     }
 
-                    var val = ConsoleHelpers.PromptIntAndClearLine(input.KeyChar + ": ", Console.CursorTop + 1);
+                    var (val, adj) = ConsoleHelpers.PromptIntAndClearLine(input.KeyChar + ": ", Console.CursorTop + 1);
+                    currTop += adj;
 
                     if (!val.HasValue)
                         break;
@@ -242,12 +228,13 @@ internal class ComplexMultiplyTool : Tool
                 case { Key: ConsoleKey.NumPad8 }:
                 case { Key: ConsoleKey.NumPad9 }:
                 {
-                    var val = ConsoleHelpers.PromptIntAndClearLine("Value: ", Console.CursorTop + 1,
+                    var (val, adj) = ConsoleHelpers.PromptIntAndClearLine("Value: ", Console.CursorTop + 1,
                         defaultValue: EnumHelpers.FastConsoleKeyToNumberString(input.Key));
+                    currTop += adj;
 
                     if (val is null)
                     {
-                        Console.SetCursorPosition(currLeft, currTop);
+                        currTop += ConsoleHelpers.SafeSetCursorPosition(currLeft, currTop);
                         continue;
                     }
 
@@ -256,11 +243,13 @@ internal class ComplexMultiplyTool : Tool
                 }
                 case { KeyChar: '-' }:
                 {
-                    var val = ConsoleHelpers.PromptIntAndClearLine("Value: ", Console.CursorTop + 1, defaultValue: "-");
+                    var (val, adj) = ConsoleHelpers.PromptIntAndClearLine("Value: ", Console.CursorTop + 1, defaultValue: "-");
+
+                    currTop += adj;
 
                     if (val is null)
                     {
-                        Console.SetCursorPosition(currLeft, currTop);
+                        currTop += ConsoleHelpers.SafeSetCursorPosition(currLeft, currTop);
                         continue;
                     }
 
@@ -283,7 +272,7 @@ internal class ComplexMultiplyTool : Tool
                     continue;
             }
 
-            Console.SetCursorPosition(currLeft, currTop);
+            currTop += ConsoleHelpers.SafeSetCursorPosition(currLeft, currTop);
             RenderExpression(result, pos);
         }
     }
@@ -296,7 +285,7 @@ internal class ComplexMultiplyTool : Tool
 
         Console.Write(new string(' ', Math.Clamp(Console.WindowWidth - Console.CursorLeft - 1, 0, int.MaxValue)));
 
-        Console.SetCursorPosition(currLeft, currTop);
+        ConsoleHelpers.SafeSetCursorPosition(currLeft, currTop);
     }
 #if DEBUG
     private readonly ILogger<ComplexMultiplyTool> _logger;
