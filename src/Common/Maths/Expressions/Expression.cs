@@ -85,7 +85,7 @@ internal class Expression
 
         for (var i = 0; i < Elements.Count;)
         {
-            Elements[i].RenderBufferWithColor(buffer, selectedPos == i);
+            Elements[i].RenderToBufferWithColor(buffer, selectedPos == i);
 
             if (++i < Elements.Count) buffer.Append(" + ");
         }
@@ -99,5 +99,15 @@ internal class Expression
         foreach (var e in Elements) ex.Elements.Add(e.Clone());
 
         return ex;
+    }
+
+    public void Sort()
+    {
+        Elements.Sort();
+
+        foreach (var e in Elements)
+        {
+            e.SortPower();
+        }
     }
 }

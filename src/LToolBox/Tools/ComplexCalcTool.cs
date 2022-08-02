@@ -30,8 +30,10 @@ internal class ComplexMultiplyTool : Tool
                 if (firstPrompt)
                 {
                     Console.WriteLine("Result:");
+                    
+                    ex.Sort();
+                    
                     RenderExpression(ex, -1);
-
                     Console.WriteLine();
                 }
 
@@ -82,6 +84,8 @@ internal class ComplexMultiplyTool : Tool
                     break;
                 }
             }
+            
+            ex.Sort();
 
             Console.WriteLine("Result:");
             RenderExpression(ex, -1);

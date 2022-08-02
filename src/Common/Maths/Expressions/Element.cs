@@ -2,7 +2,7 @@ using System.Text;
 
 namespace Common.Maths.Expressions;
 
-internal class Element
+internal class Element : IComparable<Element>
 {
     public Element()
     {
@@ -17,7 +17,7 @@ internal class Element
 
     public double Value { get; set; }
 
-    public Dictionary<int, int> Powers { get; }
+    public Dictionary<int, int> Powers { private set; get; }
 
     public static Element operator *(Element left, Element right)
     {
@@ -46,7 +46,7 @@ internal class Element
         return result;
     }
 
-    public void RenderBufferWithColor(StringBuilder buffer, bool isSelected)
+    public void RenderToBufferWithColor(StringBuilder buffer, bool isSelected)
     {
         if (isSelected)
             buffer.Append("[Green]");
@@ -105,5 +105,36 @@ internal class Element
     public Element Clone()
     {
         return new Element(Value, Powers.ToDictionary(e => e.Key, e => e.Value));
+    }
+
+    public void SortPower()
+    {
+        Powers = Powers.OrderBy(x => x.Key).ToDictionary(x => x.Key, x => x.Value);
+    }
+
+    public int CompareTo(Element? other)
+    {
+        if (other is null)
+            return 0;
+
+        var max1 = Powers.Max(x => x.Value);
+        var max2 = other.Powers.Max(x => x.Value);
+
+        if (max1 > max2)
+            return -1;
+
+        if (max2 > max1)
+            return 1;
+
+        var sum1 = Powers.Select(x => x.Key * x.Value).Sum();
+        var sum2 = other.Powers.Select(x => x.Key * x.Value).Sum();
+
+        if (sum1 > sum2)
+            return 1;
+
+        if (sum1 < sum2)
+            return -1;
+        
+        return 0;
     }
 }
