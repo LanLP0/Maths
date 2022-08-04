@@ -117,8 +117,12 @@ internal class Element : IComparable<Element>
         if (other is null)
             return 0;
 
-        var max1 = Powers.Max(x => x.Value);
-        var max2 = other.Powers.Max(x => x.Value);
+        var max1 = 0;
+        if (Powers.Count is not 0)
+            max1 = Powers.Max(x => x.Value);
+        var max2 = 0;
+        if (other.Powers.Count is not 0)
+            max2 = other.Powers.Max(x => x.Value);
 
         if (max1 > max2)
             return -1;

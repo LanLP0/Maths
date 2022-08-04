@@ -54,7 +54,6 @@ internal static class ConsoleHelpers
 
         adjTmp = SafeSetCursorPosition(0, top.Value);
         adj += adjTmp;
-        top += adjTmp;
         
         Console.Write(prompt);
         var left = Console.CursorLeft;
@@ -180,8 +179,14 @@ internal static class ConsoleHelpers
                 case ConsoleKey.Escape:
                 case ConsoleKey.Q:
                 {
-                    ClearLine(top);
-                    Console.CursorLeft = 0;
+                    buffer.Clear();
+                    buffer.Append("$null");
+                    ReRender(buffer, left);
+
+                    if (Console.CursorTop + 1 == Console.BufferHeight)
+                        adj--;
+                    
+                    Console.WriteLine();
                     return (null, adj);
                 }
                 case ConsoleKey.Enter:
@@ -225,7 +230,7 @@ internal static class ConsoleHelpers
                     {
                         if (required) continue;
 
-                        Console.WriteLine();
+                        Console.WriteLine("$null");
                         return null;
                     }
 
