@@ -52,9 +52,8 @@ internal static class ConsoleHelpers
         adj += adjTmp;
         top += adjTmp;
 
-        adjTmp = SafeSetCursorPosition(0, top.Value);
-        adj += adjTmp;
-        
+        adj += SafeSetCursorPosition(0, top.Value);
+
         Console.Write(prompt);
         var left = Console.CursorLeft;
 
