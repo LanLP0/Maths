@@ -1,6 +1,8 @@
 using Common.Results;
+using LCalc.Helpers;
+using LCalc.Helpers.CustomFunction;
 
-namespace LCalc.Helpers.CustomFunction;
+namespace LCalc.CustomFunction;
 
 internal class CustomFunction
 {

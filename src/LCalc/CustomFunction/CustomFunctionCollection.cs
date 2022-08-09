@@ -4,7 +4,7 @@ namespace LCalc.Helpers.CustomFunction;
 
 internal class CustomFunctionCollection
 {
-    private readonly List<CustomFunction> _list = new();
+    private readonly List<LCalc.CustomFunction.CustomFunction> _list = new();
     private bool[] _calledFunction = Array.Empty<bool>();
 
     public bool ContainsName(string name)
@@ -12,7 +12,7 @@ internal class CustomFunctionCollection
         return _list.Exists(a => a.Name == name);
     }
 
-    public void Add(CustomFunction function)
+    public void Add(LCalc.CustomFunction.CustomFunction function)
     {
         _list.Add(function);
     }

@@ -1,5 +1,3 @@
-// ReSharper disable MemberCanBePrivate.Global
-
 namespace Common.Results;
 
 internal readonly ref struct Result<T>
@@ -61,7 +59,7 @@ internal readonly ref struct Result<T>
     }
 }
 
-internal readonly ref struct Result
+public readonly ref struct Result
 {
     public readonly Exception? Exception;
     public bool Success => !IsFaulted;

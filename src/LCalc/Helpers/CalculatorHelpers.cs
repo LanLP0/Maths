@@ -1067,7 +1067,7 @@ internal static class CalculatorHelpers
                     if (pos is -1)
                         return Err<List<CalcElement>>("No matching end square bracket");
 
-                    var customFunction = CustomFunction.CustomFunction.Parse(math.AsSpan()[(i + 1)..pos], functions);
+                    var customFunction = LCalc.CustomFunction.CustomFunction.Parse(math.AsSpan()[(i + 1)..pos], functions);
                     if (customFunction.IsFaulted) return new Result<List<CalcElement>>(customFunction.Exception!);
 
                     functions.Add(customFunction.Value!);
