@@ -1,8 +1,7 @@
 ﻿using BenchmarkDotNet.Attributes;
-using Common.Results;
 using LCalc;
+using LCalc.CustomFunction;
 using LCalc.Helpers;
-using LCalc.Helpers.CustomFunction;
 
 namespace Benchmarks;
 

@@ -6,11 +6,11 @@ lcalc {expression}
 **Description**  
 Calculate an expression with optional arguments  
 **Arguments**  
-`&{name}={value}`  Set a variable's value  
+`&{name}={value}`  Set a variable/argument's value  
 `&{name}`  Set calculator argument  
 Arguments:
 > `step` Show each step  
-> `raw` See raw value
+> `raw` See raw value  
 
 **__Comparison operators__**
 > `==` Equal  
@@ -35,6 +35,6 @@ Arguments:
 > `sum({value} [values..])` `avg({value} [values..])` Sum, average  
 > `random([max|min,max])` Get random number in ranges: 0-1, 0-max, min-max  
 **__Special number__**  
-> `&b{binaryNum}`  Binary number  
-> `&h{hexNum}`  Hexadecimal number  
-> `&o{octalNum}`  Octal number  
+> `0b{binaryNum}`  Binary number  
+> `0x{hexNum}`  Hexadecimal number  
+> `0o{octalNum}`  Octal number  

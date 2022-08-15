@@ -1,6 +1,6 @@
 using Common.Results;
+using LCalc.Extension;
 using LCalc.Helpers;
-using LCalc.Helpers.CustomFunction;
 
 namespace LCalc.CustomFunction;
 
@@ -87,7 +87,7 @@ internal class CustomFunction
     {
         var result = new List<CalcElement>();
 
-        var buffer = new SpecialInputBuffer(result);
+        var buffer = new RestrictedInputBuffer(result);
 
         Result result1;
         for (var i = 0; i < math.Length; i++)
@@ -196,26 +196,13 @@ internal class CustomFunction
                         if (result1.IsFaulted) return result1;
                     }
 
-                    if ((int)nextChr is not (> 96 and < 123))
+                    if ((int)nextChr is not (> 96 and < 123)/*a-z*/)
                     {
                         result.Add("&");
                         break;
                     }
-
-                    buffer.Append('&');
-                    if ((int)nextChr is not (104 or 98 or 111))
-                        return Err<List<CalcElement>>("Cannot have arg in function");
-
-                    if (!math.TryGetValueAt(i + 2, out var nextNextChr))
-                        return Err<List<CalcElement>>("Missing value");
-
-                    if ((int)nextNextChr is not (> 47 and < 58) and not (> 96 and < 103))
-                        return Err<List<CalcElement>>("Missing value");
-
-                    buffer.Append(nextChr);
-                    buffer.Content = BufferContentType.SpecialNumber;
-                    i++;
-                    break;
+                    
+                    return Err<List<CalcElement>>("Cannot have arg in function");
                 }
                 case > 47 and < 58: // 0-9
                 {
@@ -238,6 +225,38 @@ internal class CustomFunction
                             buffer.Content = BufferContentType.Number;
                             break;
                         }
+                    }
+                    
+                    if (chr is '0' && buffer.Buffer.Length is 0) //Look ahead for special number
+                    {
+                        if (!math.TryGetValueAt(i + 1, out var nextChr))
+                        {
+                            buffer.Append(chr);
+                            break;
+                        }
+                        
+                        if ((int)nextChr is not (120 or 98 or 111)/*x | b | o*/)
+                        {
+                            buffer.Append(chr);
+                            break;
+                        }
+
+                        if (!math.TryGetValueAt(i + 2, out var nextNextChr))
+                        {
+                            buffer.Append(chr);
+                            break;
+                        }
+
+                        if ((int)nextNextChr is not (> 47 and < 58)/*0-9*/ and not (> 96 and < 103)/*a-f*/)
+                        {
+                            return Err<List<CalcElement>>("Invalid special number");
+                        }
+
+                        buffer.Append('0');
+                        buffer.Append(nextChr);
+                        buffer.Content = BufferContentType.SpecialNumber;
+                        i++;
+                        break;
                     }
 
                     buffer.Append(chr);

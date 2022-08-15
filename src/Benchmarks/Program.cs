@@ -10,3 +10,5 @@ Console.WriteLine(l.LCalc());
 Console.WriteLine(l.LCalcRaw());
 
 BenchmarkRunner.Run<LCalcBenchmarks>();
+
+// BenchmarkRunner.Run<Benchmarks.Benchmarks>();

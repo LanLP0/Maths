@@ -1,6 +1,6 @@
 using Xunit;
 
-namespace LCalc.Helpers.Tests;
+namespace LCalc.Tests;
 
 public class CalculatorTest
 {
@@ -18,11 +18,16 @@ public class CalculatorTest
     [InlineData("a&a=1", "1")]
     [InlineData("1-&a=70a", "-69")]
     [InlineData("a3&a=2", "8")]
+    [InlineData("a3&a=-2", "-8")]
     [InlineData("2^3^2", "512")]
     [InlineData("3!", "6")]
-    [InlineData("&h1e240", "123456")]
-    [InlineData("&o361100", "123456")]
-    [InlineData("&b11110001001000000", "123456")]
+    [InlineData("0x1e240", "123456")]
+    [InlineData("0o361100", "123456")]
+    [InlineData("0b11110001001000000", "123456")]
+    // Special number in a function
+    [InlineData("[f()=0x1e240]f()", "123456")]
+    [InlineData("[f()=0o361100]f()", "123456")]
+    [InlineData("[f()=0b11110001001000000]f()", "123456")]
     // Bitwise
     [InlineData("2&3", "2")]
     [InlineData("~2", "-3")]
@@ -54,7 +59,7 @@ public class CalculatorTest
     [InlineData("cot(38)", "1.2799416321930788")]
     [InlineData("log(3)", "1.0986122886681098")]
     // Custom function
-    [InlineData("[null(a b c)=a^(b+c)]null(2 1 null(2 1 1))", "32")]
+    [InlineData("[foo(a b c)=a^(b+c)]foo(2 1 foo(2 1 1))", "32")]
     public void Result_Should_BeExpected(string math, string result)
     {
         // Arrange
@@ -97,7 +102,7 @@ public class CalculatorTest
     [InlineData("50!<<50!", "Value too big")]
     [InlineData("2.5|2.5", "2.5 is not an integer")]
     [InlineData("100!|100!", "Value too big")]
-    [InlineData("-n", "-n is not a number")]
+    [InlineData("-n", "n is not a number")]
     [InlineData("1~", "No value after ~")]
     [InlineData("1&", "No value after &")]
     [InlineData("1+", "No value after +")]
@@ -106,8 +111,8 @@ public class CalculatorTest
     [InlineData("1-&a=100", "Missing value")]
     [InlineData("&a=", "Missing variable value")]
     [InlineData("&a=1&a=1", "Variable has already been set")]
-    [InlineData("&b21", "Invalid binary number")]
-    [InlineData("&o9", "Invalid octal number")]
+    [InlineData("0b21", "Invalid binary number")]
+    [InlineData("0o9", "Invalid octal number")]
     [InlineData("[t()=t()]t()", "Cannot call a function in it-self")]
     public void Calc_Should_Error(string math, string errorMsg)
     {

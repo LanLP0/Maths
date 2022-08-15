@@ -7,5 +7,6 @@ internal enum BufferContentType
     SpecialNumber,
     String,
     Arg,
-    Variable
+    Variable,
+    ArgWithValue
 }

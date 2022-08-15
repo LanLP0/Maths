@@ -75,6 +75,14 @@ internal class CalcElement
         }
     }
 
+    public bool StringEq(string other)
+    {
+        if (!IsString)
+            return false;
+
+        return _stringForm! == other;
+    }
+
     public int Length => StringForm.Length;
 
     public static implicit operator string(CalcElement e)
@@ -137,7 +145,7 @@ internal class CalcElement
 
     public bool StartsWith(char value)
     {
-        if (_doubleForm.HasValue)
+        if (!IsString)
             return false;
 
         return StringForm.StartsWith(value);

@@ -3,7 +3,7 @@ using System.Text.RegularExpressions;
 
 namespace Common.Cli;
 
-internal static class ConsoleHelpers
+public static class ConsoleHelpers
 {
     private static readonly Lazy<Regex> ColorBlockRegEx = new(
         () => new Regex("\\[(?<color>.*?)\\](?<text>[^[]*)\\[/\\k<color>\\]", RegexOptions.IgnoreCase),

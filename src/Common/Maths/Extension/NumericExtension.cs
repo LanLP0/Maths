@@ -1,6 +1,6 @@
 namespace Common.Maths.Extension;
 
-internal static class NumericExtension
+public static class NumericExtension
 {
     public static double ToRadians(this double angle)
     {

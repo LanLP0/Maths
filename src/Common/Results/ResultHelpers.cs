@@ -1,6 +1,6 @@
 namespace Common.Results;
 
-internal static class ResultHelpers
+public static class ResultHelpers
 {
     public static Result<T> Ok<T>(T value)
     {

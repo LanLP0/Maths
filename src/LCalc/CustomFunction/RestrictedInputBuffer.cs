@@ -1,20 +1,22 @@
 using System.Text;
 using Common.Results;
+using LCalc.Extension;
+using LCalc.Helpers;
 
-namespace LCalc.Helpers.CustomFunction;
+namespace LCalc.CustomFunction;
 
-internal ref struct SpecialInputBuffer
+internal ref struct RestrictedInputBuffer
 {
-    public SpecialInputBuffer(List<CalcElement> list)
+    public RestrictedInputBuffer(List<CalcElement> list)
     {
         Buffer = new StringBuilder();
-        this.list = list;
+        List = list;
     }
 
     public BufferContentType Content { get; set; } = BufferContentType.Empty;
 
     public StringBuilder Buffer { get; init; }
-    public List<CalcElement> list { get; init; }
+    public List<CalcElement> List { get; init; }
 
     public Result ParseBufferAndClear()
     {
@@ -23,6 +25,29 @@ internal ref struct SpecialInputBuffer
 
         switch (Content)
         {
+            case BufferContentType.Number:
+            {
+                var num = Buffer.ToString();
+
+                if (num is "-")
+                {
+                    if (List[^1].StringEq("+"))
+                        List.Remove(List.Count - 1);
+                    
+                    List.Add("-");
+
+                    Buffer.Clear();
+                    break;
+                }
+
+                if (!double.TryParse(num, out var val))
+                    return Err("Invalid number");
+                
+                List.Add(val);
+
+                Buffer.Clear();
+                break;
+            }
             case BufferContentType.SpecialNumber:
             {
                 var num = Buffer.ToString();
@@ -33,13 +58,13 @@ internal ref struct SpecialInputBuffer
 
                 switch ((int)num[1])
                 {
-                    case 104: // h
+                    case 120: // x
                     {
                         var result = CalculatorHelpers.HexStringToDouble(num.Substring(2));
                         if (result.IsFaulted)
                             return result;
 
-                        list.Add(result.Value);
+                        List.Add(result.Value);
                         break;
                     }
                     case 98: // b
@@ -48,7 +73,7 @@ internal ref struct SpecialInputBuffer
                         if (result.IsFaulted)
                             return result;
 
-                        list.Add(result.Value);
+                        List.Add(result.Value);
                         break;
                     }
                     case 111: // o
@@ -57,7 +82,7 @@ internal ref struct SpecialInputBuffer
                         if (result.IsFaulted)
                             return result;
 
-                        list.Add(result.Value);
+                        List.Add(result.Value);
                         break;
                     }
                 }
@@ -66,7 +91,7 @@ internal ref struct SpecialInputBuffer
             }
             default:
             {
-                list.Add(Buffer.ToString());
+                List.Add(Buffer.ToString());
                 Buffer.Clear();
                 break;
             }

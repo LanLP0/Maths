@@ -1,6 +1,6 @@
 namespace Common.Cli;
 
-internal static class EnumHelpers
+public static class EnumHelpers
 {
     public static bool TryParseFast(string text, out ConsoleColor consoleColor)
     {

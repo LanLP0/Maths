@@ -1,6 +1,6 @@
 namespace Common.Maths;
 
-internal static class Maths
+public static class Maths
 {
     public static List<int> GetFact(int value)
     {

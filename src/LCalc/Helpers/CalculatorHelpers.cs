@@ -1,7 +1,8 @@
 ﻿using Common.Maths;
 using Common.Maths.Extension;
 using Common.Results;
-using LCalc.Helpers.CustomFunction;
+using LCalc.CustomFunction;
+using LCalc.Extension;
 
 namespace LCalc.Helpers;
 
@@ -521,6 +522,7 @@ internal static class CalculatorHelpers
         for (var i = 0; i < math.Count; i++)
         {
             var op = math[i];
+            
             if (op.StartsWith('*'))
             {
                 var check = Guard.IndexInRange(math, i - 1, i + 1);
@@ -569,7 +571,8 @@ internal static class CalculatorHelpers
         for (var i = 0; i < math.Count; i++)
         {
             var op = math[i];
-            if (op.Length is not 1) continue;
+            if (!op.IsString && op.Length is not 1) continue;
+            
             if (op.StartsWith('+'))
             {
                 var check = Guard.IndexInRange(math, i - 1, i + 1);
@@ -631,9 +634,9 @@ internal static class CalculatorHelpers
          * Number (Ex: -123.56, 69)
          * Arg (Ex: abbhdsh, abdsjgad)
          * Other arg (Ex: &step, &shdjagdjas=12136913)
-         * Hex: &b{value} //ok how im i going to do this
-         * Binary: &b{value}
-         * Octal: &o{value}
+         * Hex: 0x{value}
+         * Binary: 0b{value}
+         * Octal: 0o{value}
          */
         var buffer = new InputBuffer(result, args);
 
@@ -673,7 +676,7 @@ internal static class CalculatorHelpers
                         break;
                     }
 
-                    if ((int)prevChr is not (> 47 and < 58) and not (> 96 and < 123) and not (41 or 61))
+                    if ((int)prevChr is not (> 47 and < 58)/*0-9*/ and not (> 96 and < 123) /*a-z*/ and not (41/*)*/ or 61/*=*/))
                     {
                         buffer.Append('-', BufferContentType.Number);
                         break;
@@ -694,8 +697,8 @@ internal static class CalculatorHelpers
                         if (result1.IsFaulted) return result1;
                     }
 
-                    if ((int)nextChr is > 47 and < 58 &&
-                        (int)prevChr is not (> 47 and < 58) and not (> 96 and < 123) and not 41)
+                    if ((int)nextChr is > 47 and < 58/*0-9*/ &&
+                        (int)prevChr is not (> 47 and < 58)/*0-9*/ and not (> 96 and < 123)/*a-z*/ and not 41/*)*/)
                     {
                         buffer.Append('-', BufferContentType.Number);
                         break;
@@ -750,34 +753,14 @@ internal static class CalculatorHelpers
                         if (result1.IsFaulted) return result1;
                     }
 
-                    if ((int)nextChr is not (> 96 and < 123))
+                    if ((int)nextChr is not (> 96 and < 123)/*a-z*/)
                     {
                         result.Add("&");
                         break;
                     }
 
                     buffer.Append('&');
-                    if ((int)nextChr is not (104 or 98 or 111))
-                    {
-                        buffer.Content = BufferContentType.Arg;
-                        break;
-                    }
-
-                    if (!math.TryGetValueAt(i + 2, out var nextNextChr))
-                    {
-                        buffer.Content = BufferContentType.Arg;
-                        break;
-                    }
-
-                    if ((int)nextNextChr is not (> 47 and < 58) and not (> 96 and < 103))
-                    {
-                        buffer.Content = BufferContentType.Arg;
-                        break;
-                    }
-
-                    buffer.Append(nextChr);
-                    buffer.Content = BufferContentType.SpecialNumber;
-                    i++;
+                    buffer.Content = BufferContentType.Arg;
                     break;
                 }
                 case > 47 and < 58: // 0-9
@@ -797,6 +780,7 @@ internal static class CalculatorHelpers
                             break;
                         }
                         case BufferContentType.Arg:
+                        case BufferContentType.ArgWithValue:
                         {
                             result1 = buffer.ParseBufferAndClear(ref opts);
                             if (result1.IsFaulted) return result1;
@@ -808,6 +792,38 @@ internal static class CalculatorHelpers
                             buffer.Content = BufferContentType.Number;
                             break;
                         }
+                    }
+
+                    if (chr is '0' && buffer.Buffer.Length is 0) //Look ahead for special number
+                    {
+                        if (!math.TryGetValueAt(i + 1, out var nextChr))
+                        {
+                            buffer.Append(chr);
+                            break;
+                        }
+                        
+                        if ((int)nextChr is not (120 or 98 or 111)/*x | b | o*/)
+                        {
+                            buffer.Append(chr);
+                            break;
+                        }
+
+                        if (!math.TryGetValueAt(i + 2, out var nextNextChr))
+                        {
+                            buffer.Append(chr);
+                            break;
+                        }
+
+                        if ((int)nextNextChr is not (> 47 and < 58)/*0-9*/ and not (> 96 and < 103)/*a-f*/)
+                        {
+                            return Err<List<CalcElement>>("Invalid special number");
+                        }
+
+                        buffer.Append('0');
+                        buffer.Append(nextChr);
+                        buffer.Content = BufferContentType.SpecialNumber;
+                        i++;
+                        break;
                     }
 
                     buffer.Append(chr);
@@ -840,7 +856,17 @@ internal static class CalculatorHelpers
                         case BufferContentType.Number:
                         {
                             if ((int)buffer[0] is 45)
-                                break;
+                            {
+                                if (buffer.Buffer.Length is 1)
+                                {
+                                    result1 = buffer.ParseBufferAndClear(ref opts);
+                                    if (result1.IsFaulted) return result1;
+                                    buffer.Content = BufferContentType.String;
+                                    
+                                    break;
+                                }
+                            }
+                                
                             result1 = buffer.ParseBufferAndClear(ref opts);
                             if (result1.IsFaulted) return result1;
                             result.Add("*");
@@ -850,7 +876,21 @@ internal static class CalculatorHelpers
                         case BufferContentType.SpecialNumber:
                         case BufferContentType.String:
                         case BufferContentType.Arg:
+                        case BufferContentType.ArgWithValue:
                             break;
+                        case BufferContentType.Variable:
+                        {
+                            if ((int)buffer.Buffer[^1] is not (> 96 and < 123 or 61)/*a-z*/) //If last char is not a-z | =(a number in this case), goto default handler
+                            {
+                                result1 = buffer.ParseBufferAndClear(ref opts);
+                                if (result1.IsFaulted) return result1;
+                                buffer.Content = BufferContentType.String;
+                                break;
+                            }
+                            
+                            buffer.Content = BufferContentType.ArgWithValue;
+                            break;
+                        }
                         default:
                         {
                             result1 = buffer.ParseBufferAndClear(ref opts);
@@ -870,7 +910,7 @@ internal static class CalculatorHelpers
                         if (!math.TryGetValueAt(i + 1, out var nextChr))
                             return Err<List<CalcElement>>("Invalid operator: =");
 
-                        if ((int)nextChr is not 61)
+                        if ((int)nextChr is not 61/*=*/)
                             return Err<List<CalcElement>>("Invalid operator: =");
 
                         result.Add("==");
@@ -878,7 +918,7 @@ internal static class CalculatorHelpers
                         break;
                     }
 
-                    if ((int)firstChr is 38)
+                    if ((int)firstChr is 38/*&*/)
                     {
                         buffer.Append('=', BufferContentType.Variable);
                         break;

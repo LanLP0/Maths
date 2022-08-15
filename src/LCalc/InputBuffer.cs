@@ -1,5 +1,6 @@
 using System.Text;
 using Common.Results;
+using LCalc.Extension;
 using LCalc.Helpers;
 
 namespace LCalc;
@@ -40,6 +41,8 @@ internal ref struct InputBuffer
                         case "raw":
                             opts.Raw = true;
                             break;
+                        default:
+                            return Err("Not an valid arg");
                     }
 
                 break;
@@ -53,8 +56,56 @@ internal ref struct InputBuffer
                 if (string.IsNullOrEmpty(tmp[1]))
                     return Err("Missing variable value");
 
-                if (!Args.TryAdd(tmp[0], tmp[1])) return Err("Variable has already been set");
+                if (!double.TryParse(tmp[1], out var val))
+                    return Err("Variable's value is not a valid number");
+                    
+                if (!Args.TryAdd(tmp[0], val)) return Err("Variable has already been set");
 
+                break;
+            }
+            case BufferContentType.ArgWithValue:
+            {
+                var arg = Buffer.ToString();
+                Buffer.Clear();
+                var tmp = arg.Substring(1).Split('=');
+
+                if (string.IsNullOrEmpty(tmp[1]))
+                    return Err("Missing arg value");
+
+                switch (tmp[0])
+                {
+                    // case "solve":
+                    // {
+                    //     opts.SolveFor.Add(tmp[1]);
+                    //     break;
+                    // }
+                    default:
+                        return Err("Not an valid arg");
+                }
+
+                break;
+            }
+            case BufferContentType.Number:
+            {
+                var num = Buffer.ToString();
+
+                if (num is "-")
+                {
+                    if (List.Count > 0 && List[^1].StringEq("+"))
+                        List.Remove(List.Count - 1);
+                    
+                    List.Add("-");
+
+                    Buffer.Clear();
+                    break;
+                }
+
+                if (!double.TryParse(num, out var val))
+                    return Err("Invalid number");
+                
+                List.Add(val);
+
+                Buffer.Clear();
                 break;
             }
             case BufferContentType.SpecialNumber:
@@ -64,7 +115,7 @@ internal ref struct InputBuffer
 
                 switch ((int)num[1])
                 {
-                    case 104: // h
+                    case 120: // x
                     {
                         var result = CalculatorHelpers.HexStringToDouble(num.Substring(2));
                         if (result.IsFaulted)

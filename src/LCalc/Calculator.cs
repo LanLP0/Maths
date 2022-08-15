@@ -1,10 +1,12 @@
 ﻿// ReSharper disable CommentTypo
 
+using System.Diagnostics;
 using System.Text;
+using System.Text.Json;
 using Common.Maths.Extension;
 using Common.Results;
+using LCalc.CustomFunction;
 using LCalc.Helpers;
-using LCalc.Helpers.CustomFunction;
 
 namespace LCalc;
 
@@ -27,6 +29,12 @@ public static class Calculator
             CalculatorHelpers.SplitInput(input.Trim().ToLower(), out var args, out var opts, out var functions);
         if (splitResult.IsFaulted)
             return HandleException(splitResult.Exception!);
+
+        Debug.WriteLine(JsonSerializer.Serialize(splitResult.Value!), "maths");
+        Debug.WriteLine(JsonSerializer.Serialize(args), "args");
+        Debug.WriteLine(JsonSerializer.Serialize(opts), "opts");
+        Debug.WriteLine(JsonSerializer.Serialize(functions), "functions");
+        
         var math = splitResult.Value!;
 
         InputHandler(ref math, args);
@@ -88,11 +96,13 @@ public static class Calculator
         args.TryAdd("pi", Math.PI);
         args.TryAdd("tau", Math.Tau);
         args.TryAdd("e", Math.E);
+        
         for (var i = 0; i < math.Count; i++)
         {
             var m = math[i];
             if (!m.IsString)
-                return;
+                continue;
+            
             if (args.TryGetValue(m.StringForm, out var val))
                 math[i] = val.CreateCopy();
         }
@@ -103,8 +113,15 @@ public static class Calculator
         result = false;
         var pos = new List<int>();
         for (var i = 0; i < math.Count; i++)
-            if (math[i].StringForm is "==" or "!=" or ">=" or "<=" or ">" or "<")
+        {
+            var element = math[i];
+            if (!element.IsString)
+                continue;
+            
+            if (element.StringForm is "==" or "!=" or ">=" or "<=" or ">" or "<")
                 pos.Add(i);
+        }
+
         if (pos.Count == 0)
             return Ok(false);
         result = true;

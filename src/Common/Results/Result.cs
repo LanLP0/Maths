@@ -1,6 +1,6 @@
 namespace Common.Results;
 
-internal readonly ref struct Result<T>
+public readonly ref struct Result<T>
 {
     private readonly Result _innerResult;
     public readonly T? Value;
