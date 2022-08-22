@@ -165,6 +165,7 @@ internal static class DeltaHelpers
                         break;
 
                     if (isUpper)
+                    {
                         switch (pos)
                         {
                             case 0:
@@ -183,7 +184,19 @@ internal static class DeltaHelpers
                                 break;
                             }
                         }
+
+                        if (pos < 2)
+                        {
+                            pos++;
+                        }
+                        else
+                        {
+                            pos = 0;
+                            isUpper = false;
+                        }
+                    }
                     else
+                    {
                         switch (pos)
                         {
                             case 0:
@@ -202,6 +215,10 @@ internal static class DeltaHelpers
                                 break;
                             }
                         }
+
+                        if (pos < 2)
+                            pos++;
+                    }
 
                     break;
                 }
