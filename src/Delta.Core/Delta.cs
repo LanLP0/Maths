@@ -1,6 +1,6 @@
 namespace Delta.Core;
 
-internal class Delta
+internal sealed class Delta
 {
     private readonly List<SimpleVariable> _l0 = new();
     private readonly List<SimpleVariable> _l1 = new();

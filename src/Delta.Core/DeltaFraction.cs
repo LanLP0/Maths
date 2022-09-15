@@ -1,6 +1,6 @@
 namespace Delta.Core;
 
-internal class DeltaFraction
+internal sealed class DeltaFraction
 {
     public SimpleVariable T0 { get; } = new();
     public SimpleVariable T1 { get; } = new();

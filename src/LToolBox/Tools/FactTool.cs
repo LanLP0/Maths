@@ -3,7 +3,7 @@ using Common.Maths;
 
 namespace LToolBox.Tools;
 
-internal class FactTool : Tool
+internal sealed class FactTool : Tool
 {
     public override string ToolName { get; } = "fact";
 

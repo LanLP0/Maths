@@ -4,7 +4,7 @@ using Common.Maths.Extension;
 
 namespace LToolBox.Tools;
 
-internal class PolynomialTool : Tool
+internal sealed class PolynomialTool : Tool
 {
     public override string ToolName { get; } = "polynomial";
 

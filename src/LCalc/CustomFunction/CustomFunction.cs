@@ -4,7 +4,7 @@ using LCalc.Helpers;
 
 namespace LCalc.CustomFunction;
 
-internal class CustomFunction
+internal sealed class CustomFunction
 {
     private readonly List<string> _args;
     private readonly IReadOnlyList<CalcElement> _math;

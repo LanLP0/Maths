@@ -6,7 +6,7 @@ using Serilog;
 
 namespace LToolBox;
 
-internal class Program
+internal sealed class Program
 {
     private static Tool[] _tools = null!;
 

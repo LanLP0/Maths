@@ -2,7 +2,7 @@ using LCalc;
 
 namespace LToolBox.Tools;
 
-internal class LCalcTool : Tool
+internal sealed class LCalcTool : Tool
 {
     public override string ToolName { get; } = "lcalc";
 

@@ -1,6 +1,6 @@
 namespace LCalc;
 
-internal class CalcOptions
+internal sealed class CalcOptions
 {
     public bool StepByStep { get; set; }
     public bool Raw { get; set; }

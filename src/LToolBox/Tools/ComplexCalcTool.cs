@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 
 namespace LToolBox.Tools;
 
-internal class ComplexMultiplyTool : Tool
+internal sealed class ComplexMultiplyTool : Tool
 {
     public override string ToolName { get; } = "complexcalc";
 

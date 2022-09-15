@@ -4,7 +4,7 @@ using LToolBox.Delta;
 
 namespace LToolBox.Tools;
 
-internal class DeltaTool : Tool
+internal sealed class DeltaTool : Tool
 {
     public override string ToolName { get; } = "delta";
 

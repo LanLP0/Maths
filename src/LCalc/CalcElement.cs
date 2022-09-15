@@ -2,7 +2,7 @@ using Common.Results;
 
 namespace LCalc;
 
-internal class CalcElement
+internal sealed class CalcElement
 {
     private double? _doubleForm;
     private string? _stringForm;

@@ -2,7 +2,7 @@
 
 // using org.mariuszgromada.math.mxparser;
 
-internal class Program
+internal sealed class Program
 {
     public static void Main(string[] args)
     {

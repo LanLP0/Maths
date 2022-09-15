@@ -1,6 +1,6 @@
 ﻿namespace Delta.Core;
 
-internal class SimpleVariable
+internal sealed class SimpleVariable
 {
     public int NumberPart { get; set; } = 0;
 

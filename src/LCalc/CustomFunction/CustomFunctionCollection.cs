@@ -2,7 +2,7 @@ using Common.Results;
 
 namespace LCalc.CustomFunction;
 
-internal class CustomFunctionCollection
+internal sealed class CustomFunctionCollection
 {
     private readonly List<LCalc.CustomFunction.CustomFunction> _list = new();
     private bool[] _calledFunction = Array.Empty<bool>();

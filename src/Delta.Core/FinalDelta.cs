@@ -2,7 +2,7 @@ using Common.Maths;
 
 namespace Delta.Core;
 
-internal class FinalDelta
+internal sealed class FinalDelta
 {
     public SimpleVariable T0 { get; init; } = null!;
     public SimpleVariable T1 { get; init; } = null!;
