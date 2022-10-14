@@ -26,18 +26,18 @@ public static class Calculator
             return "Error: No expression found";
 
         var splitResult =
-            CalculatorHelpers.SplitInput(input.Trim().ToLower(), out var args, out var opts, out var functions);
+            CalculatorHelpers.SplitInput(input.Trim().ToLower().AsSpan(), out var args, out var opts, out var functions);
         if (splitResult.IsFaulted)
             return HandleException(splitResult.Exception!);
 
-        Debug.WriteLine(JsonSerializer.Serialize(splitResult.Value!), "maths");
-        Debug.WriteLine(JsonSerializer.Serialize(args), "args");
-        Debug.WriteLine(JsonSerializer.Serialize(opts), "opts");
-        Debug.WriteLine(JsonSerializer.Serialize(functions), "functions");
+        // Debug.WriteLine(JsonSerializer.Serialize(splitResult.Value!), "maths");
+        // Debug.WriteLine(JsonSerializer.Serialize(args), "args");
+        // Debug.WriteLine(JsonSerializer.Serialize(opts), "opts");
+        // Debug.WriteLine(JsonSerializer.Serialize(functions), "functions");
         
         var math = splitResult.Value!;
 
-        InputHandler(ref math, args);
+        InputHandler(math, args);
 
         var compare = TryCompare(math, functions, out var result1);
         if (compare.IsFaulted)
@@ -91,7 +91,7 @@ public static class Calculator
         };
     }
 
-    private static void InputHandler(ref List<CalcElement> math, Dictionary<string, CalcElement> args)
+    private static void InputHandler(List<CalcElement> math, Dictionary<string, CalcElement> args)
     {
         args.TryAdd("pi", Math.PI);
         args.TryAdd("tau", Math.Tau);

@@ -82,8 +82,6 @@ internal ref struct InputBuffer
                     default:
                         return Err("Not an valid arg");
                 }
-
-                break;
             }
             case BufferContentType.Number:
             {

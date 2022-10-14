@@ -622,7 +622,7 @@ internal static class CalculatorHelpers
         return Ok();
     }
 
-    public static Result<List<CalcElement>> SplitInput(string math, out Dictionary<string, CalcElement> args,
+    public static Result<List<CalcElement>> SplitInput(ReadOnlySpan<char> math, out Dictionary<string, CalcElement> args,
         out CalcOptions opts, out CustomFunctionCollection functions)
     {
         args = new Dictionary<string, CalcElement>();
@@ -1107,7 +1107,7 @@ internal static class CalculatorHelpers
                     if (pos is -1)
                         return Err<List<CalcElement>>("No matching end square bracket");
 
-                    var customFunction = LCalc.CustomFunction.CustomFunction.Parse(math.AsSpan()[(i + 1)..pos], functions);
+                    var customFunction = LCalc.CustomFunction.CustomFunction.Parse(math[(i + 1)..pos], functions);
                     if (customFunction.IsFaulted) return new Result<List<CalcElement>>(customFunction.Exception!);
 
                     functions.Add(customFunction.Value!);
