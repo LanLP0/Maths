@@ -24,6 +24,8 @@ public sealed class CalculatorTest
     [InlineData("0x1e240", "123456")]
     [InlineData("0o361100", "123456")]
     [InlineData("0b11110001001000000", "123456")]
+    [InlineData("25%6", "1")]
+    [InlineData("25%", "1/4")]
     // Special number in a function
     [InlineData("[f()=0x1e240]f()", "123456")]
     [InlineData("[f()=0o361100]f()", "123456")]
@@ -60,6 +62,8 @@ public sealed class CalculatorTest
     [InlineData("log(3)", "1.0986122886681098")]
     // Custom function
     [InlineData("[foo(a b c)=a^(b+c)]foo(2 1 foo(2 1 1))", "32")]
+    [InlineData("[foo(a)=a%6] foo(25)", "1")]
+    [InlineData("[foo(a)=a%] foo(25)", "1/4")]
     public void Result_Should_BeExpected(string math, string result)
     {
         // Arrange

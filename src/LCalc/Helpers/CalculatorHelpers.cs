@@ -478,7 +478,7 @@ internal static class CalculatorHelpers
 
     public static Result CalcNormal(List<CalcElement> math)
     {
-        var result = Mod(math);
+        var result = ModPercent(math);
         if (!result.Success)
             return result;
 
@@ -490,7 +490,7 @@ internal static class CalculatorHelpers
         return result;
     }
 
-    private static Result Mod(List<CalcElement> math)
+    private static Result ModPercent(List<CalcElement> math)
     {
         var i = 0;
         for (;;)
@@ -499,17 +499,32 @@ internal static class CalculatorHelpers
             if (i is -1)
                 return Ok();
 
-            var check = Guard.IndexInRange(math, i - 1, i + 1);
+            var check = Guard.IndexInRange(math, i - 1);
             if (check.IsFaulted)
                 return check;
 
             var left = math[i - 1];
             var leftVal = left.GetValue();
             if (leftVal.IsFaulted) return leftVal;
+            
+            check = Guard.IndexInRange(math, i + 1);
+            if (check.IsFaulted) // if no value is provided after, turn before value into percentage
+            {
+                left.DoubleForm = leftVal.Value / 100;
+                math.RemoveAt(i);
+                
+                return Ok();
+            }
 
             var right = math[i + 1];
             var rightVal = right.GetValue();
-            if (rightVal.IsFaulted) return rightVal;
+            if (rightVal.IsFaulted) // if next value isn't a number, turn previous value into percentage 
+            {
+                left.DoubleForm = leftVal.Value / 100;
+                math.RemoveAt(i);
+                
+                return Ok();
+            }
 
             left.DoubleForm = leftVal % rightVal;
             math.RemoveRange(i, 2);
@@ -650,7 +665,6 @@ internal static class CalculatorHelpers
                 case 43: // +
                 case 42: // *
                 case 47: // /
-                case 37: // %
                 case 124: // |
                 {
                     if (i - 1 < 0)
@@ -665,6 +679,20 @@ internal static class CalculatorHelpers
                         if (result1.IsFaulted) return result1;
                     }
 
+                    result.Add(chr);
+                    break;
+                }
+                case 37: // %
+                {
+                    if (i - 1 < 0)
+                        return Err<List<CalcElement>>($"No value before {chr}");
+                    
+                    if (buffer.Content is not BufferContentType.Empty)
+                    {
+                        result1 = buffer.ParseBufferAndClear(ref opts);
+                        if (result1.IsFaulted) return result1;
+                    }
+                    
                     result.Add(chr);
                     break;
                 }

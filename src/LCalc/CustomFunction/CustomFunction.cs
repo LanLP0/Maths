@@ -99,7 +99,6 @@ internal sealed class CustomFunction
                 case 43: // +
                 case 42: // *
                 case 47: // /
-                case 37: // %
                 case 124: // |
                 {
                     if (i - 1 < 0)
@@ -114,6 +113,20 @@ internal sealed class CustomFunction
                         if (result1.IsFaulted) return result1;
                     }
 
+                    result.Add(chr);
+                    break;
+                }
+                case 37: // %
+                {
+                    if (i - 1 < 0)
+                        return Err<List<CalcElement>>($"No value before {chr}");
+                    
+                    if (buffer.Content is not BufferContentType.Empty)
+                    {
+                        result1 = buffer.ParseBufferAndClear();
+                        if (result1.IsFaulted) return result1;
+                    }
+                    
                     result.Add(chr);
                     break;
                 }
