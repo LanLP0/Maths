@@ -9,6 +9,8 @@
         <ToolCommandName>lcalc</ToolCommandName>
         <PackageVersion>0.0.0.0</PackageVersion>
         <AssemblyName>LCalc</AssemblyName>
+<!--        <PublishAot>true</PublishAot>-->
+        <StripSymbols>true</StripSymbols>
     </PropertyGroup>
 
     <ItemGroup>

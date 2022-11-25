@@ -11,6 +11,8 @@
         <PackageVersion>0.0.0.0</PackageVersion>
         <Authors>LanLP</Authors>
         <Description>LanLP's math tools collection</Description>
+<!--        <PublishAot>true</PublishAot>-->
+        <StripSymbols>true</StripSymbols>
     </PropertyGroup>
 
     <ItemGroup>
