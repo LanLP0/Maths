@@ -17,8 +17,4 @@
         <ProjectReference Include="..\Common\Common.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Compile Remove="CustomFunction\SpecialInputBuffer.cs" />
-    </ItemGroup>
-
 </Project>
