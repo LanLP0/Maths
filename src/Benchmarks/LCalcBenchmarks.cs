@@ -1,4 +1,5 @@
 ﻿using BenchmarkDotNet.Attributes;
+using BenchmarkDotNet.Attributes.Filters;
 using BenchmarkDotNet.Jobs;
 using LCalc;
 using LCalc.CustomFunction;
