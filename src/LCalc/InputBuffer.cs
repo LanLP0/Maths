@@ -20,11 +20,7 @@ internal ref struct InputBuffer
     public List<CalcElement> List { get; init; }
     public Dictionary<string, CalcElement> Args { get; init; }
 
-    public Result ParseBufferAndClear(
-#if NET7_0_OR_GREATER
-        scoped
-#endif
-    ref CalcOptions opts)
+    public Result ParseBufferAndClear(scoped ref CalcOptions opts)
     {
         if (Buffer.Length is 0)
             return new Result();
