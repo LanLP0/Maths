@@ -63,7 +63,7 @@ public static class Calculator
                 return $"Result: {result}";
             }
 
-            result = result2.Value.ToFraction();
+            result = result2.Value.Humanize();
             return $"Result: {result}";
         }
 
@@ -77,7 +77,7 @@ public static class Calculator
             return $"Result: {result}";
         }
 
-        result = result2.Value.ToFraction();
+        result = result2.Value.Humanize();
         return $"{stepsString}\nResult: {result}";
     }
 

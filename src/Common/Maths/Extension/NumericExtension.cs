@@ -7,7 +7,7 @@ public static class NumericExtension
         return Math.PI / 180 * angle;
     }
 
-    public static string ToFraction(this double num, short decimalPoints = 20)
+    public static string Humanize(this double num, short maxDecimalPoints = 20)
     {
         switch (num)
         {
@@ -17,10 +17,13 @@ public static class NumericExtension
             case double.NegativeInfinity:
                 return "∞";
         }
+        
+        if (maxDecimalPoints <= 2)
+            return num.ToString();
 
         var num1 = Math.Abs(num);
         double denominator = 1;
-        for (var i = 0; i < decimalPoints; i++)
+        for (var i = 0; i < maxDecimalPoints; i++)
         {
             if (num1 % 1 < double.Epsilon * 1000) break;
 
@@ -34,6 +37,9 @@ public static class NumericExtension
         num1 = num * denominator;
 
         if (Math.Abs(num1 % 1) > double.Epsilon * 1000)
+            return num.ToString();
+
+        if (denominator <= 100)
             return num.ToString();
 
         var gcd = Maths.GetGcd(num1, denominator);

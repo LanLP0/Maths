@@ -41,14 +41,14 @@ internal sealed class DeltaTool : Tool
             }
             case 1:
             {
-                Console.Write(result1!.Value.ToFraction());
+                Console.Write(result1!.Value.Humanize());
                 break;
             }
             case 2:
             {
-                Console.Write(result1!.Value.ToFraction());
+                Console.Write(result1!.Value.Humanize());
                 Console.Write(", ");
-                Console.Write(result2!.Value.ToFraction());
+                Console.Write(result2!.Value.Humanize());
                 break;
             }
         }
