@@ -23,7 +23,7 @@ internal sealed class ComplexMultiplyTool : Tool
         for (;;)
         {
             var op = ConsoleHelpers.ChooseOption("Op (*/^/+/-): ", new[] { "*", "^", "+", "-" },
-                false)!;
+                false);
 
             if (op is null)
             {
