@@ -6,9 +6,9 @@ namespace LToolBox.Tools;
 
 internal sealed class DeltaTool : Tool
 {
-    public override string ToolName { get; } = "delta";
+    public override string ToolName { get; } = "minmaxfrac";
 
-    public override string? HelpMsg { get; } = "Calculate a fraction using delta\nType `q` to exit";
+    public override string? HelpMsg { get; } = "Calculate minimum and maximum value of a fraction\nUse arrow keys or vim keys to move around\nEnter value by start typing it\nType `q` to exit";
 
     public override void Execute()
     {
