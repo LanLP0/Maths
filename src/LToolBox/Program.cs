@@ -11,6 +11,13 @@ internal sealed class Program
     private static Tool[] _tools = null!;
 
     private static string _promptTemplate = null!;
+    
+#if DEBUG
+    public static readonly ILogger _logger = new LoggerConfiguration()
+        .MinimumLevel.Verbose()
+        .WriteTo.Console()
+        .CreateLogger();
+#endif
 
     public static void Main()
     {
@@ -19,27 +26,20 @@ internal sealed class Program
             Console.ForegroundColor = ConsoleColor.White;
             Environment.Exit(0);
         };
-
-        var serviceProvider = new ServiceCollection()
+        _tools = new Tool[]
+        {
+            new ComplexCalcTool(
 #if DEBUG
-            .AddLogging(a =>
-            {
-                var logger = new LoggerConfiguration()
-                    .MinimumLevel.Verbose()
-                    .WriteTo.Console();
-
-                a.AddSerilog(logger.CreateLogger());
-            })
+                _logger
 #endif
-            .AddSingleton<Tool, ComplexMultiplyTool>()
-            .AddSingleton<Tool, DeltaTool>()
-            .AddSingleton<Tool, LCalcTool>()
-            .AddSingleton<Tool, PolynomialTool>()
-            .AddSingleton<Tool, FactTool>()
-            .AddSingleton<Tool, IsPrimeTool>()
-            .BuildServiceProvider();
-
-        _tools = serviceProvider.GetServices<Tool>().ToArray();
+                ),
+            new FactTool(),
+            new IsPrimeTool(),
+            new LCalcTool(),
+            new MinMaxFracTool(),
+            new PolynomialTool()
+            
+        };
 
         StringBuilder buffer = new();
         buffer.Append("> ");

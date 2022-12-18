@@ -1,12 +1,12 @@
 using Common.Cli;
 using Common.Maths.Expressions;
+using Serilog;
 #if DEBUG
-using Microsoft.Extensions.Logging;
 #endif
 
 namespace LToolBox.Tools;
 
-internal sealed class ComplexMultiplyTool : Tool
+internal sealed class ComplexCalcTool : Tool
 {
     public override string ToolName { get; } = "complexcalc";
 
@@ -90,7 +90,7 @@ internal sealed class ComplexMultiplyTool : Tool
             Console.WriteLine("Result:");
             RenderExpression(ex, -1);
 #if DEBUG
-            _logger.LogDebug("{@ex}", ex);
+            _logger.Debug("{@ex}", ex);
 #endif
 
             Console.WriteLine();
@@ -268,7 +268,7 @@ internal sealed class ComplexMultiplyTool : Tool
                     Console.WriteLine();
                     result = result.Collapse();
 #if DEBUG
-                    _logger.LogDebug("{@resultEx}", result);
+                    _logger.Debug("{@resultEx}", result);
 #endif
                     return result;
                 }
@@ -292,9 +292,9 @@ internal sealed class ComplexMultiplyTool : Tool
         ConsoleHelpers.SafeSetCursorPosition(currLeft, currTop);
     }
 #if DEBUG
-    private readonly ILogger<ComplexMultiplyTool> _logger;
+    private readonly ILogger _logger;
 
-    public ComplexMultiplyTool(ILogger<ComplexMultiplyTool> logger)
+    public ComplexCalcTool(ILogger logger)
     {
         _logger = logger;
     }

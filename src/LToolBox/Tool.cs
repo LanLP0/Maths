@@ -1,6 +1,6 @@
 namespace LToolBox;
 
-public abstract class Tool
+internal abstract class Tool
 {
     public virtual string? HelpMsg { get; } = null;
 

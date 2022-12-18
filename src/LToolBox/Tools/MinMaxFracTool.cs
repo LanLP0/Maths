@@ -4,7 +4,7 @@ using LToolBox.Delta;
 
 namespace LToolBox.Tools;
 
-internal sealed class DeltaTool : Tool
+internal sealed class MinMaxFracTool : Tool
 {
     public override string ToolName { get; } = "minmaxfrac";
 
