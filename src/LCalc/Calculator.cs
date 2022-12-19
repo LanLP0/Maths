@@ -15,6 +15,8 @@ namespace LCalc;
 /// </summary>
 public static class Calculator
 {
+    const string Newline = "\r\n";
+    
     /// <summary>
     ///     Calculate a string. This method shouldn't throw an error
     /// </summary>
@@ -74,11 +76,11 @@ public static class Calculator
         if (opts.Raw)
         {
             result = result2.ToString();
-            return $"Result: {result}";
+            return $"{stepsString}{Newline}Result: {result}";
         }
 
         result = result2.Value.Humanize();
-        return $"{stepsString}\nResult: {result}";
+        return $"{stepsString}{Newline}Result: {result}";
     }
 
     private static string HandleException(Exception ex)
@@ -185,32 +187,43 @@ public static class Calculator
             }
             else if (str.StartsWith(')'))
             {
+                if (level == 0) // Level cannot be negative
+                    return Err<double>("Invalid ) with no matching brace");
+
                 level--;
             }
 
         if (level is not 0)
-            return Err<double>("Invalid number of brackets");
+            return Err<double>("Invalid number of braces");
 
         while (maxLevel is not 0)
         {
             level = 0;
             for (var i = 0; i < math.Count; i++)
             {
-                if (math[i].StartsWith(')'))
+                var m = math[i];
+                
+                // Find the () at highest level
+                if (m.StartsWith(')'))
                     level--;
-                else if (math[i].EndsWith('('))
+                else if (m.EndsWith('('))
                     level++;
                 if (level != maxLevel) continue;
 
                 string? opt = null;
-                if (math[i].Length is not 1)
-                    opt = math[i].Substring(0, math[i].Length - 1);
+                if (m.Length is not 1)
+                    opt = m.Substring(0, m.Length - 1);
+                
+                // Get the inside of ()
                 var count = math.FindIndex(i + 1, a => a.EndsWith(')')) - i - 1;
                 var calculation = math.GetRange(i + 1, count);
+                
+                // Calculate the result
                 math.RemoveRange(i, count + 1);
                 var result = CalcByLevel(calculation, opt, functions);
                 if (!result.Success)
                     return Err<double>(result.Exception!);
+                // And place it in place of ()
                 math[i].DoubleForm = result.Value;
 
                 level--;
@@ -236,51 +249,91 @@ public static class Calculator
             }
             else if (str.StartsWith(')'))
             {
+                if (level == 0) // Level cannot be negative
+                {
+                    stepsString = string.Empty;
+                    return Err<double>("Invalid ) with no matching brace");
+                }
+                
                 level--;
             }
 
         if (level is not 0)
         {
             stepsString = string.Empty;
-            return Err<double>("Invalid number of brackets");
+            return Err<double>("Invalid number of braces");
         }
 
         var strBuilder = new StringBuilder();
+        Span<bool> fmtData = stackalloc bool[maxLevel + 1];
         while (maxLevel is not 0)
         {
+            // strBuilder.Append(string.Concat(math));
+            // strBuilder.Append('\n');
+
             level = 0;
             for (var i = 0; i < math.Count; i++)
             {
-                if (math[i].StartsWith(')'))
-                    level--;
-                else if (math[i].EndsWith('('))
-                    level++;
-                if (level != maxLevel) continue;
+                var m = math[i];
+                strBuilder.Append(m);
 
-                string? opt = null;
-                if (math[i].Length is not 1)
-                    opt = math[i].Substring(0, math[i].Length - 1);
+                // Find the () at highest level
+                if (m.StartsWith(')'))
+                {
+                    level--;
+                    
+                    if (fmtData[level] && !math[i + 1].StartsWith(')'))
+                    {
+                        strBuilder.Append(' ');
+                    }
+                }
+                else if (m.EndsWith('('))
+                {
+                    level++;
+                    
+                    // Set fmtData for the level
+                    fmtData[level] = false;
+                    if (m.Length != 1)
+                    {
+                        fmtData[level] = true;
+                    }
+                }
+                else if (fmtData[level])
+                    strBuilder.Append(' ');
+                if (level != maxLevel) continue;
+                
+                var isFunc = fmtData[level];
+                var opt = isFunc ? m.Substring(0, m.Length - 1) : null;
+                
+                // Get the inside of ()
                 var count = math.FindIndex(i + 1, a => a.EndsWith(')')) - i - 1;
                 var calculation = math.GetRange(i + 1, count);
+                
+                // Add function args
+                strBuilder.Append(isFunc ? string.Join(' ', calculation) : string.Concat(calculation));
+                strBuilder.Append(')');
+                
+                // Calculate the result
                 math.RemoveRange(i, count + 1);
                 var result = CalcByLevel(calculation, opt, functions);
                 if (!result.Success)
                 {
-                    stepsString = string.Empty;
+                    stepsString = strBuilder.ToString();
                     return Err<double>(result.Exception!);
                 }
-
+                // And place it in place of ()
                 math[i].DoubleForm = result.Value;
-                strBuilder.Append(string.Join(' ', math));
-                strBuilder.Append('\n');
 
                 level--;
             }
-
+            
+            strBuilder.Append(Newline);
             maxLevel--;
         }
 
+        strBuilder.Append(string.Concat(math));
         stepsString = strBuilder.ToString();
+        
         return CalcByLevel(math, null, functions);
     }
 

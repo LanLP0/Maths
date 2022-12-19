@@ -33,12 +33,11 @@ internal sealed class Program
                 _logger
 #endif
                 ),
-            new FactTool(),
-            new IsPrimeTool(),
             new LCalcTool(),
             new MinMaxFracTool(),
-            new PolynomialTool()
-            
+            new PolynomialTool(),
+            new FactTool(),
+            new IsPrimeTool()
         };
 
         StringBuilder buffer = new();
