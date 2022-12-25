@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net7.0</TargetFramework>
+        <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
@@ -11,6 +11,7 @@
         <Authors>LanLP</Authors>
         <Description>A Fast And Efficient String Calculator</Description>
         <Copyright>LanLP</Copyright>
+        <LangVersion>11</LangVersion>
     </PropertyGroup>
 
     <ItemGroup>
