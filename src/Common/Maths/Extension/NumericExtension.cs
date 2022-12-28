@@ -1,3 +1,5 @@
+using System.Globalization;
+
 namespace Common.Maths.Extension;
 
 public static class NumericExtension
@@ -19,7 +21,7 @@ public static class NumericExtension
         }
         
         if (maxDecimalPoints <= 2)
-            return num.ToString();
+            return num.ToString(CultureInfo.InvariantCulture);
 
         var num1 = Math.Abs(num);
         double denominator = 1;
@@ -32,25 +34,25 @@ public static class NumericExtension
         }
 
         if (denominator is 1)
-            return num.ToString();
+            return num.ToString(CultureInfo.InvariantCulture);
 
         num1 = num * denominator;
 
         if (Math.Abs(num1 % 1) > double.Epsilon * 1000)
-            return num.ToString();
+            return num.ToString(CultureInfo.InvariantCulture);
 
         if (denominator <= 100)
-            return num.ToString();
+            return num.ToString(CultureInfo.InvariantCulture);
 
         var gcd = Maths.GetGcd(num1, denominator);
 
-        if (gcd is 1) return num.ToString();
+        if (gcd is 1) return num.ToString(CultureInfo.InvariantCulture);
 
         denominator /= gcd;
         num1 /= gcd;
 
         if (Math.Max(denominator, num1) > 1_000_000)
-            return num.ToString();
+            return num.ToString(CultureInfo.InvariantCulture);
 
         return $"{num1}/{denominator}";
     }

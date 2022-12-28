@@ -1,3 +1,4 @@
+using System.Globalization;
 using Common.Results;
 
 namespace LCalc;
@@ -65,7 +66,7 @@ internal sealed class CalcElement
     {
         get
         {
-            _stringForm ??= _doubleForm!.Value.ToString();
+            _stringForm ??= _doubleForm!.Value.ToString(CultureInfo.InvariantCulture);
             return _stringForm!;
         }
         set

@@ -1,0 +1,34 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:LToolBox.Ui.ViewModels"
+             xmlns:p1="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
+             xmlns:controls="clr-namespace:Material.Styles.Controls;assembly=Material.Styles"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="LToolBox.Ui.Pages.Calc">
+    <Design.DataContext>
+        <vm:CalcModel />
+    </Design.DataContext>
+    <DockPanel>
+        <controls:ColorZone DockPanel.Dock="Top" CornerRadius="15" Background="#2b352d" Foreground="White" Margin="10, 0, 10, 0">
+            <StackPanel>
+                <TextBlock Name="MathDisplay" TextAlignment="Right" FontSize="15" TextWrapping="NoWrap" Height="20" Padding="10, 0, 10, 0" />
+                <TextBlock Name="ResultDisplay" TextAlignment="Right" FontSize="45" TextWrapping="Wrap" Height="100" Padding="10, 0, 10, 0" />
+            </StackPanel>
+        </controls:ColorZone>
+        <Rectangle Height="9" DockPanel.Dock="Top"/>
+        <TextBox KeyUp="MathInput_KeyUp" DockPanel.Dock="Top" Name="MathInput" Height="60" UseFloatingWatermark="False" Classes="filled" Watermark="Calculation" Margin="10, 0, 10, 0" Padding="10, 0, 10, 0" />
+        <Rectangle Height="6" DockPanel.Dock="Top"/>
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" HorizontalAlignment="Stretch">
+            <Button Click="ClearHistory" Content="Clear History" Margin="10, 0, 0, 0" />
+            <CheckBox Name="RawValueToggle" Content="Show raw value" IsChecked="False" Margin="10, 0, 0, 0" />
+            <Line Fill="White" />
+        </StackPanel>
+        <Separator Height="3" DockPanel.Dock="Top"/>
+        <ScrollViewer DockPanel.Dock="Bottom">
+            <ListBox DoubleTapped="HistoryBox_OnDoubleTapped" VirtualizationMode="None" Name="HistoryBox" Items="{Binding Historys}" />
+        </ScrollViewer>
+    </DockPanel>
+
+</UserControl>

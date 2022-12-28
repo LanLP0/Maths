@@ -1,0 +1,74 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:LToolBox.Ui.ViewModels"
+             xmlns:controls="clr-namespace:Material.Styles.Controls;assembly=Material.Styles"
+             xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             xmlns:pages="clr-namespace:LToolBox.Ui.Pages"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="LToolBox.Ui.Views.MainView">
+    <UserControl.DataContext>
+        <vm:MainViewModel />
+    </UserControl.DataContext>
+
+    <UserControl.Styles>
+        <Style Selector="TextBlock.Content">
+            <Setter Property="Margin" Value="0, 4" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+        </Style>
+    </UserControl.Styles>
+
+    <!-- Snackbar will appear here -->
+    <!-- <controls:SnackbarHost HostName="Root"> -->
+    <controls:NavigationDrawer Name="LeftDrawer"
+                               LeftDrawerOpened="{Binding ElementName=NavDrawerSwitch, Path=IsChecked, Mode=TwoWay}"
+                               LeftDrawerWidth="278">
+        <controls:NavigationDrawer.LeftDrawerContent>
+            <!-- Side bar content -->
+            <ScrollViewer>
+                <StackPanel>
+                    <TextBlock TextAlignment="Center" FontWeight="Bold" FontSize="20" Text="LCalc" />
+                    <TextBlock TextAlignment="Center" FontWeight="Light" FontStyle="Italic" FontSize="12"
+                               Text="by LanLP" />
+                    <Rectangle Height="10" />
+                    <Separator />
+                    <ListBox Name="AppChooser" PointerReleased="AppChooser_OnPointerReleased"
+                             SelectedItem="{Binding Path=SelectedItem, Mode=OneWayToSource}">
+                        <ListBoxItem IsSelected="True">
+                            <TextBlock Text="Calc" />
+                        </ListBoxItem>
+                        <ListBoxItem>
+                            <TextBlock Text="ComplexCalc" />
+                        </ListBoxItem>
+                        <ListBoxItem>
+                            <TextBlock Text="Fact" />
+                        </ListBoxItem>
+                        <ListBoxItem>
+                            <TextBlock Text="Polynomial" />
+                        </ListBoxItem>
+                        <ListBoxItem>
+                            <TextBlock Text="MinMaxFrac" />
+                        </ListBoxItem>
+                        <ListBoxItem>
+                            <TextBlock Text="IsPrime" />
+                        </ListBoxItem>
+                    </ListBox>
+                </StackPanel>
+            </ScrollViewer>
+        </controls:NavigationDrawer.LeftDrawerContent>
+        <DockPanel>
+            <Grid DockPanel.Dock="Top" Height="50" ColumnDefinitions="Auto, *">
+                <ToggleButton Grid.Column="0" Name="NavDrawerSwitch">
+                    <avalonia:MaterialIcon Height="30" Width="30" Kind="Menu" />
+                </ToggleButton>
+                <TextBlock FontSize="20" VerticalAlignment="Center" TextAlignment="Center" Grid.Column="1"
+                           Text="{Binding Path=SelectedItemText}" />
+            </Grid>
+            <Carousel DockPanel.Dock="Bottom" Name="AppNavigator">
+                <pages:Calc />
+            </Carousel>
+        </DockPanel>
+    </controls:NavigationDrawer>
+    <!-- </controls:SnackbarHost> -->
+</UserControl>

@@ -7,6 +7,7 @@ using Common.Maths.Extension;
 using Common.Results;
 using LCalc.CustomFunction;
 using LCalc.Helpers;
+using OneOf;
 
 namespace LCalc;
 
@@ -18,7 +19,7 @@ public static class Calculator
     const string Newline = "\r\n";
     
     /// <summary>
-    ///     Calculate a string. This method shouldn't throw an error
+    ///     Calculate a math string
     /// </summary>
     /// <param name="input">Expression</param>
     /// <returns>"Error: {error}" if there is an error. "Result: {result}" or "{steps}\nResult: {result}" otherwise</returns>
@@ -31,11 +32,6 @@ public static class Calculator
             CalculatorHelpers.SplitInput(input.Trim().ToLower().AsSpan(), out var args, out var opts, out var functions);
         if (splitResult.IsFaulted)
             return HandleException(splitResult.Exception!);
-
-        // Debug.WriteLine(JsonSerializer.Serialize(splitResult.Value!), "maths");
-        // Debug.WriteLine(JsonSerializer.Serialize(args), "args");
-        // Debug.WriteLine(JsonSerializer.Serialize(opts), "opts");
-        // Debug.WriteLine(JsonSerializer.Serialize(functions), "functions");
         
         var math = splitResult.Value!;
 
@@ -81,6 +77,60 @@ public static class Calculator
 
         result = result2.Value.Humanize();
         return $"{stepsString}{Newline}Result: {result}";
+    }
+
+    /// <summary>
+    ///     Calculate a math string
+    /// </summary>
+    /// <param name="input">The math string</param>
+    /// <param name="steps">The solving steps</param>
+    /// <returns>
+    ///     Exception: the exception;
+    ///     double: the result;
+    ///     bool: the result of the compare function
+    /// </returns>
+    public static OneOf<Exception, double, bool> CalcUnformatted(string input, out string? steps)
+    {
+        steps = null;
+        
+        if (string.IsNullOrWhiteSpace(input))
+            return new Exception("Error: No expression found");
+
+        var splitResult =
+            CalculatorHelpers.SplitInput(input.Trim().ToLower().AsSpan(), out var args, out var opts, out var functions);
+        if (splitResult.IsFaulted)
+            return splitResult.Exception!;
+        
+        var math = splitResult.Value!;
+
+        InputHandler(math, args);
+
+        var compare = TryCompare(math, functions, out var result1);
+        if (compare.IsFaulted)
+            return compare.Exception!;
+
+        string result;
+        if (compare.Value)
+        {
+            return result1;
+        }
+
+        Result<double> result2;
+        if (!opts.StepByStep)
+        {
+            result2 = Calculate(math, functions);
+            if (result2.IsFaulted)
+                return result2.Exception!;
+            
+            return result2.Value;
+        }
+
+        result2 = Calculate(math, functions, out var stepsString);
+        if (result2.IsFaulted)
+            return result2.Exception!;
+
+        steps = stepsString;
+        return result2.Value;
     }
 
     private static string HandleException(Exception ex)
