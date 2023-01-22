@@ -10,7 +10,7 @@ internal sealed class Program
     private static Tool[] _tools = null!;
 
     private static string _promptTemplate = null!;
-    
+
 #if DEBUG
     public static readonly ILogger _logger = new LoggerConfiguration()
         .MinimumLevel.Verbose()
@@ -31,7 +31,7 @@ internal sealed class Program
 #if DEBUG
                 _logger
 #endif
-                ),
+            ),
             new LCalcTool(),
             new MinMaxFracTool(),
             new PolynomialTool(),

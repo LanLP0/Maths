@@ -9,6 +9,6 @@
         x:Class="LToolBox.Ui.Views.MainWindow"
         Icon="/Assets/avalonia-logo.ico"
         Title="LToolBox">
-    
+
     <views:MainView />
 </Window>

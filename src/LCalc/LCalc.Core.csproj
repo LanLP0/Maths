@@ -1,25 +1,25 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
+        <TargetFramework>net6</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <PackageVersion>1.7</PackageVersion>
+        <PackageVersion>1.8</PackageVersion>
         <RootNamespace>LCalc</RootNamespace>
         <Title>LCalc.Core</Title>
         <Authors>LanLP</Authors>
         <Description>A Fast And Efficient String Calculator</Description>
         <Copyright>LanLP</Copyright>
-        <LangVersion>11</LangVersion>
+        <LangVersion>latest</LangVersion>
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Common\Common.csproj" />
+        <ProjectReference Include="..\Common\Common.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="OneOf" Version="3.0.223" />
+        <PackageReference Include="OneOf" Version="3.0.223"/>
     </ItemGroup>
 
 </Project>

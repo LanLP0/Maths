@@ -9,19 +9,18 @@ public sealed partial class MainView : UserControl
     {
         InitializeComponent();
     }
-    
+
     private void AppChooser_OnPointerReleased(object? sender, PointerReleasedEventArgs e)
     {
-        if (sender is not ListBox listBox)
-            return;
-
         try
         {
-            
         }
         catch
         {
             // ignored
         }
+
+        // LeftDrawer.IsPaneOpen = false;
+        LeftDrawer.OptionalCloseLeftDrawer();
     }
 }

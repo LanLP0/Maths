@@ -6,7 +6,7 @@ namespace LToolBox.Ui.ViewModels;
 public sealed class MainViewModel : ViewModelBase
 {
     private ListBoxItem _selectedItem;
-    
+
     public ListBoxItem SelectedItem
     {
         set
@@ -16,5 +16,5 @@ public sealed class MainViewModel : ViewModelBase
         }
     }
 
-    public string SelectedItemText => _selectedItem.Content is TextBlock textBlock ? textBlock.Text! : "LCalc";
+    public string SelectedItemText => _selectedItem?.Content is TextBlock textBlock ? textBlock.Text! : "LCalc";
 }

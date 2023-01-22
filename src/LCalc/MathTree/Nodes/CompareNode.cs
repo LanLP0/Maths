@@ -1,0 +1,146 @@
+﻿using System.Diagnostics;
+using System.Text;
+using Common.Results;
+
+namespace LCalc.MathTree.Nodes;
+
+internal sealed class CompareNode : IMathNode
+{
+    private readonly List<IMathNode> _args = new();
+    private readonly List<CompareOp> _compareOps = new();
+
+    public int Priority { get; set; } = MathTree.SpecialNodePriority;
+
+    bool IMathNode.AddNode(IMathNode node)
+    {
+        throw new UnreachableException();
+    }
+
+    public bool IsFull()
+    {
+        throw new UnreachableException();
+    }
+
+    public void ChangeLastNodeTo(IMathNode node)
+    {
+        throw new UnreachableException();
+    }
+
+    public Result GenerateMissingValueError()
+    {
+        throw new UnreachableException();
+    }
+
+    Result<double> IMathNode.Calc(Scope scope)
+    {
+        throw new UnreachableException();
+    }
+
+    public Result RenderStep(StringBuilder buffer, int selectedLevel, Scope scope, int nodeLevel = 1, bool showTree = false)
+    {
+        if (nodeLevel == selectedLevel)
+        {
+            var result = Calc(scope);
+            if (result.Faulted)
+                return result;
+
+            buffer.Append(result.Value);
+            return Ok();
+        }
+
+        for (var i = 0; i < _args.Count; i++)
+        {
+            var result = _args[i].RenderStep(buffer, selectedLevel, scope, nodeLevel, showTree);
+            if (result.Faulted)
+                return result;
+
+            if (i == _args.Count - 2)
+                continue;
+
+            buffer.Append(' ');
+            buffer.Append(_compareOps[i].ToString());
+            buffer.Append(' ');
+        }
+
+        return Ok();
+    }
+
+    public Result<int> GetDepth()
+    {
+        var max = 0;
+        foreach (var arg in _args)
+        {
+            var result = arg.GetDepth();
+            if (result.Faulted)
+                return result;
+
+            max = Math.Max(max, result.Value);
+        }
+
+        return max;
+    }
+
+    internal Result<bool> Calc(Scope scope)
+    {
+        if (_args.Count <= 1)
+            return Err<bool>("Missing value");
+
+        if (_compareOps.Count >= _args.Count)
+            return Err<bool>("Missing value");
+
+        for (var i = 0; i < _compareOps.Count; i++)
+        {
+            var result = _args[i].Calc(scope);
+            if (result.Faulted)
+                return result.Exception!;
+            var num1 = result.Value;
+
+            result = _args[i + 1].Calc(scope);
+            if (result.Faulted)
+                return result.Exception!;
+            var num2 = result.Value;
+
+            var rs = _compareOps[i] switch
+            {
+                CompareOp.Equal => Math.Abs(num1 - num2) < double.Epsilon,
+                CompareOp.Difference => Math.Abs(num1 - num2) > double.Epsilon,
+                CompareOp.GreaterThanOrEqual => num1 >= num2,
+                CompareOp.LessThanOrEqual => num1 <= num2,
+                CompareOp.GreaterThan => num1 > num2,
+                CompareOp.LessThan => num1 < num2,
+                _ => throw new UnreachableException()
+            };
+
+            if (!rs)
+                return false;
+        }
+
+        return true;
+    }
+
+    internal void AddNode(IMathNode node)
+    {
+        _args.Add(node);
+    }
+
+    internal void AddOp(CompareOp op)
+    {
+        _compareOps.Add(op);
+    }
+
+    internal void Clear()
+    {
+        _compareOps.Clear();
+        _args.Clear();
+    }
+}
+
+internal enum CompareOp
+{
+    Equal,
+    Difference,
+    GreaterThanOrEqual,
+    LessThanOrEqual,
+    GreaterThan,
+    LessThan
+}

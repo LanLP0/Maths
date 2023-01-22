@@ -9,11 +9,11 @@
 
     <ItemGroup>
         <ProjectReference Include="..\LCalc\LCalc.Core.csproj" />
-<!--        <ProjectReference Include="..\LToolBox\LToolBox.csproj" />-->
+        <!--        <ProjectReference Include="..\LToolBox\LToolBox.csproj" />-->
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="BenchmarkDotNet" Version="0.13.2" />
+        <PackageReference Include="BenchmarkDotNet" Version="0.13.4" />
     </ItemGroup>
 
 </Project>

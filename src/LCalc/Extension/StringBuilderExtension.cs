@@ -15,4 +15,9 @@ internal static class StringBuilderExtension
         value = stringBuilder[index];
         return true;
     }
+
+    public static bool IsEmpty(this StringBuilder stringBuilder)
+    {
+        return stringBuilder.Length is 0;
+    }
 }

@@ -5,8 +5,8 @@ public readonly ref struct Result<T>
     private readonly Result _innerResult;
     public readonly T? Value;
     public Exception? Exception => _innerResult.Exception;
-    public bool Success => !IsFaulted;
-    public bool IsFaulted => _innerResult.IsFaulted;
+    public bool Success => !Faulted;
+    public bool Faulted => _innerResult.Faulted;
 
     private Result(Result innerResult)
     {
@@ -62,19 +62,19 @@ public readonly ref struct Result<T>
 public readonly ref struct Result
 {
     public readonly Exception? Exception;
-    public bool Success => !IsFaulted;
-    public readonly bool IsFaulted;
+    public bool Success => !Faulted;
+    public readonly bool Faulted;
 
     public Result()
     {
         Exception = null;
-        IsFaulted = false;
+        Faulted = false;
     }
 
     public Result(Exception exception)
     {
         Exception = exception;
-        IsFaulted = true;
+        Faulted = true;
     }
 
     public static implicit operator Result(Exception exception)

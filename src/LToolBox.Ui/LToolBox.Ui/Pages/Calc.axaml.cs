@@ -1,11 +1,10 @@
-﻿using System;
-using System.Globalization;
-using Avalonia;
+﻿using System.Globalization;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media;
 using Common.Maths.Extension;
+using LCalc;
 using LToolBox.Ui.Extension;
 using LToolBox.Ui.ViewModels;
 
@@ -13,8 +12,10 @@ namespace LToolBox.Ui.Pages;
 
 public sealed partial class Calc : UserControl
 {
-    private CalcModel _calcModel;
     private const int MaxHistoryLenght = 25;
+    private const double MaxFontSize = 45.0;
+    private const double MinFontSize = 10.0;
+    private readonly CalcModel _calcModel;
 
     public Calc()
     {
@@ -22,55 +23,64 @@ public sealed partial class Calc : UserControl
         _calcModel = new CalcModel();
         DataContext = _calcModel;
         MathDisplay.TextTrimming = TextTrimming.CharacterEllipsis;
+        MathInput.AddHandler(KeyDownEvent, MathInput_KeyDown, RoutingStrategies.Tunnel);
     }
 
-    private void MathInput_KeyUp(object? sender, KeyEventArgs e)
+    private void MathInput_KeyDown(object? sender, KeyEventArgs e)
     {
-        e.Handled = true;
         if (e.Key is not (Key.Enter or Key.Return))
             return;
 
+        e.Handled = true;
+
         if (string.IsNullOrWhiteSpace(MathInput.Text))
             return;
-        
-        HistoryBox.BeginBatchUpdate();
 
-        var math = MathInput.Text!;
-        MathDisplay.Text = math;
+        MathDisplay.Text = _calcModel.Math;
 
-        var result = LCalc.Calculator.CalcUnformatted(math, out var steps);
+        var result = Calculator.CalcRaw(_calcModel.Math, out _, out var steps);
 
-        if (result.IsT0)
+        if (result.IsT0) // Error
         {
-            ResultDisplay.Text = result.AsT0.Message;
-            HistoryBox.EndBatchUpdate();
+            ResultDisplay.Text = result.AsT0.Message; // Display error
+
             MathInput.Focus();
             MathInput.MoveCaretToEnd();
+            MathDisplay.FitContent(MaxFontSize, MinFontSize);
             return;
         }
-        
+
         string resultText;
-        if (result.IsT1)
+        if (result.IsT2)
         {
-            resultText = RawValueToggle.IsChecked!.Value ? result.AsT1.ToString(CultureInfo.InvariantCulture) : result.AsT1.Humanize();
+            resultText = RawValueToggle.IsChecked!.Value
+                ? result.AsT2.ToString(CultureInfo.InvariantCulture)
+                : result.AsT2.Humanize();
             ResultDisplay.Text = resultText;
-            _calcModel.Historys.Insert(0, new TextBlock { Text = $"{resultText}: {math}", TextWrapping = TextWrapping.NoWrap, TextTrimming = TextTrimming.CharacterEllipsis});
+            _calcModel.Historys.Insert(0,
+                new TextBlock
+                {
+                    Text = $"{resultText}: {_calcModel.Math}", TextWrapping = TextWrapping.NoWrap,
+                    TextTrimming = TextTrimming.CharacterEllipsis
+                });
         }
         else if (result.IsT2)
         {
             resultText = result.AsT2.ToString();
             ResultDisplay.Text = resultText;
-            _calcModel.Historys.Insert(0, new TextBlock{ Text = $"{resultText}: {math}", TextWrapping = TextWrapping.NoWrap, TextTrimming = TextTrimming.CharacterEllipsis});
+            _calcModel.Historys.Insert(0,
+                new TextBlock
+                {
+                    Text = $"{resultText}: {_calcModel.Math}", TextWrapping = TextWrapping.NoWrap,
+                    TextTrimming = TextTrimming.CharacterEllipsis
+                });
         }
 
-        if (_calcModel.Historys.Count >= MaxHistoryLenght)
-        {
-            _calcModel.Historys.RemoveAt(_calcModel.Historys.Count - 1);
-        }
+        if (_calcModel.Historys.Count >= MaxHistoryLenght) _calcModel.Historys.RemoveAt(_calcModel.Historys.Count - 1);
 
-        HistoryBox.EndBatchUpdate();
         MathInput.Focus();
         MathInput.Text = string.Empty;
+        MathDisplay.FitContent(MaxFontSize, MinFontSize);
     }
 
     private void HistoryBox_OnDoubleTapped(object? sender, TappedEventArgs e)
@@ -85,5 +95,37 @@ public sealed partial class Calc : UserControl
     private void ClearHistory(object? sender, RoutedEventArgs e)
     {
         _calcModel.Historys.Clear();
+    }
+
+    private void MathInput_OnTextChanged(object? sender, TextChangedEventArgs e)
+    {
+        ResultDisplay.Text = MathInput.Text;
+        ResultDisplay.FitContent(MaxFontSize, MinFontSize);
+        return;
+
+        if (string.IsNullOrWhiteSpace(MathInput.Text))
+            return;
+
+        MathDisplay.Text = string.Empty; // Clear math display
+        var result = Calculator.CalcRaw(_calcModel.Math, out _, out var steps);
+
+        if (result.IsT0) // Ignore error
+            return;
+
+        string resultText;
+        if (result.IsT2)
+        {
+            resultText = RawValueToggle.IsChecked!.Value
+                ? result.AsT2.ToString(CultureInfo.InvariantCulture)
+                : result.AsT2.Humanize();
+            ResultDisplay.Text = resultText;
+        }
+        else if (result.IsT1)
+        {
+            resultText = result.AsT1.ToString();
+            ResultDisplay.Text = resultText;
+        }
+
+        ResultDisplay.FitContent(10);
     }
 }

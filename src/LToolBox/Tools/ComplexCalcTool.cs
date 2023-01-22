@@ -30,9 +30,9 @@ internal sealed class ComplexCalcTool : Tool
                 if (firstPrompt)
                 {
                     Console.WriteLine("Result:");
-                    
+
                     ex.Sort();
-                    
+
                     RenderExpression(ex, -1);
                     Console.WriteLine();
                 }
@@ -84,7 +84,7 @@ internal sealed class ComplexCalcTool : Tool
                     break;
                 }
             }
-            
+
             ex.Sort();
 
             Console.WriteLine("Result:");
@@ -247,7 +247,8 @@ internal sealed class ComplexCalcTool : Tool
                 }
                 case { KeyChar: '-' }:
                 {
-                    var (val, adj) = ConsoleHelpers.PromptIntAndClearLine("Value: ", Console.CursorTop + 1, defaultValue: "-");
+                    var (val, adj) =
+                        ConsoleHelpers.PromptIntAndClearLine("Value: ", Console.CursorTop + 1, defaultValue: "-");
 
                     currTop += adj;
 

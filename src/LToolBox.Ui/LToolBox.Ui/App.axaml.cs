@@ -6,7 +6,7 @@ using LToolBox.Ui.Views;
 
 namespace LToolBox.Ui;
 
-public sealed partial class App : Application
+public sealed class App : Application
 {
     public override void Initialize()
     {
@@ -16,19 +16,15 @@ public sealed partial class App : Application
     public override void OnFrameworkInitializationCompleted()
     {
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
-        {
             desktop.MainWindow = new MainWindow
             {
                 DataContext = new MainViewModel()
             };
-        }
         else if (ApplicationLifetime is ISingleViewApplicationLifetime singleViewPlatform)
-        {
             singleViewPlatform.MainView = new MainView
             {
                 DataContext = new MainViewModel()
             };
-        }
 
         base.OnFrameworkInitializationCompleted();
     }

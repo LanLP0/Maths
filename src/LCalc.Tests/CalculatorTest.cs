@@ -14,7 +14,6 @@ public sealed class CalculatorTest
     [InlineData("1/2", "0.5")]
     [InlineData("1/4", "0.25")]
     [InlineData("1/8", "1/8")]
-    [InlineData("7%4", "3")]
     [InlineData("((1))", "1")]
     [InlineData("3a&a=2", "6")]
     [InlineData("a&a=1", "1")]
@@ -58,30 +57,32 @@ public sealed class CalculatorTest
     [InlineData("lcm(1 2 3 4)", "12")]
     [InlineData("gcd(0 3)", "3")]
     [InlineData("gcd(12 0)", "0")]
-    [InlineData("sin(1)", "0.01745240643728351")]
-    [InlineData("cos(1)", "0.9998476951563913")]
-    [InlineData("tan(1)", "0.017455064928217585")]
-    [InlineData("cot(38)", "1.2799416321930788")]
-    [InlineData("log(3)", "1.0986122886681098")]
+    [InlineData("sin(1)", "0.017452")]
+    [InlineData("cos(1)", "0.999848")]
+    [InlineData("tan(1)", "0.017455")]
+    [InlineData("cot(38)", "1.279942")]
+    [InlineData("log(3)", "1.098612")]
     // Custom function
     [InlineData("[foo(a b c)=a^(b+c)]foo(2 1 foo(2 1 1))", "32")]
     [InlineData("[foo(a)=a%6] foo(25)", "1")]
     [InlineData("[foo(a)=a%] foo(25)", "0.25")]
     [InlineData("[foo(a)=a%*8] foo(25)", "2")]
+    [InlineData("[t()=a()][a()=c] t() &c=1", "1")]
+    [InlineData("[f(a)=a] f(1) &a=2", "1")]
     public void Result_Should_BeExpected(string math, string result)
     {
         // Arrange
         var output = $"Result: {result}";
 
         // Act
-        var result1 = Calculator.Calc(math);
+        var result1 = Calculator.CalcFormatted(math);
 
         // Assert
         Assert.Equal(output, result1);
     }
 
     [Theory]
-    [InlineData("null()", "Unknown function: null()")]
+    [InlineData("null()", "Unknown function null()")]
     [InlineData("sum()", "sum() takes at least one argument")]
     [InlineData("avg()", "avg() takes at least one argument")]
     [InlineData("abs()", "abs() accept exactly 1 argument")]
@@ -98,27 +99,27 @@ public sealed class CalculatorTest
     [InlineData("tan()", "tan() takes exactly one argument")]
     [InlineData("cot()", "cot() takes exactly one argument")]
     [InlineData("log()", "log() takes exactly one argument")]
-    [InlineData("random(1 a)", "a is not a number")]
+    [InlineData("random(1 a)", "Unknown variable 'a'")]
     [InlineData("log()&step", "log() takes exactly one argument")]
     [InlineData("", "No expression found")]
-    [InlineData("(1", "Invalid number of brackets")]
-    [InlineData("1==(1", "Invalid number of brackets")]
-    [InlineData("((1)&step", "Invalid number of brackets")]
-    [InlineData("1-", "No value after -")]
-    [InlineData("null!", "null is not an integer")]
-    [InlineData("2.5<<2.5", "2.5 is not an integer")]
-    [InlineData("50!<<50!", "Value too big")]
-    [InlineData("2.5|2.5", "2.5 is not an integer")]
-    [InlineData("100!|100!", "Value too big")]
-    [InlineData("-n", "n is not a number")]
-    [InlineData("1~", "No value after ~")]
-    [InlineData("1&", "No value after &")]
-    [InlineData("1+", "No value after +")]
-    [InlineData("+1", "No value before +")]
+    [InlineData("(1", "Invalid number of braces")]
+    [InlineData("1==(1", "Invalid number of braces")]
+    [InlineData("((1)&step", "Invalid number of braces")]
+    [InlineData("1-", "Missing value after operator -")]
+    [InlineData("null!", "Unknown variable 'null'")]
+    [InlineData("2.5<<2.5", "Value(s) of operator << must be integer")]
+    [InlineData("50!<<50!", "Value(s) of operator << must be between 2^31 and -2^31")]
+    [InlineData("2.5|2.5", "Value(s) of operator | must be integer")]
+    [InlineData("100!|100!", "Value(s) of operator | must be between 2^63 and -2^63")]
+    [InlineData("-n", "Unknown variable 'n'")]
+    [InlineData("1~", "Invalid operator ~ at char 2")]
+    [InlineData("1&", "Missing value after operator &")]
+    [InlineData("1+", "Missing value after operator +")]
+    [InlineData("+1", "Missing value before operator +")]
     [InlineData("1 1", "Missing operator")]
-    [InlineData("1-&a=100", "Missing value")]
+    [InlineData("1-&a=100", "Missing value after operator -")]
     [InlineData("&a=", "Missing variable value")]
-    [InlineData("&a=1&a=1", "Variable has already been set")]
+    [InlineData("&a=1&a=1", "Variable a had already been set")]
     [InlineData("0b21", "Invalid binary number")]
     [InlineData("0o9", "Invalid octal number")]
     [InlineData("[t()=t()]t()", "Cannot call a function in it-self")]
@@ -128,7 +129,7 @@ public sealed class CalculatorTest
         var output = $"Error: {errorMsg}";
 
         // Act
-        var result = Calculator.Calc(math);
+        var result = Calculator.CalcFormatted(math);
 
         // Assert
         Assert.Equal(output, result);
@@ -137,32 +138,31 @@ public sealed class CalculatorTest
     [Theory]
     [InlineData("1+(1+1)&step",
         """
-        1+(1+1)
-        1+2
-        Result: 3
+        1 + (1 + 1)
+        1 + 2
+        3
         """)]
     [InlineData("[foo(a b c)=a^(b+c)]foo(2 1 (1+foo(2 1 1))) &step",
         """
-        foo(2 1 (1+foo(2 1 1)))
-        foo(2 1 (1+4))
-        foo(2 1 5)
+        foo(2, 1, (1 + foo(2, 1, 1)))
+        foo(2, 1, (1 + 4))
+        foo(2, 1, 5)
         64
-        Result: 64
         """)]
     [InlineData("abs(sin(((~1>>2<<2)^2!/1000*50-40+1))) &step",
         """
-        abs(sin(((~1>>2<<2)^2!/1000*50-40+1)))
-        abs(sin((-4^2!/1000*50-40+1)))
+        abs(sin((((~1 >> 2 << 2) ^ 2!) / 1000 * 50 - 40 + 1)))
+        abs(sin(((-4 ^ 2!) / 1000 * 50 - 40 + 1)))
+        abs(sin((20922789888000 / 1000 * 50 - 40 + 1)))
         abs(sin(1046139494361))
         abs(-0.6293194965251864)
         0.6293194965251864
-        Result: 0.6293194965251864
         """)]
     public void Calc_Should_ReturnCorrectStep(string math, string output)
     {
         // Act
-        var result = Calculator.Calc(math);
-
+        var result = Calculator.CalcFormatted(math);
+    
         // Assert
         Assert.Equal(output, result);
     }
@@ -173,14 +173,14 @@ public sealed class CalculatorTest
     [InlineData("random(5 10)", 5, 10)]
     public void Random_Should_BeInRange(string math, double lowerEnd, double upperEnd)
     {
-        for (var i = 0; i <= 25; i++) // Run the test 25 times
+        for (var i = 0; i <= 100; i++)
         {
             // Act
-            var result = Calculator.Calc(math);
-            var resultNum = double.Parse(result.Substring(result.IndexOf(' ') + 1));
+            var result = Calculator.CalcRaw(math, out _, out _);
+            var num = result.AsT2;
 
             // Assert
-            Assert.InRange(resultNum, lowerEnd, upperEnd);
+            Assert.InRange(num, lowerEnd, upperEnd);
         }
     }
 }

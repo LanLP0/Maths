@@ -24,6 +24,19 @@ public static class SpanExtension
                 return startIndex;
         }
 
-        return default;
+        return -1;
+    }
+
+    public static int IndexOf(this Span<char> span, char value, int startIndex = 0)
+    {
+        for (; startIndex < span.Length; startIndex++)
+        {
+            var chr = span[startIndex];
+
+            if (chr == value)
+                return startIndex;
+        }
+
+        return -1;
     }
 }

@@ -83,7 +83,7 @@ public static class Maths
         return gcd;
     }
 
-    public static double GetLcm(long a, long b)
+    public static double GetLcm(double a, double b)
     {
         return a * b / GetGcd(a, b);
     }

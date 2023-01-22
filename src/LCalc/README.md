@@ -10,7 +10,7 @@ Calculate an expression with optional arguments
 `&{name}`  Set calculator argument  
 Arguments:
 > `step` Show each step  
-> `raw` See raw value  
+> `raw` See raw value
 
 **__Comparison operators__**
 > `==` Equal  
@@ -33,8 +33,9 @@ Arguments:
 > `log({value})` Logarithm  
 > `sqrt({value})` `cbrt({value})` Square root, cube root  
 > `sum({value} [values..])` `avg({value} [values..])` Sum, average  
-> `random([max|min,max])` Get random number in ranges: 0-1, 0-max, min-max  
-**__Special number__**  
+> `random([max|min,max])` Get random number in ranges: 0-1, 0-max, min-max
+
+**__Special number__**
 > `0b{binaryNum}`  Binary number  
 > `0x{hexNum}`  Hexadecimal number  
 > `0o{octalNum}`  Octal number  

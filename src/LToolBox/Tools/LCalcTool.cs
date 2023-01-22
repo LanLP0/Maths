@@ -18,7 +18,7 @@ internal sealed class LCalcTool : Tool
             if (input.Length is 1 && input is "q")
                 return;
 
-            Console.WriteLine(Calculator.Calc(input));
+            Console.WriteLine(Calculator.CalcFormatted(input));
         }
     }
 }

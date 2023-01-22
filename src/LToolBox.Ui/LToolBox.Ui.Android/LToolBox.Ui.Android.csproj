@@ -2,15 +2,21 @@
     <PropertyGroup>
         <OutputType>Exe</OutputType>
         <TargetFramework>net7.0-android</TargetFramework>
-        <SupportedOSPlatformVersion>25</SupportedOSPlatformVersion>
+        <SupportedOSPlatformVersion>21</SupportedOSPlatformVersion>
         <Nullable>enable</Nullable>
         <ApplicationId>com.LanLP.LToolBox.Ui</ApplicationId>
         <ApplicationVersion>1</ApplicationVersion>
         <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
         <AndroidPackageFormat>apk</AndroidPackageFormat>
-        <AndroidEnableProfiledAot>False</AndroidEnableProfiledAot>
     </PropertyGroup>
-    
+
+    <PropertyGroup>
+        <!--        <AndroidEnableProfiledAot>True</AndroidEnableProfiledAot>-->
+        <RunAOTCompilation>True</RunAOTCompilation>
+        <EnableLLVM>True</EnableLLVM>
+        <EmbedAssembliesIntoApk>True</EmbedAssembliesIntoApk>
+    </PropertyGroup>
+
     <PropertyGroup>
         <AndroidSdkDirectory>C:\Program Files (x86)\Android\android-sdk</AndroidSdkDirectory>
     </PropertyGroup>

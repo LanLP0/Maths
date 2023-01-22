@@ -105,9 +105,6 @@ public sealed class Expression
     {
         Elements.Sort();
 
-        foreach (var e in Elements)
-        {
-            e.SortPower();
-        }
+        foreach (var e in Elements) e.SortPower();
     }
 }

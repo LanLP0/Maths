@@ -97,7 +97,7 @@ internal sealed class PolynomialTool : Tool
                 {
                     var (val, adj) = ConsoleHelpers.PromptIntAndClearLine("Value: ", top + 1, defaultValue: "-");
                     top += adj;
-                    
+
                     if (!val.HasValue)
                         continue;
 

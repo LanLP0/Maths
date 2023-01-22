@@ -32,15 +32,17 @@ public static class ConsoleHelpers
 
         Console.CursorTop--;
         ClearLine();
-        
+
         Console.SetCursorPosition(currLeft, currTop + result.adj);
 
         return (result.result, result.adj);
     }
 
     public static int? PromptInt(string prompt, int? top = null, int? lengthLimit = 5,
-        bool isNegativeAllowed = true, string defaultValue = "") =>
-        PromptIntInternal(prompt, top, lengthLimit, isNegativeAllowed, defaultValue).Item1;
+        bool isNegativeAllowed = true, string defaultValue = "")
+    {
+        return PromptIntInternal(prompt, top, lengthLimit, isNegativeAllowed, defaultValue).Item1;
+    }
 
     private static (int? result, int adj) PromptIntInternal(string prompt, int? top = null, int? lengthLimit = 5,
         bool isNegativeAllowed = true, string? defaultValue = null)
@@ -184,7 +186,7 @@ public static class ConsoleHelpers
 
                     if (Console.CursorTop + 1 == Console.BufferHeight)
                         adj--;
-                    
+
                     Console.WriteLine();
                     return (null, adj);
                 }
@@ -203,7 +205,7 @@ public static class ConsoleHelpers
 
                     if (Console.CursorTop + 1 == Console.BufferHeight)
                         adj--;
-                    
+
                     Console.WriteLine();
                     return (int.Parse(buffer.ToString()), adj);
                 }
@@ -285,17 +287,17 @@ public static class ConsoleHelpers
     }
 
     /// <summary>
-    /// Safely set the cursor position
+    ///     Safely set the cursor position
     /// </summary>
     /// <returns>The offset of <c>top</c></returns>
     public static int SafeSetCursorPosition(int left, int top)
     {
         left = Math.Clamp(left, 0, Console.BufferWidth - 1);
         top = top < 0 ? 0 : top;
-        
+
         var adj = SafeGoToTop(top);
         Console.CursorLeft = left;
-        
+
         return adj;
     }
 
@@ -310,11 +312,8 @@ public static class ConsoleHelpers
         }
 
         var adj = top - Console.CursorTop;
-        
-        if (adj <= 0)
-        {
-            return 0;
-        }
+
+        if (adj <= 0) return 0;
 
         Console.Write(new string('\n', adj));
         return -adj;

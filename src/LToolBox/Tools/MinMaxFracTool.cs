@@ -8,7 +8,8 @@ internal sealed class MinMaxFracTool : Tool
 {
     public override string ToolName { get; } = "minmaxfrac";
 
-    public override string? HelpMsg { get; } = "Calculate minimum and maximum value of a fraction\nUse arrow keys or vim keys to move around\nEnter value by start typing it\nType `q` to exit";
+    public override string? HelpMsg { get; } =
+        "Calculate minimum and maximum value of a fraction\nUse arrow keys or vim keys to move around\nEnter value by start typing it\nType `q` to exit";
 
     public override void Execute()
     {
@@ -19,13 +20,13 @@ internal sealed class MinMaxFracTool : Tool
             return;
 
         top = afterTop;
-        
+
         var delta = deltaFraction.Calc();
         var finalDelta = delta.Calc();
-        
+
         ConsoleHelpers.SafeSetCursorPosition(0, top + 3);
         DeltaHelpers.RenderFinalDelta(finalDelta);
-        
+
         Console.Write("Result: ");
         switch (finalDelta.Calc(out var result1, out var result2))
         {

@@ -16,12 +16,12 @@ internal static class DeltaHelpers
         var pos = 0;
         var deltaFraction = new DeltaFraction
         {
-            T0 = { NumberPart = 0},
-            T1 = { NumberPart = 0},
-            T2 = { NumberPart = 0},
-            B0 = { NumberPart = 0},
-            B1 = { NumberPart = 0},
-            B2 = { NumberPart = 0}
+            T0 = { NumberPart = 0 },
+            T1 = { NumberPart = 0 },
+            T2 = { NumberPart = 0 },
+            B0 = { NumberPart = 0 },
+            B1 = { NumberPart = 0 },
+            B2 = { NumberPart = 0 }
         };
 
         RenderDeltaFraction(deltaFraction, isUpper, pos, top);
@@ -160,7 +160,7 @@ internal static class DeltaHelpers
                     var (val, adj) = ConsoleHelpers.PromptIntAndClearLine("Value: ", top + 3, defaultValue: "-");
 
                     top += adj;
-                    
+
                     if (!val.HasValue)
                         break;
 

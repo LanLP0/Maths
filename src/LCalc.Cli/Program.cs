@@ -11,7 +11,7 @@ internal sealed class Program
         var input = string.Join(' ', args);
         if (args.Length is not 0)
         {
-            Console.WriteLine(Calculator.Calc(input));
+            Console.WriteLine(Calculator.CalcFormatted(input));
             return;
         }
 
@@ -22,7 +22,7 @@ internal sealed class Program
             {
                 Console.Write("Expression: ");
                 input = Console.ReadLine()!;
-                Console.WriteLine(Calculator.Calc(input));
+                Console.WriteLine(Calculator.CalcFormatted(input));
             }
             catch (Exception e)
             {
