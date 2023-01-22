@@ -158,6 +158,15 @@ public sealed class CalculatorTest
         abs(-0.6293194965251864)
         0.6293194965251864
         """)]
+    [InlineData("abs(sin(((~1>>2<<2)^2!/1000*50-40+1))) &tree", 
+        """
+        abs(sin((((((((((~1) >> 2) << 2) ^ 2)!) / 1000) * 50) - 40) + 1)))
+        abs(sin(((((((-4 ^ 2)!) / 1000) * 50) - 40) + 1)))
+        abs(sin(((((20922789888000 / 1000) * 50) - 40) + 1)))
+        abs(sin(1046139494361))
+        abs(-0.6293194965251864)
+        0.6293194965251864
+        """)]
     public void Calc_Should_ReturnCorrectStep(string math, string output)
     {
         // Act

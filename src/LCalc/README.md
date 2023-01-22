@@ -10,6 +10,7 @@ Calculate an expression with optional arguments
 `&{name}`  Set calculator argument  
 Arguments:
 > `step` Show each step  
+> `tree` Like &step but wrap every node with a `()`
 > `raw` See raw value
 
 **__Comparison operators__**
@@ -25,8 +26,8 @@ Arguments:
 > `|` `&` `^^` `~` `>>` `<<` Bitwise operators
 >
 **__Functions__**
-> Use: `functionName([arguments])`  
-> Custom function: `[{functionName}([arg...])={body}]`  
+> Use: `functionName([arg][,] [arg...])`  
+> Custom function: `[{functionName}([arg] [arg...])={body}]`  
 > `abs({value})` Absolute value  
 > `clamp({value})` `ceiling({value})` `round({value} [digits])` Rounding numbers  
 > `cos({deg})` `sin({deg})` `tan({deg})` `cot({deg})` Trigonometric  

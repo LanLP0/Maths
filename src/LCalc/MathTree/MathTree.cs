@@ -597,6 +597,7 @@ internal sealed class MathTree
                         result = scope.SetStepByStepOpt(true);
                         break;
                     case "tree":
+                        scope.SetStepByStepOpt(true);
                         result = scope.SetShowTreeOpt(true);
                         break;
                     default:
