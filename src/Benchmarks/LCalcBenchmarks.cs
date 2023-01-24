@@ -1,17 +1,16 @@
 ﻿using BenchmarkDotNet.Attributes;
+using BenchmarkDotNet.Jobs;
 using LCalc;
 
 namespace Benchmarks;
 
 [MemoryDiagnoser]
-// [SimpleJob(RuntimeMoniker.Net60, baseline: true)]
-// [SimpleJob(RuntimeMoniker.Net70)]
 [MaxIterationCount(50)]
 public class LCalcBenchmarks
 {
-    // [Params("1", "1233211 + 227633 * 6555 + 999 / (99+1)", "2^2^2^2", "sin(cos(tan(9)))", "abs(sin(((~1>>2<<2)^2!/1000*50-40+1)))")]
-    // public string Math { get; set; } = null!;
-    //
+    [Params("1", "1233211 + 227633 * 6555 + 999 / (99+1)", "2^2^2^2", "sin(cos(tan(9)))", "abs(sin(((~1>>2<<2)^2!/1000*50-40+1)))")]
+    public string Math { get; set; } = null!;
+    
     // // private (List<CalcElement>, CustomFunctionCollection) val;
     //
     // // [GlobalSetup]
@@ -38,6 +37,7 @@ public class LCalcBenchmarks
     [Benchmark]
     public void LCalc()
     {
-        Calculator.CalcFormatted("abs(sin(((~1>>2<<2)^2^3/1000*50-40+1*2)))");
+        // Calculator.CalcFormatted("abs(sin(((~1>>2<<2)^2^3/1000*50-40+1*2)))");
+        Calculator.CalcFormatted(Math);
     }
 }

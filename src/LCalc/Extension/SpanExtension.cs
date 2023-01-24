@@ -39,4 +39,18 @@ public static class SpanExtension
 
         return -1;
     }
+    
+    public static Span<char> TrimEnd(this Span<char> span, char trimChar)
+    {
+        int end = span.Length - 1;
+        for (; end >= 0; end--)
+        {
+            if (span[end] != trimChar)
+            {
+                break;
+            }
+        }
+ 
+        return span.Slice(0, end + 1);
+    }
 }

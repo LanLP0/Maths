@@ -7,7 +7,6 @@ namespace LCalc.MathTree.Nodes;
 internal sealed class VariableNode : IMathNode
 {
     private readonly string _name;
-    private double? _value;
 
     public VariableNode(string name)
     {

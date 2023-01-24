@@ -12,20 +12,25 @@ namespace LCalc;
 /// </summary>
 public static class Calculator
 {
+    private static void Test()
+    {
+        CalcFormatted("abs(sin(((~1>>2<<2)^2^3/1000*50-40+1*2)))");
+    }
+    
     public static string CalcFormatted(string math)
     {
         var result = CalcRaw(math, out var rawValueRequested, out var steps);
 
-        if (result.IsT0)
+        if (result.IsT0) // Err
             return $"Error: {result.AsT0.Message}";
 
-        if (result.IsT1)
+        if (result.IsT1) // Bool
             return $"Result: {result.AsT1}";
 
         if (steps is not null)
             return steps;
 
-        var result1 = result.AsT2;
+        var result1 = result.AsT2; // Double
         result1 = Math.Round(result1, 6);
         return $"Result: {(rawValueRequested ? result1.ToString(CultureInfo.InvariantCulture) : result1.Humanize())}";
     }
@@ -47,7 +52,6 @@ public static class Calculator
             return result.Exception!;
         rawValueRequested = tree.Scope.GetRawValueOpt();
 
-        OneOf<Exception, bool, double> result2;
         if (!tree.Scope.GetStepByStepOpt())
             return tree.Calc();
         

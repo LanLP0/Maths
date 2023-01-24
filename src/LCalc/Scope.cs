@@ -136,7 +136,7 @@ internal sealed class Scope
         var scope = new Scope(isCustomFunctionAllowed, isCalculatorOptionAllowed, isVariableAllowed, isCompareAllowed);
 
         scope.Variables.TryAdd("pi", Math.PI);
-        scope.Variables.TryAdd("tau", Math.Tau);
+        scope.Variables.TryAdd("tau", 6.283185307179586476925);
         scope.Variables.TryAdd("e", Math.E);
 
         return scope;
