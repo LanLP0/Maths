@@ -18,8 +18,15 @@
     </ItemGroup>
 
     <ItemGroup>
-      <None Remove="BenchmarkDotNet.Artifacts\Benchmarks.LCalcBenchmarks-20230120-211803.log" />
-      <None Remove="BenchmarkDotNet.Artifacts\Benchmarks.LCalcBenchmarks-20230120-211404.log" />
+      <None Remove="BenchmarkDotNet.Artifacts\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Remove="BenchmarkDotNet.Artifacts\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Remove="BenchmarkDotNet.Artifacts\**" />
     </ItemGroup>
 
 </Project>
