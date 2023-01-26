@@ -140,14 +140,14 @@ public sealed class CalculatorTest
         """
         1 + (1 + 1)
         1 + 2
-        3
+        Result: 3
         """)]
     [InlineData("[foo(a b c)=a^(b+c)]foo(2 1 (1+foo(2 1 1))) &step",
         """
         foo(2, 1, (1 + foo(2, 1, 1)))
         foo(2, 1, (1 + 4))
         foo(2, 1, 5)
-        64
+        Result: 64
         """)]
     [InlineData("abs(sin(((~1>>2<<2)^2!/1000*50-40+1))) &step",
         """
@@ -156,16 +156,25 @@ public sealed class CalculatorTest
         abs(sin((20922789888000 / 1000 * 50 - 40 + 1)))
         abs(sin(1046139494361))
         abs(-0.6293194965251864)
-        0.6293194965251864
+        Result: 0.629319
         """)]
-    [InlineData("abs(sin(((~1>>2<<2)^2!/1000*50-40+1))) &tree", 
+    [InlineData("abs(sin(((~1>>2<<2)^2!/1000*50-40+1))) &tree",
         """
         abs(sin((((((((((~1) >> 2) << 2) ^ 2)!) / 1000) * 50) - 40) + 1)))
         abs(sin(((((((-4 ^ 2)!) / 1000) * 50) - 40) + 1)))
         abs(sin(((((20922789888000 / 1000) * 50) - 40) + 1)))
         abs(sin(1046139494361))
         abs(-0.6293194965251864)
-        0.6293194965251864
+        Result: 0.629319
+        """)]
+    [InlineData("abs(1+(2+3))==2+4!= (1+(2+(3+4))) &step",
+        """
+        abs(1 + (2 + 3)) == 2 + 4 != (1 + (2 + (3 + 4)))
+        abs(1 + (2 + 3)) == 2 + 4 != (1 + (2 + 7))
+        abs(1 + 5) == 2 + 4 != (1 + 9)
+        6 == 2 + 4 != 10
+        6 == 6 != 10
+        Result: True
         """)]
     public void Calc_Should_ReturnCorrectStep(string math, string output)
     {

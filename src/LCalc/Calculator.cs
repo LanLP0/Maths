@@ -1,8 +1,7 @@
-﻿// ReSharper disable CommentTypo
-
-using System.Globalization;
+﻿using System.Globalization;
 using System.Text;
 using Common.Results;
+using LCalc.MathTree.Nodes;
 using OneOf;
 
 namespace LCalc;
@@ -25,13 +24,20 @@ public static class Calculator
             return $"Error: {result.AsT0.Message}";
 
         if (result.IsT1) // Bool
+        {
+            if (steps is not null)
+                return $"{steps}{Environment.NewLine}Result: {result.AsT1}";
             return $"Result: {result.AsT1}";
+        }
 
-        if (steps is not null)
-            return steps;
-
-        var result1 = result.AsT2; // Double
+        var result1 = result.AsT2;
         result1 = Math.Round(result1, 6);
+        
+        if (steps is not null)
+        {
+            return $"{steps}{Environment.NewLine}Result: {(rawValueRequested ? result1.ToString(CultureInfo.InvariantCulture) : result1.Humanize())}";
+        }
+
         return $"Result: {(rawValueRequested ? result1.ToString(CultureInfo.InvariantCulture) : result1.Humanize())}";
     }
 
@@ -72,20 +78,26 @@ public static class Calculator
             return maxDepth.Exception!;
 
         var buffer = new StringBuilder();
-        for (var i = maxDepth.Value + 1; i > 0; i--)
+        for (var i = maxDepth.Value + 1; i > 1; i--)
         {
             var result = root.RenderStep(buffer, i, tree.Scope, 1, tree.Scope.GetShowTreeOpt());
             if (result.Faulted)
                 return result;
 
-            if (i is 1)
+            if (i is 2)
                 continue;
 
-            if (i is 2 && root.Priority is MathTree.MathTree.ValueNodePriority)
+            if (i is 3 && root.Priority is MathTree.MathTree.ValueNodePriority) // Prevent the last line to be printed twice
                 break;
 
             buffer.Append(Environment.NewLine);
         }
+
+        if (root is not CompareNode)
+            return buffer.ToString();
+        
+        buffer.Append(Environment.NewLine);
+        root.RenderStep(buffer, 1, tree.Scope, 1, tree.Scope.GetShowTreeOpt());
 
         return buffer.ToString();
     }

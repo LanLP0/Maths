@@ -38,27 +38,43 @@ internal sealed class CompareNode : IMathNode
 
     public Result RenderStep(StringBuilder buffer, int selectedLevel, Scope scope, int nodeLevel = 1, bool showTree = false)
     {
-        if (nodeLevel == selectedLevel)
-        {
-            var result = Calc(scope);
-            if (result.Faulted)
-                return result;
-
-            buffer.Append(result.Value);
-            return Ok();
-        }
-
         for (var i = 0; i < _args.Count; i++)
         {
-            var result = _args[i].RenderStep(buffer, selectedLevel, scope, nodeLevel, showTree);
-            if (result.Faulted)
-                return result;
+            if (selectedLevel is 1)
+            {
+                var arg = _args[i]!;
+                if (arg.Priority is not MathTree.ValueNodePriority)
+                {
+                    var result = arg.RenderStep(buffer, selectedLevel, scope, nodeLevel, showTree);
+                    if (result.Faulted)
+                        return result;
+                }
+                else
+                    buffer.Append(arg.Calc(scope));
+            }
+            else
+            {
+                var result = _args[i].RenderStep(buffer, selectedLevel, scope, nodeLevel, showTree);
+                if (result.Faulted)
+                    return result;
+            }
 
-            if (i == _args.Count - 2)
+            if (i >= _args.Count - 1)
                 continue;
 
+            var op = _compareOps[i] switch
+            {
+                CompareOp.Equal => "==",
+                CompareOp.Difference => "!=",
+                CompareOp.GreaterThanOrEqual => ">=",
+                CompareOp.LessThanOrEqual => "<=",
+                CompareOp.GreaterThan => ">",
+                CompareOp.LessThan => "<",
+                _ => throw new UnreachableException()
+            };
+
             buffer.Append(' ');
-            buffer.Append(_compareOps[i].ToString());
+            buffer.Append(op);
             buffer.Append(' ');
         }
 
