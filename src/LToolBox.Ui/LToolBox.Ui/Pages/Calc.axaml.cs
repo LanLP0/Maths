@@ -38,11 +38,11 @@ public sealed partial class Calc : UserControl
 
         MathDisplay.Text = _calcModel.Math;
 
-        var result = Calculator.CalcRaw(_calcModel.Math, out _, out var steps);
+        var result = Calculator.CalcRaw(_calcModel.Math, out _);
 
-        if (result.IsT0) // Error
+        if (result.Faulted) // Error
         {
-            ResultDisplay.Text = result.AsT0.Message; // Display error
+            ResultDisplay.Text = result.AsException!.Message; // Display error
 
             MathInput.Focus();
             MathInput.MoveCaretToEnd();
@@ -51,36 +51,37 @@ public sealed partial class Calc : UserControl
         }
 
         string resultText;
-        if (result.IsT2)
+        if (result.IsDouble)
         {
             resultText = RawValueToggle.IsChecked!.Value
-                ? result.AsT2.ToString(CultureInfo.InvariantCulture)
-                : result.AsT2.Humanize();
-            ResultDisplay.Text = resultText;
-            _calcModel.Historys.Insert(0,
-                new TextBlock
-                {
-                    Text = $"{resultText}: {_calcModel.Math}", TextWrapping = TextWrapping.NoWrap,
-                    TextTrimming = TextTrimming.CharacterEllipsis
-                });
+                ? result.AsDouble!.Value.ToString(CultureInfo.InvariantCulture)
+                : result.AsDouble!.Value.Humanize();
+            AddToHistory(resultText);
         }
-        else if (result.IsT2)
+        else
         {
-            resultText = result.AsT2.ToString();
-            ResultDisplay.Text = resultText;
-            _calcModel.Historys.Insert(0,
-                new TextBlock
-                {
-                    Text = $"{resultText}: {_calcModel.Math}", TextWrapping = TextWrapping.NoWrap,
-                    TextTrimming = TextTrimming.CharacterEllipsis
-                });
+            resultText = result.AsDouble!.Value.ToString(CultureInfo.InvariantCulture);
+            AddToHistory(resultText);
         }
 
-        if (_calcModel.Historys.Count >= MaxHistoryLenght) _calcModel.Historys.RemoveAt(_calcModel.Historys.Count - 1);
+        ResultDisplay.Text = resultText;
 
         MathInput.Focus();
         MathInput.Text = string.Empty;
         MathDisplay.FitContent(MaxFontSize, MinFontSize);
+    }
+
+    private void AddToHistory(string resultText)
+    {
+        _calcModel.Historys.Insert(0,
+            new TextBlock
+            {
+                Text = $"{resultText}: {_calcModel.Math}", TextWrapping = TextWrapping.NoWrap,
+                TextTrimming = TextTrimming.CharacterEllipsis
+            });
+
+        if (_calcModel.Historys.Count >= MaxHistoryLenght)
+            _calcModel.Historys.RemoveAt(_calcModel.Historys.Count - 1);
     }
 
     private void HistoryBox_OnDoubleTapped(object? sender, TappedEventArgs e)
@@ -99,30 +100,30 @@ public sealed partial class Calc : UserControl
 
     private void MathInput_OnTextChanged(object? sender, TextChangedEventArgs e)
     {
-        ResultDisplay.Text = MathInput.Text;
-        ResultDisplay.FitContent(MaxFontSize, MinFontSize);
-        return;
+        // ResultDisplay.Text = MathInput.Text;
+        // ResultDisplay.FitContent(MaxFontSize, MinFontSize);
+        // return;
 
         if (string.IsNullOrWhiteSpace(MathInput.Text))
             return;
 
         MathDisplay.Text = string.Empty; // Clear math display
-        var result = Calculator.CalcRaw(_calcModel.Math, out _, out var steps);
+        var result = Calculator.CalcRaw(_calcModel.Math, out _);
 
-        if (result.IsT0) // Ignore error
+        if (result.Faulted) // Ignore error
             return;
 
         string resultText;
-        if (result.IsT2)
+        if (result.IsDouble)
         {
             resultText = RawValueToggle.IsChecked!.Value
-                ? result.AsT2.ToString(CultureInfo.InvariantCulture)
-                : result.AsT2.Humanize();
+                ? result.AsDouble!.Value.ToString(CultureInfo.InvariantCulture)
+                : result.AsDouble!.Value.Humanize();
             ResultDisplay.Text = resultText;
         }
-        else if (result.IsT1)
+        else
         {
-            resultText = result.AsT1.ToString();
+            resultText = result.AsBool!.Value.ToString();
             ResultDisplay.Text = resultText;
         }
 

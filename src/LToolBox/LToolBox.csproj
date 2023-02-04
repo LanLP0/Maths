@@ -2,7 +2,7 @@
 
     <PropertyGroup>
         <OutputType>Exe</OutputType>
-        <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
+        <TargetFramework>net6.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <AssemblyName>ltb</AssemblyName>
@@ -11,9 +11,8 @@
         <PackageVersion>0.0.0.0</PackageVersion>
         <Authors>LanLP</Authors>
         <Description>LanLP's math tools collection</Description>
-        <!--        <PublishAot>true</PublishAot>-->
+        <!--                 <PublishAot>true</PublishAot> -->
         <StripSymbols>true</StripSymbols>
-        <LangVersion>latest</LangVersion>
     </PropertyGroup>
 
     <ItemGroup>
@@ -22,7 +21,7 @@
         <ProjectReference Include="..\LCalc\LCalc.Core.csproj"/>
     </ItemGroup>
 
-    <ItemGroup>
+    <ItemGroup Condition="'$(Configuration)' == 'Debug'">
         <PackageReference Include="Serilog" Version="2.12.0"/>
         <PackageReference Include="Serilog.Sinks.Console" Version="4.1.0"/>
     </ItemGroup>

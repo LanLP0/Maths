@@ -2,7 +2,7 @@
 
 namespace LCalc.Helpers;
 
-public static class OperatorHelpers
+internal static class OperatorHelpers
 {
     public static Result<long> ToInt64(double value, string operatorName)
     {

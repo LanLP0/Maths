@@ -41,7 +41,8 @@ internal sealed class ValueNode : IMathNode
         throw new UnreachableException();
     }
 
-    public Result RenderStep(StringBuilder buffer, int selectedLevel, Scope scope, int nodeLevel = 1, bool showTree = false)
+    public Result RenderStep(StringBuilder buffer, int selectedLevel, Scope scope, int nodeLevel = 1,
+        bool showTree = false)
     {
         buffer.Append(_value);
         return Ok();

@@ -1,7 +1,9 @@
 ﻿using System.Text;
 using Common.Cli;
 using LToolBox.Tools;
+#if DEBUG
 using Serilog;
+#endif
 
 namespace LToolBox;
 
@@ -12,7 +14,7 @@ internal sealed class Program
     private static string _promptTemplate = null!;
 
 #if DEBUG
-    public static readonly ILogger _logger = new LoggerConfiguration()
+    public static readonly ILogger Logger = new LoggerConfiguration()
         .MinimumLevel.Verbose()
         .WriteTo.Console()
         .CreateLogger();
@@ -29,7 +31,7 @@ internal sealed class Program
         {
             new ComplexCalcTool(
 #if DEBUG
-                _logger
+                Logger
 #endif
             ),
             new LCalcTool(),

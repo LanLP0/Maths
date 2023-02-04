@@ -19,6 +19,9 @@ internal interface IMathNode
     public bool IsFull();
     public void ChangeLastNodeTo(IMathNode node);
     public Result GenerateMissingValueError();
-    public Result RenderStep(StringBuilder buffer, int selectedLevel, Scope scope, int nodeLevel = 1, bool showTree = false);
+
+    public Result RenderStep(StringBuilder buffer, int selectedLevel, Scope scope, int nodeLevel = 1,
+        bool showTree = false);
+
     public Result<int> GetDepth();
 }

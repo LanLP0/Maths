@@ -145,7 +145,7 @@ internal static class CalculatorHelpers
             if (!num2.IsInt())
                 return Err("gcd() only accept integers");
 
-            num1 = Maths.GetGcd(num1, num2);
+            num1 = Maths.FastGcd(num1, num2);
         }
 
         return num1;
@@ -166,7 +166,7 @@ internal static class CalculatorHelpers
             if (!num2.IsInt())
                 return Err("lcm() only accept integers");
 
-            num1 = Maths.GetLcm(num1, num2);
+            num1 = Maths.FastLcm(num1, num2);
         }
 
         return num1;

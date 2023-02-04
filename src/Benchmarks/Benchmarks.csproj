@@ -9,24 +9,24 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\LCalc\LCalc.Core.csproj" />
+        <ProjectReference Include="..\LCalc\LCalc.Core.csproj"/>
         <!--        <ProjectReference Include="..\LToolBox\LToolBox.csproj" />-->
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="BenchmarkDotNet" Version="0.13.4" />
+        <PackageReference Include="BenchmarkDotNet" Version="0.13.4"/>
     </ItemGroup>
 
     <ItemGroup>
-      <None Remove="BenchmarkDotNet.Artifacts\**" />
+        <None Remove="BenchmarkDotNet.Artifacts\**"/>
     </ItemGroup>
 
     <ItemGroup>
-      <Compile Remove="BenchmarkDotNet.Artifacts\**" />
+        <Compile Remove="BenchmarkDotNet.Artifacts\**"/>
     </ItemGroup>
 
     <ItemGroup>
-      <EmbeddedResource Remove="BenchmarkDotNet.Artifacts\**" />
+        <EmbeddedResource Remove="BenchmarkDotNet.Artifacts\**"/>
     </ItemGroup>
 
 </Project>

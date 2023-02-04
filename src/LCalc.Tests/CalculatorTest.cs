@@ -14,6 +14,7 @@ public sealed class CalculatorTest
     [InlineData("1/2", "0.5")]
     [InlineData("1/4", "0.25")]
     [InlineData("1/8", "1/8")]
+    [InlineData("1/3", "1/3")]
     [InlineData("((1))", "1")]
     [InlineData("3a&a=2", "6")]
     [InlineData("a&a=1", "1")]
@@ -180,7 +181,7 @@ public sealed class CalculatorTest
     {
         // Act
         var result = Calculator.CalcFormatted(math);
-    
+
         // Assert
         Assert.Equal(output, result);
     }
@@ -194,11 +195,11 @@ public sealed class CalculatorTest
         for (var i = 0; i <= 100; i++)
         {
             // Act
-            var result = Calculator.CalcRaw(math, out _, out _);
-            var num = result.AsT2;
+            var result = Calculator.CalcRaw(math, out _);
+            var num = result.AsDouble!;
 
             // Assert
-            Assert.InRange(num, lowerEnd, upperEnd);
+            Assert.InRange(num.Value, lowerEnd, upperEnd);
         }
     }
 }

@@ -15,11 +15,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Common\Common.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <PackageReference Include="OneOf" Version="3.0.223" />
+        <ProjectReference Include="..\Common\Common.csproj"/>
     </ItemGroup>
 
 </Project>

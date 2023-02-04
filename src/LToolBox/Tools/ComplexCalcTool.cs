@@ -1,7 +1,7 @@
 using Common.Cli;
 using Common.Maths.Expressions;
-using Serilog;
 #if DEBUG
+using Serilog;
 #endif
 
 namespace LToolBox.Tools;

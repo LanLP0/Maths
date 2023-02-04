@@ -78,7 +78,7 @@ internal sealed class CustomFunction
         fn._scope.Variables = args;
         fn._scope.CustomFunctions = customFunctions;
         fn._tree = new MathTree.MathTree(fn._scope);
-        var result = fn._tree.Parse(secondHalf, fn._scope);
+        var result = fn._tree.Parse(secondHalf);
         if (result.Faulted)
             return result;
 
@@ -103,9 +103,9 @@ internal sealed class CustomFunction
 
         var result = _tree.Calc();
 
-        if (result.IsT0)
-            return result.AsT0;
+        if (result.Faulted)
+            return result.AsException!;
 
-        return result.AsT2;
+        return result.AsDouble!.Value;
     }
 }

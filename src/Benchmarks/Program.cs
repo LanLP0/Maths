@@ -1,5 +1,4 @@
 ﻿using BenchmarkDotNet.Running;
-using Benchmarks;
 
 // var l = new LCalcBenchmarks();
 //
@@ -9,6 +8,6 @@ using Benchmarks;
 // Console.WriteLine(l.LCalc());
 // Console.WriteLine(l.LCalcRaw());
 
-BenchmarkRunner.Run<LCalcBenchmarks>();
+BenchmarkRunner.Run<Benchmarks.Benchmarks>();
 
 // BenchmarkRunner.Run<Benchmarks.Benchmarks>();

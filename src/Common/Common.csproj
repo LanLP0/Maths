@@ -7,4 +7,8 @@
         <LangVersion>latest</LangVersion>
     </PropertyGroup>
 
+    <ItemGroup>
+        <PackageReference Include="Rationals" Version="2.0.0"/>
+    </ItemGroup>
+
 </Project>

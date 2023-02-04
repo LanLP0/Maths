@@ -119,7 +119,8 @@ internal sealed class FunctionCallNode : IMathNode
         throw new UnreachableException();
     }
 
-    public Result RenderStep(StringBuilder buffer, int selectedLevel, Scope scope, int nodeLevel = 1, bool showTree = false)
+    public Result RenderStep(StringBuilder buffer, int selectedLevel, Scope scope, int nodeLevel = 1,
+        bool showTree = false)
     {
         nodeLevel++;
         if (nodeLevel == selectedLevel)

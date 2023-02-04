@@ -4,7 +4,6 @@ using Common.Results;
 using LCalc.Extension;
 using LCalc.Helpers;
 using LCalc.MathTree.Nodes;
-using OneOf;
 
 namespace LCalc.MathTree;
 
@@ -30,7 +29,7 @@ internal sealed class MathTree
         _stack = new List<List<IMathNode>> { new() };
     }
 
-    public Result Parse(ReadOnlySpan<char> math, Scope? scope = null)
+    public Result Parse(ReadOnlySpan<char> math)
     {
         CompareNode?.Clear();
         if (_stack.Count is not 0) _stack[0].Clear();
@@ -809,20 +808,20 @@ internal sealed class MathTree
         return true;
     }
 
-    public OneOf<Exception, bool, double> Calc()
+    public CalcResult Calc()
     {
-        if (CompareNode != null)
+        if (CompareNode is not null)
         {
             var result1 = CompareNode.Calc(Scope);
             if (result1.Faulted)
                 return result1.Exception!;
-            return result1.Value!;
+            return result1.Value;
         }
 
         var result2 = Root!.Calc(Scope);
         if (result2.Faulted)
             return result2.Exception!;
-        return result2.Value!;
+        return result2.Value;
     }
 }
 

@@ -67,7 +67,7 @@ public static class Maths
         return true;
     }
 
-    public static double GetGcd(double a, double b)
+    public static double FastGcd(double a, double b)
     {
         a = Math.Abs(a);
         b = Math.Abs(b);
@@ -83,8 +83,8 @@ public static class Maths
         return gcd;
     }
 
-    public static double GetLcm(double a, double b)
+    public static double FastLcm(double a, double b)
     {
-        return a * b / GetGcd(a, b);
+        return a * b / FastGcd(a, b);
     }
 }

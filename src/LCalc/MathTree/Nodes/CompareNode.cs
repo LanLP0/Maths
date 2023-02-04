@@ -36,7 +36,8 @@ internal sealed class CompareNode : IMathNode
         throw new UnreachableException();
     }
 
-    public Result RenderStep(StringBuilder buffer, int selectedLevel, Scope scope, int nodeLevel = 1, bool showTree = false)
+    public Result RenderStep(StringBuilder buffer, int selectedLevel, Scope scope, int nodeLevel = 1,
+        bool showTree = false)
     {
         for (var i = 0; i < _args.Count; i++)
         {
@@ -50,7 +51,9 @@ internal sealed class CompareNode : IMathNode
                         return result;
                 }
                 else
+                {
                     buffer.Append(arg.Calc(scope));
+                }
             }
             else
             {

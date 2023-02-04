@@ -73,7 +73,8 @@ internal sealed class BitwiseAndNode : IMathNode
         return Err("Missing value after operator &");
     }
 
-    public Result RenderStep(StringBuilder buffer, int selectedLevel, Scope scope, int nodeLevel = 1, bool showTree = false)
+    public Result RenderStep(StringBuilder buffer, int selectedLevel, Scope scope, int nodeLevel = 1,
+        bool showTree = false)
     {
         if (!IsFull())
             return GenerateMissingValueError();
@@ -90,7 +91,7 @@ internal sealed class BitwiseAndNode : IMathNode
 
         if (isEncased || showTree)
             buffer.Append('(');
-        
+
         var result = _arg1!.RenderStep(buffer, selectedLevel, scope, nodeLevel, showTree);
         if (result.Faulted)
             return result;

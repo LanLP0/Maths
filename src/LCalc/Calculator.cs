@@ -1,8 +1,6 @@
-﻿using System.Globalization;
-using System.Text;
+﻿using System.Text;
 using Common.Results;
 using LCalc.MathTree.Nodes;
-using OneOf;
 
 namespace LCalc;
 
@@ -11,39 +9,15 @@ namespace LCalc;
 /// </summary>
 public static class Calculator
 {
-    private static void Test()
-    {
-        CalcFormatted("abs(sin(((~1>>2<<2)^2^3/1000*50-40+1*2)))");
-    }
-    
     public static string CalcFormatted(string math)
     {
-        var result = CalcRaw(math, out var rawValueRequested, out var steps);
+        var result = CalcRaw(math, out var rawValueRequested);
 
-        if (result.IsT0) // Err
-            return $"Error: {result.AsT0.Message}";
-
-        if (result.IsT1) // Bool
-        {
-            if (steps is not null)
-                return $"{steps}{Environment.NewLine}Result: {result.AsT1}";
-            return $"Result: {result.AsT1}";
-        }
-
-        var result1 = result.AsT2;
-        result1 = Math.Round(result1, 6);
-        
-        if (steps is not null)
-        {
-            return $"{steps}{Environment.NewLine}Result: {(rawValueRequested ? result1.ToString(CultureInfo.InvariantCulture) : result1.Humanize())}";
-        }
-
-        return $"Result: {(rawValueRequested ? result1.ToString(CultureInfo.InvariantCulture) : result1.Humanize())}";
+        return result.Render(rawValueRequested);
     }
 
-    public static OneOf<Exception, bool, double> CalcRaw(ReadOnlySpan<char> math, out bool rawValueRequested, out string? steps)
+    public static CalcResult CalcRaw(ReadOnlySpan<char> math, out bool rawValueRequested)
     {
-        steps = null;
         rawValueRequested = false;
 
         if (math.Length is 0)
@@ -60,14 +34,12 @@ public static class Calculator
 
         if (!tree.Scope.GetStepByStepOpt())
             return tree.Calc();
-        
+
         var result1 = CalcStep(tree);
         if (result1.Faulted)
             return result1.Exception!;
-        steps = result1.Value;
 
-        return tree.Calc();
-
+        return tree.Calc().WithSteps(result1.Value!);
     }
 
     private static Result<string> CalcStep(MathTree.MathTree tree)
@@ -87,7 +59,8 @@ public static class Calculator
             if (i is 2)
                 continue;
 
-            if (i is 3 && root.Priority is MathTree.MathTree.ValueNodePriority) // Prevent the last line to be printed twice
+            if (i is 3 && root.Priority is MathTree.MathTree
+                    .ValueNodePriority) // Prevent the last line to be printed twice
                 break;
 
             buffer.Append(Environment.NewLine);
@@ -95,7 +68,7 @@ public static class Calculator
 
         if (root is not CompareNode)
             return buffer.ToString();
-        
+
         buffer.Append(Environment.NewLine);
         root.RenderStep(buffer, 1, tree.Scope, 1, tree.Scope.GetShowTreeOpt());
 

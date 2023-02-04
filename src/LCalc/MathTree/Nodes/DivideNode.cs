@@ -73,7 +73,8 @@ internal sealed class DivideNode : IMathNode
     }
 
 
-    public Result RenderStep(StringBuilder buffer, int selectedLevel, Scope scope, int nodeLevel = 1, bool showTree = false)
+    public Result RenderStep(StringBuilder buffer, int selectedLevel, Scope scope, int nodeLevel = 1,
+        bool showTree = false)
     {
         if (!IsFull())
             return GenerateMissingValueError();

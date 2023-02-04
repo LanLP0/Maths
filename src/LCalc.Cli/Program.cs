@@ -1,7 +1,5 @@
 ﻿using LCalc;
 
-// using org.mariuszgromada.math.mxparser;
-
 internal sealed class Program
 {
     public static void Main(string[] args)
@@ -22,6 +20,9 @@ internal sealed class Program
             {
                 Console.Write("Expression: ");
                 input = Console.ReadLine()!;
+                // var num = Calculator.CalcRaw(input, out _).AsDouble!.Value;
+                // Console.WriteLine(num.ToFractions(100));
+                // continue;
                 Console.WriteLine(Calculator.CalcFormatted(input));
             }
             catch (Exception e)
