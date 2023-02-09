@@ -4,16 +4,39 @@ namespace LCalc.CustomFunction;
 
 internal sealed class CustomFunctionCollection
 {
+    private const int MaxFunctionAmount = 15;
     private readonly List<CustomFunction> _list = new();
-    private bool[] _calledFunctions;
+
+    public Scope Scope = Scope.Create(false, false, true, false);
+
+    public int Count()
+    {
+        return _list.Count;
+    }
 
     public bool ContainsName(string name)
     {
-        return _list.Exists(a => a.Name == name);
+        foreach (var fn in _list)
+            if (fn.Name == name)
+                return true;
+
+        return false;
+    }
+
+    private CustomFunction? GetFunction(string name)
+    {
+        foreach (var fn in _list)
+            if (fn.Name == name)
+                return fn;
+
+        return null;
     }
 
     public Result Add(CustomFunction function)
     {
+        if (_list.Count >= MaxFunctionAmount)
+            return Err("Max custom function amount reached");
+
         if (ContainsName(function.Name))
             return Err($"{function.Name}() had already exists");
 
@@ -21,16 +44,13 @@ internal sealed class CustomFunctionCollection
         return Ok();
     }
 
-    public void End(Dictionary<string, double>? additionalArgs)
+    public void End(VariableCollection? additionalArgs)
     {
-        _calledFunctions = new bool[_list.Count];
-
-        if (additionalArgs == null)
+        if (additionalArgs is null)
             return;
 
         foreach (var fn in _list)
-        foreach (var arg in additionalArgs)
-            fn.Args.TryAdd(arg.Key, arg.Value);
+            fn.Args.Link(additionalArgs);
     }
 
     public Result<double> Execute(string name, scoped ReadOnlySpan<double> math)
@@ -38,17 +58,17 @@ internal sealed class CustomFunctionCollection
         if (_list.Count is 0)
             return Err($"Unknown function {name}()");
 
-        var pos = _list.FindIndex(a => a.Name == name);
-        if (pos is -1)
+        var fn = GetFunction(name);
+        if (fn is null)
             return Err($"Unknown function {name}()");
 
-        if (_calledFunctions[pos])
-            return Err("Cannot call a function in it-self");
-        var function = _list[pos];
+        if (fn.IsCalled)
+            return Err("Function loop is not allowed");
 
-        _calledFunctions[pos] = true;
-        var result = function.Run(math);
-        _calledFunctions[pos] = false;
+        fn.IsCalled = true;
+        var result = fn.Run(math);
+        fn.IsCalled = false;
+
         return result;
     }
 }

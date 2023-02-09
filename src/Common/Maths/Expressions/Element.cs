@@ -2,7 +2,7 @@ using System.Text;
 
 namespace Common.Maths.Expressions;
 
-public sealed class Element : IComparable<Element>
+internal sealed class Element : IComparable<Element>
 {
     public Element()
     {

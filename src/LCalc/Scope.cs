@@ -26,35 +26,35 @@ internal sealed class Scope
             Options = new CalculatorOptions();
         if (isCustomFunctionAllowed)
             CustomFunctions = new CustomFunctionCollection();
-        Variables = new Dictionary<string, double>();
+        Variables = new VariableCollection();
     }
 
     private CalculatorOptions? Options { get; }
     public CustomFunctionCollection? CustomFunctions { get; set; }
-    public Dictionary<string, double> Variables { get; set; }
-    public bool IsCompareAllowed { get; init; }
-    public bool IsCalculatorOptionAllowed { get; init; }
+    public VariableCollection Variables { get; set; }
+    public bool IsCompareAllowed { get; }
+    public bool IsCalculatorOptionAllowed { get; }
 
-    public Result<double> GetVariable(string variableName)
+    public Result<double> GetVariable(string name)
     {
-        if (Variables.TryGetValue(variableName, out var variable))
+        if (Variables.TryGet(name, out var variable))
             return variable;
 
         if (!_isVariableAllowed) // Allow for some standard variable like: pi
             return Err<double>("Variable not allowed in this scope");
 
-        return Err<double>($"Unknown variable '{variableName}'");
+        return Err<double>($"Unknown variable '{name}'");
     }
 
-    public Result SetVariable(string variableName, double variable)
+    public Result SetVariable(string name, double value)
     {
         if (!_isVariableAllowed)
             return Err("Variable not allowed in this scope");
 
-        if (Variables.TryAdd(variableName, variable))
+        if (Variables.TryAdd(name, value))
             return Ok();
 
-        return Err($"Variable {variableName} had already been set");
+        return Err($"Variable '{name}' had already been set");
     }
 
     public Result SetStepByStepOpt(bool value)
@@ -126,7 +126,7 @@ internal sealed class Scope
 
     public void EndInit()
     {
-        if (_isCustomFunctionAllowed)
+        if (_isCustomFunctionAllowed && CustomFunctions!.Count() is not 0)
             CustomFunctions!.End(Variables);
     }
 
@@ -134,10 +134,6 @@ internal sealed class Scope
         bool isVariableAllowed = true, bool isCompareAllowed = true)
     {
         var scope = new Scope(isCustomFunctionAllowed, isCalculatorOptionAllowed, isVariableAllowed, isCompareAllowed);
-
-        scope.Variables.TryAdd("pi", Math.PI);
-        scope.Variables.TryAdd("tau", 6.283185307179586476925);
-        scope.Variables.TryAdd("e", Math.E);
 
         return scope;
     }

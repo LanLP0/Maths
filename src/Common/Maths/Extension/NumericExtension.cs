@@ -4,7 +4,7 @@ using Rationals;
 
 namespace Common.Maths.Extension;
 
-public static class NumericExtension
+internal static class NumericExtension
 {
     public static bool IsInt(this double value)
     {
@@ -63,8 +63,8 @@ public static class NumericExtension
         if (denominator <= 100)
             return num.ToString(CultureInfo.InvariantCulture);
 
-        var approx = Rational.Approximate(num, 10E-6);
-        if (approx.FractionPart.Denominator >= 10_000)
+        var approx = Rational.Approximate(num, 10E-8);
+        if (approx.FractionPart.Denominator >= 1000)
         {
             num = Math.Round(num, 6);
             return num.ToString(CultureInfo.InvariantCulture);

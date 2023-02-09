@@ -351,18 +351,15 @@ internal static class CalculatorHelpers
 
     public static Result<double> OctalStringToDouble(ReadOnlySpan<char> s)
     {
-        var length = s.Length;
         var result = 0.0;
-        long pow = 1;
+        const long radix = 8;
 
-        for (var i = 0; i < length; i++)
+        foreach (var chr in s)
         {
-            var chr = s[length - i - 1];
             if ((int)chr is not (> 47 and < 56))
                 return Err<double>("Invalid octal number");
 
-            result += (chr - 48) * pow;
-            pow *= 8;
+            result = result * radix + (chr - 48);
         }
 
         return Ok(result);
@@ -370,14 +367,11 @@ internal static class CalculatorHelpers
 
     public static Result<double> HexStringToDouble(ReadOnlySpan<char> s)
     {
-        var length = s.Length;
         var result = 0.0;
-        long pow = 1;
+        const long radix = 16;
 
-        for (var i = 0; i < length; i++)
+        foreach (var chr in s)
         {
-            var chr = s[length - i - 1];
-
             int val;
             // ReSharper disable once RedundantCast
             switch ((int)chr)
@@ -392,8 +386,7 @@ internal static class CalculatorHelpers
                     return Err<double>("Invalid hex number");
             }
 
-            result += val * pow;
-            pow *= 16;
+            result = result * radix + val;
         }
 
         return Ok(result);
@@ -401,18 +394,15 @@ internal static class CalculatorHelpers
 
     public static Result<double> BinaryStringToDouble(ReadOnlySpan<char> s)
     {
-        var length = s.Length;
         var result = 0.0;
-        long pow = 1;
+        const long radix = 2;
 
-        for (var i = 0; i < length; i++)
+        foreach (var chr in s)
         {
-            var chr = s[length - i - 1];
             if ((int)chr is not (48 or 49))
                 return Err<double>("Invalid binary number");
 
-            result += (chr - 48) * pow;
-            pow *= 2;
+            result = result * radix + (chr - 48);
         }
 
         return Ok(result);

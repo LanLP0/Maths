@@ -5,15 +5,11 @@ namespace LCalc.CustomFunction;
 
 internal sealed class CustomFunction
 {
-    private int _argsCount;
     private Scope _scope;
     private MathTree.MathTree _tree;
-    public Dictionary<string, double> Args;
+    public VariableCollection Args;
 
-    private CustomFunction()
-    {
-    }
-
+    public bool IsCalled = false;
     public string Name { get; private set; }
 
     public static Result<CustomFunction> Parse(ReadOnlySpan<char> span, CustomFunctionCollection customFunctions)
@@ -36,7 +32,7 @@ internal sealed class CustomFunction
             return Err<CustomFunction>("Duplicate functions");
         var argsSpan = firstHalf[(pos + 1)..^1];
 
-        Dictionary<string, double> args = new();
+        VariableCollection args = new();
         var fn = new CustomFunction();
         if (argsSpan.Length is not 0)
         {
@@ -54,7 +50,7 @@ internal sealed class CustomFunction
                     case 32: // ' '
                     {
                         if (buffer[0] != '\0')
-                            args.Add(buffer.TrimEnd('\0').ToString(), 0);
+                            args.TryAdd(buffer.TrimEnd('\0').ToString(), 0);
                         buffer.Clear();
                         count = 0;
                         break;
@@ -64,8 +60,7 @@ internal sealed class CustomFunction
                 }
 
             if (buffer[0] != '\0')
-                args.Add(buffer.TrimEnd('\0').ToString(), 0);
-            fn._argsCount = args.Count;
+                args.TryAdd(buffer.TrimEnd('\0').ToString(), 0);
         }
 
         var secondHalf = span[(pos1 + 1)..];
@@ -74,7 +69,7 @@ internal sealed class CustomFunction
 
         fn.Name = name;
         fn.Args = args;
-        fn._scope = Scope.Create(false, false, true, false);
+        fn._scope = customFunctions.Scope;
         fn._scope.Variables = args;
         fn._scope.CustomFunctions = customFunctions;
         fn._tree = new MathTree.MathTree(fn._scope);
@@ -87,17 +82,13 @@ internal sealed class CustomFunction
 
     public Result<double> Run(scoped ReadOnlySpan<double> args)
     {
-        if (args.Length != _argsCount)
+        if (args.Length != Args.Count)
             return Err("Invalid number of args");
 
         var i = 0;
-        foreach (var (key, _) in Args)
+        foreach (var arg in Args)
         {
-            if (i >= args.Length)
-                break;
-
-            Args[key] = args[i];
-
+            arg.SetValue(args[i]);
             i++;
         }
 

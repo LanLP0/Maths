@@ -1,0 +1,91 @@
+﻿using System.Collections;
+
+namespace LCalc;
+
+internal sealed class VariableCollection : IEnumerable<Variable>
+{
+    private readonly List<Variable> _variables = new();
+    private VariableCollection? _linkedCollection;
+
+    public int Count => _variables.Count;
+
+    public IEnumerator<Variable> GetEnumerator()
+    {
+        return _variables.GetEnumerator();
+    }
+
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return GetEnumerator();
+    }
+
+    public bool Contains(Variable variable)
+    {
+        if (ContainsName(variable.Name))
+            return true;
+
+        if (_linkedCollection is null)
+            return false;
+
+        return _linkedCollection!.Contains(variable);
+    }
+
+    private bool ContainsName(string name)
+    {
+        foreach (var variable in _variables)
+            if (variable.Name == name)
+                return true;
+
+        return false;
+    }
+
+    public bool TryAdd(string name, double value)
+    {
+        return TryAdd(new Variable(name, value));
+    }
+
+    public bool TryAdd(Variable variable)
+    {
+        if (ContainsName(variable.Name)) // Dont use this.Contains() to allow for variable overwrite
+            return false;
+
+        _variables.Add(variable);
+        return true;
+    }
+
+    public bool TryGet(string name, out double result)
+    {
+        foreach (var variable in _variables)
+        {
+            if (variable.Name != name)
+                continue;
+
+            result = variable.Value;
+            return true;
+        }
+
+        if (_linkedCollection is not null)
+            return _linkedCollection.TryGet(name, out result);
+
+        switch (name)
+        {
+            case "pi":
+                result = Math.PI;
+                return true;
+            case "e":
+                result = Math.E;
+                return true;
+            case "tau":
+                result = 6.283185307179586476925; // tau
+                return true;
+            default:
+                result = -1;
+                return false;
+        }
+    }
+
+    public void Link(VariableCollection variableCollection)
+    {
+        _linkedCollection = variableCollection;
+    }
+}

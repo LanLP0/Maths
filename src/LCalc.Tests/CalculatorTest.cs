@@ -120,10 +120,10 @@ public sealed class CalculatorTest
     [InlineData("1 1", "Missing operator")]
     [InlineData("1-&a=100", "Missing value after operator -")]
     [InlineData("&a=", "Missing variable value")]
-    [InlineData("&a=1&a=1", "Variable a had already been set")]
+    [InlineData("&a=1&a=1", "Variable 'a' had already been set")]
     [InlineData("0b21", "Invalid binary number")]
     [InlineData("0o9", "Invalid octal number")]
-    [InlineData("[t()=t()]t()", "Cannot call a function in it-self")]
+    [InlineData("[t()=t()]t()", "Function loop is not allowed")]
     public void Calc_Should_Error(string math, string errorMsg)
     {
         // Arrange

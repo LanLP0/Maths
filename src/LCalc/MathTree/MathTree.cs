@@ -140,8 +140,10 @@ internal sealed class MathTree
                         result = ParseAndSetNode(level, buffer, ref tokenType, Scope);
                         if (result.Faulted)
                             return result;
-                        AddFnNode(level, new DivideNode());
-                        AddValueNode(level, new ValueNode(100));
+
+                        var levelStack = GetStackAt(level);
+                        AddFnNode(levelStack, new DivideNode());
+                        AddValueNode(levelStack, new ValueNode(100));
                         break;
                     }
 
@@ -162,8 +164,10 @@ internal sealed class MathTree
                         result = ParseAndSetNode(level, buffer, ref tokenType, Scope);
                         if (result.Faulted)
                             return result;
-                        AddFnNode(level, new DivideNode());
-                        AddValueNode(level, new ValueNode(100));
+
+                        var levelStack = GetStackAt(level);
+                        AddFnNode(levelStack, new DivideNode());
+                        AddValueNode(levelStack, new ValueNode(100));
                         break;
                     }
 
@@ -197,12 +201,12 @@ internal sealed class MathTree
                         break;
                     }
 
-                    var addResult = AddFnNode(level, node);
+                    var addResult = AddFnNode(levelStack, node);
                     if (!addResult.Faulted)
                         break;
 
                     node.AddNode(EmptyNode.Shared);
-                    if (AddValueNode(level, node))
+                    if (AddValueNode(levelStack, node))
                         break;
 
                     return Err($"Invalid operator - at char {i + 1}");
@@ -221,7 +225,7 @@ internal sealed class MathTree
                         break;
                     }
 
-                    if (!AddValueNode(level, bitwiseNotNode))
+                    if (!AddValueNode(levelStack, bitwiseNotNode))
                         return Err($"Invalid operator ~ at char {i + 1}");
 
                     break;
@@ -572,7 +576,7 @@ internal sealed class MathTree
             case TokenType.Number:
             case TokenType.SpecialNumber:
                 Span<char> value = stackalloc char[buffer.Length];
-                buffer.CopyTo(0, value, buffer.Length);
+                buffer.CopyTo(0, value, value.Length);
                 var result1 = ValueNode.Parse(value);
                 if (result1.Faulted)
                     return Err(result1.Exception!);
@@ -643,7 +647,7 @@ internal sealed class MathTree
         if (node is EmptyNode)
             return Ok();
 
-        var levelStack = _stack[level];
+        var levelStack = GetStackAt(level);
         if (levelStack.Count is 0)
         {
             if (node.Priority != ValueNodePriority)
@@ -660,7 +664,7 @@ internal sealed class MathTree
 
         if (node.Priority != ValueNodePriority)
         {
-            var result = AddFnNode(level, node);
+            var result = AddFnNode(levelStack, node);
             if (result.Faulted)
                 return result;
 
@@ -670,21 +674,20 @@ internal sealed class MathTree
             return result;
         }
 
-        if (AddValueNode(level, node))
+        if (AddValueNode(levelStack, node))
             return Ok();
 
         if (_isPrevCharSpace)
             return Err("Missing operator");
 
-        AddFnNode(level, node is ValueNode ? new ExponentNode() : new MultiplyNode());
+        AddFnNode(levelStack, node is ValueNode ? new ExponentNode() : new MultiplyNode());
 
-        AddValueNode(level, node);
+        AddValueNode(levelStack, node);
         return Ok();
     }
 
-    private Result AddFnNode(int level, IMathNode node)
+    private Result AddFnNode(List<IMathNode> levelStack, IMathNode node)
     {
-        var levelStack = _stack[level];
         for (var stackIndex = 0; stackIndex < levelStack.Count;)
         {
             AddOp op;
@@ -722,9 +725,8 @@ internal sealed class MathTree
         throw new UnreachableException();
     }
 
-    private bool AddValueNode(int level, IMathNode node)
+    private bool AddValueNode(List<IMathNode> levelStack, IMathNode node)
     {
-        var levelStack = _stack[level];
         for (var i = levelStack.Count - 1; i >= 0; i--)
         {
             var node1 = levelStack[i];
@@ -806,6 +808,11 @@ internal sealed class MathTree
         if (op.HasValue)
             CompareNode.AddOp(op.Value);
         return true;
+    }
+
+    private List<IMathNode> GetStackAt(int level)
+    {
+        return _stack[level];
     }
 
     public CalcResult Calc()

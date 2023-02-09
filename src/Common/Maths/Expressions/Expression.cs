@@ -2,7 +2,7 @@ using System.Text;
 
 namespace Common.Maths.Expressions;
 
-public sealed class Expression
+internal sealed class Expression
 {
     public List<Element> Elements { get; private set; } = new();
 

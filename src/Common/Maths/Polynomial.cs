@@ -1,6 +1,6 @@
 ﻿namespace Common.Maths;
 
-public static class Polynomial
+internal static class Polynomial
 {
     public static int Calc2(double a, double b, double c, out double? result1, out double? result2)
     {

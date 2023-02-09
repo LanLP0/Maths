@@ -19,34 +19,20 @@ internal sealed class Program
             try
             {
                 Console.Write("Expression: ");
-                input = Console.ReadLine()!;
-                // var num = Calculator.CalcRaw(input, out _).AsDouble!.Value;
-                // Console.WriteLine(num.ToFractions(100));
-                // continue;
+                input = Console.ReadLine();
+                if (input is null)
+                    break;
+
+                if (string.IsNullOrWhiteSpace(input))
+                    break;
+
                 Console.WriteLine(Calculator.CalcFormatted(input));
             }
             catch (Exception e)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine(e);
+                Console.Error.WriteLine(e);
                 Console.ForegroundColor = ConsoleColor.Gray;
             }
-
-        // for(;;)
-        // {
-        //     try
-        //     {
-        //         Console.Write("Expression: ");
-        //         var input = Console.ReadLine()!;
-        //         var exp = new Expression(input);
-        //         Console.WriteLine(exp.calculate());
-        //     }
-        //     catch (Exception e)
-        //     {
-        //         Console.ForegroundColor = ConsoleColor.Red;
-        //         Console.WriteLine(e);
-        //         Console.ForegroundColor = ConsoleColor.Gray;
-        //     }
-        // }
     }
 }
