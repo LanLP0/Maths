@@ -35,10 +35,7 @@ public class CalcResult
 
     public Exception? AsException { get; }
 
-    public string? GetStep()
-    {
-        return _steps;
-    }
+    public string? Steps => _steps;
 
     internal CalcResult WithSteps(string steps)
     {

@@ -8,12 +8,6 @@ internal sealed class Scope
     private readonly bool _isCustomFunctionAllowed;
     private readonly bool _isVariableAllowed;
 
-    [Obsolete("Please use Scope.Create", true)]
-    public Scope()
-    {
-        throw new Exception("Please use Scope.Create");
-    }
-
     private Scope(bool isCustomFunctionAllowed, bool isCalculatorOptionAllowed, bool isVariableAllowed,
         bool isCompareAllowed)
     {

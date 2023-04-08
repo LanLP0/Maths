@@ -242,7 +242,7 @@ internal static class CalculatorHelpers
                     if (value.Length < 3)
                         return Err($"{value.ToString()} is not a number");
 
-                    var result = HexStringToDouble(value.Slice(3));
+                    var result = HexStringToNumber(value.Slice(3));
                     if (result.Faulted)
                         return Err<double>(result.Exception!);
 
@@ -254,7 +254,7 @@ internal static class CalculatorHelpers
                     if (value.Length < 3)
                         return Err($"{value.ToString()} is not a number");
 
-                    var result = BinaryStringToDouble(value.Slice(3));
+                    var result = BinaryStringToNumber(value.Slice(3));
                     if (result.Faulted)
                         return Err<double>(result.Exception!);
 
@@ -266,7 +266,7 @@ internal static class CalculatorHelpers
                     if (value.Length < 3)
                         return Err($"{value.ToString()} is not a number");
 
-                    var result = OctalStringToDouble(value.Slice(3));
+                    var result = OctalStringToNumber(value.Slice(3));
                     if (result.Faulted)
                         return Err<double>(result.Exception!);
 
@@ -305,7 +305,7 @@ internal static class CalculatorHelpers
                 if (value.Length < 3)
                     return Err($"{value.ToString()} is not a number");
 
-                var result = HexStringToDouble(value.Slice(2));
+                var result = HexStringToNumber(value.Slice(2));
                 if (result.Faulted)
                     return Err<double>(result.Exception!);
 
@@ -317,7 +317,7 @@ internal static class CalculatorHelpers
                 if (value.Length < 3)
                     return Err($"{value.ToString()} is not a number");
 
-                var result = BinaryStringToDouble(value.Slice(2));
+                var result = BinaryStringToNumber(value.Slice(2));
                 if (result.Faulted)
                     return Err<double>(result.Exception!);
 
@@ -329,7 +329,7 @@ internal static class CalculatorHelpers
                 if (value.Length < 3)
                     return Err($"{value.ToString()} is not a number");
 
-                var result = OctalStringToDouble(value.Slice(2));
+                var result = OctalStringToNumber(value.Slice(2));
                 if (result.Faulted)
                     return Err<double>(result.Exception!);
 
@@ -349,7 +349,7 @@ internal static class CalculatorHelpers
         return e;
     }
 
-    public static Result<double> OctalStringToDouble(ReadOnlySpan<char> s)
+    public static Result<double> OctalStringToNumber(ReadOnlySpan<char> s)
     {
         var result = 0.0;
         const long radix = 8;
@@ -365,7 +365,7 @@ internal static class CalculatorHelpers
         return Ok(result);
     }
 
-    public static Result<double> HexStringToDouble(ReadOnlySpan<char> s)
+    public static Result<double> HexStringToNumber(ReadOnlySpan<char> s)
     {
         var result = 0.0;
         const long radix = 16;
@@ -392,7 +392,7 @@ internal static class CalculatorHelpers
         return Ok(result);
     }
 
-    public static Result<double> BinaryStringToDouble(ReadOnlySpan<char> s)
+    public static Result<double> BinaryStringToNumber(ReadOnlySpan<char> s)
     {
         var result = 0.0;
         const long radix = 2;

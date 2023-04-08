@@ -246,7 +246,7 @@ public static class ConsoleHelpers
                 }
                 default:
                 {
-                    if (input.KeyChar is '\0')
+                    if (!char.IsControl(input.KeyChar))
                         continue;
 
                     if (buffer.Length >= maxLength)
@@ -262,9 +262,7 @@ public static class ConsoleHelpers
                     if (buffer.Length is 0)
                         continue;
 
-                    Console.CursorLeft--;
-                    Console.Write(' ');
-                    Console.CursorLeft--;
+                    Console.Write("\b \b");
 
                     buffer.Remove(buffer.Length - 1, 1);
 

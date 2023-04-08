@@ -1,4 +1,5 @@
 ﻿using LCalc;
+using Spectre.Console;
 
 internal sealed class Program
 {
@@ -6,33 +7,29 @@ internal sealed class Program
     {
         Console.CancelKeyPress += (_, _) => Environment.Exit(0);
 
-        var input = string.Join(' ', args);
         if (args.Length is not 0)
         {
-            Console.WriteLine(Calculator.CalcFormatted(input));
+            var input = string.Join(' ', args);
+            var result = Calculator.CalcFormatted(input);
+            AnsiConsole.WriteLine(result);
             return;
         }
 
-        Console.WriteLine("Press ^C to exit");
+        AnsiConsole.MarkupLine("Press [Yellow]Ctrl-C[/] to exit");
 
         for (;;)
             try
             {
-                Console.Write("Expression: ");
-                input = Console.ReadLine();
-                if (input is null)
-                    break;
-
+                var input = AnsiConsole.Ask<string>("Expression: ");
                 if (string.IsNullOrWhiteSpace(input))
                     break;
 
-                Console.WriteLine(Calculator.CalcFormatted(input));
+                var result = Calculator.CalcFormatted(input);
+                AnsiConsole.WriteLine(result);
             }
             catch (Exception e)
             {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.Error.WriteLine(e);
-                Console.ForegroundColor = ConsoleColor.Gray;
+                AnsiConsole.WriteException(e);
             }
     }
 }

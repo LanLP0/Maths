@@ -10,17 +10,17 @@ public sealed partial class MainView : UserControl
         InitializeComponent();
     }
 
-    private void AppChooser_OnPointerReleased(object? sender, PointerReleasedEventArgs e)
-    {
-        try
-        {
-        }
-        catch
-        {
-            // ignored
-        }
-
-        // LeftDrawer.IsPaneOpen = false;
-        LeftDrawer.OptionalCloseLeftDrawer();
-    }
+    // private void AppChooser_OnPointerReleased(object? sender, PointerReleasedEventArgs e)
+    // {
+    //     try
+    //     {
+    //     }
+    //     catch
+    //     {
+    //         // ignored
+    //     }
+    //
+    //     // LeftDrawer.IsPaneOpen = false;
+    //     LeftDrawer.OptionalCloseLeftDrawer();
+    // }
 }

@@ -14,7 +14,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\LCalc\LCalc.Core.csproj"/>
+        <ProjectReference Include="..\LCalc\LCalc.Core.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Spectre.Console.Cli" Version="0.46.0" />
     </ItemGroup>
 
     <!--    <ItemGroup>-->

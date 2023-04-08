@@ -16,6 +16,7 @@ internal sealed class MathTree
     public const int ExpFacNodePriority = 2;
     public const int BitwiseNodePriority = 3;
     public const int ValueNodePriority = 4;
+    
     private readonly List<List<IMathNode>> _stack;
     public readonly Scope Scope;
     private bool _isPrevCharSpace;

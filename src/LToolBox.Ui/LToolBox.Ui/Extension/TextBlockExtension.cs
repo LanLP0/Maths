@@ -23,6 +23,8 @@ public static class TextBlockExtension
             throw new ArgumentException($"{nameof(maxFontSize)} cannot be less than or equal to {nameof(minFontSize)}",
                 nameof(maxFontSize));
 
+        maxFontSize *= 10;
+
         if (string.IsNullOrWhiteSpace(textBlock.Text)) // Ignore if content is empty
             return;
 

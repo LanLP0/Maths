@@ -44,9 +44,8 @@ public sealed partial class Calc : UserControl
         {
             ResultDisplay.Text = result.AsException!.Message; // Display error
 
-            MathInput.Focus();
-            MathInput.MoveCaretToEnd();
-            MathDisplay.FitContent(MaxFontSize, MinFontSize);
+            FocusInputBox();
+            // MathDisplay.FitContent(MaxFontSize, MinFontSize);
             return;
         }
 
@@ -56,46 +55,57 @@ public sealed partial class Calc : UserControl
             resultText = RawValueToggle.IsChecked!.Value
                 ? result.AsDouble!.Value.ToString(CultureInfo.InvariantCulture)
                 : result.AsDouble!.Value.Humanize();
-            AddToHistory(resultText);
         }
         else
         {
             resultText = result.AsDouble!.Value.ToString(CultureInfo.InvariantCulture);
-            AddToHistory(resultText);
         }
 
         ResultDisplay.Text = resultText;
+        AddToHistory(resultText);
 
-        MathInput.Focus();
+        FocusInputBox();
         MathInput.Text = string.Empty;
-        MathDisplay.FitContent(MaxFontSize, MinFontSize);
+        // MathDisplay.FitContent(MaxFontSize, MinFontSize);
     }
 
     private void AddToHistory(string resultText)
     {
-        _calcModel.Historys.Insert(0,
-            new TextBlock
+        var textBlock = new TextBlock
+        {
+            Text = $"{resultText}: {_calcModel.Math}", TextWrapping = TextWrapping.NoWrap,
+            TextTrimming = TextTrimming.CharacterEllipsis
+        };
+        
+        _calcModel.Histories.Insert(0,
+            new ListBoxItem
             {
-                Text = $"{resultText}: {_calcModel.Math}", TextWrapping = TextWrapping.NoWrap,
-                TextTrimming = TextTrimming.CharacterEllipsis
+                Content = textBlock
             });
 
-        if (_calcModel.Historys.Count >= MaxHistoryLenght)
-            _calcModel.Historys.RemoveAt(_calcModel.Historys.Count - 1);
+        if (_calcModel.Histories.Count >= MaxHistoryLenght)
+            _calcModel.Histories.RemoveAt(_calcModel.Histories.Count - 1);
+        
+        HistoryBox.InvalidateVisual();
     }
 
     private void HistoryBox_OnDoubleTapped(object? sender, TappedEventArgs e)
     {
         var text = (HistoryBox.SelectedItem as TextBlock)!.Text!;
         MathInput.Text = text.Substring(text.IndexOf(' ') + 1);
+        FocusInputBox();
+        e.Handled = true;
+    }
+
+    private void FocusInputBox()
+    {
         MathInput.Focus();
         MathInput.MoveCaretToEnd();
-        e.Handled = true;
     }
 
     private void ClearHistory(object? sender, RoutedEventArgs e)
     {
-        _calcModel.Historys.Clear();
+        _calcModel.Histories.Clear();
     }
 
     private void MathInput_OnTextChanged(object? sender, TextChangedEventArgs e)
@@ -127,6 +137,6 @@ public sealed partial class Calc : UserControl
             ResultDisplay.Text = resultText;
         }
 
-        ResultDisplay.FitContent(10);
+        // ResultDisplay.FitContent(10);
     }
 }

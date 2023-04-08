@@ -7,7 +7,7 @@ namespace LToolBox.Ui.ViewModels;
 public sealed class CalcModel : ViewModelBase
 {
     private string _math = string.Empty;
-    public ObservableCollection<TextBlock> Historys { get; } = new();
+    public ObservableCollection<ListBoxItem> Histories { get; } = new();
 
     public string Math
     {
