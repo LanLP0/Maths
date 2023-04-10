@@ -2,7 +2,7 @@
 
     <PropertyGroup>
         <OutputType>Exe</OutputType>
-        <TargetFramework>net6.0</TargetFramework>
+        <TargetFramework>net7.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <AssemblyName>ltb</AssemblyName>
@@ -24,6 +24,11 @@
     <ItemGroup Condition="'$(Configuration)' == 'Debug'">
         <PackageReference Include="Serilog" Version="2.12.0"/>
         <PackageReference Include="Serilog.Sinks.Console" Version="4.1.0"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="RadLine" Version="0.6.0"/>
+        <PackageReference Include="Spectre.Console.Cli" Version="0.46.0"/>
     </ItemGroup>
 
 </Project>

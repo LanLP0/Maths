@@ -1,6 +1,7 @@
 ﻿using System.Text;
 using Common.Cli;
 using LToolBox.Tools;
+using Spectre.Console;
 #if DEBUG
 using Serilog;
 #endif
@@ -11,7 +12,7 @@ internal sealed class Program
 {
     private static Tool[] _tools = null!;
 
-    private static string _promptTemplate = null!;
+    private static string _prompt = null!;
 
 #if DEBUG
     public static readonly ILogger Logger = new LoggerConfiguration()
@@ -22,52 +23,58 @@ internal sealed class Program
 
     public static void Main()
     {
-        Console.CancelKeyPress += (_, _) =>
-        {
-            Console.ForegroundColor = ConsoleColor.White;
-            Environment.Exit(0);
-        };
+        if (!AnsiConsole.Profile.Capabilities.Interactive)
+            AnsiConsole.MarkupLine("[red]This program needs to be run in interactive mode[/]");
+
+        Console.CancelKeyPress += (_, _) => { Environment.Exit(0); };
+
+        var console = AnsiConsole.Console;
+
         _tools = new Tool[]
         {
             new ComplexCalcTool(
+                console
 #if DEBUG
-                Logger
+                , Logger
 #endif
             ),
-            new LCalcTool(),
-            new MinMaxFracTool(),
-            new PolynomialTool(),
-            new FactTool(),
-            new IsPrimeTool()
+            new LCalcTool(console),
+            new MinMaxFracTool(console),
+            new PolynomialTool(console),
+            new FactTool(console),
+            new IsPrimeTool(console)
         };
 
         StringBuilder buffer = new();
-        buffer.Append("> ");
+        buffer.Append("[Green]>[/] ");
         var count = 1;
         foreach (var tool in _tools)
         {
+            buffer.Append("[Green]");
             buffer.Append(count);
+            buffer.Append("[/]");
             buffer.Append('-');
+            buffer.Append("[Yellow]");
             buffer.Append(tool.ToolName);
+            buffer.Append("[/]");
             buffer.Append(' ');
 
             count++;
         }
 
-        buffer.Append("\n> Select tool: ");
-        _promptTemplate = buffer.ToString();
+        buffer.Append("\n[Green]>[/] Select tool: ");
+        _prompt = buffer.ToString();
         buffer.Clear();
 
-        Console.ForegroundColor = ConsoleColor.Yellow;
-        Console.WriteLine("> Press `?` to get help about a tool, press <Ctrl-C> to exit");
+        AnsiConsole.MarkupLine(
+            "[Green]>[/] Type [Yellow]?[/] to get help about a tool, press [Yellow]Ctrl-C[/] to exit");
 
         for (;;) PromptTool();
     }
 
     private static void PromptTool()
     {
-        Console.ForegroundColor = ConsoleColor.Yellow;
-        Console.Write(_promptTemplate);
+        AnsiConsole.Markup(_prompt);
         var help = false;
 
         for (;;)
@@ -84,17 +91,16 @@ internal sealed class Program
 
             switch (id)
             {
-                case -2:
+                case -2: // Help key
                 {
-                    Console.CursorLeft = 0;
-                    ConsoleHelpers.ClearLine();
+                    AnsiConsole.Console.ClearLine();
 
-                    Console.Write("> Help: ");
+                    AnsiConsole.Markup("[Green]>[/] Help: ");
                     help = true;
 
                     continue;
                 }
-                case -1:
+                case -1: // Unknown key
                 {
                     continue;
                 }
@@ -103,10 +109,8 @@ internal sealed class Program
             if (id >= _tools.Length)
                 continue;
 
-            Console.ForegroundColor = ConsoleColor.White;
-
             var tool = _tools.ElementAt(id);
-            Console.WriteLine(tool.ToolName);
+            AnsiConsole.WriteLine(tool.ToolName);
 
             if (help)
             {

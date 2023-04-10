@@ -7,4 +7,9 @@
         <LangVersion>latest</LangVersion>
     </PropertyGroup>
 
+    <ItemGroup>
+        <PackageReference Include="RadLine" Version="0.6.0"/>
+        <PackageReference Include="Spectre.Console.Cli" Version="0.46.0"/>
+    </ItemGroup>
+
 </Project>

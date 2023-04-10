@@ -4,66 +4,78 @@ namespace LCalc;
 
 public class CalcResult
 {
-    private string? _steps;
-
     public CalcResult(Exception exception, string? steps = null)
     {
-        AsException = exception;
-        _steps = steps;
+        Exception = exception;
+        Steps = steps;
     }
 
     public CalcResult(bool result, string? steps = null)
     {
-        AsBool = result;
-        _steps = steps;
+        Bool = result;
+        Steps = steps;
     }
 
     public CalcResult(double result, string? steps = null)
     {
-        AsDouble = result;
-        _steps = steps;
+        Number = result;
+        Steps = steps;
     }
 
-    public bool IsBool => AsBool.HasValue;
-    public bool IsDouble => AsDouble.HasValue;
-    public bool Faulted => AsException is not null;
-    public bool ContainSteps => _steps is not null;
+    public bool IsBool => Bool.HasValue;
+    public bool IsDouble => Number.HasValue;
+    public bool Faulted => Exception is not null;
+    public bool ContainSteps => Steps is not null;
 
-    public bool? AsBool { get; }
+    public bool? Bool { get; }
 
-    public double? AsDouble { get; }
+    public double? Number { get; }
 
-    public Exception? AsException { get; }
+    public Exception? Exception { get; }
 
-    public string? Steps => _steps;
+    public string? Steps { get; private set; }
 
     internal CalcResult WithSteps(string steps)
     {
-        _steps = steps;
+        Steps = steps;
         return this;
     }
 
-    public string Render(bool rawValue = false)
+    public string RenderValue(bool raw = false)
+    {
+        if (Faulted)
+            return Exception!.Message;
+
+        if (IsBool)
+            return Bool!.Value.ToString();
+
+        if (raw)
+            return Number!.Value.ToString(CultureInfo.InvariantCulture);
+
+        return Number!.Value.Humanize();
+    }
+
+    public string Render(bool raw = false)
     {
         if (Faulted) // Err
-            return $"Error: {AsException!.Message}";
+            return $"Error: {Exception!.Message}";
 
         if (IsBool) // Bool
         {
             if (ContainSteps)
-                return $"{_steps}{Environment.NewLine}Result: {AsBool!}";
-            return $"Result: {AsBool!}";
+                return $"{Steps}{Environment.NewLine}Result: {Bool!}";
+            return $"Result: {Bool!}";
         }
 
-        var result = AsDouble!.Value;
-        if (rawValue)
+        var result = Number!.Value;
+        if (raw)
             result = Math.Round(result, 6);
 
         if (ContainSteps)
             return
-                $"{_steps}{Environment.NewLine}Result: {(rawValue ? result.ToString(CultureInfo.InvariantCulture) : result.Humanize())}";
+                $"{Steps}{Environment.NewLine}Result: {(raw ? result.ToString(CultureInfo.InvariantCulture) : result.Humanize())}";
 
-        return $"Result: {(rawValue ? result.ToString(CultureInfo.InvariantCulture) : result.Humanize())}";
+        return $"Result: {(raw ? result.ToString(CultureInfo.InvariantCulture) : result.Humanize())}";
     }
 
     public static implicit operator CalcResult(Exception exception)

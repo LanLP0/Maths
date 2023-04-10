@@ -95,8 +95,8 @@ internal sealed class CustomFunction
         var result = _tree.Calc();
 
         if (result.Faulted)
-            return result.AsException!;
+            return result.Exception!;
 
-        return result.AsDouble!.Value;
+        return result.Number!.Value;
     }
 }

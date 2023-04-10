@@ -1,5 +1,6 @@
 using Common.Cli;
 using Common.Maths.Expressions;
+using Spectre.Console;
 #if DEBUG
 using Serilog;
 #endif
@@ -10,8 +11,30 @@ internal sealed class ComplexCalcTool : Tool
 {
     public override string ToolName { get; } = "complexcalc";
 
-    public override string? HelpMsg { get; } =
-        "Calculate multiple expression of any size\nControls:\nEnter constant by start typing it\nArrow keys, `[` - `]`: Move around\nCtrl + `+`, `+`: decrease, increase amount of element\n`a` - `z`: Change variable power\nPress `\\` to quit";
+    public override string? HelpMsg { get; } = """
+        Calculate multiple expression of any size
+        Enter constant by start typing it
+        [Yellow]Arrow keys[/], [Yellow][[[/] - [Yellow]]][/]: Move around
+        [Yellow]Ctrl-+[/], [Yellow]+[/]: decrease, increase amount of element
+        [Yellow]a[/] - [Yellow]z[/]: Change variable power
+        Press [Yellow]\[/] to exit
+        """;
+
+    private readonly Validator<int?> _powValidator = new()
+    {
+        val =>
+        {
+            if (val!.Value > 10) return "The value must be <= 10";
+
+            return null;
+        },
+        val =>
+        {
+            if (val!.Value <= 0) return "The value must be positive";
+
+            return null;
+        }
+    };
 
     public override void Execute()
     {
@@ -22,20 +45,20 @@ internal sealed class ComplexCalcTool : Tool
         var firstPrompt = true;
         for (;;)
         {
-            var op = ConsoleHelpers.ChooseOption("Op (*/^/+/-): ", new[] { "*", "^", "+", "-" },
-                false);
+            var op = Console.ChooseOption("[blue][[Optional]][/]Op [blue](*/^/+/-)[/]:", new[] { "*", "^", "+", "-" },
+                true, newLine: false, clear: false);
 
             if (op is null)
             {
-                if (firstPrompt)
-                {
-                    Console.WriteLine("Result:");
+                if (!firstPrompt)
+                    return;
 
-                    ex.Sort();
+                Console.WriteLine("Result:");
 
-                    RenderExpression(ex, -1);
-                    Console.WriteLine();
-                }
+                ex.Sort();
+
+                RenderExpression(ex, -1);
+                Console.WriteLine();
 
                 return;
             }
@@ -56,8 +79,8 @@ internal sealed class ComplexCalcTool : Tool
                 }
                 case '^':
                 {
-                    var pow = ConsoleHelpers.PromptInt("Power by: ", lengthLimit: 2, isNegativeAllowed: false);
-                    if (pow is null)
+                    var pow = Console.Ask("Power by:", validators: _powValidator, newLine: false, clear: false);
+                    if (!pow.HasValue)
                         return;
 
                     ex = Expression.Pow(ex, pow.Value);
@@ -90,6 +113,7 @@ internal sealed class ComplexCalcTool : Tool
             Console.WriteLine("Result:");
             RenderExpression(ex, -1);
 #if DEBUG
+            Console.WriteLine();
             _logger.Debug("{@ex}", ex);
 #endif
 
@@ -101,62 +125,67 @@ internal sealed class ComplexCalcTool : Tool
     {
         var result = new Expression
         {
-            Elements =
+            Values =
             {
                 new Element()
             }
-        };
+        }; // Initial empty Expression
 
-        const int argLimit = 7;
-        var pos = 0;
-        var (currLeft, currTop) = Console.GetCursorPosition();
-        RenderExpression(result, pos);
+        const int maxValCount = 7; // Max amount of vals an Expression can have
+        var selectedPos = 0;
 
-        for (;;)
+        RenderExpression(result, selectedPos);
+
+        for (;;) // Main loop
         {
-            var input = Console.ReadKey(true);
+            var input = Console.ReadKey(true)!.Value;
 
             switch (input)
             {
-                case { KeyChar: '=' }:
+                case { KeyChar: '=' }: // Add val
                 {
-                    if (result.Elements.Count >= argLimit)
+                    // If the number of vals has reached the max amount
+                    if (result.Values.Count >= maxValCount)
                         continue;
 
-                    result.Elements.Add(new Element());
-                    pos = result.Elements.Count - 1;
+                    result.Values.Add(new Element());
+                    selectedPos = result.Values.Count - 1; // Set the selected val to the newly added val
                     break;
                 }
-                case { KeyChar: '+' }:
+                case { KeyChar: '+' }: // Remove val
                 {
-                    if (result.Elements.Count <= 1)
+                    // The should always be some val(s)
+                    if (result.Values.Count <= 1)
                         continue;
 
-                    result.Elements.RemoveAt(result.Elements.Count - 1);
+                    // Remove the right-most one
+                    result.Values.RemoveAt(result.Values.Count - 1);
 
-                    pos = Math.Clamp(pos, 0, result.Elements.Count - 1);
+                    selectedPos = Math.Clamp(selectedPos, 0, result.Values.Count - 1);
                     break;
                 }
                 case { Key: ConsoleKey.LeftArrow }:
-                case { KeyChar: '[' }:
+                case { KeyChar: '[' }: // Move left
                 {
-                    if (pos is 0)
+                    // If the first one is selected, ignore
+                    if (selectedPos is 0)
                         break;
 
-                    pos--;
+                    selectedPos--;
                     break;
                 }
                 case { Key: ConsoleKey.RightArrow }:
-                case { KeyChar: ']' }:
+                case { KeyChar: ']' }: // Move right
                 {
-                    if (pos + 1 >= result.Elements.Count)
+                    // If the last one is selected, ignore
+                    if (selectedPos + 1 >= result.Values.Count)
                         break;
 
-                    pos++;
+                    selectedPos++;
                     break;
                 }
                 case { Key: ConsoleKey.Escape }:
-                case { KeyChar: '\\' }:
+                case { KeyChar: '\\' }: // Exit
                 {
                     Console.WriteLine();
                     return null;
@@ -186,29 +215,22 @@ internal sealed class ComplexCalcTool : Tool
                 case { Key: ConsoleKey.W }:
                 case { Key: ConsoleKey.X }:
                 case { Key: ConsoleKey.Y }:
-                case { Key: ConsoleKey.Z }:
+                case { Key: ConsoleKey.Z }: // Set the unknowns
                 {
-                    var e = result.Elements[pos];
-                    if (e.Powers.Count > 6)
+                    var e = result.Values[selectedPos]; // The current selected val
+                    if (e.Unknowns.Count > 6)
                         break;
 
-                    var key = char.ToLower(input.KeyChar) - 97;
-                    if (e.Powers.ContainsKey(key))
-                    {
-                        e.Powers.Remove(key);
-                        break;
-                    }
-
-                    var (val, adj) = ConsoleHelpers.PromptIntAndClearLine(input.KeyChar + ": ", Console.CursorTop + 1);
-                    currTop += adj;
-
-                    if (!val.HasValue)
+                    var key = char.ToLower(input.KeyChar) - 97; // Get the unknown's id
+                    if (e.Unknowns.Remove(key))
                         break;
 
-                    if (val.Value is 0)
+                    var val = Console.Ask<int?>($"{input.KeyChar}:", true);
+
+                    if (val is null or 0)
                         break;
 
-                    e.Powers.Add(key, val.Value);
+                    e.Unknowns.Add(key, val.Value);
                     break;
                 }
                 case { Key: ConsoleKey.D0 }:
@@ -230,44 +252,34 @@ internal sealed class ComplexCalcTool : Tool
                 case { Key: ConsoleKey.NumPad6 }:
                 case { Key: ConsoleKey.NumPad7 }:
                 case { Key: ConsoleKey.NumPad8 }:
-                case { Key: ConsoleKey.NumPad9 }:
+                case { Key: ConsoleKey.NumPad9 }: // Change value of selected
                 {
-                    var (val, adj) = ConsoleHelpers.PromptIntAndClearLine("Value: ", Console.CursorTop + 1,
-                        defaultValue: EnumHelpers.FastConsoleKeyToNumberString(input.Key));
-                    currTop += adj;
+                    var val = Console.Ask<int?>("Value:", initialText: EnumHelpers.FastToString(input.Key));
 
-                    if (val is null)
-                    {
-                        currTop += ConsoleHelpers.SafeSetCursorPosition(currLeft, currTop);
+                    if (!val.HasValue)
                         continue;
-                    }
 
-                    result.Elements[pos].Value = val.Value;
+                    result.Values[selectedPos].Value = val.Value;
                     break;
                 }
-                case { KeyChar: '-' }:
+                case { KeyChar: '-' }: // Change value of selected
                 {
-                    var (val, adj) =
-                        ConsoleHelpers.PromptIntAndClearLine("Value: ", Console.CursorTop + 1, defaultValue: "-");
+                    var val = Console.Ask<int?>("Value:", initialText: "-");
 
-                    currTop += adj;
-
-                    if (val is null)
-                    {
-                        currTop += ConsoleHelpers.SafeSetCursorPosition(currLeft, currTop);
+                    if (!val.HasValue)
                         continue;
-                    }
 
-                    result.Elements[pos].Value = val.Value;
+                    result.Values[selectedPos].Value = val.Value;
+
                     break;
                 }
                 case { Key: ConsoleKey.Enter }:
                 {
-                    if (!result.Elements.TrueForAll(a => a.Value is not 0))
+                    if (!result.Validate())
                         continue;
 
                     Console.WriteLine();
-                    result = result.Collapse();
+                    result = result.Condense();
 #if DEBUG
                     _logger.Debug("{@resultEx}", result);
 #endif
@@ -277,27 +289,26 @@ internal sealed class ComplexCalcTool : Tool
                     continue;
             }
 
-            currTop += ConsoleHelpers.SafeSetCursorPosition(currLeft, currTop);
-            RenderExpression(result, pos);
+            RenderExpression(result, selectedPos);
         }
     }
 
     private void RenderExpression(Expression expression, int selectedPos)
     {
-        ConsoleHelpers.WriteEmbeddedColor(expression.ToStringWithColor(selectedPos));
-
-        var (currLeft, currTop) = Console.GetCursorPosition();
-
-        Console.Write(new string(' ', Math.Clamp(Console.WindowWidth - Console.CursorLeft - 1, 0, int.MaxValue)));
-
-        ConsoleHelpers.SafeSetCursorPosition(currLeft, currTop);
+        Console.ClearLine();
+        Console.Markup(expression.ToMarkupColorString(selectedPos));
+        Console.MoveCursorToStart();
     }
 #if DEBUG
     private readonly ILogger _logger;
 
-    public ComplexCalcTool(ILogger logger)
+    public ComplexCalcTool(IAnsiConsole console, ILogger logger) : base(console)
     {
         _logger = logger;
+    }
+#else
+    public ComplexCalcTool(IAnsiConsole console) : base(console)
+    {
     }
 #endif
 }

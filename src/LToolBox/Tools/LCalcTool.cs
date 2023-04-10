@@ -1,24 +1,55 @@
+using System.Text;
+using Common.Cli;
 using LCalc;
+using Spectre.Console;
 
 namespace LToolBox.Tools;
 
 internal sealed class LCalcTool : Tool
 {
+    private readonly StringBuilder _buffer = new();
+
+    public LCalcTool(IAnsiConsole console) : base(console)
+    {
+    }
+
     public override string ToolName { get; } = "lcalc";
 
-    public override string? HelpMsg { get; } = "A powerful calculator\nType `q` to exit";
+    public override string? HelpMsg { get; } = "A powerful calculator\nType [Yellow]q[/] to exit";
 
     public override void Execute()
     {
         for (;;)
         {
-            Console.Write("Expression: ");
-            var input = Console.ReadLine()!;
+            _buffer.Clear();
 
-            if (input.Length is 1 && input is "q")
+            var input = Console.Ask<string>("[white]Expression:[/]", clear: false, newLine: false);
+
+            if (input is "q")
                 return;
 
-            Console.WriteLine(Calculator.CalcFormatted(input));
+            var result = Calculator.CalcRaw(input!, out var raw);
+
+            if (result.ContainSteps)
+            {
+                _buffer.Append(result.Steps);
+                _buffer.Append(Environment.NewLine);
+            }
+
+            _buffer.Append("[white]");
+            _buffer.Append(GetResultText(result));
+            _buffer.Append("[/] ");
+            _buffer.Append(result.RenderValue(raw));
+
+            Console.MarkupLine(_buffer.ToString());
         }
+    }
+
+    public static string GetResultText(CalcResult result)
+    {
+        if (result.Faulted)
+            return "Error:";
+
+        return "Result:";
     }
 }

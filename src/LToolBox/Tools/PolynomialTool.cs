@@ -1,30 +1,36 @@
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using Common.Cli;
 using Common.Maths;
 using Common.Maths.Extension;
+using Spectre.Console;
 
 namespace LToolBox.Tools;
 
 internal sealed class PolynomialTool : Tool
 {
+    public PolynomialTool(IAnsiConsole console) : base(console)
+    {
+    }
+
     public override string ToolName { get; } = "polynomial";
 
-    public override string? HelpMsg { get; } = "Calculate polynomial\nType `q` to quit";
+    public override string? HelpMsg { get; } = "Calculate polynomial\nPress [Yellow]q[/], [yellow]Esc[/] to exit";
 
     public override void Execute()
     {
         double a = 0, b = 0, c = 0;
         var pos = 0;
-        var top = Console.CursorTop;
         RenderExp(a, b, c, pos);
 
         for (;;)
         {
-            var input = Console.ReadKey(true);
+            var input = Console.ReadKey(true)!.Value;
 
             switch (input)
             {
                 case { Key: ConsoleKey.LeftArrow }:
-                case { Key: ConsoleKey.H }:
+                case { Key: ConsoleKey.H }: // Move left
                 {
                     if (pos is 0)
                         continue;
@@ -33,7 +39,7 @@ internal sealed class PolynomialTool : Tool
                     break;
                 }
                 case { Key: ConsoleKey.RightArrow }:
-                case { Key: ConsoleKey.L }:
+                case { Key: ConsoleKey.L }: // Move right
                 {
                     if (pos >= 2)
                         continue;
@@ -60,73 +66,31 @@ internal sealed class PolynomialTool : Tool
                 case { Key: ConsoleKey.NumPad6 }:
                 case { Key: ConsoleKey.NumPad7 }:
                 case { Key: ConsoleKey.NumPad8 }:
-                case { Key: ConsoleKey.NumPad9 }:
+                case { Key: ConsoleKey.NumPad9 }: // Change the value
                 {
-                    var (val, adj) = ConsoleHelpers.PromptIntAndClearLine("Value: ", top + 1,
-                        defaultValue: EnumHelpers.FastConsoleKeyToNumberString(input.Key));
-                    top += adj;
+                    var val = Console.Ask<int?>("Value:", true,
+                        EnumHelpers.FastToString(input.Key));
 
                     if (!val.HasValue)
                         continue;
 
-                    switch (pos)
-                    {
-                        case 0:
-                        {
-                            a = val.Value;
-                            break;
-                        }
-                        case 1:
-                        {
-                            b = val.Value;
-                            break;
-                        }
-                        default:
-                        {
-                            c = val.Value;
-                            break;
-                        }
-                    }
-
-                    if (pos < 2)
-                        pos++;
+                    ChangeValueAndMoveNext(ref pos, val, ref a, ref b, ref c);
 
                     break;
                 }
-                case { KeyChar: '-' }:
+                case { KeyChar: '-' }: // Change the value
                 {
-                    var (val, adj) = ConsoleHelpers.PromptIntAndClearLine("Value: ", top + 1, defaultValue: "-");
-                    top += adj;
+                    var val = Console.Ask<int?>("Value:", true, "-");
 
                     if (!val.HasValue)
                         continue;
 
-                    switch (pos)
-                    {
-                        case 0:
-                        {
-                            a = val.Value;
-                            break;
-                        }
-                        case 1:
-                        {
-                            b = val.Value;
-                            break;
-                        }
-                        default:
-                        {
-                            c = val.Value;
-                            break;
-                        }
-                    }
-
-                    if (pos < 2)
-                        pos++;
+                    ChangeValueAndMoveNext(ref pos, val, ref a, ref b, ref c);
 
                     break;
                 }
                 case { Key: ConsoleKey.Q }:
-                case { Key: ConsoleKey.Escape }:
+                case { Key: ConsoleKey.Escape }: // Exit
                 {
                     Console.WriteLine();
                     return;
@@ -135,6 +99,7 @@ internal sealed class PolynomialTool : Tool
                 {
                     if (a is 0 && b is 0 && c is 0)
                         continue;
+
                     break;
                 }
                 default:
@@ -148,7 +113,7 @@ internal sealed class PolynomialTool : Tool
         }
 
         Console.WriteLine();
-        Console.Write("Result: ");
+        Console.Markup("[white]Result:[/] ");
         switch (Polynomial.Calc2(a, b, c, out var result1, out var result2))
         {
             case -1:
@@ -178,10 +143,35 @@ internal sealed class PolynomialTool : Tool
         Console.WriteLine();
     }
 
-    private static void RenderExp(double a, double b, double c, int pos)
+    private static void ChangeValueAndMoveNext(ref int pos, [DisallowNull] int? val, ref double a, ref double b,
+        ref double c)
     {
-        Console.CursorLeft = 0;
-        ConsoleHelpers.ClearLine();
+        switch (pos)
+        {
+            case 0:
+            {
+                a = val.Value;
+                break;
+            }
+            case 1:
+            {
+                b = val.Value;
+                break;
+            }
+            default:
+            {
+                c = val.Value;
+                break;
+            }
+        }
+
+        if (pos < 2)
+            pos++;
+    }
+
+    private void RenderExp(double a, double b, double c, int pos)
+    {
+        Console.ClearLine();
 
         RenderVariable(a, 2, pos is 0);
         Console.Write(" + ");
@@ -190,32 +180,21 @@ internal sealed class PolynomialTool : Tool
         RenderVariable(c, 0, pos is 2);
     }
 
-    private static void RenderVariable(double val, int power, bool isSelected)
+    private void RenderVariable(double val, int power, bool isSelected)
     {
+        var style = Style.Plain;
         if (isSelected)
-            Console.ForegroundColor = ConsoleColor.Green;
+            style = style.Foreground(Color.Green);
 
-        Console.Write(val);
+        var markup = new Text(val.ToString(CultureInfo.InvariantCulture), style);
+        Console.Write(markup);
 
-        Console.ForegroundColor = ConsoleColor.Cyan;
+        if (power <= 0) return;
 
-        if (power <= 0)
-        {
-            Console.ForegroundColor = ConsoleColor.White;
-            return;
-        }
+        Console.Markup("[cyan]x[/]");
 
-        Console.Write('x');
+        if (power <= 1) return;
 
-        if (power <= 1)
-        {
-            Console.ForegroundColor = ConsoleColor.White;
-            return;
-        }
-
-        Console.Write('^');
-        Console.Write(power);
-
-        Console.ForegroundColor = ConsoleColor.White;
+        Console.Markup($"[cyan]^{power}[/]");
     }
 }

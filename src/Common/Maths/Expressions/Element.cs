@@ -6,18 +6,18 @@ internal sealed class Element : IComparable<Element>
 {
     public Element()
     {
-        Powers = new Dictionary<int, int>();
+        Unknowns = new Dictionary<int, int>();
     }
 
-    public Element(double value, Dictionary<int, int> powers)
+    public Element(double value, Dictionary<int, int> unknowns)
     {
         Value = value;
-        Powers = powers;
+        Unknowns = unknowns;
     }
 
     public double Value { get; set; }
 
-    public Dictionary<int, int> Powers { private set; get; }
+    public Dictionary<int, int> Unknowns { private set; get; }
 
     public int CompareTo(Element? other)
     {
@@ -25,11 +25,11 @@ internal sealed class Element : IComparable<Element>
             return 0;
 
         var max1 = 0;
-        if (Powers.Count is not 0)
-            max1 = Powers.Max(x => x.Value);
+        if (Unknowns.Count is not 0)
+            max1 = Unknowns.Max(x => x.Value);
         var max2 = 0;
-        if (other.Powers.Count is not 0)
-            max2 = other.Powers.Max(x => x.Value);
+        if (other.Unknowns.Count is not 0)
+            max2 = other.Unknowns.Max(x => x.Value);
 
         if (max1 > max2)
             return -1;
@@ -37,8 +37,8 @@ internal sealed class Element : IComparable<Element>
         if (max2 > max1)
             return 1;
 
-        var sum1 = Powers.Select(x => x.Key * x.Value).Sum();
-        var sum2 = other.Powers.Select(x => x.Key * x.Value).Sum();
+        var sum1 = Unknowns.Select(x => x.Key * x.Value).Sum();
+        var sum2 = other.Unknowns.Select(x => x.Key * x.Value).Sum();
 
         if (sum1 > sum2)
             return 1;
@@ -60,9 +60,9 @@ internal sealed class Element : IComparable<Element>
 
     private static Dictionary<int, int> MulPowerFromElements(Element left, Element right)
     {
-        var result = left.Powers.ToDictionary(e => e.Key, e => e.Value);
+        var result = left.Unknowns.ToDictionary(e => e.Key, e => e.Value);
 
-        foreach (var e in right.Powers)
+        foreach (var e in right.Unknowns)
         {
             if (result.ContainsKey(e.Key))
             {
@@ -84,12 +84,12 @@ internal sealed class Element : IComparable<Element>
         buffer.Append(Value);
 
         if (isSelected)
-            buffer.Append("[/Green]");
+            buffer.Append("[/]");
 
-        if (Powers.Count is 0)
+        if (Unknowns.Count is 0)
             return;
 
-        foreach (var e in Powers)
+        foreach (var e in Unknowns)
         {
             if (e.Value is 0)
                 continue;
@@ -105,24 +105,24 @@ internal sealed class Element : IComparable<Element>
 
             if (e.Value is 1)
             {
-                buffer.Append("[/Cyan]");
+                buffer.Append("[/]");
                 continue;
             }
 
             buffer.Append('^');
             buffer.Append(e.Value);
-            buffer.Append("[/Cyan]");
+            buffer.Append("[/]");
         }
     }
 
     public bool PowerEqual(Element val)
     {
-        if (Powers.Count != val.Powers.Count)
+        if (Unknowns.Count != val.Unknowns.Count)
             return false;
 
-        foreach (var e in Powers)
+        foreach (var e in Unknowns)
         {
-            if (!val.Powers.TryGetValue(e.Key, out var value))
+            if (!val.Unknowns.TryGetValue(e.Key, out var value))
                 return false;
 
             if (e.Value != value)
@@ -134,11 +134,11 @@ internal sealed class Element : IComparable<Element>
 
     public Element Clone()
     {
-        return new Element(Value, Powers.ToDictionary(e => e.Key, e => e.Value));
+        return new Element(Value, Unknowns.ToDictionary(e => e.Key, e => e.Value));
     }
 
     public void SortPower()
     {
-        Powers = Powers.OrderBy(x => x.Key).ToDictionary(x => x.Key, x => x.Value);
+        Unknowns = Unknowns.OrderBy(x => x.Key).ToDictionary(x => x.Key, x => x.Value);
     }
 }

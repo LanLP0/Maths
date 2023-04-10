@@ -196,7 +196,7 @@ public sealed class CalculatorTest
         {
             // Act
             var result = Calculator.CalcRaw(math, out _);
-            var num = result.AsDouble!;
+            var num = result.Number!;
 
             // Assert
             Assert.InRange(num.Value, lowerEnd, upperEnd);

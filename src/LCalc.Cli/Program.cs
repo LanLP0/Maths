@@ -15,6 +15,14 @@ internal sealed class Program
             return;
         }
 
+        if (!AnsiConsole.Profile.Capabilities.Interactive)
+        {
+            AnsiConsole.MarkupLine(
+                "[red]This program needs to be run in interactive mode when run with no arguments[/]");
+
+            return;
+        }
+
         AnsiConsole.MarkupLine("Press [Yellow]Ctrl-C[/] to exit");
 
         for (;;)

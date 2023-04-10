@@ -4,44 +4,57 @@ namespace Common.Maths.Expressions;
 
 internal sealed class Expression
 {
-    public List<Element> Elements { get; private set; } = new();
+    public List<Element> Values { get; private set; } = new();
 
     public static Expression operator *(Expression left, Expression right)
     {
         var ex = new Expression();
 
-        foreach (var element in left.Elements)
-        foreach (var element1 in right.Elements)
-            ex.Elements.Add(element * element1);
+        foreach (var element in left.Values)
+        foreach (var element1 in right.Values)
+            ex.Values.Add(element * element1);
 
-        return ex.Collapse();
+        return ex.Condense();
     }
 
     public static Expression operator -(Expression left, Expression right)
     {
         var ex = new Expression();
 
-        ex.Elements = left.Clone().Elements;
+        ex.Values = left.Clone().Values;
 
         var rightCloned = right.Clone();
-        foreach (var e in rightCloned.Elements)
+        foreach (var e in rightCloned.Values)
         {
             e.Value = -e.Value;
-            ex.Elements.Add(e);
+            ex.Values.Add(e);
         }
 
-        return ex.Collapse();
+        return ex.Condense();
     }
 
     public static Expression operator +(Expression left, Expression right)
     {
         var ex = new Expression();
 
-        ex.Elements = left.Clone().Elements;
+        ex.Values = left.Clone().Values;
 
-        ex.Elements.AddRange(right.Clone().Elements);
+        ex.Values.AddRange(right.Clone().Values);
 
-        return ex.Collapse();
+        return ex.Condense();
+    }
+
+    /// <summary>
+    ///     Validate every value(s) is not 0
+    /// </summary>
+    /// <returns></returns>
+    public bool Validate()
+    {
+        foreach (var value in Values)
+            if (value.Value < double.Epsilon)
+                return false;
+
+        return true;
     }
 
     public static Expression Pow(Expression left, int right)
@@ -50,44 +63,44 @@ internal sealed class Expression
 
         for (var i = 1; i < right; i++) ex *= left;
 
-        return ex.Collapse();
+        return ex.Condense();
     }
 
-    public Expression Collapse()
+    public Expression Condense()
     {
-        if (Elements.Count <= 1)
+        if (Values.Count <= 1)
             return this;
 
-        for (var i = 0; i < Elements.Count;)
+        for (var i = 0; i < Values.Count;)
         {
-            var e = Elements[i];
+            var e = Values[i];
 
-            for (var j = ++i; j < Elements.Count; j++)
+            for (var j = ++i; j < Values.Count; j++)
             {
-                var e1 = Elements[j];
+                var e1 = Values[j];
                 if (!e.PowerEqual(e1))
                     continue;
 
                 e.Value += e1.Value;
-                Elements.RemoveAt(j);
+                Values.RemoveAt(j);
             }
 
             if (e.Value is 0)
-                Elements.RemoveAt(--i);
+                Values.RemoveAt(--i);
         }
 
         return this;
     }
 
-    public string ToStringWithColor(int selectedPos = -1)
+    public string ToMarkupColorString(int selectedPos = -1)
     {
         var buffer = new StringBuilder();
 
-        for (var i = 0; i < Elements.Count;)
+        for (var i = 0; i < Values.Count;)
         {
-            Elements[i].RenderToBufferWithColor(buffer, selectedPos == i);
+            Values[i].RenderToBufferWithColor(buffer, selectedPos == i);
 
-            if (++i < Elements.Count) buffer.Append(" + ");
+            if (++i < Values.Count) buffer.Append(" + ");
         }
 
         return buffer.ToString();
@@ -96,15 +109,15 @@ internal sealed class Expression
     private Expression Clone()
     {
         var ex = new Expression();
-        foreach (var e in Elements) ex.Elements.Add(e.Clone());
+        foreach (var e in Values) ex.Values.Add(e.Clone());
 
         return ex;
     }
 
     public void Sort()
     {
-        Elements.Sort();
+        Values.Sort();
 
-        foreach (var e in Elements) e.SortPower();
+        foreach (var e in Values) e.SortPower();
     }
 }

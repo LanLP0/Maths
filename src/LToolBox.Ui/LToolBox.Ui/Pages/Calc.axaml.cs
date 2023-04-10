@@ -42,7 +42,7 @@ public sealed partial class Calc : UserControl
 
         if (result.Faulted) // Error
         {
-            ResultDisplay.Text = result.AsException!.Message; // Display error
+            ResultDisplay.Text = result.Exception!.Message; // Display error
 
             FocusInputBox();
             // MathDisplay.FitContent(MaxFontSize, MinFontSize);
@@ -51,15 +51,11 @@ public sealed partial class Calc : UserControl
 
         string resultText;
         if (result.IsDouble)
-        {
             resultText = RawValueToggle.IsChecked!.Value
-                ? result.AsDouble!.Value.ToString(CultureInfo.InvariantCulture)
-                : result.AsDouble!.Value.Humanize();
-        }
+                ? result.Number!.Value.ToString(CultureInfo.InvariantCulture)
+                : result.Number!.Value.Humanize();
         else
-        {
-            resultText = result.AsDouble!.Value.ToString(CultureInfo.InvariantCulture);
-        }
+            resultText = result.Number!.Value.ToString(CultureInfo.InvariantCulture);
 
         ResultDisplay.Text = resultText;
         AddToHistory(resultText);
@@ -76,7 +72,7 @@ public sealed partial class Calc : UserControl
             Text = $"{resultText}: {_calcModel.Math}", TextWrapping = TextWrapping.NoWrap,
             TextTrimming = TextTrimming.CharacterEllipsis
         };
-        
+
         _calcModel.Histories.Insert(0,
             new ListBoxItem
             {
@@ -85,7 +81,7 @@ public sealed partial class Calc : UserControl
 
         if (_calcModel.Histories.Count >= MaxHistoryLenght)
             _calcModel.Histories.RemoveAt(_calcModel.Histories.Count - 1);
-        
+
         HistoryBox.InvalidateVisual();
     }
 
@@ -127,13 +123,13 @@ public sealed partial class Calc : UserControl
         if (result.IsDouble)
         {
             resultText = RawValueToggle.IsChecked!.Value
-                ? result.AsDouble!.Value.ToString(CultureInfo.InvariantCulture)
-                : result.AsDouble!.Value.Humanize();
+                ? result.Number!.Value.ToString(CultureInfo.InvariantCulture)
+                : result.Number!.Value.Humanize();
             ResultDisplay.Text = resultText;
         }
         else
         {
-            resultText = result.AsBool!.Value.ToString();
+            resultText = result.Bool!.Value.ToString();
             ResultDisplay.Text = resultText;
         }
 
