@@ -1,5 +1,7 @@
-﻿using LCalc;
+﻿using System.Text;
+using LCalc;
 using Spectre.Console;
+using Common.Cli;
 
 internal sealed class Program
 {
@@ -25,19 +27,39 @@ internal sealed class Program
 
         AnsiConsole.MarkupLine("Press [Yellow]Ctrl-C[/] to exit");
 
-        for (;;)
-            try
-            {
-                var input = AnsiConsole.Ask<string>("Expression: ");
-                if (string.IsNullOrWhiteSpace(input))
-                    break;
+        var buffer = new StringBuilder();
 
-                var result = Calculator.CalcFormatted(input);
-                AnsiConsole.WriteLine(result);
-            }
-            catch (Exception e)
+        for (;;)
+        {
+            buffer.Clear();
+
+            var input = AnsiConsole.Console.Ask<string>("[white]Expression:[/]", clear: false, newLine: false);
+
+            if (input is "q")
+                return;
+
+            var result = Calculator.CalcRaw(input!, out var raw);
+
+            if (result.ContainSteps)
             {
-                AnsiConsole.WriteException(e);
+                buffer.Append(result.Steps);
+                buffer.Append(Environment.NewLine);
             }
+
+            buffer.Append("[white]");
+            buffer.Append(GetResultText(result));
+            buffer.Append("[/] ");
+            buffer.Append(result.RenderValue(raw));
+
+            AnsiConsole.MarkupLine(buffer.ToString());
+        }
+    }
+    
+    public static string GetResultText(CalcResult result)
+    {
+        if (result.Faulted)
+            return "Error:";
+
+        return "Result:";
     }
 }

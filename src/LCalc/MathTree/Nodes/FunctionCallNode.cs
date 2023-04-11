@@ -100,6 +100,10 @@ internal sealed class FunctionCallNode : IMathNode
 
     public bool IsFull()
     {
+        // This happens when the function call is completed
+        if (Priority != MathTree.SpecialNodePriority)
+            return true;
+        
         return false;
     }
 

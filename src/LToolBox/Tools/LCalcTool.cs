@@ -45,7 +45,7 @@ internal sealed class LCalcTool : Tool
         }
     }
 
-    public static string GetResultText(CalcResult result)
+    private static string GetResultText(CalcResult result)
     {
         if (result.Faulted)
             return "Error:";
