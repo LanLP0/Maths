@@ -595,14 +595,17 @@ internal sealed class MathTree
                 switch (op)
                 {
                     case "raw":
-                        result = scope.SetRawValueOpt(true);
+                        result = scope.SetRawValueOpt();
                         break;
                     case "step":
-                        result = scope.SetStepByStepOpt(true);
+                        result = scope.SetStepByStepOpt();
                         break;
                     case "tree":
-                        scope.SetStepByStepOpt(true);
-                        result = scope.SetShowTreeOpt(true);
+                        scope.SetStepByStepOpt();
+                        result = scope.SetShowTreeOpt();
+                        break;
+                    case "solve":
+                        result = scope.SetSolveOpt();
                         break;
                     default:
                         result = scope.IsCalculatorOptionAllowed
@@ -830,6 +833,11 @@ internal sealed class MathTree
         if (result2.Faulted)
             return result2.Exception!;
         return result2.Value;
+    }
+
+    public IMathNode GetTopNode()
+    {
+        return CompareNode ?? Root!;
     }
 }
 

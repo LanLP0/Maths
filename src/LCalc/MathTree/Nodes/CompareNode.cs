@@ -52,7 +52,7 @@ internal sealed class CompareNode : IMathNode
                 }
                 else
                 {
-                    buffer.Append(arg.Calc(scope));
+                    buffer.Append(arg.Calc(scope).Value);
                 }
             }
             else
@@ -97,6 +97,12 @@ internal sealed class CompareNode : IMathNode
         }
 
         return max;
+    }
+
+    public Result SetupForSolving(Scope scope, out string unknown)
+    {
+        unknown = string.Empty;
+        return Err("Compare is not allowed in solve mode");
     }
 
     internal Result<bool> Calc(Scope scope)

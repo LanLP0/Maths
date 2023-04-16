@@ -15,15 +15,14 @@ internal sealed class Scope
         IsCalculatorOptionAllowed = isCalculatorOptionAllowed;
         _isVariableAllowed = isVariableAllowed;
         IsCompareAllowed = isCompareAllowed;
-
-        if (isCalculatorOptionAllowed)
-            Options = new CalculatorOptions();
+        Option = 0;
+        
         if (isCustomFunctionAllowed)
             CustomFunctions = new CustomFunctionCollection();
         Variables = new VariableCollection();
     }
 
-    private CalculatorOptions? Options { get; }
+    private CalculatorOption? Option { get; set; }
     public CustomFunctionCollection? CustomFunctions { get; set; }
     public VariableCollection Variables { get; set; }
     public bool IsCompareAllowed { get; }
@@ -51,55 +50,60 @@ internal sealed class Scope
         return Err($"Variable '{name}' had already been set");
     }
 
-    public Result SetStepByStepOpt(bool value)
+    public Result SetStepByStepOpt()
     {
         if (!IsCalculatorOptionAllowed)
             return Err("Cannot set calculator option in this scope");
-
-        Options!.StepByStep = value;
+        
+        Option |= CalculatorOption.StepByStep;
         return Ok();
     }
 
     public bool GetStepByStepOpt()
     {
-        if (!IsCalculatorOptionAllowed)
-            return false;
-
-        return Options!.StepByStep;
+        return (Option & CalculatorOption.StepByStep) != 0;
     }
 
-    public Result SetRawValueOpt(bool value)
+    public Result SetRawValueOpt()
     {
         if (!IsCalculatorOptionAllowed)
             return Err("Cannot set calculator option in this scope");
-
-        Options!.Raw = value;
+        
+        Option |= CalculatorOption.Raw;
         return Ok();
     }
 
     public bool GetRawValueOpt()
     {
-        if (!IsCalculatorOptionAllowed)
-            return false;
-
-        return Options!.Raw;
+        return (Option & CalculatorOption.Raw) != 0;
     }
 
-    public Result SetShowTreeOpt(bool value)
+    public Result SetShowTreeOpt()
     {
         if (!IsCalculatorOptionAllowed)
             return Err("Cannot set calculator option in this scope");
 
-        Options!.ShowTree = value;
+        Option |= CalculatorOption.ShowTree;
         return Ok();
     }
 
     public bool GetShowTreeOpt()
     {
+        return (Option & CalculatorOption.ShowTree) != 0;
+    }
+    
+    public Result SetSolveOpt()
+    {
         if (!IsCalculatorOptionAllowed)
-            return false;
+            return Err("Cannot set calculator option in this scope");
 
-        return Options!.ShowTree;
+        Option |= CalculatorOption.Solve;
+        return Ok();
+    }
+
+    public bool GetSolveOpt()
+    {
+        return (Option & CalculatorOption.Solve) != 0;
     }
 
     public Result<CustomFunctionCollection> GetFnCollection()

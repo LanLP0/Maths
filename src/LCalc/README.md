@@ -10,8 +10,9 @@ Calculate an expression with optional arguments
 `&{name}`  Set calculator argument  
 Arguments:
 > `step` Show each step  
-> `tree` Like &step but wrap every node with a `()`
-> `raw` See raw value
+> `tree` Like &step but wrap every node with a `()`  
+> `raw` See raw value  
+> `solve` Solve for the unknown variable so that the result is 0
 
 **__Comparison operators__**
 > `==` Equal  

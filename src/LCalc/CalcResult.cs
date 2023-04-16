@@ -78,6 +78,11 @@ public class CalcResult
         return $"Result: {(raw ? result.ToString(CultureInfo.InvariantCulture) : result.Humanize())}";
     }
 
+    public static CalcResult Err(string message)
+    {
+        return new CalcResult(new Exception(message));
+    }
+
     public static implicit operator CalcResult(Exception exception)
     {
         return new CalcResult(exception);

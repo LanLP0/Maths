@@ -29,6 +29,7 @@ public sealed class CalculatorTest
     [InlineData("25%6", "1")]
     [InlineData("25%", "0.25")]
     [InlineData("25%*8", "2")]
+    [InlineData("0!", "1")] // Special case: 0! = 1
     // Special number in a function
     [InlineData("[f()=0x1e240]f()", "123456")]
     [InlineData("[f()=0o361100]f()", "123456")]
@@ -70,6 +71,10 @@ public sealed class CalculatorTest
     [InlineData("[foo(a)=a%*8] foo(25)", "2")]
     [InlineData("[t()=a()][a()=c] t() &c=1", "1")]
     [InlineData("[f(a)=a] f(1) &a=2", "1")]
+    // Solve mode
+    [InlineData("x^5-2x+1 &solve", "0.51879")]
+    [InlineData("x+1 &solve", "-1")]
+    [InlineData("[f(x)=x^2-2x+1] f(x) &solve", "0.999993")]
     public void Result_Should_BeExpected(string math, string result)
     {
         // Arrange
@@ -124,6 +129,11 @@ public sealed class CalculatorTest
     [InlineData("0b21", "Invalid binary number")]
     [InlineData("0o9", "Invalid octal number")]
     [InlineData("[t()=t()]t()", "Function loop is not allowed")]
+    // Solve mode
+    [InlineData("abs(x)+1 &solve", "Cannot solve")]
+    [InlineData("x!-6 &solve", "Cannot solve")]
+    [InlineData("1 &solve", "No unknown to solve for")]
+    [InlineData("x*y &solve", "Too many unknowns")]
     public void Calc_Should_Error(string math, string errorMsg)
     {
         // Arrange

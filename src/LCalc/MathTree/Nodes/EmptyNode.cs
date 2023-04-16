@@ -45,4 +45,10 @@ internal sealed class EmptyNode : IMathNode
     {
         return 1;
     }
+
+    public Result SetupForSolving(Scope scope, out string unknown)
+    {
+        unknown = string.Empty;
+        return Ok();
+    }
 }

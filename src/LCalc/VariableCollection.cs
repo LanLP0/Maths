@@ -53,6 +53,18 @@ internal sealed class VariableCollection : IEnumerable<Variable>
         return true;
     }
 
+    public void OverrideAdd(string name, double value)
+    {
+        OverrideAdd(new Variable(name, value));
+    }
+
+    public void OverrideAdd(Variable variable)
+    {
+        Remove(variable.Name);
+        
+        _variables.Add(variable);
+    }
+
     public bool TryGet(string name, out double result)
     {
         foreach (var variable in _variables)
@@ -82,6 +94,11 @@ internal sealed class VariableCollection : IEnumerable<Variable>
                 result = -1;
                 return false;
         }
+    }
+
+    public int Remove(string name)
+    {
+        return _variables.RemoveAll(x => x.Name == name);
     }
 
     public void Link(VariableCollection variableCollection)

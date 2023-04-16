@@ -85,7 +85,7 @@ internal sealed class PlusNode : IMathNode
 
         if (nodeLevel == selectedLevel)
         {
-            buffer.Append(Calc(scope));
+            buffer.Append(Calc(scope).Value);
             return Ok();
         }
 
@@ -123,5 +123,28 @@ internal sealed class PlusNode : IMathNode
 
         return Math.Max(num1.Value, num2.Value) +
                (Priority == MathTree.ValueNodePriority ? 1 : 0);
+    }
+    
+    public Result SetupForSolving(Scope scope, out string unknown)
+    {
+        if (!IsFull())
+        {
+            unknown = string.Empty;
+            return GenerateMissingValueError();
+        }
+
+        var rs = _arg1!.SetupForSolving(scope, out unknown);
+        if (rs.Faulted)
+            return rs;
+        if (unknown != string.Empty)
+        {
+            _arg2!.SetupForSolving(scope, out var unknown1);
+            if (unknown1 != string.Empty && unknown1 != unknown)
+                return Err("Too many unknowns");
+            
+            return rs;
+        }
+
+        return _arg2!.SetupForSolving(scope, out unknown);
     }
 }

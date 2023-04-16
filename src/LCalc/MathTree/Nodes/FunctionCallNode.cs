@@ -173,6 +173,28 @@ internal sealed class FunctionCallNode : IMathNode
         return max + 1;
     }
 
+    public Result SetupForSolving(Scope scope, out string unknown)
+    {
+        unknown = string.Empty;
+        
+        foreach (var arg in _args)
+        {
+            var rs = arg.SetupForSolving(scope, out var unknown1);
+            if (unknown1 != string.Empty)
+            {
+                if (unknown != string.Empty && unknown1 != unknown)
+                    return Err("Too many unknowns");
+
+                unknown = unknown1;
+            }
+
+            if (rs.Faulted)
+                return rs;
+        }
+        
+        return Ok();
+    }
+
     public void SetName(string name)
     {
         _name = name;

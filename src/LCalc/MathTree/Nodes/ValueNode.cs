@@ -53,12 +53,18 @@ internal sealed class ValueNode : IMathNode
         return 1;
     }
 
+    public Result SetupForSolving(Scope scope, out string unknown)
+    {
+        unknown = string.Empty;
+        return Ok();
+    }
+
     public static Result<ValueNode> Parse(ReadOnlySpan<char> value)
     {
         var e = CalculatorHelpers.Parse(value);
         if (e.Faulted)
             return Err<ValueNode>(e.Exception!);
 
-        return new ValueNode(e.Value!);
+        return new ValueNode(e.Value);
     }
 }

@@ -26,11 +26,6 @@ public readonly ref struct Result<T>
         Value = value;
     }
 
-    public static implicit operator T?(Result<T> value)
-    {
-        return value.Value;
-    }
-
     public static implicit operator Result<T>(T value)
     {
         return new Result<T>(value);

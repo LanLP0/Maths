@@ -62,7 +62,7 @@ internal sealed class BitwiseNotNode : IMathNode
 
         if (nodeLevel == selectedLevel)
         {
-            buffer.Append(Calc(scope));
+            buffer.Append(Calc(scope).Value);
             return Ok();
         }
 
@@ -91,5 +91,16 @@ internal sealed class BitwiseNotNode : IMathNode
 
         return num.Value +
                (Priority == MathTree.ValueNodePriority ? 1 : 0);
+    }
+
+    public Result SetupForSolving(Scope scope, out string unknown)
+    {
+        if (!IsFull())
+        {
+            unknown = string.Empty;
+            return GenerateMissingValueError();
+        }
+
+        return _arg!.SetupForSolving(scope, out unknown);
     }
 }

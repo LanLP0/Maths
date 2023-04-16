@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using Common.Results;
+using LCalc.Extension;
 using LCalc.MathTree.Nodes;
 
 namespace LCalc;
@@ -32,19 +33,36 @@ public static class Calculator
             return result.Exception!;
         rawValueRequested = tree.Scope.GetRawValueOpt();
 
+        if (tree.Scope.GetSolveOpt())
+        {
+            var node = tree.GetTopNode();
+            var rs = node.SetupForSolving(tree.Scope, out var unknown);
+            if (rs.Faulted)
+                return rs.Exception!;
+
+            if (unknown == string.Empty)
+                return CalcResult.Err("No unknown to solve for");
+
+            return NewtonRaphsonSolver.SolveFor(tree, unknown).MapToCalcResult();
+        }
+
+        var calcResult = tree.Calc();
         if (!tree.Scope.GetStepByStepOpt())
-            return tree.Calc();
+            return calcResult;
+
+        if (calcResult.Faulted)
+            return calcResult;
 
         var result1 = CalcStep(tree);
         if (result1.Faulted)
             return result1.Exception!;
 
-        return tree.Calc().WithSteps(result1.Value!);
+        return calcResult.WithSteps(result1.Value!);
     }
 
     private static Result<string> CalcStep(MathTree.MathTree tree)
     {
-        var root = tree.CompareNode ?? tree.Root!;
+        var root = tree.GetTopNode();
         var maxDepth = root.GetDepth();
         if (maxDepth.Faulted)
             return maxDepth.Exception!;

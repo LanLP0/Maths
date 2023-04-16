@@ -21,9 +21,12 @@ internal interface IMathNode
     public void ChangeLastNodeTo(IMathNode node);
     
     public Result GenerateMissingValueError();
-
+    
+    /// <remarks>Note: Run Calc before to catch errors</remarks>
     public Result RenderStep(StringBuilder buffer, int selectedLevel, Scope scope, int nodeLevel = 1,
         bool showTree = false);
 
     public Result<int> GetDepth();
+
+    public Result SetupForSolving(Scope scope, out string unknown);
 }
