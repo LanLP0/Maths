@@ -47,11 +47,11 @@ internal sealed class Expression
     /// <summary>
     ///     Validate every value(s) is not 0
     /// </summary>
-    /// <returns></returns>
+    /// <returns>true if every value(s) is not 0; false otherwise</returns>
     public bool Validate()
     {
         foreach (var value in Values)
-            if (value.Value < double.Epsilon)
+            if (Math.Abs(value.Value) < double.Epsilon)
                 return false;
 
         return true;

@@ -62,7 +62,7 @@ internal sealed class Program
             count++;
         }
 
-        buffer.Append("\n[Green]>[/] Select tool: ");
+        buffer.Append("\n[Green]>[/] [white]Select tool:[/] ");
         _prompt = buffer.ToString();
         buffer.Clear();
 
