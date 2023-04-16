@@ -27,6 +27,10 @@ internal sealed class FactorialNode : IMathNode
         if (num < 0)
             return Err<double>("Operator ! only accept positive value");
 
+        // Special case 0! = 1
+        if (num < double.Epsilon) // == 0
+            return 1;
+
         for (long i = 2; i < initialValue; i++) num *= i;
 
         return num;
