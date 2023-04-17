@@ -29,7 +29,7 @@ internal sealed class CustomFunction
         if (name.Length is 0)
             return Err<CustomFunction>("Invalid function name");
         if (customFunctions.ContainsName(name))
-            return Err<CustomFunction>("Duplicate functions");
+            return Err<CustomFunction>("Duplicated functions");
         var argsSpan = firstHalf[(pos + 1)..^1];
 
         VariableCollection args = new();
