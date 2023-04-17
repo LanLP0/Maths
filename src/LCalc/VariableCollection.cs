@@ -60,7 +60,14 @@ internal sealed class VariableCollection : IEnumerable<Variable>
 
     public void OverrideAdd(Variable variable)
     {
-        Remove(variable.Name);
+        foreach (var var1 in _variables)
+        {
+            if (var1.Name != variable.Name)
+                continue;
+
+            var1.Value = variable.Value;
+            return;
+        }
         
         _variables.Add(variable);
     }

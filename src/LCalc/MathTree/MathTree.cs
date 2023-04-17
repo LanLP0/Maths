@@ -26,7 +26,7 @@ internal sealed class MathTree
 
     public MathTree(Scope? scope = null)
     {
-        Scope = scope ?? Scope.Create();
+        Scope = scope ?? new Scope();
         _stack = new List<List<IMathNode>> { new() };
     }
 

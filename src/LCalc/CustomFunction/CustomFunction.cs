@@ -5,11 +5,11 @@ namespace LCalc.CustomFunction;
 
 internal sealed class CustomFunction
 {
-    private Scope _scope;
     private MathTree.MathTree _tree;
-    public VariableCollection Args;
-
+    
     public bool IsCalled = false;
+    
+    public Scope Scope { get; private set; }
     public string Name { get; private set; }
 
     public static Result<CustomFunction> Parse(ReadOnlySpan<char> span, CustomFunctionCollection customFunctions)
@@ -68,11 +68,10 @@ internal sealed class CustomFunction
             return Err<CustomFunction>("Missing function body");
 
         fn.Name = name;
-        fn.Args = args;
-        fn._scope = customFunctions.Scope;
-        fn._scope.Variables = args;
-        fn._scope.CustomFunctions = customFunctions;
-        fn._tree = new MathTree.MathTree(fn._scope);
+        fn.Scope = new Scope(false, false, false, false);
+        fn.Scope.Variables = args;
+        fn.Scope.CustomFunctions = customFunctions;
+        fn._tree = new MathTree.MathTree(fn.Scope);
         var result = fn._tree.Parse(secondHalf);
         if (result.Faulted)
             return result;
@@ -82,11 +81,11 @@ internal sealed class CustomFunction
 
     public Result<double> Run(scoped ReadOnlySpan<double> args)
     {
-        if (args.Length != Args.Count)
+        if (args.Length != Scope.Variables.Count)
             return Err("Invalid number of args");
 
         var i = 0;
-        foreach (var arg in Args)
+        foreach (var arg in Scope.Variables)
         {
             arg.SetValue(args[i]);
             i++;

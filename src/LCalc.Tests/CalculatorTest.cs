@@ -71,6 +71,7 @@ public sealed class CalculatorTest
     [InlineData("[foo(a)=a%*8] foo(25)", "2")]
     [InlineData("[t()=a()][a()=c] t() &c=1", "1")]
     [InlineData("[f(a)=a] f(1) &a=2", "1")]
+    [InlineData("[a()=1] [b(x)=x] a()", "1")] // Variables is not shared between functions
     // Solve mode
     [InlineData("x^5-2x+1 &solve", "0.51879")]
     [InlineData("x+1 &solve", "-1")]

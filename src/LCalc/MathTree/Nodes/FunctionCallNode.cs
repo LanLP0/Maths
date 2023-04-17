@@ -9,13 +9,13 @@ internal sealed class FunctionCallNode : IMathNode
 {
     private readonly List<IMathNode> _args = new();
     private string _name = null!;
+    
     public int Priority { get; set; } = MathTree.SpecialNodePriority;
 
     public Result<double> Calc(Scope scope)
     {
-        var customFn = scope.CustomFunctions;
+        var customFunctions = scope.CustomFunctions;
 
-        // List<double> math = new(_args.Count);
         Span<double> math = stackalloc double[_args.Count];
         for (var i = 0; i < _args.Count; i++)
         {
@@ -30,7 +30,10 @@ internal sealed class FunctionCallNode : IMathNode
         Result<double> result;
         switch (_name)
         {
+            case "rng":
             case "random":
+                if (scope.GetSolveOpt())
+                    return Err("Cannot use random() in solve mode");
                 result = CalculatorHelpers.CalcRandom(math);
                 break;
             case "gcd":
@@ -79,9 +82,9 @@ internal sealed class FunctionCallNode : IMathNode
                 result = CalculatorHelpers.CalcSum(math);
                 break;
             default:
-                if (customFn is null)
+                if (customFunctions is null)
                     return Err($"Unknown function {_name}()");
-                result = customFn.Execute(_name, math);
+                result = customFunctions.Execute(_name, math);
                 break;
         }
 

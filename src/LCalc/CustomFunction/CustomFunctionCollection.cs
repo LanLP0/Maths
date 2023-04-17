@@ -7,8 +7,6 @@ internal sealed class CustomFunctionCollection
     private const int MaxFunctionAmount = 15;
     private readonly List<CustomFunction> _list = new();
 
-    public Scope Scope = Scope.Create(false, false, true, false);
-
     public int Count()
     {
         return _list.Count;
@@ -44,13 +42,16 @@ internal sealed class CustomFunctionCollection
         return Ok();
     }
 
-    public void End(VariableCollection? additionalArgs)
+    public void End(VariableCollection? additionalArgs, CalculatorOption option)
     {
         if (additionalArgs is null)
             return;
 
         foreach (var fn in _list)
-            fn.Args.Link(additionalArgs);
+        {
+            fn.Scope.Variables.Link(additionalArgs);
+            fn.Scope.Option = option;
+        }
     }
 
     public Result<double> Execute(string name, scoped ReadOnlySpan<double> math)

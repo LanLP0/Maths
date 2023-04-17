@@ -8,7 +8,11 @@ internal sealed class Scope
     private readonly bool _isCustomFunctionAllowed;
     private readonly bool _isVariableAllowed;
 
-    private Scope(bool isCustomFunctionAllowed, bool isCalculatorOptionAllowed, bool isVariableAllowed,
+    public Scope() : this(true, true, true, true)
+    {
+    }
+
+    public Scope(bool isCustomFunctionAllowed, bool isCalculatorOptionAllowed, bool isVariableAllowed,
         bool isCompareAllowed)
     {
         _isCustomFunctionAllowed = isCustomFunctionAllowed;
@@ -22,7 +26,7 @@ internal sealed class Scope
         Variables = new VariableCollection();
     }
 
-    private CalculatorOption? Option { get; set; }
+    public CalculatorOption Option { get; set; }
     public CustomFunctionCollection? CustomFunctions { get; set; }
     public VariableCollection Variables { get; set; }
     public bool IsCompareAllowed { get; }
@@ -125,14 +129,6 @@ internal sealed class Scope
     public void EndInit()
     {
         if (_isCustomFunctionAllowed && CustomFunctions!.Count() is not 0)
-            CustomFunctions!.End(Variables);
-    }
-
-    public static Scope Create(bool isCustomFunctionAllowed = true, bool isCalculatorOptionAllowed = true,
-        bool isVariableAllowed = true, bool isCompareAllowed = true)
-    {
-        var scope = new Scope(isCustomFunctionAllowed, isCalculatorOptionAllowed, isVariableAllowed, isCompareAllowed);
-
-        return scope;
+            CustomFunctions!.End(Variables, Option);
     }
 }
