@@ -43,6 +43,7 @@ internal sealed class MathTree
         for (var i = 0; i < math.Length; i++)
         {
             var c = math[i];
+            isPrevCharSpace = false;
 
             switch ((int)c)
             {
@@ -193,7 +194,7 @@ internal sealed class MathTree
                     if (result.Faulted)
                         return result;
 
-                    var levelStack = _stack[level];
+                    var levelStack = GetStackAt(level);
                     IMathNode node = new MinusNode();
                     if (levelStack.Count is 0)
                     {
@@ -218,7 +219,7 @@ internal sealed class MathTree
                     if (result.Faulted)
                         return result;
 
-                    var levelStack = _stack[level];
+                    var levelStack = GetStackAt(level);
                     var bitwiseNotNode = new BitwiseNotNode();
                     if (levelStack.Count is 0)
                     {
@@ -264,7 +265,7 @@ internal sealed class MathTree
                 }
                 case 44: // ,
                 {
-                    var levelStack = _stack[level];
+                    var levelStack = GetStackAt(level);
                     if (levelStack.First() is not FunctionCallNode functionCallNode)
                         return Err("Coma can only be used inside of a function call");
 
@@ -542,11 +543,8 @@ internal sealed class MathTree
                 case 93: // ]
                     return Err($"Invalid square bracket at char {i + 1}");
             }
-
-            if (isPrevCharSpace)
-                _isPrevCharSpace = true;
-            else if (_isPrevCharSpace)
-                _isPrevCharSpace = false;
+            
+            _isPrevCharSpace = isPrevCharSpace;
         }
 
         var result2 = ParseAndSetNode(level, buffer, ref tokenType, Scope);
@@ -556,7 +554,7 @@ internal sealed class MathTree
         if (level is not 0)
             return Err("Invalid number of braces");
 
-        var rootStack = _stack[0];
+        var rootStack = GetStackAt(0);
         if (rootStack.Count is 0)
             return Err("No expression found");
 
@@ -757,7 +755,7 @@ internal sealed class MathTree
         if (_stack.Count == level + 1)
             _stack.Add(new List<IMathNode>());
 
-        var levelStack = _stack[++level];
+        var levelStack = GetStackAt(++level);
         if (levelStack.Count is not 0)
             levelStack.Clear();
     }
@@ -767,7 +765,7 @@ internal sealed class MathTree
         if (_stack.Count == level + 1)
             _stack.Add(new List<IMathNode>());
 
-        var levelStack = _stack[++level];
+        var levelStack = GetStackAt(++level);
         if (levelStack.Count is not 0)
             levelStack.Clear();
 
@@ -781,7 +779,7 @@ internal sealed class MathTree
         if (level is 0)
             return Err("Invalid expression");
 
-        var node = _stack[level].First();
+        var node = GetStackAt(level).First();
         node.Priority = ValueNodePriority;
 
         return AddNode(--level, node);
@@ -799,7 +797,7 @@ internal sealed class MathTree
                 return result;
         }
 
-        var levelStack = _stack[0];
+        var levelStack = GetStackAt(0);
         if (levelStack.Count is 0)
             return false;
 
