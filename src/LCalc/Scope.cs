@@ -5,9 +5,6 @@ namespace LCalc;
 
 internal sealed class Scope
 {
-    private readonly bool _isCustomFunctionAllowed;
-    private readonly bool _isVariableAllowed;
-
     public Scope() : this(true, true, true, true)
     {
     }
@@ -15,11 +12,16 @@ internal sealed class Scope
     public Scope(bool isCustomFunctionAllowed, bool isCalculatorOptionAllowed, bool isVariableAllowed,
         bool isCompareAllowed)
     {
-        _isCustomFunctionAllowed = isCustomFunctionAllowed;
-        IsCalculatorOptionAllowed = isCalculatorOptionAllowed;
-        _isVariableAllowed = isVariableAllowed;
-        IsCompareAllowed = isCompareAllowed;
         Option = 0;
+
+        if (isVariableAllowed)
+            Option = CalculatorOption.VariableAllowed;
+
+        if (isCalculatorOptionAllowed)
+            Option |= CalculatorOption.CalculatorOptionAllowed;
+
+        if (isCompareAllowed)
+            Option |= CalculatorOption.CompareAllowed;
         
         if (isCustomFunctionAllowed)
             CustomFunctions = new CustomFunctionCollection();
@@ -29,15 +31,15 @@ internal sealed class Scope
     public CalculatorOption Option { get; set; }
     public CustomFunctionCollection? CustomFunctions { get; set; }
     public VariableCollection Variables { get; set; }
-    public bool IsCompareAllowed { get; }
-    public bool IsCalculatorOptionAllowed { get; }
+    public bool IsCompareAllowed => (Option & CalculatorOption.CompareAllowed) != 0;
+    public bool IsCalculatorOptionAllowed => (Option & CalculatorOption.CalculatorOptionAllowed) != 0;
 
     public Result<double> GetVariable(string name)
     {
-        if (Variables.TryGet(name, out var variable))
+        if (Variables.TryGet(name, out var variable)) // Allow for some standard variable like: pi
             return variable;
 
-        if (!_isVariableAllowed) // Allow for some standard variable like: pi
+        if ((Option & CalculatorOption.VariableAllowed) == 0)
             return Err<double>("Variable not allowed in this scope");
 
         return Err<double>($"Unknown variable '{name}'");
@@ -45,7 +47,7 @@ internal sealed class Scope
 
     public Result SetVariable(string name, double value)
     {
-        if (!_isVariableAllowed)
+        if ((Option & CalculatorOption.VariableAllowed) == 0)
             return Err("Variable not allowed in this scope");
 
         if (Variables.TryAdd(name, value))
@@ -112,7 +114,7 @@ internal sealed class Scope
 
     public Result<CustomFunctionCollection> GetFnCollection()
     {
-        if (!_isCustomFunctionAllowed)
+        if (CustomFunctions is null)
             return Err<CustomFunctionCollection>("Custom function not allowed in this scope");
 
         return CustomFunctions!;
@@ -120,7 +122,7 @@ internal sealed class Scope
 
     public Result AddFn(CustomFunction.CustomFunction fn)
     {
-        if (!_isCustomFunctionAllowed)
+        if (CustomFunctions is null)
             return Err<CustomFunctionCollection>("Custom function not allowed in this scope");
 
         return CustomFunctions!.Add(fn);
@@ -128,7 +130,9 @@ internal sealed class Scope
 
     public void EndInit()
     {
-        if (_isCustomFunctionAllowed && CustomFunctions!.Count() is not 0)
-            CustomFunctions!.End(Variables, Option);
+        if (CustomFunctions is null)
+            return;
+        
+        CustomFunctions.End(Variables, Option);
     }
 }

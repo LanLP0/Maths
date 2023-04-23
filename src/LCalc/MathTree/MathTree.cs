@@ -546,6 +546,9 @@ internal sealed class MathTree
             _isPrevCharSpace = isPrevCharSpaceTmp;
         }
 
+        if (math.Length > 1)
+            _isPrevCharSpace = math[^2].Equals(' ');
+
         var result2 = ParseAndSetNode(level, buffer, ref tokenType, Scope);
         if (result2.Faulted)
             return result2;
