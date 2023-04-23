@@ -17,12 +17,12 @@ internal sealed class MathTree
     public const int BitwiseNodePriority = 3;
     public const int ValueNodePriority = 4;
     
-    private readonly List<List<IMathNode>> _stack;
     public readonly Scope Scope;
+    private readonly List<List<IMathNode>> _stack;
     private bool _isPrevCharSpace;
-    public CompareNode? CompareNode;
 
-    public IMathNode? Root;
+    private CompareNode? _compareNode;
+    private IMathNode? _root;
 
     public MathTree(Scope? scope = null)
     {
@@ -32,10 +32,9 @@ internal sealed class MathTree
 
     public Result Parse(ReadOnlySpan<char> math)
     {
-        CompareNode?.Clear();
-        if (_stack.Count is not 0) _stack[0].Clear();
+        _compareNode?.Clear();
+        _stack[0].Clear(); // _stack.Count is never 0
 
-        var isPrevCharSpace = false;
         var buffer = new StringBuilder();
         var tokenType = TokenType.Empty;
         var level = 0;
@@ -43,7 +42,7 @@ internal sealed class MathTree
         for (var i = 0; i < math.Length; i++)
         {
             var c = math[i];
-            isPrevCharSpace = false;
+            var isPrevCharSpaceTmp = false;
 
             switch ((int)c)
             {
@@ -259,7 +258,7 @@ internal sealed class MathTree
                 }
                 case 32: // ' '
                 {
-                    isPrevCharSpace = true;
+                    isPrevCharSpaceTmp = true;
                     ParseAndSetNode(level, buffer, ref tokenType, Scope);
                     break;
                 }
@@ -544,7 +543,7 @@ internal sealed class MathTree
                     return Err($"Invalid square bracket at char {i + 1}");
             }
             
-            _isPrevCharSpace = isPrevCharSpace;
+            _isPrevCharSpace = isPrevCharSpaceTmp;
         }
 
         var result2 = ParseAndSetNode(level, buffer, ref tokenType, Scope);
@@ -558,8 +557,8 @@ internal sealed class MathTree
         if (rootStack.Count is 0)
             return Err("No expression found");
 
-        Root = rootStack[0];
-        CompareNode?.AddNode(Root);
+        _root = rootStack[0];
+        _compareNode?.AddNode(_root);
         Scope.EndInit();
 
         return Ok();
@@ -804,11 +803,11 @@ internal sealed class MathTree
         var node = levelStack[0];
         levelStack.Clear();
 
-        CompareNode ??= new CompareNode();
+        _compareNode ??= new CompareNode();
 
-        CompareNode.AddNode(node);
+        _compareNode.AddNode(node);
         if (op.HasValue)
-            CompareNode.AddOp(op.Value);
+            _compareNode.AddOp(op.Value);
         return true;
     }
 
@@ -819,15 +818,15 @@ internal sealed class MathTree
 
     public CalcResult Calc()
     {
-        if (CompareNode is not null)
+        if (_compareNode is not null)
         {
-            var result1 = CompareNode.Calc(Scope);
+            var result1 = _compareNode.Calc(Scope);
             if (result1.Faulted)
                 return result1.Exception!;
             return result1.Value;
         }
 
-        var result2 = Root!.Calc(Scope);
+        var result2 = _root!.Calc(Scope);
         if (result2.Faulted)
             return result2.Exception!;
         return result2.Value;
@@ -835,7 +834,7 @@ internal sealed class MathTree
 
     public IMathNode GetTopNode()
     {
-        return CompareNode ?? Root!;
+        return _compareNode ?? _root!;
     }
 }
 

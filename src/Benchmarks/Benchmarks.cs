@@ -1,5 +1,6 @@
 ﻿using BenchmarkDotNet.Attributes;
 using LCalc;
+using LCalc.MathTree;
 
 namespace Benchmarks;
 
@@ -7,10 +8,13 @@ namespace Benchmarks;
 [MaxIterationCount(50)]
 public class Benchmarks
 {
-    [Params("1", "1233211 + 227633 * 6555 + 999 / (99+1)", "2^2^2^2", "sin(cos(tan(9)))",
-        "abs(sin(((~1>>2<<2)^2!/1000*50-40+1)))")]
-    // [Params("[a()=1]a()", "[a()=1][b()=1][c()=1][d()=1][e()=1][f()=1][g()=1][h()=1][j()=1][q()=1][k()=1]a()")]
+    [Params("1", "1233211 + 227633 * 6555 + 999 / (99+1)", "sin(cos(tan(9)))",
+        "abs(sin(((~1>>2<<2)^2!/1000*50-40+1)))",
+        "[a()=1]a()", "[a()=1][b()=1][c()=1][d()=1][e()=1][f()=1][g()=1][h()=1][j()=1][q()=1][k()=1]a()")]
+    // ReSharper disable once MemberCanBePrivate.Global
     public string Math { get; set; } = null!;
+
+    private MathTree Tree { get; set; } = null!;
 
     // [Benchmark]
     // public void LCalc()
@@ -23,6 +27,26 @@ public class Benchmarks
     public void LCalcRaw()
     {
         Calculator.CalcRaw(Math, out _);
+    }
+
+    [Benchmark(Baseline = true)]
+    public void LCalcParse()
+    {
+        var tree = new MathTree();
+        tree.Parse(Math);
+    }
+
+    [Benchmark]
+    public CalcResult LCalcCalc()
+    {
+        return Tree.Calc();
+    }
+
+    [GlobalSetup]
+    public void Setup()
+    {
+        Tree = new MathTree();
+        Tree.Parse(Math);
     }
 
     // [GlobalSetup]

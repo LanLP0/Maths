@@ -32,16 +32,26 @@ internal static class NewtonRaphsonSolver
         {
             var fx = f(x0);
             if (fx.Faulted)
-                return fx;
+                return Err<double>("Cannot solve"
+#if DEBUG
+                                    + " (f(x) failed)"
+#endif
+                );
             
             if (Math.Abs(fx.Value) < Epsilon) // If we have found the approx root
                 break;
             
             var dfx = Derivative(f, fx.Value, x0, 1E-5);
+            if (dfx.Faulted)
+                return Err<double>("Cannot solve"
+#if DEBUG
+                                   + " (f'(x) failed)"
+#endif
+                );
 
             // dfx cannot be 0
             if (Math.Abs(dfx.Value) < Epsilon)
-                return new DfxZeroException("Cannot solve"
+                return Err("Cannot solve"
 #if DEBUG
                            + " (dfx = 0)"
 #endif
@@ -66,67 +76,60 @@ internal static class NewtonRaphsonSolver
         });
 
         var x = Solve(f, 0);
-        if (x.Faulted && x.Exception! is not DfxZeroException)
-            return x;
+        if (!x.Faulted)
+        {
 
-        var y1 = f(x.Value);
+            var y1 = f(x.Value);
 
-        if (y1.Faulted)
-            return Err("Cannot solve"
+            if (y1.Faulted)
+                return Err("Cannot solve"
 #if DEBUG
-                        + ' ' + y1.Exception!.Message
+                           + ' ' + y1.Exception!.Message
 #endif
-            );
-        
-        if (Math.Abs(y1.Value) < Epsilon)
-            return x;
+                );
+
+            if (Math.Abs(y1.Value) < Epsilon)
+                return x;
+        }
 
         x = Solve(f, -1);
-        if (x.Faulted && x.Exception! is not DfxZeroException)
-            return x;
+        if (!x.Faulted)
+        {
 
-        var y2 = f(x.Value);
+            var y2 = f(x.Value);
 
-        if (y2.Faulted)
-            return Err("Cannot solve"
+            if (y2.Faulted)
+                return Err("Cannot solve"
 #if DEBUG
-                       + ' ' + y2.Exception!.Message
+                           + ' ' + y2.Exception!.Message
 #endif
-            );
-        
-        if (Math.Abs(y2.Value) < Epsilon)
-            return x;
+                );
+
+            if (Math.Abs(y2.Value) < Epsilon)
+                return x;
+        }
 
         x = Solve(f, 1);
-        if (x.Faulted && x.Exception! is not DfxZeroException)
-            return x;
+        if (!x.Faulted)
+        {
 
-        var y3 = f(x.Value);
+            var y3 = f(x.Value);
 
-        if (y3.Faulted)
-            return Err("Cannot solve"
+            if (y3.Faulted)
+                return Err("Cannot solve"
 #if DEBUG
-                       + ' ' + y3.Exception!.Message
+                           + ' ' + y3.Exception!.Message
 #endif
-            );
-        
-        if (Math.Abs(y3.Value) < Epsilon)
-            return x;
+                );
+
+            if (Math.Abs(y3.Value) < Epsilon)
+                return x;
+        }
 
         return Err("Cannot solve"
 #if DEBUG
                    + " (3 tries ended)"
 #endif
         );
-    }
-    
-    private sealed class DfxZeroException : Exception
-    {
-        public override string Message { get; }
-
-        public DfxZeroException(string message)
-        {
-            Message = message;
-        }
     }
 }

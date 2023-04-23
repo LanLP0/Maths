@@ -75,7 +75,7 @@ public sealed class CalculatorTest
     // Solve mode
     [InlineData("x^5-2x+1 &solve", "0.51879")]
     [InlineData("x+1 &solve", "-1")]
-    [InlineData("[f(x)=x^2-2x+1] f(x) &solve", "0.999993")]
+    [InlineData("[f(x)=x^2-2x+1] f(x) &solve", "0.999991")]
     public void Result_Should_BeExpected(string math, string result)
     {
         // Arrange
@@ -131,8 +131,16 @@ public sealed class CalculatorTest
     [InlineData("0o9", "Invalid octal number")]
     [InlineData("[t()=t()]t()", "Function loop is not allowed")]
     // Solve mode
-    [InlineData("abs(x)+1 &solve", "Cannot solve")]
-    [InlineData("x!-6 &solve", "Cannot solve")]
+    [InlineData("abs(x)+1 &solve", "Cannot solve"
+#if DEBUG
+                                   + " (3 tries ended)"
+#endif
+                                   )]
+    [InlineData("x!-6 &solve", "Cannot solve"
+#if DEBUG
+                               + " (3 tries ended)"
+#endif
+    )]
     [InlineData("1 &solve", "No unknown to solve for")]
     [InlineData("x*y &solve", "Too many unknowns")]
     public void Calc_Should_Error(string math, string errorMsg)
