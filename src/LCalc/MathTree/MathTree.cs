@@ -19,7 +19,7 @@ internal sealed class MathTree
     
     public readonly Scope Scope;
     private readonly List<List<IMathNode>> _stack;
-    private bool _isPrevCharSpace;
+    private bool _spaceBeforeToken;
 
     private CompareNode? _compareNode;
     private IMathNode? _root;
@@ -42,7 +42,7 @@ internal sealed class MathTree
         for (var i = 0; i < math.Length; i++)
         {
             var c = math[i];
-            var isPrevCharSpaceTmp = false;
+            var spaceBeforeTokenTmp = false;
 
             switch ((int)c)
             {
@@ -258,7 +258,7 @@ internal sealed class MathTree
                 }
                 case 32: // ' '
                 {
-                    isPrevCharSpaceTmp = true;
+                    spaceBeforeTokenTmp = true;
                     ParseAndSetNode(level, buffer, ref tokenType, Scope);
                     break;
                 }
@@ -543,11 +543,9 @@ internal sealed class MathTree
                     return Err($"Invalid square bracket at char {i + 1}");
             }
             
-            _isPrevCharSpace = isPrevCharSpaceTmp;
+            if (tokenType is TokenType.Empty)
+                _spaceBeforeToken = spaceBeforeTokenTmp;
         }
-
-        if (math.Length > 1)
-            _isPrevCharSpace = math[^2].Equals(' ');
 
         var result2 = ParseAndSetNode(level, buffer, ref tokenType, Scope);
         if (result2.Faulted)
@@ -681,7 +679,7 @@ internal sealed class MathTree
         if (AddValueNode(levelStack, node))
             return Ok();
 
-        if (_isPrevCharSpace)
+        if (_spaceBeforeToken)
             return Err("Missing operator");
 
         AddFnNode(levelStack, node is ValueNode ? new ExponentNode() : new MultiplyNode());
