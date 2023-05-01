@@ -79,56 +79,47 @@ internal static class NewtonRaphsonSolver
         if (!x.Faulted)
         {
 
-            var y1 = f(x.Value);
+            var y = f(x.Value);
 
-            if (y1.Faulted)
+            if (y.Faulted)
                 return Err("Cannot solve"
 #if DEBUG
-                           + ' ' + y1.Exception!.Message
+                           + ' ' + y.Exception!.Message
 #endif
                 );
 
-            if (Math.Abs(y1.Value) < Epsilon)
+            if (Math.Abs(y.Value) < Epsilon)
                 return x;
         }
-
-        x = Solve(f, -1);
-        if (!x.Faulted)
+        
+        for (var x0 = 2187; x0 >= 1; x0 /= 3) // 1, 3, 9, .., 2187
         {
+            Result<double> y;
+            x = Solve(f, x0);
+            if (!x.Faulted)
+            {
+                y = f(x.Value);
 
-            var y2 = f(x.Value);
+                if (!y.Faulted && Math.Abs(y.Value) < Epsilon)
+                    return x;
+            }
 
-            if (y2.Faulted)
-                return Err("Cannot solve"
-#if DEBUG
-                           + ' ' + y2.Exception!.Message
-#endif
-                );
-
-            if (Math.Abs(y2.Value) < Epsilon)
-                return x;
-        }
-
-        x = Solve(f, 1);
-        if (!x.Faulted)
-        {
-
-            var y3 = f(x.Value);
-
-            if (y3.Faulted)
-                return Err("Cannot solve"
-#if DEBUG
-                           + ' ' + y3.Exception!.Message
-#endif
-                );
-
-            if (Math.Abs(y3.Value) < Epsilon)
+            x = Solve(f, -x0);
+            if (x.Faulted)
+                continue;
+            
+            y = f(x.Value);
+            
+            if (y.Faulted)
+                continue;
+            
+            if (Math.Abs(y.Value) < Epsilon)
                 return x;
         }
 
         return Err("Cannot solve"
 #if DEBUG
-                   + " (3 tries ended)"
+                   + " (15 tries ended)"
 #endif
         );
     }

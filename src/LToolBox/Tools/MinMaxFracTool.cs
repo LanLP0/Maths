@@ -30,7 +30,10 @@ internal sealed class MinMaxFracTool : Tool
         var fraction = PromptFraction();
 
         if (fraction is null)
+        {
+            Console.WriteLine();
             return;
+        }
 
         var delta = fraction.Calc();
         var finalDelta = delta.Calc();

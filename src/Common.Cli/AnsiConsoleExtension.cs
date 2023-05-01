@@ -45,6 +45,13 @@ public static class AnsiConsoleExtension
             {
                 if (optional)
                 {
+                    if (!clear)
+                    {
+                        console.Cursor.MoveUp();
+                        console.Markup(prompt);
+                        console.MarkupLine(" [gray]No Value[/]");
+                    }
+                    
                     ClearAsk(console, clear, hasErrorLine, newLine);
 
                     return default;
@@ -198,6 +205,13 @@ public static class AnsiConsoleExtension
             {
                 if (optional)
                 {
+                    if (!clear)
+                    {
+                        console.Cursor.MoveUp();
+                        console.Markup(prompt);
+                        console.MarkupLine(" [gray]No Value[/]");
+                    }
+                    
                     ClearAsk(console, clear, hasErrorLine, newLine);
 
                     return default;
