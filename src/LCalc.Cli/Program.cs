@@ -2,6 +2,7 @@
 using LCalc;
 using Spectre.Console;
 using Common.Cli;
+using LCalc.Cli;
 
 internal sealed class Program
 {
@@ -19,21 +20,21 @@ internal sealed class Program
 
         if (!AnsiConsole.Profile.Capabilities.Interactive)
         {
-            AnsiConsole.MarkupLine(
-                "[red]This program needs to be run in interactive mode when run with no arguments[/]");
-
+            AnsiConsole.MarkupLine("[red]This program needs to be run in interactive mode when run with no arguments[/]");
             return;
         }
 
         AnsiConsole.MarkupLine("Press [Yellow]Ctrl-C[/] to exit");
 
+        var highlighter = new MathHighlighter();
         var buffer = new StringBuilder();
 
         for (;;)
         {
             buffer.Clear();
 
-            var input = AnsiConsole.Console.Ask<string>("[white]Expression:[/]", clear: false, newLine: false);
+            var input = AnsiConsole.Console.Ask<string>("[white]Expression:[/]", clear: false, newLine: false,
+                highlighter: highlighter);
 
             if (input is "q")
                 return;

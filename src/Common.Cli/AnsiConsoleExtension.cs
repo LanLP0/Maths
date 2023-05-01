@@ -17,11 +17,12 @@ public static class AnsiConsoleExtension
     /// <param name="validators">The validators</param>
     /// <param name="clear">Clear the prompt afterward</param>
     /// <param name="newLine">Add a newline at the start</param>
+    /// <param name="highlighter">The highlighter</param>
     /// <typeparam name="T">The prompt result type</typeparam>
     /// <returns>The prompt result</returns>
     public static T? Ask<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] T>(
         this IAnsiConsole console, string prompt, bool optional = false, string initialText = "",
-        Validator<T?>? validators = null, bool clear = true, bool newLine = true)
+        Validator<T?>? validators = null, bool clear = true, bool newLine = true, IHighlighter? highlighter = null)
     {
         if (newLine)
             console.WriteLine();
@@ -30,7 +31,8 @@ public static class AnsiConsoleExtension
         {
             MultiLine = false,
             Prompt = new LineEditorPrompt(prompt),
-            Text = initialText
+            Text = initialText,
+            Highlighter = highlighter
         };
 
         var converter = TypeDescriptor.GetConverter(typeof(T));

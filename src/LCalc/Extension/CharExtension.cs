@@ -11,13 +11,4 @@ internal static class CharExtension
     {
         return (int)c is >= 97 and <= 122;
     }
-
-    public static bool IsLetter(this char c)
-    {
-        var chrInt = (int)c;
-        if (chrInt is not 65)
-            chrInt -= 65;
-
-        return chrInt is >= 97 and <= 122;
-    }
 }

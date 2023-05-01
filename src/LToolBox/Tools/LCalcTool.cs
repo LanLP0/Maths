@@ -1,6 +1,7 @@
 using System.Text;
 using Common.Cli;
 using LCalc;
+using LCalc.Cli;
 using Spectre.Console;
 
 namespace LToolBox.Tools;
@@ -19,11 +20,14 @@ internal sealed class LCalcTool : Tool
 
     public override void Execute()
     {
+        var highlighter = new MathHighlighter();
+    
         for (;;)
         {
             _buffer.Clear();
 
-            var input = Console.Ask<string>("[white]Expression:[/]", clear: false, newLine: false);
+            var input = Console.Ask<string>("[white]Expression:[/]", clear: false, newLine: false,
+                highlighter: highlighter);
 
             if (input is "q")
                 return;
