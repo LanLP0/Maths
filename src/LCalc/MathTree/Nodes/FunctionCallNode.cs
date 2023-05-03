@@ -9,6 +9,11 @@ internal sealed class FunctionCallNode : IMathNode
 {
     private readonly List<IMathNode> _args = new();
     private string _name = null!;
+
+    public FunctionCallNode(string name)
+    {
+        _name = name;
+    }
     
     public int Priority { get; set; } = MathTree.SpecialNodePriority;
 
@@ -196,10 +201,5 @@ internal sealed class FunctionCallNode : IMathNode
         }
         
         return Ok();
-    }
-
-    public void SetName(string name)
-    {
-        _name = name;
     }
 }

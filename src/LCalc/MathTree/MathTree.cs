@@ -18,7 +18,7 @@ internal sealed class MathTree
     public const int ValueNodePriority = 4;
     
     public readonly Scope Scope;
-    private readonly List<List<IMathNode>> _stack;
+    private readonly NodeStack _stack;
     private bool _spaceBeforeToken;
 
     private CompareNode? _compareNode;
@@ -27,17 +27,17 @@ internal sealed class MathTree
     public MathTree(Scope? scope = null)
     {
         Scope = scope ?? new Scope();
-        _stack = new List<List<IMathNode>> { new() };
+        _stack = new NodeStack();
     }
 
     public Result Parse(ReadOnlySpan<char> math)
     {
         _compareNode?.Clear();
-        _stack[0].Clear(); // _stack.Count is never 0
+        _stack.MoveToStart();
+        _stack.ClearLevel();
 
         var buffer = new StringBuilder();
         var tokenType = TokenType.Empty;
-        var level = 0;
 
         for (var i = 0; i < math.Length; i++)
         {
@@ -50,7 +50,7 @@ internal sealed class MathTree
                 {
                     var result = Ok();
                     if (tokenType is not (TokenType.Number or TokenType.VariableSet or TokenType.SpecialNumber))
-                        result = ParseAndSetNode(level, buffer, ref tokenType, Scope);
+                        result = ParseAndSetNode(buffer, ref tokenType, Scope);
                     if (result.Faulted)
                         return result;
 
@@ -79,44 +79,44 @@ internal sealed class MathTree
                 }
                 case 43: // +
                 {
-                    var result = ParseAndSetNode(level, buffer, ref tokenType, Scope);
+                    var result = ParseAndSetNode(buffer, ref tokenType, Scope);
                     if (result.Faulted)
                         return result;
 
-                    result = AddNode(level, new PlusNode());
+                    result = AddNode(new PlusNode());
                     if (result.Faulted)
                         return result;
                     break;
                 }
                 case 42: // *
                 {
-                    var result = ParseAndSetNode(level, buffer, ref tokenType, Scope);
+                    var result = ParseAndSetNode(buffer, ref tokenType, Scope);
                     if (result.Faulted)
                         return result;
 
-                    result = AddNode(level, new MultiplyNode());
+                    result = AddNode(new MultiplyNode());
                     if (result.Faulted)
                         return result;
                     break;
                 }
                 case 47: // /
                 {
-                    var result = ParseAndSetNode(level, buffer, ref tokenType, Scope);
+                    var result = ParseAndSetNode(buffer, ref tokenType, Scope);
                     if (result.Faulted)
                         return result;
 
-                    result = AddNode(level, new DivideNode());
+                    result = AddNode(new DivideNode());
                     if (result.Faulted)
                         return result;
                     break;
                 }
                 case 124: // |
                 {
-                    var result = ParseAndSetNode(level, buffer, ref tokenType, Scope);
+                    var result = ParseAndSetNode(buffer, ref tokenType, Scope);
                     if (result.Faulted)
                         return result;
 
-                    result = AddNode(level, new BitwiseOrNode());
+                    result = AddNode(new BitwiseOrNode());
                     if (result.Faulted)
                         return result;
                     break;
@@ -129,7 +129,7 @@ internal sealed class MathTree
                         if (tokenType is TokenType.Number)
                         {
                             buffer.Append(c);
-                            result = ParseAndSetNode(level, buffer, ref tokenType, Scope);
+                            result = ParseAndSetNode(buffer, ref tokenType, Scope);
                             if (result.Faulted)
                                 return result;
                             break;
@@ -138,11 +138,11 @@ internal sealed class MathTree
                         if (tokenType != TokenType.Variable)
                             return Err($"Invalid operator % at char {i + 1}");
 
-                        result = ParseAndSetNode(level, buffer, ref tokenType, Scope);
+                        result = ParseAndSetNode(buffer, ref tokenType, Scope);
                         if (result.Faulted)
                             return result;
 
-                        var levelStack = GetStackAt(level);
+                        var levelStack = _stack.CurrentLevel;
                         AddFnNode(levelStack, new DivideNode());
                         AddValueNode(levelStack, new ValueNode(100));
                         break;
@@ -153,7 +153,7 @@ internal sealed class MathTree
                         if (tokenType is TokenType.Number)
                         {
                             buffer.Append(c);
-                            result = ParseAndSetNode(level, buffer, ref tokenType, Scope);
+                            result = ParseAndSetNode(buffer, ref tokenType, Scope);
                             if (result.Faulted)
                                 return result;
                             break;
@@ -162,21 +162,21 @@ internal sealed class MathTree
                         if (tokenType != TokenType.Variable)
                             return Err($"Invalid operator % at char {i + 1}");
 
-                        result = ParseAndSetNode(level, buffer, ref tokenType, Scope);
+                        result = ParseAndSetNode(buffer, ref tokenType, Scope);
                         if (result.Faulted)
                             return result;
 
-                        var levelStack = GetStackAt(level);
+                        var levelStack = _stack.CurrentLevel;
                         AddFnNode(levelStack, new DivideNode());
                         AddValueNode(levelStack, new ValueNode(100));
                         break;
                     }
 
-                    result = ParseAndSetNode(level, buffer, ref tokenType, Scope);
+                    result = ParseAndSetNode(buffer, ref tokenType, Scope);
                     if (result.Faulted)
                         return result;
 
-                    result = AddNode(level, new ModuloNode());
+                    result = AddNode(new ModuloNode());
                     if (result.Faulted)
                         return result;
                     break;
@@ -189,11 +189,11 @@ internal sealed class MathTree
                         break;
                     }
 
-                    var result = ParseAndSetNode(level, buffer, ref tokenType, Scope);
+                    var result = ParseAndSetNode(buffer, ref tokenType, Scope);
                     if (result.Faulted)
                         return result;
 
-                    var levelStack = GetStackAt(level);
+                    var levelStack = _stack.CurrentLevel;
                     IMathNode node = new MinusNode();
                     if (levelStack.Count is 0)
                     {
@@ -214,11 +214,11 @@ internal sealed class MathTree
                 }
                 case 126: // ~
                 {
-                    var result = ParseAndSetNode(level, buffer, ref tokenType, Scope);
+                    var result = ParseAndSetNode(buffer, ref tokenType, Scope);
                     if (result.Faulted)
                         return result;
 
-                    var levelStack = GetStackAt(level);
+                    var levelStack = _stack.CurrentLevel;
                     var bitwiseNotNode = new BitwiseNotNode();
                     if (levelStack.Count is 0)
                     {
@@ -235,23 +235,23 @@ internal sealed class MathTree
                 {
                     if (tokenType is TokenType.Variable) // A function call
                     {
-                        MoveDownLevelWithFnCallNode(ref level, buffer.ToString());
+                        MoveDownLevelWithFnCallNode(buffer.ToString());
                         buffer.Clear();
                         tokenType = TokenType.Empty;
                         break;
                     }
 
-                    ParseAndSetNode(level, buffer, ref tokenType, Scope);
-                    MoveDownLevel(ref level);
+                    ParseAndSetNode(buffer, ref tokenType, Scope);
+                    MoveDownLevel();
                     break;
                 }
                 case 41: // )
                 {
-                    var result = ParseAndSetNode(level, buffer, ref tokenType, Scope);
+                    var result = ParseAndSetNode(buffer, ref tokenType, Scope);
                     if (result.Faulted)
                         return result;
 
-                    result = MoveUpLevel(ref level);
+                    result = MoveUpLevel();
                     if (result.Faulted)
                         return result;
                     break;
@@ -259,16 +259,19 @@ internal sealed class MathTree
                 case 32: // ' '
                 {
                     spaceBeforeTokenTmp = true;
-                    ParseAndSetNode(level, buffer, ref tokenType, Scope);
+                    ParseAndSetNode(buffer, ref tokenType, Scope);
                     break;
                 }
                 case 44: // ,
                 {
-                    var levelStack = GetStackAt(level);
+                    var levelStack = _stack.CurrentLevel;
+                    if (levelStack.Count is 0)
+                        return Err("',' can only be used in function calls");
+                    
                     if (levelStack.First() is not FunctionCallNode functionCallNode)
-                        return Err("Coma can only be used inside of a function call");
+                        return Err("',' can only be used in function calls");
 
-                    var result = ParseAndSetNode(level, buffer, ref tokenType, Scope);
+                    var result = ParseAndSetNode(buffer, ref tokenType, Scope);
                     if (result.Faulted)
                         return result;
 
@@ -279,7 +282,7 @@ internal sealed class MathTree
                 }
                 case 38: // &
                 {
-                    var result = ParseAndSetNode(level, buffer, ref tokenType, Scope);
+                    var result = ParseAndSetNode(buffer, ref tokenType, Scope);
                     if (result.Faulted)
                         return result;
 
@@ -290,7 +293,7 @@ internal sealed class MathTree
                         break;
                     }
 
-                    result = AddNode(level, new BitwiseAndNode());
+                    result = AddNode(new BitwiseAndNode());
                     if (result.Faulted)
                         return result;
                     break;
@@ -299,7 +302,7 @@ internal sealed class MathTree
                 {
                     if (tokenType is not (TokenType.Empty or TokenType.Number or TokenType.VariableSet))
                     {
-                        var result = ParseAndSetNode(level, buffer, ref tokenType, Scope);
+                        var result = ParseAndSetNode(buffer, ref tokenType, Scope);
                         if (result.Faulted)
                             return result;
                     }
@@ -319,7 +322,7 @@ internal sealed class MathTree
                         or TokenType.CalculatorOption
                         or TokenType.AdvancedCalculatorOption))
                     {
-                        var result = ParseAndSetNode(level, buffer, ref tokenType, Scope);
+                        var result = ParseAndSetNode(buffer, ref tokenType, Scope);
                         if (result.Faulted)
                             return result;
                     }
@@ -335,7 +338,7 @@ internal sealed class MathTree
                     Result<bool> result;
                     if (tokenType is not (TokenType.Empty or TokenType.CalculatorOption))
                     {
-                        result = ParseAndSetNode(level, buffer, ref tokenType, Scope);
+                        result = ParseAndSetNode(buffer, ref tokenType, Scope);
                         if (result.Faulted)
                             return result;
                     }
@@ -368,7 +371,7 @@ internal sealed class MathTree
                         return Err($"Invalid symbol = at char {i + 1}");
 
                     // the op is ==
-                    result = AddToCompare(ref level, CompareOp.Equal);
+                    result = AddToCompare(CompareOp.Equal);
                     if (result.Faulted)
                         return result;
                     if (!result.Value)
@@ -378,7 +381,7 @@ internal sealed class MathTree
                 }
                 case 62: // >
                 {
-                    var result = ParseAndSetNode(level, buffer, ref tokenType, Scope);
+                    var result = ParseAndSetNode(buffer, ref tokenType, Scope);
                     if (result.Faulted)
                         return result;
 
@@ -390,14 +393,14 @@ internal sealed class MathTree
                         case '>':
                         {
                             i++;
-                            result = AddNode(level, new RightShiftNode());
+                            result = AddNode(new RightShiftNode());
                             if (result.Faulted)
                                 return result;
                             break;
                         }
                         case '=':
                         {
-                            var result1 = AddToCompare(ref level, CompareOp.GreaterThanOrEqual);
+                            var result1 = AddToCompare(CompareOp.GreaterThanOrEqual);
                             if (result1.Faulted)
                                 return result1;
                             if (!result1.Value)
@@ -407,7 +410,7 @@ internal sealed class MathTree
                         }
                         default:
                         {
-                            var result1 = AddToCompare(ref level, CompareOp.GreaterThan);
+                            var result1 = AddToCompare(CompareOp.GreaterThan);
                             if (result1.Faulted)
                                 return result1;
                             if (!result1.Value)
@@ -420,7 +423,7 @@ internal sealed class MathTree
                 }
                 case 60: // <
                 {
-                    var result = ParseAndSetNode(level, buffer, ref tokenType, Scope);
+                    var result = ParseAndSetNode(buffer, ref tokenType, Scope);
                     if (result.Faulted)
                         return result;
 
@@ -432,14 +435,14 @@ internal sealed class MathTree
                         case '<':
                         {
                             i++;
-                            result = AddNode(level, new LeftShiftNode());
+                            result = AddNode(new LeftShiftNode());
                             if (result.Faulted)
                                 return result;
                             break;
                         }
                         case '=':
                         {
-                            var result1 = AddToCompare(ref level, CompareOp.LessThanOrEqual);
+                            var result1 = AddToCompare(CompareOp.LessThanOrEqual);
                             if (result1.Faulted)
                                 return result1;
                             if (!result1.Value)
@@ -449,7 +452,7 @@ internal sealed class MathTree
                         }
                         default:
                         {
-                            var result1 = AddToCompare(ref level, CompareOp.LessThan);
+                            var result1 = AddToCompare(CompareOp.LessThan);
                             if (result1.Faulted)
                                 return result1;
                             if (!result1.Value)
@@ -462,13 +465,13 @@ internal sealed class MathTree
                 }
                 case 33: // !
                 {
-                    var result = ParseAndSetNode(level, buffer, ref tokenType, Scope);
+                    var result = ParseAndSetNode(buffer, ref tokenType, Scope);
                     if (result.Faulted)
                         return result;
 
                     if (!math.TryGetValueAt(i + 1, out c))
                     {
-                        result = AddNode(level, new FactorialNode());
+                        result = AddNode(new FactorialNode());
                         if (result.Faulted)
                             return result;
                         break;
@@ -476,7 +479,7 @@ internal sealed class MathTree
 
                     if (c == '=')
                     {
-                        var result1 = AddToCompare(ref level, CompareOp.Difference);
+                        var result1 = AddToCompare(CompareOp.Difference);
                         if (result1.Faulted)
                             return result1;
                         if (!result1.Value)
@@ -485,14 +488,14 @@ internal sealed class MathTree
                         break;
                     }
 
-                    result = AddNode(level, new FactorialNode());
+                    result = AddNode(new FactorialNode());
                     if (result.Faulted)
                         return result;
                     break;
                 }
                 case 94: // ^
                 {
-                    var result = ParseAndSetNode(level, buffer, ref tokenType, Scope);
+                    var result = ParseAndSetNode(buffer, ref tokenType, Scope);
                     if (result.Faulted)
                         return result;
 
@@ -501,14 +504,14 @@ internal sealed class MathTree
 
                     if (c == '^')
                     {
-                        result = AddNode(level, new BitwiseXorNode());
+                        result = AddNode(new BitwiseXorNode());
                         if (result.Faulted)
                             return result;
                         i++;
                         break;
                     }
 
-                    result = AddNode(level, new ExponentNode());
+                    result = AddNode(new ExponentNode());
                     if (result.Faulted)
                         return result;
                     break;
@@ -519,7 +522,7 @@ internal sealed class MathTree
                     if (getFnCollectionResult.Faulted)
                         return getFnCollectionResult;
 
-                    var result = ParseAndSetNode(level, buffer, ref tokenType, Scope);
+                    var result = ParseAndSetNode(buffer, ref tokenType, Scope);
                     if (result.Faulted)
                         return result;
 
@@ -547,14 +550,14 @@ internal sealed class MathTree
                 _spaceBeforeToken = spaceBeforeTokenTmp;
         }
 
-        var result2 = ParseAndSetNode(level, buffer, ref tokenType, Scope);
+        var result2 = ParseAndSetNode(buffer, ref tokenType, Scope);
         if (result2.Faulted)
             return result2;
 
-        if (level is not 0)
+        if (_stack.PreviousLevel is not null) // If not at the first level
             return Err("Invalid number of braces");
 
-        var rootStack = GetStackAt(0);
+        var rootStack = _stack.CurrentLevel;
         if (rootStack.Count is 0)
             return Err("No expression found");
 
@@ -565,7 +568,7 @@ internal sealed class MathTree
         return Ok();
     }
 
-    private Result ParseAndSetNode(int level, StringBuilder buffer, scoped ref TokenType tokenType, Scope scope)
+    private Result ParseAndSetNode(StringBuilder buffer, scoped ref TokenType tokenType, Scope scope)
     {
         IMathNode resultNode = EmptyNode.Shared;
         switch (tokenType)
@@ -641,15 +644,15 @@ internal sealed class MathTree
 
         buffer.Clear();
         tokenType = TokenType.Empty;
-        return AddNode(level, resultNode);
+        return AddNode(resultNode);
     }
 
-    private Result AddNode(int level, IMathNode node)
+    private Result AddNode(IMathNode node)
     {
         if (node is EmptyNode)
             return Ok();
 
-        var levelStack = GetStackAt(level);
+        var levelStack = _stack.CurrentLevel;
         if (levelStack.Count is 0)
         {
             if (node.Priority != ValueNodePriority)
@@ -750,54 +753,51 @@ internal sealed class MathTree
         return false;
     }
 
-    private void MoveDownLevel(ref int level)
+    private void MoveDownLevel()
     {
-        if (_stack.Count == level + 1)
-            _stack.Add(new List<IMathNode>());
-
-        var levelStack = GetStackAt(++level);
-        if (levelStack.Count is not 0)
-            levelStack.Clear();
+        if (_stack.MoveDownAndClear())
+            return;
+        
+        _stack.AddLevel();
+        _stack.MoveDown();
     }
 
-    private void MoveDownLevelWithFnCallNode(ref int level, string fnName)
+    private void MoveDownLevelWithFnCallNode(string fnName)
     {
-        if (_stack.Count == level + 1)
-            _stack.Add(new List<IMathNode>());
+        MoveDownLevel();
 
-        var levelStack = GetStackAt(++level);
-        if (levelStack.Count is not 0)
-            levelStack.Clear();
-
-        var fnCallNode = new FunctionCallNode();
-        fnCallNode.SetName(fnName);
-        levelStack.Add(fnCallNode);
+        var fnCallNode = new FunctionCallNode(fnName);
+        _stack.CurrentLevel.Add(fnCallNode);
     }
 
-    private Result MoveUpLevel(scoped ref int level)
+    private Result MoveUpLevel()
     {
-        if (level is 0)
+        var currentLevel = _stack.CurrentLevel;
+        if (!_stack.MoveUp())
             return Err("Invalid expression");
 
-        var node = GetStackAt(level).First();
+        if (currentLevel.Count is 0)
+            return Err("Invalid expression");
+
+        var node = currentLevel.First();
         node.Priority = ValueNodePriority;
 
-        return AddNode(--level, node);
+        return AddNode(node);
     }
 
-    private Result<bool> AddToCompare(scoped ref int level, CompareOp? op = null)
+    private Result<bool> AddToCompare(CompareOp? op = null)
     {
         if (!Scope.IsCompareAllowed)
             return Err<bool>("Compare not allowed in this scope");
 
-        while (level is not 0)
+        while (_stack.PreviousLevel is not null)
         {
-            var result = MoveUpLevel(ref level);
+            var result = MoveUpLevel();
             if (result.Faulted)
                 return result;
         }
 
-        var levelStack = GetStackAt(0);
+        var levelStack = _stack.CurrentLevel;
         if (levelStack.Count is 0)
             return false;
 
@@ -810,11 +810,6 @@ internal sealed class MathTree
         if (op.HasValue)
             _compareNode.AddOp(op.Value);
         return true;
-    }
-
-    private List<IMathNode> GetStackAt(int level)
-    {
-        return _stack[level];
     }
 
     public CalcResult Calc()

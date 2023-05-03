@@ -76,6 +76,7 @@ public sealed class CalculatorTest
     [InlineData("x^5-2x+1 &solve", "0.51879")]
     [InlineData("x+1 &solve", "-1")]
     [InlineData("[f(x)=x^2-2x+1] f(x) &solve", "0.999991")]
+    [InlineData("x!-6 &solve", "3")]
     public void Result_Should_BeExpected(string math, string result)
     {
         // Arrange
@@ -89,6 +90,8 @@ public sealed class CalculatorTest
     }
 
     [Theory]
+    [InlineData("a,b", "',' can only be used in function calls")]
+    [InlineData("a+(b,c)", "',' can only be used in function calls")]
     [InlineData("null()", "Unknown function null()")]
     [InlineData("sum()", "sum() takes at least one argument")]
     [InlineData("avg()", "avg() takes at least one argument")]
@@ -133,12 +136,7 @@ public sealed class CalculatorTest
     // Solve mode
     [InlineData("abs(x)+1 &solve", "Cannot solve"
 #if DEBUG
-                                   + " (3 tries ended)"
-#endif
-                                   )]
-    [InlineData("x!-6 &solve", "Cannot solve"
-#if DEBUG
-                               + " (3 tries ended)"
+                                   + " (15 tries ended)"
 #endif
     )]
     [InlineData("1 &solve", "No unknown to solve for")]
