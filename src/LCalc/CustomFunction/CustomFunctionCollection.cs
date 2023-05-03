@@ -7,11 +7,6 @@ internal sealed class CustomFunctionCollection
     private const int MaxFunctionAmount = 15;
     private readonly List<CustomFunction> _list = new();
 
-    public int Count()
-    {
-        return _list.Count;
-    }
-
     public bool ContainsName(string name)
     {
         foreach (var fn in _list)
