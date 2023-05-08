@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Runtime.InteropServices;
 using System.Text;
 using Common.Results;
 using LCalc.Extension;
@@ -693,38 +694,34 @@ internal sealed class MathTree
 
     private Result AddFnNode(List<IMathNode> levelStack, IMathNode node)
     {
-        for (var stackIndex = 0; stackIndex < levelStack.Count;)
+        var stack = CollectionsMarshal.AsSpan(levelStack);
+        for (var stackIndex = 0; stackIndex < stack.Length;)
         {
-            AddOp op;
-            var node1 = levelStack[stackIndex];
+            var node1 = stack[stackIndex];
 
             if (node1 is ExponentNode && node is ExponentNode) // Special case
-                op = AddOp.StepIn;
-            else if (stackIndex == levelStack.Count - 1)
-                op = AddOp.Interact;
-            else if (node1.Priority >= node.Priority)
-                op = AddOp.Interact;
-            else
-                op = AddOp.StepIn;
-
-            switch (op)
             {
-                case AddOp.StepIn:
-                    stackIndex++;
-                    break;
-                case AddOp.Interact:
-                    if (node1.Priority == SpecialNodePriority)
-                        return node.GenerateMissingValueError();
-
-                    if (node1.Priority != ValueNodePriority && !node1.IsFull())
-                        return node1.GenerateMissingValueError();
-
-                    node.AddNode(node1);
-                    if (stackIndex is not 0) levelStack[stackIndex - 1].ChangeLastNodeTo(node);
-
-                    levelStack.Insert(stackIndex, node);
-                    return Ok();
+                stackIndex++;
+                continue;
             }
+            
+            if (!(stackIndex == levelStack.Count - 1 || node1.Priority >= node.Priority))
+            {
+                stackIndex++;
+                continue;
+            }
+            
+            if (node1.Priority == SpecialNodePriority)
+                return node.GenerateMissingValueError();
+
+            if (node1.Priority != ValueNodePriority && !node1.IsFull())
+                return node1.GenerateMissingValueError();
+
+            node.AddNode(node1);
+            if (stackIndex is not 0) levelStack[stackIndex - 1].ChangeLastNodeTo(node);
+
+            levelStack.Insert(stackIndex, node);
+            return Ok();
         }
 
         throw new UnreachableException();
@@ -732,14 +729,15 @@ internal sealed class MathTree
 
     private bool AddValueNode(List<IMathNode> levelStack, IMathNode node)
     {
-        for (var i = levelStack.Count - 1; i >= 0; i--)
+        var stack = CollectionsMarshal.AsSpan(levelStack);
+        for (var i = stack.Length - 1; i >= 0; i--)
         {
-            var node1 = levelStack[i];
+            var node1 = stack[i];
             if (node1.IsFull()) continue;
 
             node1.AddNode(node);
 
-            if (i == levelStack.Count - 1)
+            if (i == stack.Length - 1)
             {
                 levelStack.Add(node);
                 return true;
@@ -832,10 +830,4 @@ internal sealed class MathTree
     {
         return _compareNode ?? _root!;
     }
-}
-
-file enum AddOp
-{
-    StepIn,
-    Interact
 }

@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Runtime.InteropServices;
 using System.Text;
 using Common.Results;
 using LCalc.Helpers;
@@ -21,10 +22,11 @@ internal sealed class FunctionCallNode : IMathNode
     {
         var customFunctions = scope.CustomFunctions;
 
-        Span<double> math = stackalloc double[_args.Count];
-        for (var i = 0; i < _args.Count; i++)
+        var args = CollectionsMarshal.AsSpan(_args);
+        Span<double> math = stackalloc double[args.Length];
+        for (var i = 0; i < args.Length; i++)
         {
-            var arg = _args[i];
+            var arg = args[i];
             var rs = arg.Calc(scope);
             if (rs.Faulted)
                 return rs;
@@ -148,13 +150,14 @@ internal sealed class FunctionCallNode : IMathNode
         buffer.Append(_name);
         buffer.Append('(');
 
-        for (var i = 0; i < _args.Count; i++)
+        var args = CollectionsMarshal.AsSpan(_args);
+        for (var i = 0; i < args.Length; i++)
         {
-            var result = _args[i].RenderStep(buffer, selectedLevel, scope, nodeLevel, showTree);
+            var result = args[i].RenderStep(buffer, selectedLevel, scope, nodeLevel, showTree);
             if (result.Faulted)
                 return result;
 
-            if (i == _args.Count - 1)
+            if (i == args.Length - 1)
                 continue;
 
             buffer.Append(',');

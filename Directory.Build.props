@@ -2,6 +2,6 @@
     <PropertyGroup>
         <Nullable>enable</Nullable>
         <PrevAvaloniaVersion>11.0.999-cibuild0028631-beta</PrevAvaloniaVersion>
-        <AvaloniaVersion>11.0.999-cibuild0032818-beta</AvaloniaVersion>
+        <AvaloniaVersion>11.0.0-preview7</AvaloniaVersion>
     </PropertyGroup>
 </Project>

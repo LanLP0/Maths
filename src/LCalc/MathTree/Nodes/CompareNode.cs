@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Runtime.InteropServices;
 using System.Text;
 using Common.Results;
 
@@ -39,11 +40,12 @@ internal sealed class CompareNode : IMathNode
     public Result RenderStep(StringBuilder buffer, int selectedLevel, Scope scope, int nodeLevel = 1,
         bool showTree = false)
     {
-        for (var i = 0; i < _args.Count; i++)
+        var args = CollectionsMarshal.AsSpan(_args);
+        for (var i = 0; i < args.Length; i++)
         {
             if (selectedLevel is 1)
             {
-                var arg = _args[i]!;
+                var arg = args[i];
                 if (arg.Priority is not MathTree.ValueNodePriority)
                 {
                     var result = arg.RenderStep(buffer, selectedLevel, scope, nodeLevel, showTree);
@@ -57,7 +59,7 @@ internal sealed class CompareNode : IMathNode
             }
             else
             {
-                var result = _args[i].RenderStep(buffer, selectedLevel, scope, nodeLevel, showTree);
+                var result = args[i].RenderStep(buffer, selectedLevel, scope, nodeLevel, showTree);
                 if (result.Faulted)
                     return result;
             }
@@ -107,20 +109,22 @@ internal sealed class CompareNode : IMathNode
 
     internal Result<bool> Calc(Scope scope)
     {
-        if (_args.Count <= 1)
+        var args = CollectionsMarshal.AsSpan(_args);
+        
+        if (args.Length <= 1)
             return Err<bool>("Missing value");
 
-        if (_compareOps.Count >= _args.Count)
+        if (_compareOps.Count >= args.Length)
             return Err<bool>("Missing value");
 
         for (var i = 0; i < _compareOps.Count; i++)
         {
-            var result = _args[i].Calc(scope);
+            var result = args[i].Calc(scope);
             if (result.Faulted)
                 return result.Exception!;
             var num1 = result.Value;
 
-            result = _args[i + 1].Calc(scope);
+            result = args[i + 1].Calc(scope);
             if (result.Faulted)
                 return result.Exception!;
             var num2 = result.Value;

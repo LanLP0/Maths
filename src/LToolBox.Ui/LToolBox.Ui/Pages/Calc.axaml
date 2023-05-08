@@ -33,8 +33,7 @@
         </StackPanel>
         <Separator Height="3" DockPanel.Dock="Top" />
         <ScrollViewer DockPanel.Dock="Bottom">
-            <ListBox DoubleTapped="HistoryBox_OnDoubleTapped" AutoScrollToSelectedItem="True" Name="HistoryBox"
-                     Items="{Binding Histories}" />
+            <ListBox DoubleTapped="HistoryBox_OnDoubleTapped" AutoScrollToSelectedItem="True" Name="HistoryBox" />
         </ScrollViewer>
     </DockPanel>
 

@@ -92,7 +92,7 @@ internal static class NewtonRaphsonSolver
                 return x;
         }
         
-        for (var x0 = 2187; x0 >= 1; x0 /= 3) // 1, 3, 9, .., 2187
+        for (var x0 = 2187; x0 >= 1; x0 /= 3) // powers of 3: 1, 3, 9, .., 2187
         {
             Result<double> y;
             x = Solve(f, x0);

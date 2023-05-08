@@ -17,6 +17,8 @@ public sealed partial class Calc : UserControl
     private const double MinFontSize = 10.0;
     private readonly CalcModel _calcModel;
 
+    private ItemCollection Histories => HistoryBox.Items;
+
     public Calc()
     {
         InitializeComponent();
@@ -73,21 +75,21 @@ public sealed partial class Calc : UserControl
             TextTrimming = TextTrimming.CharacterEllipsis
         };
 
-        _calcModel.Histories.Insert(0,
+        Histories.Insert(0,
             new ListBoxItem
             {
                 Content = textBlock
             });
 
-        if (_calcModel.Histories.Count >= MaxHistoryLenght)
-            _calcModel.Histories.RemoveAt(_calcModel.Histories.Count - 1);
+        if (Histories.Count >= MaxHistoryLenght)
+            Histories.RemoveAt(Histories.Count - 1);
 
         HistoryBox.InvalidateVisual();
     }
 
     private void HistoryBox_OnDoubleTapped(object? sender, TappedEventArgs e)
     {
-        var text = (HistoryBox.SelectedItem as TextBlock)!.Text!;
+        var text = ((HistoryBox.SelectedItem as ListBoxItem)!.Content! as TextBlock)!.Text!;
         MathInput.Text = text.Substring(text.IndexOf(' ') + 1);
         FocusInputBox();
         e.Handled = true;
@@ -101,7 +103,7 @@ public sealed partial class Calc : UserControl
 
     private void ClearHistory(object? sender, RoutedEventArgs e)
     {
-        _calcModel.Histories.Clear();
+        Histories.Clear();
     }
 
     private void MathInput_OnTextChanged(object? sender, TextChangedEventArgs e)
