@@ -27,7 +27,7 @@ internal sealed class VariableCollection : IEnumerable<Variable>
         if (_linkedCollection is null)
             return false;
 
-        return _linkedCollection!.Contains(variable);
+        return _linkedCollection.Contains(variable);
     }
 
     private bool ContainsName(string name)
@@ -68,7 +68,7 @@ internal sealed class VariableCollection : IEnumerable<Variable>
             var1.Value = variable.Value;
             return;
         }
-        
+
         _variables.Add(variable);
     }
 

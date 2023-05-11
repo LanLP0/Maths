@@ -7,21 +7,20 @@ public delegate Result<double> Function(double unknown);
 internal static class NewtonRaphsonSolver
 {
     private const double Epsilon = 1E-10;
-    
+
     /// <summary>
-    /// The approximate of derivative of func()
+    ///     The approximate of derivative of func()
     /// </summary>
     private static Result<double> Derivative(Function f, double fx, double x, double h)
     {
         var fxh = f(x + h);
         if (fxh.Faulted)
             return fxh;
-        
+
         return (fxh.Value - fx) / h;
     }
 
     /// <summary>
-    /// 
     /// </summary>
     /// <param name="f">The function</param>
     /// <param name="x0">Initial guess</param>
@@ -34,13 +33,13 @@ internal static class NewtonRaphsonSolver
             if (fx.Faulted)
                 return Err<double>("Cannot solve"
 #if DEBUG
-                                    + " (f(x) failed)"
+                                   + " (f(x) failed)"
 #endif
                 );
-            
+
             if (Math.Abs(fx.Value) < Epsilon) // If we have found the approx root
                 break;
-            
+
             var dfx = Derivative(f, fx.Value, x0, 1E-5);
             if (dfx.Faulted)
                 return Err<double>("Cannot solve"
@@ -56,7 +55,7 @@ internal static class NewtonRaphsonSolver
                            + " (dfx = 0)"
 #endif
                 );
-            
+
             x0 -= fx.Value / dfx.Value;
         }
 
@@ -78,7 +77,6 @@ internal static class NewtonRaphsonSolver
         var x = Solve(f, 0);
         if (!x.Faulted)
         {
-
             var y = f(x.Value);
 
             if (y.Faulted)
@@ -91,7 +89,7 @@ internal static class NewtonRaphsonSolver
             if (Math.Abs(y.Value) < Epsilon)
                 return x;
         }
-        
+
         for (var x0 = 2187; x0 >= 1; x0 /= 3) // powers of 3: 1, 3, 9, .., 2187
         {
             Result<double> y;
@@ -107,12 +105,12 @@ internal static class NewtonRaphsonSolver
             x = Solve(f, -x0);
             if (x.Faulted)
                 continue;
-            
+
             y = f(x.Value);
-            
+
             if (y.Faulted)
                 continue;
-            
+
             if (Math.Abs(y.Value) < Epsilon)
                 return x;
         }

@@ -9,5 +9,5 @@ internal enum CalculatorOption
     Solve = 1 << 3,
     VariableAllowed = 1 << 4,
     CompareAllowed = 1 << 5,
-    CalculatorOptionAllowed = 1 << 6,
+    CalculatorOptionAllowed = 1 << 6
 }

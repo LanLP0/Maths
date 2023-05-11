@@ -103,7 +103,7 @@ internal sealed class FactorialNode : IMathNode
         return num.Value +
                (Priority == MathTree.ValueNodePriority ? 1 : 0);
     }
-    
+
     public Result SetupForSolving(Scope scope, out string unknown)
     {
         if (!IsFull())

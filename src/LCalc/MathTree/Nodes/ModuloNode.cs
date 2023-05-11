@@ -123,7 +123,7 @@ internal sealed class ModuloNode : IMathNode
         return Math.Max(num1.Value, num2.Value) +
                (Priority == MathTree.ValueNodePriority ? 1 : 0);
     }
-    
+
     public Result SetupForSolving(Scope scope, out string unknown)
     {
         if (!IsFull())
@@ -140,7 +140,7 @@ internal sealed class ModuloNode : IMathNode
             _arg2!.SetupForSolving(scope, out var unknown1);
             if (unknown1 != string.Empty && unknown1 != unknown)
                 return Err("Too many unknowns");
-            
+
             return rs;
         }
 

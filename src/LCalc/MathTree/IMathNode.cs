@@ -17,11 +17,11 @@ internal interface IMathNode
     public bool AddNode(IMathNode node);
 
     public bool IsFull();
-    
+
     public void ChangeLastNodeTo(IMathNode node);
-    
+
     public Result GenerateMissingValueError();
-    
+
     /// <remarks>Note: Run Calc before to catch errors</remarks>
     public Result RenderStep(StringBuilder buffer, int selectedLevel, Scope scope, int nodeLevel = 1,
         bool showTree = false);

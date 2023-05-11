@@ -6,14 +6,14 @@ namespace LCalc.Cli;
 
 public sealed class MathHighlighter : IHighlighter
 {
-    private static readonly Style Grey = new Style(foreground: Color.Grey);
-    private static readonly Style Blue = new Style(foreground: Color.Blue);
-    private static readonly Style Yellow = new Style(foreground: Color.Yellow);
+    private static readonly Style Grey = new(foreground: Color.Grey);
+    private static readonly Style Blue = new(foreground: Color.Blue);
+    private static readonly Style Yellow = new(foreground: Color.Yellow);
     
-    private static string[] _keys = new[]
+    private static string[] _keys =
     {
         "+", "-", "*", "/", "^", "%", "!",
-        "|", "&", "~", ">", "<", "="
+        "|", "&", "~", ">", "<", "=", "[", "]"
     };
     
     public Style? Highlight(string token)

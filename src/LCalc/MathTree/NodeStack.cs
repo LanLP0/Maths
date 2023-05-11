@@ -5,15 +5,15 @@ internal sealed class NodeStack
     private readonly LinkedList<List<IMathNode>> _list;
     private LinkedListNode<List<IMathNode>> _current;
 
-    public List<IMathNode>? PreviousLevel => _current.Previous?.Value;
-    public List<IMathNode> CurrentLevel => _current.Value;
-
     public NodeStack()
     {
         _list = new LinkedList<List<IMathNode>>();
         _current = new LinkedListNode<List<IMathNode>>(new List<IMathNode>());
         _list.AddLast(_current);
     }
+
+    public List<IMathNode>? PreviousLevel => _current.Previous?.Value;
+    public List<IMathNode> CurrentLevel => _current.Value;
 
     public void AddLevel()
     {
@@ -34,7 +34,7 @@ internal sealed class NodeStack
     {
         if (!MoveDown())
             return false;
-        
+
         ClearLevel();
         return true;
     }

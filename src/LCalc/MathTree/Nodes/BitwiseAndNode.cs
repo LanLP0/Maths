@@ -141,7 +141,7 @@ internal sealed class BitwiseAndNode : IMathNode
             _arg2!.SetupForSolving(scope, out var unknown1);
             if (unknown1 != string.Empty && unknown1 != unknown)
                 return Err("Too many unknowns");
-            
+
             return rs;
         }
 

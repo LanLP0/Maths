@@ -122,7 +122,7 @@ public sealed class CalculatorTest
     [InlineData("2.5|2.5", "Value(s) of operator | must be integer")]
     [InlineData("100!|100!", "Value(s) of operator | must be between 2^63 and -2^63")]
     [InlineData("-n", "Unknown variable 'n'")]
-    [InlineData("1~", "Invalid operator ~ at char 2")]
+    [InlineData("1~", "Invalid operator ~")]
     [InlineData("1&", "Missing value after operator &")]
     [InlineData("1+", "Missing value after operator +")]
     [InlineData("+1", "Missing value before operator +")]
@@ -133,6 +133,11 @@ public sealed class CalculatorTest
     [InlineData("0b21", "Invalid binary number")]
     [InlineData("0o9", "Invalid octal number")]
     [InlineData("[t()=t()]t()", "Function loop is not allowed")]
+    [InlineData("[a()=)]", "Invalid amount of braces in custom function")]
+    [InlineData("[a(x x)=1]", "Duplicated variables in custom function")]
+    [InlineData("[a(])", "Invalid custom function syntax")]
+    [InlineData("[a(1)]", "Invalid character in custom function arg space '1'")]
+    [InlineData("[a()=1", "Invalid custom function syntax")]
     // Solve mode
     [InlineData("abs(x)+1 &solve", "Cannot solve"
 #if DEBUG

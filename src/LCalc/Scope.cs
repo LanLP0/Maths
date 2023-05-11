@@ -22,7 +22,7 @@ internal sealed class Scope
 
         if (isCompareAllowed)
             Option |= CalculatorOption.CompareAllowed;
-        
+
         if (isCustomFunctionAllowed)
             CustomFunctions = new CustomFunctionCollection();
         Variables = new VariableCollection();
@@ -31,6 +31,8 @@ internal sealed class Scope
     public CalculatorOption Option { get; set; }
     public CustomFunctionCollection? CustomFunctions { get; set; }
     public VariableCollection Variables { get; set; }
+
+    public bool CustomFunctionAllowed => CustomFunctions is not null;
     public bool IsCompareAllowed => (Option & CalculatorOption.CompareAllowed) != 0;
     public bool IsCalculatorOptionAllowed => (Option & CalculatorOption.CalculatorOptionAllowed) != 0;
 
@@ -60,7 +62,7 @@ internal sealed class Scope
     {
         if (!IsCalculatorOptionAllowed)
             return Err("Cannot set calculator option in this scope");
-        
+
         Option |= CalculatorOption.StepByStep;
         return Ok();
     }
@@ -74,7 +76,7 @@ internal sealed class Scope
     {
         if (!IsCalculatorOptionAllowed)
             return Err("Cannot set calculator option in this scope");
-        
+
         Option |= CalculatorOption.Raw;
         return Ok();
     }
@@ -97,7 +99,7 @@ internal sealed class Scope
     {
         return (Option & CalculatorOption.ShowTree) != 0;
     }
-    
+
     public Result SetSolveOpt()
     {
         if (!IsCalculatorOptionAllowed)
@@ -132,7 +134,7 @@ internal sealed class Scope
     {
         if (CustomFunctions is null)
             return;
-        
+
         CustomFunctions.End(Variables, Option);
     }
 }

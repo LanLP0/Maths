@@ -110,7 +110,7 @@ internal sealed class CompareNode : IMathNode
     internal Result<bool> Calc(Scope scope)
     {
         var args = CollectionsMarshal.AsSpan(_args);
-        
+
         if (args.Length <= 1)
             return Err<bool>("Missing value");
 

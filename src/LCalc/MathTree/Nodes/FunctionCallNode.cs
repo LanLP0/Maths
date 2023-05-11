@@ -9,13 +9,13 @@ namespace LCalc.MathTree.Nodes;
 internal sealed class FunctionCallNode : IMathNode
 {
     private readonly List<IMathNode> _args = new();
-    private string _name = null!;
+    private readonly string _name = null!;
 
     public FunctionCallNode(string name)
     {
         _name = name;
     }
-    
+
     public int Priority { get; set; } = MathTree.SpecialNodePriority;
 
     public Result<double> Calc(Scope scope)
@@ -113,7 +113,7 @@ internal sealed class FunctionCallNode : IMathNode
         // This happens when the function call is completed
         if (Priority != MathTree.SpecialNodePriority)
             return true;
-        
+
         return false;
     }
 
@@ -187,7 +187,7 @@ internal sealed class FunctionCallNode : IMathNode
     public Result SetupForSolving(Scope scope, out string unknown)
     {
         unknown = string.Empty;
-        
+
         foreach (var arg in _args)
         {
             var rs = arg.SetupForSolving(scope, out var unknown1);
@@ -202,7 +202,7 @@ internal sealed class FunctionCallNode : IMathNode
             if (rs.Faulted)
                 return rs;
         }
-        
+
         return Ok();
     }
 }

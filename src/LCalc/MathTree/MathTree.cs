@@ -11,19 +11,20 @@ namespace LCalc.MathTree;
 internal sealed class MathTree
 {
     // The order of operation
+    // Higher is more likely to interact
     public const int SpecialNodePriority = -1;
     public const int PlusMinusNodePriority = 0;
     public const int MulDivModNodePriority = 1;
     public const int ExpFacNodePriority = 2;
     public const int BitwiseNodePriority = 3;
     public const int ValueNodePriority = 4;
-    
-    public readonly Scope Scope;
     private readonly NodeStack _stack;
-    private bool _spaceBeforeToken;
+
+    public readonly Scope Scope;
 
     private CompareNode? _compareNode;
     private IMathNode? _root;
+    private bool _spaceBeforeToken;
 
     public MathTree(Scope? scope = null)
     {
@@ -39,6 +40,7 @@ internal sealed class MathTree
 
         var buffer = new StringBuilder();
         var tokenType = TokenType.Empty;
+        var isInCustomFunction = false;
 
         for (var i = 0; i < math.Length; i++)
         {
@@ -137,7 +139,7 @@ internal sealed class MathTree
                         }
 
                         if (tokenType != TokenType.Variable)
-                            return Err($"Invalid operator % at char {i + 1}");
+                            return Err("Invalid operator %");
 
                         result = ParseAndSetNode(buffer, ref tokenType, Scope);
                         if (result.Faulted)
@@ -161,7 +163,7 @@ internal sealed class MathTree
                         }
 
                         if (tokenType != TokenType.Variable)
-                            return Err($"Invalid operator % at char {i + 1}");
+                            return Err("Invalid operator %");
 
                         result = ParseAndSetNode(buffer, ref tokenType, Scope);
                         if (result.Faulted)
@@ -211,7 +213,7 @@ internal sealed class MathTree
                     if (AddValueNode(levelStack, node))
                         break;
 
-                    return Err($"Invalid operator - at char {i + 1}");
+                    return Err("Invalid operator -");
                 }
                 case 126: // ~
                 {
@@ -228,7 +230,7 @@ internal sealed class MathTree
                     }
 
                     if (!AddValueNode(levelStack, bitwiseNotNode))
-                        return Err($"Invalid operator ~ at char {i + 1}");
+                        return Err("Invalid operator ~");
 
                     break;
                 }
@@ -268,7 +270,7 @@ internal sealed class MathTree
                     var levelStack = _stack.CurrentLevel;
                     if (levelStack.Count is 0)
                         return Err("',' can only be used in function calls");
-                    
+
                     if (levelStack.First() is not FunctionCallNode functionCallNode)
                         return Err("',' can only be used in function calls");
 
@@ -348,7 +350,7 @@ internal sealed class MathTree
                     {
                         if (tokenType is TokenType.CalculatorOption)
                             return Err("Missing variable value");
-                        return Err($"Invalid symbol = at char {i + 1}");
+                        return Err("Invalid symbol =");
                     }
 
                     if (tokenType is TokenType.CalculatorOption)
@@ -361,7 +363,7 @@ internal sealed class MathTree
                         }
 
                         if (!nextChar.IsLowerLetter())
-                            return Err($"Invalid symbol = at char {i + 1}");
+                            return Err("Invalid symbol =");
 
                         tokenType = TokenType.AdvancedCalculatorOption;
                         buffer.Append(c);
@@ -369,14 +371,14 @@ internal sealed class MathTree
                     }
 
                     if (nextChar != '=')
-                        return Err($"Invalid symbol = at char {i + 1}");
+                        return Err("Invalid symbol =");
 
                     // the op is ==
                     result = AddToCompare(CompareOp.Equal);
                     if (result.Faulted)
                         return result;
                     if (!result.Value)
-                        return Err($"Invalid operator == at char {i + 1}");
+                        return Err("Invalid operator ==");
                     i++;
                     break;
                 }
@@ -387,7 +389,7 @@ internal sealed class MathTree
                         return result;
 
                     if (!math.TryGetValueAt(i + 1, out c))
-                        return Err($"Invalid operator > at char {i + 1}");
+                        return Err("Invalid operator >");
 
                     switch (c)
                     {
@@ -405,7 +407,7 @@ internal sealed class MathTree
                             if (result1.Faulted)
                                 return result1;
                             if (!result1.Value)
-                                return Err($"Invalid operator >= at char {i + 1}");
+                                return Err("Invalid operator >=");
                             i++;
                             break;
                         }
@@ -415,7 +417,7 @@ internal sealed class MathTree
                             if (result1.Faulted)
                                 return result1;
                             if (!result1.Value)
-                                return Err($"Invalid operator > at char {i + 1}");
+                                return Err("Invalid operator >");
                             break;
                         }
                     }
@@ -429,7 +431,7 @@ internal sealed class MathTree
                         return result;
 
                     if (!math.TryGetValueAt(i + 1, out c))
-                        return Err($"Invalid operator < at char {i + 1}");
+                        return Err("Invalid operator <");
 
                     switch (c)
                     {
@@ -447,7 +449,7 @@ internal sealed class MathTree
                             if (result1.Faulted)
                                 return result1;
                             if (!result1.Value)
-                                return Err($"Invalid operator <= at char {i + 1}");
+                                return Err("Invalid operator <=");
                             i++;
                             break;
                         }
@@ -457,7 +459,7 @@ internal sealed class MathTree
                             if (result1.Faulted)
                                 return result1;
                             if (!result1.Value)
-                                return Err($"Invalid operator < at char {i + 1}");
+                                return Err("Invalid operator <");
                             break;
                         }
                     }
@@ -484,7 +486,7 @@ internal sealed class MathTree
                         if (result1.Faulted)
                             return result1;
                         if (!result1.Value)
-                            return Err($"Invalid operator != at char {i + 1}");
+                            return Err("Invalid operator !=");
                         i++;
                         break;
                     }
@@ -501,7 +503,7 @@ internal sealed class MathTree
                         return result;
 
                     if (!math.TryGetValueAt(i + 1, out c))
-                        return Err($"Invalid operator ^ at char {i + 1}");
+                        return Err("Invalid operator ^");
 
                     if (c == '^')
                     {
@@ -519,34 +521,107 @@ internal sealed class MathTree
                 }
                 case 91: // [
                 {
-                    var getFnCollectionResult = Scope.GetFnCollection();
-                    if (getFnCollectionResult.Faulted)
-                        return getFnCollectionResult;
+                    if (!Scope.CustomFunctionAllowed)
+                        return Err("Custom function is not allowed in this scope");
+
+                    if (isInCustomFunction)
+                        return Err("Invalid char '['");
 
                     var result = ParseAndSetNode(buffer, ref tokenType, Scope);
                     if (result.Faulted)
                         return result;
 
-                    var end = math.IndexOf(']', i + 1);
+                    i++;
+                    if (i >= math.Length)
+                        return Err("Invalid char '['");
+
+                    ReadLettersToBuffer(buffer, math, ref i);
+                    if (buffer.Length is 0)
+                        return Err("Custom function name cannot be empty");
+
+                    if (math[i] is not '(')
+                        return Err("Invalid custom function syntax");
+
+                    i++;
+                    var argEnd = math.IndexOf(')', i);
+                    if (argEnd is -1)
+                        return Err("Invalid custom function syntax");
+
+                    var end = math.IndexOf(']', i);
                     if (end is -1)
-                        return Err("No matching end square bracket found");
+                        return Err("Invalid custom function syntax");
 
-                    var body = math.Slice(i + 1, end - i - 1);
+                    if (argEnd > end) // Prevent [abc(]...)
+                        return Err("Invalid custom function syntax");
 
-                    var parseFnResult = CustomFunction.CustomFunction.Parse(body, getFnCollectionResult.Value!);
-                    if (parseFnResult.Faulted)
-                        return parseFnResult;
+                    var name = buffer.ToString();
+                    buffer.Clear();
 
-                    result = Scope.AddFn(parseFnResult.Value!);
-                    if (result.Faulted)
-                        return result;
-                    i = end;
+                    var args = new VariableCollection();
+                    for (; i < argEnd; i++)
+                    {
+                        var chr = math[i];
+                        switch ((int)chr)
+                        {
+                            case > 96 and < 122: // a-z
+                            {
+                                buffer.Append(chr);
+                                break;
+                            }
+                            case 32: // ' '
+                            {
+                                if (buffer.Length is 0)
+                                    break;
+
+                                if (!args.TryAdd(buffer.ToString(), 0))
+                                    return Err("Duplicated variables in custom function");
+
+                                buffer.Clear();
+                                break;
+                            }
+                            default:
+                                return Err($"Invalid character in custom function arg space '{chr}'");
+                        }
+                    }
+
+                    if (buffer.Length is not 0)
+                    {
+                        if (!args.TryAdd(buffer.ToString(), 0))
+                            return Err("Duplicated variables in custom function");
+
+                        buffer.Clear();
+                    }
+
+                    MoveDownLevel();
+                    _stack.CurrentLevel.Add(new CustomFunctionNode(name, args));
+
+                    i = argEnd + 1;
                     break;
                 }
                 case 93: // ]
-                    return Err($"Invalid square bracket at char {i + 1}");
+                {
+                    if (!Scope.CustomFunctionAllowed)
+                        return Err("Custom function is not allowed in this scope");
+
+                    if (_stack.CurrentLevel.FirstOrDefault() is not CustomFunctionNode cNode)
+                        return Err("Invalid custom function");
+
+                    var result = ParseAndSetNode(buffer, ref tokenType, Scope);
+                    if (result.Faulted)
+                        return result;
+
+                    if (!cNode.IsFull())
+                        return Err("Missing custom function body");
+
+                    var fn = cNode.ToCustomFunction(Scope.CustomFunctions!);
+                    Scope.CustomFunctions!.Add(fn);
+
+                    _stack.MoveUp();
+                    isInCustomFunction = false;
+                    break;
+                }
             }
-            
+
             if (tokenType is TokenType.Empty)
                 _spaceBeforeToken = spaceBeforeTokenTmp;
         }
@@ -704,13 +779,15 @@ internal sealed class MathTree
                 stackIndex++;
                 continue;
             }
-            
+
             if (!(stackIndex == levelStack.Count - 1 || node1.Priority >= node.Priority))
             {
                 stackIndex++;
                 continue;
             }
-            
+
+            // Interact
+
             if (node1.Priority == SpecialNodePriority)
                 return node.GenerateMissingValueError();
 
@@ -755,7 +832,7 @@ internal sealed class MathTree
     {
         if (_stack.MoveDownAndClear())
             return;
-        
+
         _stack.AddLevel();
         _stack.MoveDown();
     }
@@ -778,6 +855,9 @@ internal sealed class MathTree
             return Err("Invalid expression");
 
         var node = currentLevel.First();
+        if (node is CustomFunctionNode)
+            return Err("Invalid amount of braces in custom function");
+
         node.Priority = ValueNodePriority;
 
         return AddNode(node);
@@ -808,6 +888,18 @@ internal sealed class MathTree
         if (op.HasValue)
             _compareNode.AddOp(op.Value);
         return true;
+    }
+
+    private void ReadLettersToBuffer(StringBuilder buffer, ReadOnlySpan<char> math, ref int index)
+    {
+        for (; index <= math.Length; index++)
+        {
+            var chr = math[index];
+            if (!chr.IsLowerLetter())
+                break;
+
+            buffer.Append(chr);
+        }
     }
 
     public CalcResult Calc()
