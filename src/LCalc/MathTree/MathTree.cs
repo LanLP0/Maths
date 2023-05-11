@@ -32,12 +32,9 @@ internal sealed class MathTree
         _stack = new NodeStack();
     }
 
+    /// <remarks>This method should only be called once</remarks>
     public Result Parse(ReadOnlySpan<char> math)
     {
-        _compareNode?.Clear();
-        _stack.MoveToStart();
-        _stack.ClearLevel();
-
         var buffer = new StringBuilder();
         var tokenType = TokenType.Empty;
         var isInCustomFunction = false;
