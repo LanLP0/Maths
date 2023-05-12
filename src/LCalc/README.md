@@ -2,13 +2,23 @@
 
 A fast and efficient string calculator  
 **Usage**  
-lcalc {expression}  
+Calculator.CalcFormatted() calculate and format the output  
+Calculator.CalcRaw() calculate the expression the return the raw result  
 **Description**  
 Calculate an expression with optional arguments  
-**Arguments**  
-`&{name}={value}`  Set a variable/argument's value  
-`&{name}`  Set calculator argument  
-Arguments:
+**Syntax**  
+`[custom functions..] {expression} [args..]`  
+<h6>`|`: or - `[]`: optional - `{}`: value</h6>
+> Custom function:  
+> `[{name}([args..])(=| ){expression}]`  
+>  <h6>The square brackets around the function is required<br />Call the function by using `name()` just like normal functions</h6> 
+> `name` The name of the custom function  
+> `expression` The expression  
+> `args` The arguments
+> 
+> Arguments:  
+> `&{name}={value}`  Set a variable's value  
+> `&{name}`  Set calculator argument  
 > `step` Show each step  
 > `tree` Like &step but wrap every node with a `()`  
 > `raw` See raw value  
@@ -28,16 +38,15 @@ Arguments:
 >
 **__Functions__**
 > Use: `functionName([arg][,] [arg...])`  
-> Custom function: `[{functionName}([arg] [arg...])={body}]`  
 > `abs({value})` Absolute value  
 > `clamp({value})` `ceiling({value})` `round({value} [digits])` Rounding numbers  
 > `cos({deg})` `sin({deg})` `tan({deg})` `cot({deg})` Trigonometric  
 > `log({value})` Logarithm  
 > `sqrt({value})` `cbrt({value})` Square root, cube root  
 > `sum({value} [values..])` `avg({value} [values..])` Sum, average  
-> `random([max|min,max])` Get random number in ranges: 0-1, 0-max, min-max
+> `random([max|(min,max)])` Get random number in ranges: 0-1, 0-max, min-max
 
 **__Special number__**
-> `0b{binaryNum}`  Binary number  
-> `0x{hexNum}`  Hexadecimal number  
-> `0o{octalNum}`  Octal number  
+> `0b{binary}`  Binary number  
+> `0x{hex}`  Hexadecimal number  
+> `0o{octal}`  Octal number  

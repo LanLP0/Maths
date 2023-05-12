@@ -593,6 +593,9 @@ internal sealed class MathTree
                     _stack.CurrentLevel.Add(new CustomFunctionNode(name, args));
 
                     i = argEnd + 1;
+                    if (math[i] is not ('=' or ' '))
+                        return Err("Invalid custom function syntax");
+                    
                     break;
                 }
                 case 93: // ]

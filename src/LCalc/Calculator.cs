@@ -10,13 +10,34 @@ namespace LCalc;
 /// </summary>
 public static class Calculator
 {
+    /// <summary>
+    /// Calculate the expression
+    /// </summary>
+    /// <param name="math">The expression</param>
+    /// <returns>The result (formatted)</returns>
     public static string CalcFormatted(string math)
+    {
+        return CalcFormatted((ReadOnlySpan<char>)math);
+    }
+
+    /// <summary>
+    /// Calculate the expression
+    /// </summary>
+    /// <param name="math">The expression</param>
+    /// <returns>The result (formatted)</returns>
+    public static string CalcFormatted(ReadOnlySpan<char> math)
     {
         var result = CalcRaw(math, out var rawValueRequested);
 
         return result.Render(rawValueRequested);
     }
 
+    /// <summary>
+    /// Calculate the expression
+    /// </summary>
+    /// <param name="math">The expression</param>
+    /// <param name="rawValueRequested">If the &raw argument exists</param>
+    /// <returns>The raw result</returns>
     public static CalcResult CalcRaw(ReadOnlySpan<char> math, out bool rawValueRequested)
     {
         rawValueRequested = false;

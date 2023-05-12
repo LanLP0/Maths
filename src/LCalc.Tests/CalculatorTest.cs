@@ -71,6 +71,7 @@ public sealed class CalculatorTest
     [InlineData("[foo(a)=a%*8] foo(25)", "2")]
     [InlineData("[t()=a()][a()=c] t() &c=1", "1")]
     [InlineData("[f(a)=a] f(1) &a=2", "1")]
+    [InlineData("[f(a) a] f(1) &a=2", "1")]
     [InlineData("[a()=1] [b(x)=x] a()", "1")] // Variables is not shared between functions
     // Solve mode
     [InlineData("x^5-2x+1 &solve", "0.51879")]
@@ -138,6 +139,8 @@ public sealed class CalculatorTest
     [InlineData("[a(])", "Invalid custom function syntax")]
     [InlineData("[a(1)]", "Invalid character in custom function arg space '1'")]
     [InlineData("[a()=1", "Invalid custom function syntax")]
+    [InlineData("[a():1]", "Invalid custom function syntax")]
+    [InlineData("[a()1]", "Invalid custom function syntax")]
     // Solve mode
     [InlineData("abs(x)+1 &solve", "Cannot solve"
 #if DEBUG
