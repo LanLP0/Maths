@@ -703,7 +703,7 @@ internal sealed class MathTree
                 var splitIndex = str.IndexOf('=');
                 var firstHalf = str.Slice(0, splitIndex);
                 var secondHalf = str.Slice(splitIndex + 1);
-                var parseResult = CalculatorHelpers.Parse(secondHalf);
+                var parseResult = CalculatorHelpers.ParseNumber(secondHalf);
                 if (parseResult.Faulted)
                     return Err(parseResult.Exception!);
 

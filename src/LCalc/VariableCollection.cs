@@ -2,10 +2,10 @@
 
 namespace LCalc;
 
-internal sealed class VariableCollection : IEnumerable<Variable>
+internal sealed class VariableCollection : IVariableCollection
 {
     private readonly List<Variable> _variables = new();
-    private VariableCollection? _linkedCollection;
+    private IVariableCollection? _linkedCollection;
 
     public int Count => _variables.Count;
 
@@ -108,7 +108,7 @@ internal sealed class VariableCollection : IEnumerable<Variable>
         return _variables.RemoveAll(x => x.Name == name);
     }
 
-    public void Link(VariableCollection variableCollection)
+    public void Link(IVariableCollection variableCollection)
     {
         _linkedCollection = variableCollection;
     }

@@ -11,25 +11,28 @@ public sealed class CalculatorTest
     [InlineData("1+2", "3")]
     [InlineData("1-2", "-1")]
     [InlineData("1*2", "2")]
+    [InlineData("25%6", "1")]
+    [InlineData("25%*8", "2")]
+    [InlineData("2^3^2", "512")]
+    [InlineData("3!", "6")]
+    [InlineData("0!", "1")] // Special case: 0! = 1
+    // Rounding
     [InlineData("1/2", "0.5")]
     [InlineData("1/4", "0.25")]
     [InlineData("1/8", "1/8")]
     [InlineData("1/3", "1/3")]
     [InlineData("((1))", "1")]
+    // Variable
     [InlineData("3a&a=2", "6")]
     [InlineData("a&a=1", "1")]
     [InlineData("1-&a=70a", "-69")]
     [InlineData("a3&a=2", "8")]
     [InlineData("a3&a=-2", "-8")]
-    [InlineData("2^3^2", "512")]
-    [InlineData("3!", "6")]
+    // Special number
+    [InlineData("25%", "0.25")]
     [InlineData("0x1e240", "123456")]
     [InlineData("0o361100", "123456")]
     [InlineData("0b11110001001000000", "123456")]
-    [InlineData("25%6", "1")]
-    [InlineData("25%", "0.25")]
-    [InlineData("25%*8", "2")]
-    [InlineData("0!", "1")] // Special case: 0! = 1
     // Special number in a function
     [InlineData("[f()=0x1e240]f()", "123456")]
     [InlineData("[f()=0o361100]f()", "123456")]
@@ -64,6 +67,8 @@ public sealed class CalculatorTest
     [InlineData("tan(1)", "0.017455")]
     [InlineData("cot(38)", "1.279942")]
     [InlineData("log(3)", "1.098612")]
+    [InlineData("sigma(x 1 4 x*10)", "100")]
+    [InlineData("cpi(x 1 4 x*10)", "240000")]
     // Custom function
     [InlineData("[foo(a b c)=a^(b+c)]foo(2 1 foo(2 1 1))", "32")]
     [InlineData("[foo(a)=a%6] foo(25)", "1")]
@@ -141,6 +146,21 @@ public sealed class CalculatorTest
     [InlineData("[a()=1", "Invalid custom function syntax")]
     [InlineData("[a():1]", "Invalid custom function syntax")]
     [InlineData("[a()1]", "Invalid custom function syntax")]
+    // Sigma & CPi
+    [InlineData("sigma(x, 3, 1, x*10)", "sigma(): End cannot be less than start")]
+    [InlineData("sigma(x, -3, 3)", "sigma() takes exactly 4 arguments")]
+    [InlineData("sigma(y, -3, 3, x*10)", "sigma(): Invalid variable name")]
+    [InlineData("sigma(x, -3, 3, 10)", "sigma(): Invalid variable name")]
+    [InlineData("sigma(x-1, 1, 1, x)", "sigma(): First argument must be a variable")]
+    [InlineData("sigma(x, 1.1, 2, x)", "sigma(): Start must be an integer")]
+    [InlineData("sigma(x, 1, 2.1, x)", "sigma(): End must be an integer")]
+    [InlineData("cpi(x, 3, 1, x*10)", "cpi(): End cannot be less than start")]
+    [InlineData("cpi(x, -3, 3)", "cpi() takes exactly 4 arguments")]
+    [InlineData("cpi(y, -3, 3, x*10)", "cpi(): Invalid variable name")]
+    [InlineData("cpi(x, -3, 3, 10)", "cpi(): Invalid variable name")]
+    [InlineData("cpi(x-1, 1, 1, x)", "cpi(): First argument must be a variable")]
+    [InlineData("cpi(x, 1.1, 2, x)", "cpi(): Start must be an integer")]
+    [InlineData("cpi(x, 1, 2.1, x)", "cpi(): End must be an integer")]
     // Solve mode
     [InlineData("abs(x)+1 &solve", "Cannot solve"
 #if DEBUG

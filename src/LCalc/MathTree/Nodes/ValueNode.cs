@@ -61,7 +61,7 @@ internal sealed class ValueNode : IMathNode
 
     public static Result<ValueNode> Parse(ReadOnlySpan<char> value)
     {
-        var e = CalculatorHelpers.Parse(value);
+        var e = CalculatorHelpers.ParseNumber(value);
         if (e.Faulted)
             return Err<ValueNode>(e.Exception!);
 

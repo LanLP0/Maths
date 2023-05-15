@@ -30,7 +30,7 @@ internal sealed class Scope
 
     public CalculatorOption Option { get; set; }
     public CustomFunctionCollection? CustomFunctions { get; set; }
-    public VariableCollection Variables { get; set; }
+    public IVariableCollection Variables { get; set; }
 
     public bool CustomFunctionAllowed => CustomFunctions is not null;
     public bool IsCompareAllowed => (Option & CalculatorOption.CompareAllowed) != 0;

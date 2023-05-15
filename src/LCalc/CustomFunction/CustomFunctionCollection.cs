@@ -37,7 +37,7 @@ internal sealed class CustomFunctionCollection
         return Ok();
     }
 
-    public void End(VariableCollection? additionalArgs, CalculatorOption option)
+    public void End(IVariableCollection? additionalArgs, CalculatorOption option)
     {
         if (additionalArgs is null)
             return;

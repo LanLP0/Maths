@@ -8,6 +8,8 @@ internal sealed class VariableNode : IMathNode
 {
     private readonly string _name;
 
+    public string Name => _name;
+
     public VariableNode(string name)
     {
         _name = name;

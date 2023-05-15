@@ -8,15 +8,12 @@ internal static class NumericExtension
 {
     public static bool IsInt(this double value)
     {
-        if (value % 1 > double.Epsilon)
-            return false;
-
-        return true;
+        return value % 1 <= double.Epsilon;
     }
 
     public static Result<long> ToInt64(this double value)
     {
-        if (value % 1 > double.Epsilon)
+        if (!value.IsInt())
             return new Result<long>(new Exception($"Value {value} is not an integer"));
         if (double.IsNaN(value) || double.IsInfinity(value) || value is > long.MaxValue or < long.MinValue)
             return new Result<long>(new OverflowException($"Value {value} must be between 2^63 and -2^63"));
@@ -26,7 +23,7 @@ internal static class NumericExtension
 
     public static Result<int> ToInt(this double value)
     {
-        if (value % 1 > double.Epsilon)
+        if (!value.IsInt())
             return new Result<int>(new Exception($"Value {value} is not an integer"));
         if (double.IsNaN(value) || double.IsInfinity(value) || value is > int.MaxValue or < int.MinValue)
             return new Result<int>(new OverflowException($"Value {value} must be between 2^31 and -2^31"));
@@ -54,7 +51,7 @@ internal static class NumericExtension
         double denominator = 1;
         for (var i = 0; i < 4; i++)
         {
-            if (num1 % 1 < double.Epsilon * 1000) break;
+            if (num1.IsInt()) break;
 
             num1 *= 10;
             denominator *= 10;

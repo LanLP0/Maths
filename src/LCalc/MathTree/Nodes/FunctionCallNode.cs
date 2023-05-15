@@ -9,7 +9,7 @@ namespace LCalc.MathTree.Nodes;
 internal sealed class FunctionCallNode : IMathNode
 {
     private readonly List<IMathNode> _args = new();
-    private readonly string _name = null!;
+    private readonly string _name;
 
     public FunctionCallNode(string name)
     {
@@ -20,6 +20,13 @@ internal sealed class FunctionCallNode : IMathNode
 
     public Result<double> Calc(Scope scope)
     {
+        switch (_name) // Special functions that need the raw IMathNode
+        {
+            case "sigma":
+                return CalculatorHelpers.CalcSigma(_args, scope);
+            case "cpi":
+                return CalculatorHelpers.CalcCPi(_args, scope);
+        }
         var customFunctions = scope.CustomFunctions;
 
         var args = CollectionsMarshal.AsSpan(_args);
@@ -34,71 +41,48 @@ internal sealed class FunctionCallNode : IMathNode
             math[i] = rs.Value;
         }
 
-        Result<double> result;
         switch (_name)
         {
             case "rng":
             case "random":
                 if (scope.GetSolveOpt())
                     return Err("Cannot use random() in solve mode");
-                result = CalculatorHelpers.CalcRandom(math);
-                break;
+                return CalculatorHelpers.CalcRandom(math);
             case "gcd":
-                result = CalculatorHelpers.CalcGcd(math);
-                break;
+                return CalculatorHelpers.CalcGcd(math);
             case "lcm":
-                result = CalculatorHelpers.CalcLcm(math);
-                break;
+                return CalculatorHelpers.CalcLcm(math);
             case "sin":
-                result = CalculatorHelpers.CalcSin(math);
-                break;
+                return CalculatorHelpers.CalcSin(math);
             case "cos":
-                result = CalculatorHelpers.CalcCos(math);
-                break;
+                return CalculatorHelpers.CalcCos(math);
             case "tan":
-                result = CalculatorHelpers.CalcTan(math);
-                break;
+                return CalculatorHelpers.CalcTan(math);
             case "cot":
-                result = CalculatorHelpers.CalcCot(math);
-                break;
+                return CalculatorHelpers.CalcCot(math);
             case "sqrt":
-                result = CalculatorHelpers.CalcSqrt(math);
-                break;
+                return CalculatorHelpers.CalcSqrt(math);
             case "cbrt":
-                result = CalculatorHelpers.CalcCbrt(math);
-                break;
+                return CalculatorHelpers.CalcCbrt(math);
             case "abs":
-                result = CalculatorHelpers.CalcAbs(math);
-                break;
+                return CalculatorHelpers.CalcAbs(math);
             case "log":
-                result = CalculatorHelpers.CalcLog(math);
-                break;
+                return CalculatorHelpers.CalcLog(math);
             case "floor":
-                result = CalculatorHelpers.CalcFloor(math);
-                break;
+                return CalculatorHelpers.CalcFloor(math);
             case "ceiling":
-                result = CalculatorHelpers.CalcCeiling(math);
-                break;
+                return CalculatorHelpers.CalcCeiling(math);
             case "round":
-                result = CalculatorHelpers.CalcRound(math);
-                break;
+                return CalculatorHelpers.CalcRound(math);
             case "avg":
-                result = CalculatorHelpers.CalcAvg(math);
-                break;
+                return CalculatorHelpers.CalcAvg(math);
             case "sum":
-                result = CalculatorHelpers.CalcSum(math);
-                break;
+                return CalculatorHelpers.CalcSum(math);
             default:
                 if (customFunctions is null)
                     return Err($"Unknown function {_name}()");
-                result = customFunctions.Execute(_name, math);
-                break;
+                return customFunctions.Execute(_name, math);
         }
-
-        if (result.Faulted)
-            return result.Exception!;
-
-        return result.Value;
     }
 
     public bool AddNode(IMathNode node)

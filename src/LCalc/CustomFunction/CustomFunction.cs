@@ -26,7 +26,7 @@ internal sealed class CustomFunction
         var i = 0;
         foreach (var arg in Scope.Variables)
         {
-            arg.SetValue(args[i]);
+            arg.Value = args[i];
             i++;
         }
 

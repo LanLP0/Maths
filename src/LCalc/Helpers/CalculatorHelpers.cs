@@ -1,11 +1,129 @@
 ﻿using Common.Maths;
 using Common.Results;
+using LCalc.MathTree;
+using LCalc.MathTree.Nodes;
 
 namespace LCalc.Helpers;
 
 internal static class CalculatorHelpers
 {
     private static readonly Random Rng = new();
+    
+    // Special functions
+
+    public static Result<double> CalcSigma(List<IMathNode> maths, Scope scope)
+    {
+        if (maths.Count is not 4)
+            return Err("sigma() takes exactly 4 arguments");
+
+        if (maths[0] is not VariableNode variable)
+            return Err("sigma(): First argument must be a variable");
+
+        var start = maths[1].Calc(scope);
+        if (start.Faulted)
+            return start;
+
+        var startVal = start.Value;
+        if (!startVal.IsInt())
+            return Err("sigma(): Start must be an integer");
+
+        var end = maths[2].Calc(scope);
+        if (end.Faulted)
+            return end;
+
+        var endVal = end.Value;
+        if (!endVal.IsInt())
+            return Err("sigma(): End must be an integer");
+
+        if (endVal < startVal)
+            return Err("sigma(): End cannot be less than start");
+
+        var fn = maths[3];
+        var setupResult = fn.SetupForSolving(scope, out var unknown);
+        if (setupResult.Faulted)
+            return setupResult;
+
+        if (unknown != variable.Name)
+            return Err("sigma(): Invalid variable name");
+
+        // Setup variable
+        var ogVarCollection = scope.Variables;
+        var variable1 = new Variable(variable.Name, 0);
+        scope.Variables = new SingleVariableCollection(variable1, ogVarCollection);
+
+        var result = 0.0;
+        for (; startVal <= endVal; startVal++)
+        {
+            variable1.Value = startVal;
+            
+            var runResult = fn.Calc(scope);
+            if (runResult.Faulted)
+                return runResult;
+
+            result += runResult.Value;
+        }
+
+        scope.Variables = ogVarCollection;
+        return result;
+    }
+    
+    public static Result<double> CalcCPi(List<IMathNode> maths, Scope scope)
+    {
+        if (maths.Count is not 4)
+            return Err("cpi() takes exactly 4 arguments");
+
+        if (maths[0] is not VariableNode variable)
+            return Err("cpi(): First argument must be a variable");
+
+        var start = maths[1].Calc(scope);
+        if (start.Faulted)
+            return start;
+
+        var startVal = start.Value;
+        if (!startVal.IsInt())
+            return Err("cpi(): Start must be an integer");
+
+        var end = maths[2].Calc(scope);
+        if (end.Faulted)
+            return end;
+
+        var endVal = end.Value;
+        if (!endVal.IsInt())
+            return Err("cpi(): End must be an integer");
+
+        if (endVal < startVal)
+            return Err("cpi(): End cannot be less than start");
+
+        var fn = maths[3];
+        var setupResult = fn.SetupForSolving(scope, out var unknown);
+        if (setupResult.Faulted)
+            return setupResult;
+
+        if (unknown != variable.Name)
+            return Err("cpi(): Invalid variable name");
+
+        // Setup variable
+        var ogVarCollection = scope.Variables;
+        var variable1 = new Variable(variable.Name, 0);
+        scope.Variables = new SingleVariableCollection(variable1, ogVarCollection);
+
+        var result = 1.0;
+        for (; startVal <= endVal; startVal++)
+        {
+            variable1.Value = startVal;
+            
+            var runResult = fn.Calc(scope);
+            if (runResult.Faulted)
+                return runResult;
+
+            result *= runResult.Value;
+        }
+
+        scope.Variables = ogVarCollection;
+        return result;
+    }
+
+    // Functions
 
     public static Result<double> CalcCbrt(scoped ReadOnlySpan<double> math)
     {
@@ -198,8 +316,10 @@ internal static class CalculatorHelpers
 
         return total;
     }
+    
+    // Misc
 
-    public static Result<double> Parse(ReadOnlySpan<char> value)
+    public static Result<double> ParseNumber(ReadOnlySpan<char> value)
     {
         var e = 0.0;
 

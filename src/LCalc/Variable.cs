@@ -10,9 +10,4 @@ internal sealed class Variable
 
     public string Name { get; }
     public double Value { get; set; }
-
-    public void SetValue(double value)
-    {
-        Value = value;
-    }
 }
