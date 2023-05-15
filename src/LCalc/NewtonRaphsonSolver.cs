@@ -2,7 +2,7 @@
 
 namespace LCalc;
 
-public delegate Result<double> Function(double unknown);
+internal delegate Result<double> Function(double unknown);
 
 internal static class NewtonRaphsonSolver
 {
