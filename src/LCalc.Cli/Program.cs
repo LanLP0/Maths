@@ -2,7 +2,6 @@
 using LCalc;
 using Spectre.Console;
 using Common.Cli;
-using LCalc.Cli;
 
 internal sealed class Program
 {

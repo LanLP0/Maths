@@ -1,6 +1,6 @@
 ﻿namespace Common.Extensions;
 
-public static class StringExtension
+internal static class StringExtension
 {
     /// <summary>
     /// Check if a string contains only ASCII letters

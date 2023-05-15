@@ -2,7 +2,7 @@
 using RadLine;
 using Spectre.Console;
 
-namespace LCalc.Cli;
+namespace Common.Cli;
 
 public sealed class MathHighlighter : IHighlighter
 {

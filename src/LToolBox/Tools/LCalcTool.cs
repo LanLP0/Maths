@@ -1,7 +1,6 @@
 using System.Text;
 using Common.Cli;
 using LCalc;
-using LCalc.Cli;
 using Spectre.Console;
 
 namespace LToolBox.Tools;
