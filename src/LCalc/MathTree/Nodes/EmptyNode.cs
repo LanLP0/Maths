@@ -12,7 +12,7 @@ internal sealed class EmptyNode : IMathNode
 
     public Result<double> Calc(Scope scope)
     {
-        return Ok<double>(0);
+        return 0.0;
     }
 
     public bool AddNode(IMathNode node)

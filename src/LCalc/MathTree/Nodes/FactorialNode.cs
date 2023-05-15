@@ -20,7 +20,7 @@ internal sealed class FactorialNode : IMathNode
             return Err<double>("Operator ! only accept integer value");
         var num = result.Value;
         if (num > 170)
-            return Ok(double.PositiveInfinity);
+            return double.PositiveInfinity;
 
         var initialValue = num;
 

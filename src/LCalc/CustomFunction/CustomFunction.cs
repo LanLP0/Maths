@@ -30,7 +30,6 @@ internal sealed class CustomFunction
             i++;
         }
 
-        // var result = _tree.Calc();
         var result = _node.Calc(Scope);
 
         if (result.Faulted)

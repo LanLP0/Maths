@@ -108,7 +108,7 @@ internal sealed class VariableCollection : IVariableCollection
         return _variables.RemoveAll(x => x.Name == name);
     }
 
-    public void Link(IVariableCollection variableCollection)
+    public void Link(IVariableCollection? variableCollection)
     {
         _linkedCollection = variableCollection;
     }

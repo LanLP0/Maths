@@ -2,16 +2,11 @@ namespace Common.Results;
 
 internal static class ResultHelpers
 {
-    public static Result<T> Ok<T>(T value)
+    public static Result Ok()
     {
-        return new Result<T>(value);
+        return new Result();
     }
-
-    public static Result<T> Err<T>()
-    {
-        return new Result<T>(new Exception());
-    }
-
+    
     public static Result<T> Err<T>(string errMsg)
     {
         return Err<T>(new Exception(errMsg));
@@ -22,11 +17,6 @@ internal static class ResultHelpers
         return new Result<T>(err);
     }
 
-    public static Result Ok()
-    {
-        return new Result();
-    }
-
     public static Result Err()
     {
         return new Result(new Exception());
@@ -34,11 +24,6 @@ internal static class ResultHelpers
 
     public static Result Err(string errMsg)
     {
-        return Err(new Exception(errMsg));
-    }
-
-    public static Result Err(Exception err)
-    {
-        return new Result(err);
+        return new Result(new Exception(errMsg));
     }
 }

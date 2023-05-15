@@ -482,7 +482,7 @@ internal static class CalculatorHelpers
             result = result * radix + (chr - 48);
         }
 
-        return Ok(result);
+        return result;
     }
 
     public static Result<double> HexStringToNumber(ReadOnlySpan<char> s)
@@ -509,7 +509,7 @@ internal static class CalculatorHelpers
             result = result * radix + val;
         }
 
-        return Ok(result);
+        return result;
     }
 
     public static Result<double> BinaryStringToNumber(ReadOnlySpan<char> s)
@@ -525,6 +525,6 @@ internal static class CalculatorHelpers
             result = result * radix + (chr - 48);
         }
 
-        return Ok(result);
+        return result;
     }
 }

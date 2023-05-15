@@ -5,7 +5,10 @@ internal static class Polynomial
     public static int Calc2(double a, double b, double c, out double? result1, out double? result2)
     {
         if (a is 0)
-            return Calc1(b, c, out result1, out result2);
+        {
+            result2 = null;
+            return Calc1(b, c, out result1);
+        }
 
         var delta = b * b - 4 * a * c;
         switch (delta)
@@ -26,12 +29,11 @@ internal static class Polynomial
         }
     }
 
-    private static int Calc1(double b, double c, out double? result1, out double? result2)
+    private static int Calc1(double b, double c, out double? result1)
     {
         if (b is 0)
         {
             result1 = null;
-            result2 = null;
 
             if (c is 0)
                 return -1;
@@ -40,7 +42,6 @@ internal static class Polynomial
         }
 
         result1 = -c / b;
-        result2 = null;
         return 1;
     }
 }

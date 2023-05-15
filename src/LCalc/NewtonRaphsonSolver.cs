@@ -94,11 +94,11 @@ internal static class NewtonRaphsonSolver
         {
             Result<double> y;
             x = Solve(f, x0);
-            if (!x.Faulted)
+            if (x.Success)
             {
                 y = f(x.Value);
 
-                if (!y.Faulted && Math.Abs(y.Value) < Epsilon)
+                if (y.Success && Math.Abs(y.Value) < Epsilon)
                     return x;
             }
 

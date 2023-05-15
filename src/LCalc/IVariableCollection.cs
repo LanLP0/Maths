@@ -11,5 +11,5 @@ internal interface IVariableCollection : IEnumerable<Variable>
     void OverrideAdd(Variable variable);
     bool TryGet(string name, out double result);
     int Remove(string name);
-    void Link(IVariableCollection variableCollection);
+    void Link(IVariableCollection? variableCollection);
 }

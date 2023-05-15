@@ -53,14 +53,4 @@ internal sealed class NodeStack
     {
         _current.Value.Clear();
     }
-
-    public void MoveToStart()
-    {
-        _current = _list.First!;
-    }
-
-    public void MoveToEnd()
-    {
-        _current = _list.Last!;
-    }
 }

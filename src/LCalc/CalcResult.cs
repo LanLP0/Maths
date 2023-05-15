@@ -4,19 +4,19 @@ namespace LCalc;
 
 public class CalcResult
 {
-    public CalcResult(Exception exception, string? steps = null)
+    internal CalcResult(Exception exception, string? steps = null)
     {
         Exception = exception;
         Steps = steps;
     }
 
-    public CalcResult(bool result, string? steps = null)
+    internal CalcResult(bool result, string? steps = null)
     {
         Bool = result;
         Steps = steps;
     }
 
-    public CalcResult(double result, string? steps = null)
+    internal CalcResult(double result, string? steps = null)
     {
         Number = result;
         Steps = steps;

@@ -657,7 +657,7 @@ internal sealed class MathTree
                 buffer.CopyTo(0, value, value.Length);
                 var result1 = ValueNode.Parse(value);
                 if (result1.Faulted)
-                    return Err(result1.Exception!);
+                    return result1.Exception!;
 
                 resultNode = result1.Value!;
                 break;
@@ -696,7 +696,7 @@ internal sealed class MathTree
 
                 break;
             case TokenType.VariableSet:
-                buffer.Remove(0, 1);
+                buffer.Remove(0, 1); // Remove the &
                 Span<char> str = stackalloc char[buffer.Length];
                 buffer.CopyTo(0, str, str.Length);
 
@@ -705,7 +705,7 @@ internal sealed class MathTree
                 var secondHalf = str.Slice(splitIndex + 1);
                 var parseResult = CalculatorHelpers.ParseNumber(secondHalf);
                 if (parseResult.Faulted)
-                    return Err(parseResult.Exception!);
+                    return parseResult.Exception!;
 
                 var setVarResult = scope.SetVariable(firstHalf.ToString(), parseResult.Value);
                 if (setVarResult.Faulted)
@@ -715,7 +715,7 @@ internal sealed class MathTree
             case TokenType.AdvancedCalculatorOption:
                 break;
             default:
-                throw new ArgumentOutOfRangeException(nameof(tokenType), tokenType, null);
+                throw new UnreachableException();
         }
 
         buffer.Clear();

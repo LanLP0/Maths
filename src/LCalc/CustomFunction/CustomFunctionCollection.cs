@@ -39,9 +39,6 @@ internal sealed class CustomFunctionCollection
 
     public void End(IVariableCollection? additionalArgs, CalculatorOption option)
     {
-        if (additionalArgs is null)
-            return;
-
         foreach (var fn in _list)
         {
             fn.Scope.Variables.Link(additionalArgs);

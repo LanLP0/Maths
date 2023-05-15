@@ -73,7 +73,7 @@ internal sealed class SingleVariableCollection : IVariableCollection
         throw new UnreachableException();
     }
 
-    public void Link(IVariableCollection variableCollection)
+    public void Link(IVariableCollection? variableCollection)
     {
         throw new UnreachableException();
     }

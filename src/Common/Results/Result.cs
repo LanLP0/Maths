@@ -3,7 +3,8 @@ namespace Common.Results;
 public readonly ref struct Result<T>
 {
     private readonly Result _innerResult;
-    public readonly T? Value;
+
+    public T? Value { get; }
     public Exception? Exception => _innerResult.Exception;
     public bool Success => !Faulted;
     public bool Faulted => _innerResult.Faulted;
@@ -24,6 +25,11 @@ public readonly ref struct Result<T>
     {
         _innerResult = new Result();
         Value = value;
+    }
+
+    public T UnwrapOr(T defaultValue)
+    {
+        return Value ?? defaultValue;
     }
 
     public static implicit operator Result<T>(T value)
