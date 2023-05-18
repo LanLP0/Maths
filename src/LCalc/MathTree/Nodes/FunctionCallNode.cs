@@ -27,7 +27,6 @@ internal sealed class FunctionCallNode : IMathNode
             case "cpi":
                 return CalculatorHelpers.CalcCPi(_args, scope);
         }
-        var customFunctions = scope.CustomFunctions;
 
         var args = CollectionsMarshal.AsSpan(_args);
         Span<double> math = stackalloc double[args.Length];
@@ -79,6 +78,7 @@ internal sealed class FunctionCallNode : IMathNode
             case "sum":
                 return CalculatorHelpers.CalcSum(math);
             default:
+                var customFunctions = scope.CustomFunctions;
                 if (customFunctions is null)
                     return Err($"Unknown function {_name}()");
                 return customFunctions.Execute(_name, math);
