@@ -24,13 +24,13 @@ public class Benchmarks
     // }
 
     // [Benchmark(Baseline = true)]
-    [Benchmark]
+    [Benchmark(Baseline = true)]
     public void LCalcRaw()
     {
         Calculator.CalcRaw(Math, out _);
     }
 
-    [Benchmark(Baseline = true)]
+    [Benchmark]
     public void LCalcParse()
     {
         var tree = new MathTree();

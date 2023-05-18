@@ -11,9 +11,9 @@ using Common.Results;
 // Console.WriteLine(l.LCalc());
 // Console.WriteLine(l.LCalcRaw());
 
-// BenchmarkRunner.Run<Benchmarks.Benchmarks>();
+BenchmarkRunner.Run<Benchmarks.Benchmarks>();
 
-BenchmarkRunner.Run<MiscBenchmarks>();
+// BenchmarkRunner.Run<MiscBenchmarks>();
 
 // unsafe
 // {
