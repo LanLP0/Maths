@@ -1,4 +1,7 @@
-﻿using BenchmarkDotNet.Running;
+﻿using System.Runtime.InteropServices;
+using BenchmarkDotNet.Running;
+using Benchmarks;
+using Common.Results;
 
 // var l = new LCalcBenchmarks();
 //
@@ -10,4 +13,11 @@
 
 BenchmarkRunner.Run<Benchmarks.Benchmarks>();
 
-// BenchmarkRunner.Run<Benchmarks.Benchmarks>();
+// BenchmarkRunner.Run<MiscBenchmarks>();
+
+// unsafe
+// {
+//     Console.WriteLine(sizeof(Result));
+//     Console.WriteLine(sizeof(ResultDouble));
+//     Console.WriteLine(sizeof(Result<double>));
+// }

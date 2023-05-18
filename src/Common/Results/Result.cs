@@ -2,28 +2,26 @@ namespace Common.Results;
 
 public readonly ref struct Result<T>
 {
-    private readonly Result _innerResult;
-
     public T? Value { get; }
-    public Exception? Exception => _innerResult.Exception;
-    public bool Success => !Faulted;
-    public bool Faulted => _innerResult.Faulted;
+    public Exception? Exception { get; }
+    public bool Success => Exception is null;
+    public bool Faulted => !Success;
 
-    private Result(Result innerResult)
+    private Result(Result result)
     {
-        _innerResult = innerResult;
+        Exception = result.Exception;
         Value = default;
     }
 
     public Result(Exception exception)
     {
-        _innerResult = new Result(exception);
+        Exception = exception;
         Value = default;
     }
 
     public Result(T value)
     {
-        _innerResult = new Result();
+        Exception = null;
         Value = value;
     }
 
@@ -49,7 +47,10 @@ public readonly ref struct Result<T>
 
     public static implicit operator Result(Result<T> value)
     {
-        return value._innerResult;
+        if (value.Success)
+            return new Result();
+        
+        return new Result(value.Exception!);
     }
 
     public override string ToString()
