@@ -9,8 +9,10 @@ internal static class CalculatorHelpers
 {
     private static readonly Random Rng = new();
     
+    //
     // Special functions
-
+    //
+    
     public static Result<double> CalcSigma(List<IMathNode> maths, Scope scope)
     {
         if (maths.Count is not 4)
@@ -39,17 +41,18 @@ internal static class CalculatorHelpers
             return Err("sigma(): End cannot be less than start");
 
         var fn = maths[3];
+        
+        // Setup variable
+        var ogVarCollection = scope.Variables;
+        var variable1 = new Variable(variable.Name, 0);
+        scope.Variables = new SigmaCPiVariableCollection(variable1, ogVarCollection);
+        
         var setupResult = fn.SetupForSolving(scope, out var unknown);
         if (setupResult.Faulted)
             return setupResult;
 
         if (unknown != variable.Name)
             return Err("sigma(): Invalid variable name");
-
-        // Setup variable
-        var ogVarCollection = scope.Variables;
-        var variable1 = new Variable(variable.Name, 0);
-        scope.Variables = new SingleVariableCollection(variable1, ogVarCollection);
 
         var result = 0.0;
         for (; startVal <= endVal; startVal++)
@@ -95,17 +98,18 @@ internal static class CalculatorHelpers
             return Err("cpi(): End cannot be less than start");
 
         var fn = maths[3];
+        
+        // Setup variable
+        var ogVarCollection = scope.Variables;
+        var variable1 = new Variable(variable.Name, 0);
+        scope.Variables = new SigmaCPiVariableCollection(variable1, ogVarCollection);
+        
         var setupResult = fn.SetupForSolving(scope, out var unknown);
         if (setupResult.Faulted)
             return setupResult;
 
         if (unknown != variable.Name)
             return Err("cpi(): Invalid variable name");
-
-        // Setup variable
-        var ogVarCollection = scope.Variables;
-        var variable1 = new Variable(variable.Name, 0);
-        scope.Variables = new SingleVariableCollection(variable1, ogVarCollection);
 
         var result = 1.0;
         for (; startVal <= endVal; startVal++)
@@ -123,7 +127,9 @@ internal static class CalculatorHelpers
         return result;
     }
 
+    //
     // Functions
+    //
 
     public static Result<double> CalcCbrt(scoped ReadOnlySpan<double> math)
     {
@@ -317,7 +323,9 @@ internal static class CalculatorHelpers
         return total;
     }
     
+    //
     // Misc
+    //
 
     public static Result<double> ParseNumber(ReadOnlySpan<char> value)
     {

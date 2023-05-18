@@ -64,8 +64,7 @@ internal sealed class VariableNode : IMathNode
 
     public Result SetupForSolving(Scope scope, out string unknown)
     {
-        var result = scope.GetVariable(_name);
-        if (result.Faulted)
+        if (!scope.Variables.Contains(_name))
         {
             unknown = _name;
             return Ok();

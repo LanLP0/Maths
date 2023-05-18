@@ -135,15 +135,13 @@ internal sealed class ModuloNode : IMathNode
         var rs = _arg1!.SetupForSolving(scope, out unknown);
         if (rs.Faulted)
             return rs;
-        if (unknown != string.Empty)
-        {
-            _arg2!.SetupForSolving(scope, out var unknown1);
-            if (unknown1 != string.Empty && unknown1 != unknown)
-                return Err("Too many unknowns");
+        if (unknown == string.Empty)
+            return _arg2!.SetupForSolving(scope, out unknown);
+        
+        _arg2!.SetupForSolving(scope, out var unknown1);
+        if (unknown1 != string.Empty && unknown1 != unknown)
+            return Err("Too many unknowns");
 
-            return rs;
-        }
-
-        return _arg2!.SetupForSolving(scope, out unknown);
+        return rs;
     }
 }

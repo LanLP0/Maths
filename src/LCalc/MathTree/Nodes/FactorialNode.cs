@@ -106,12 +106,10 @@ internal sealed class FactorialNode : IMathNode
 
     public Result SetupForSolving(Scope scope, out string unknown)
     {
-        if (!IsFull())
-        {
-            unknown = string.Empty;
-            return GenerateMissingValueError();
-        }
-
-        return _arg!.SetupForSolving(scope, out unknown);
+        if (IsFull())
+            return _arg!.SetupForSolving(scope, out unknown);
+        
+        unknown = string.Empty;
+        return GenerateMissingValueError();
     }
 }

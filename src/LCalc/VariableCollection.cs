@@ -30,6 +30,17 @@ internal sealed class VariableCollection : IVariableCollection
         return _linkedCollection.Contains(variable);
     }
 
+    public bool Contains(string name)
+    {
+        if (ContainsName(name))
+            return true;
+
+        if (_linkedCollection is null)
+            return false;
+
+        return _linkedCollection.Contains(name);
+    }
+
     private bool ContainsName(string name)
     {
         foreach (var variable in _variables)

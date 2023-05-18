@@ -3,8 +3,8 @@ using System.Diagnostics;
 
 namespace LCalc;
 
-// Used to override a single variable
-internal sealed class SingleVariableCollection : IVariableCollection
+// Used to override a single variable inside sigma() or cpi()
+internal sealed class SigmaCPiVariableCollection : IVariableCollection
 {
     private readonly Variable _variable;
     private readonly IVariableCollection _linkedCollection;
@@ -14,7 +14,7 @@ internal sealed class SingleVariableCollection : IVariableCollection
         get => _variable;
     }
 
-    public SingleVariableCollection(Variable variable, IVariableCollection linkedCollection)
+    public SigmaCPiVariableCollection(Variable variable, IVariableCollection linkedCollection)
     {
         _variable = variable;
         _linkedCollection = linkedCollection;
@@ -35,6 +35,16 @@ internal sealed class SingleVariableCollection : IVariableCollection
     public bool Contains(Variable variable)
     {
         throw new UnreachableException();
+    }
+
+    public bool Contains(string name)
+    {
+        // We want this able to be the unknown to allow
+        // overriding the default value in _linkedCollection
+        if (name == _variable.Name)
+            return false;
+        
+        return _linkedCollection.Contains(name);
     }
 
     public bool TryAdd(string name, double value)
