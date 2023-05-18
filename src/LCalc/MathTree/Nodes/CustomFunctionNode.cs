@@ -66,7 +66,7 @@ internal sealed class CustomFunctionNode : IMathNode
 
     public CustomFunction.CustomFunction ToCustomFunction(CustomFunctionCollection customFunctions)
     {
-        var scope = new Scope(false, false, false, false);
+        var scope = new Scope(false);
         scope.Variables = _variables;
         scope.CustomFunctions = customFunctions;
         var fn = new CustomFunction.CustomFunction(scope, _name, _node!);

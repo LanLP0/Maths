@@ -1,6 +1,9 @@
 ﻿using System.Runtime.InteropServices;
 using BenchmarkDotNet.Attributes;
 using Common.Results;
+using LCalc;
+using LCalc.MathTree;
+using LCalc.MathTree.Nodes;
 using static Common.Results.ResultHelpers;
 
 namespace Benchmarks;
@@ -45,94 +48,20 @@ public class MiscBenchmarks
     //     return Num1 % Num2;
     // }
 
-    [Benchmark]
-    public Result<double> ResultTCreate()
+    private IMathNode _node;
+    private Scope _scope;
+
+    [GlobalSetup]
+    public void Setup()
     {
-        return 1.1;
+        _scope = new Scope(false);
+        _node = new FunctionCallNode("abs");
+        _node.AddNode(new ValueNode(-69));
     }
 
     [Benchmark]
-    public ResultDouble ResultDoubleCreate()
+    public Result<double> Calc()
     {
-        return new ResultDouble(1.1);
-    }
-
-    [Benchmark]
-    public Result2<double> Result2TCreate()
-    {
-        return new Result2<double>(1.1);
-    }
-
-    [Benchmark(Baseline = true)]
-    public Result ResultCreate()
-    {
-        return Ok();
-    }
-}
-
-public readonly ref struct ResultDouble
-{
-    public readonly double? Value;
-    public readonly Exception? Exception;
-    public bool Success => !Faulted;
-    public bool Faulted => Exception is null;
-
-    public ResultDouble(double value)
-    {
-        Value = value;
-        Exception = null;
-    }
-
-    public ResultDouble(Exception exception)
-    {
-        Value = default;
-        Exception = exception;
-    }
-
-    public static implicit operator ResultDouble(Exception exception)
-    {
-        return new ResultDouble(exception);
-    }
-}
-
-public readonly ref struct Result2<T>
-{
-    public readonly T? Value;
-    public readonly Exception? Exception;
-    public bool Success => !Faulted;
-    public bool Faulted => Exception is not null;
-
-    public Result2(Exception exception)
-    {
-        Exception = exception;
-        Value = default;
-    }
-
-    public Result2(T value)
-    {
-        Exception = null;
-        Value = value;
-    }
-
-    public T UnwrapOr(T defaultValue)
-    {
-        return Value ?? defaultValue;
-    }
-
-    public static implicit operator Result2<T>(T value)
-    {
-        return new Result2<T>(value);
-    }
-
-    public static implicit operator Result2<T>(Exception exception)
-    {
-        return new Result2<T>(exception);
-    }
-
-    public override string ToString()
-    {
-        return Success
-            ? Value?.ToString() ?? "(null)"
-            : Exception?.ToString() ?? "(error)";
+        return _node.Calc(_scope);
     }
 }
