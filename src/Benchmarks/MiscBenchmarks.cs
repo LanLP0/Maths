@@ -55,8 +55,7 @@ public class MiscBenchmarks
     public void Setup()
     {
         _scope = new Scope(false);
-        _node = new FunctionCallNode("abs");
-        _node.AddNode(new ValueNode(-69));
+        _node = new ValueNode(1);
     }
 
     [Benchmark]

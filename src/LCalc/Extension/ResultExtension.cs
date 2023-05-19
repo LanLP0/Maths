@@ -6,9 +6,11 @@ internal static class ResultExtension
 {
     public static CalcResult MapToCalcResult(this Result<double> result)
     {
-        if (result.Faulted)
-            return result.Exception!;
+        return new CalcResult(result.Value, result.Exception);
+    }
 
-        return result.Value;
+    public static CalcResult MapToCalcResult(this Result<bool> result)
+    {
+        return new CalcResult(result.Value, result.Exception);
     }
 }

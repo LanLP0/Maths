@@ -22,6 +22,18 @@ public class CalcResult
         Steps = steps;
     }
 
+    internal CalcResult(double? result, Exception? exception)
+    {
+        Number = result;
+        Exception = exception;
+    }
+    
+    internal CalcResult(bool? result, Exception? exception)
+    {
+        Bool = result;
+        Exception = exception;
+    }
+
     public bool IsBool => Bool.HasValue;
     public bool IsDouble => Number.HasValue;
     public bool Faulted => Exception is not null;

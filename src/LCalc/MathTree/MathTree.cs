@@ -905,17 +905,9 @@ internal sealed class MathTree
     public CalcResult Calc()
     {
         if (_compareNode is not null)
-        {
-            var result1 = _compareNode.Calc(Scope);
-            if (result1.Faulted)
-                return result1.Exception!;
-            return result1.Value;
-        }
+            return _compareNode.Calc(Scope).MapToCalcResult();
 
-        var result2 = _root!.Calc(Scope);
-        if (result2.Faulted)
-            return result2.Exception!;
-        return result2.Value;
+        return _root!.Calc(Scope).MapToCalcResult();
     }
 
     public IMathNode GetTopNode()
