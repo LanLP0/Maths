@@ -1,7 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using Common.Cli;
-using Common.Maths.Extension;
 using MinMaxFraction.Core;
 using Spectre.Console;
 
@@ -35,37 +34,13 @@ internal sealed class MinMaxFracTool : Tool
             return;
         }
 
-        var delta = fraction.Calc();
-        var finalDelta = delta.Calc();
+        var polynomial = fraction.Calc();
+        var deltaResult = polynomial.Calc();
 
-        RenderDelta(finalDelta);
+        RenderDeltaResult(deltaResult);
 
         Console.Markup("[white]Result:[/] ");
-        switch (finalDelta.Calc(out var result1, out var result2))
-        {
-            case -1:
-            {
-                Console.Write("Infinite results");
-                break;
-            }
-            case 0:
-            {
-                Console.Write("No result");
-                break;
-            }
-            case 1:
-            {
-                Console.Write(result1!.Value.Humanize());
-                break;
-            }
-            case 2:
-            {
-                Console.Write(result1!.Value.Humanize());
-                Console.Write(", ");
-                Console.Write(result2!.Value.Humanize());
-                break;
-            }
-        }
+        Console.Write(deltaResult.RenderResult());
 
         Console.WriteLine();
     }
@@ -339,7 +314,7 @@ internal sealed class MinMaxFracTool : Tool
         RenderVariableToBuffer(fraction.B2, pos is 2, bottomBuffer);
     }
 
-    public void RenderDelta(MMDeltaResult mmDeltaResult)
+    public void RenderDeltaResult(MMDeltaResult mmDeltaResult)
     {
         var strBuilder = new StringBuilder();
 

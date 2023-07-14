@@ -5,37 +5,59 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              xmlns:controls="clr-namespace:Material.Styles.Controls;assembly=Material.Styles"
              x:Class="LToolBox.Ui.Pages.MinMaxFrac">
-    <StackPanel>
-        <controls:ColorZone FontSize="20" Foreground="White" Background="#30ffffff" BorderBrush="White"
-                            BorderThickness="0 0 0 1" CornerRadius="5 5 0 0">
+    <DockPanel>
+        <controls:ColorZone DockPanel.Dock="Top" FontSize="20" Foreground="White" Background="#30ffffff"
+                            BorderBrush="White" BorderThickness="0 0 0 1"
+                            CornerRadius="5 5 0 0">
             <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
                 <TextBlock VerticalAlignment="Center" Text="A  =  " />
                 <StackPanel>
                     <StackPanel Orientation="Horizontal" Margin="10 5" Spacing="5">
-                        <TextBox Classes="filled" Name="InputT0" Width="60" />
+                        <TextBox KeyDown="InputT0_OnKeyDown" Classes="filled" Name="InputT0" Width="60" Watermark="0" />
                         <TextBlock Text="x^2  +  " VerticalAlignment="Center" />
-                        <TextBox Classes="filled" Name="InputT1" Width="60" />
+                        <TextBox KeyDown="InputT1_OnKeyDown" Classes="filled" Name="InputT1" Width="60" Watermark="0" />
                         <TextBlock Text="x  +  " VerticalAlignment="Center" />
-                        <TextBox Classes="filled" Name="InputT2" Width="60" />
+                        <TextBox KeyDown="InputT2_OnKeyDown" Classes="filled" Name="InputT2" Width="60" Watermark="0" />
                     </StackPanel>
-                    <Separator Foreground="White" Margin="0" Padding="0" />
+                    <Separator Foreground="White" Margin="0" />
                     <StackPanel Orientation="Horizontal" Margin="10 5" Spacing="5">
-                        <TextBox Classes="filled" Name="InputB0" Width="60" />
+                        <TextBox KeyDown="InputB0_OnKeyDown" Classes="filled" Name="InputB0" Width="60" Watermark="0" />
                         <TextBlock Text="x^2  +  " VerticalAlignment="Center" />
-                        <TextBox Classes="filled" Name="InputB1" Width="60" />
+                        <TextBox KeyDown="InputB1_OnKeyDown" Classes="filled" Name="InputB1" Width="60" Watermark="0" />
                         <TextBlock Text="x  +  " VerticalAlignment="Center" />
-                        <TextBox Classes="filled" Name="InputB2" Width="60" />
+                        <TextBox KeyDown="InputB2_OnKeyDown" Classes="filled" Name="InputB2" Width="60" Watermark="0" />
                     </StackPanel>
                 </StackPanel>
             </StackPanel>
         </controls:ColorZone>
-        <Button Name="SubmitButton" Margin="0 10 0 0" Content="Submit" />
-        <ScrollViewer Margin="0 10 0 0">
-            <ListBox>
-                <ListBoxItem>
-                    <TextBlock Text="Test" />
-                </ListBoxItem>
+        <Grid DockPanel.Dock="Top" Margin="0 10 0 0" ColumnDefinitions="*, 5, Auto, 5, Auto">
+            <Button Grid.Column="0" Click="SubmitPressed" Name="SubmitButton" Content="Submit" />
+            <Button Grid.Column="2" Click="ClearHistoryButtonPressed" Name="ClearHistoryButton" Content="Clear History" />
+            <Button Grid.Column="4" Click="ClearButtonPressed" Name="ClearButton" Content="Clear" />
+        </Grid>
+        <TextBlock DockPanel.Dock="Top" Name="ExceptionDisplay" Margin="0 5 0 0" Foreground="Red" IsVisible="False" />
+        <ScrollViewer DockPanel.Dock="Bottom" Margin="0 10 0 0">
+            <ListBox DoubleTapped="HistoryBox_OnDoubleTapped" Name="HistoryBox" AutoScrollToSelectedItem="True">
+                <!-- Template for item -->
+                <!-- <ListBoxItem> -->
+                <!--     <controls:ColorZone FontSize="20" Foreground="White" Background="#30ffffff" BorderBrush="White" -->
+                <!--                         CornerRadius="5" Padding="5"> -->
+                <!--         <StackPanel Spacing="10"> -->
+                <!--             <TextBlock IsVisible="False" Text="$DATA" /> -->
+                <!--             <StackPanel Orientation="Horizontal"> -->
+                <!--                 <TextBlock VerticalAlignment="Center" Text="A  =  " /> -->
+                <!--                 <StackPanel> -->
+                <!--                     <TextBlock Text="1x^2 + 2x + 3" Margin="5 0" /> -->
+                <!--                     <Separator Foreground="White" Margin="0" /> -->
+                <!--                     <TextBlock Text="4x^2 + 5x + 6" Margin="5 0" /> -->
+                <!--                 </StackPanel> -->
+                <!--             </StackPanel> -->
+                <!--             <TextBlock Text="-71A^2 + 52A + -8 >= 0" /> -->
+                <!--             <TextBlock Text="Result: 0.219827, 0.512568" /> -->
+                <!--         </StackPanel> -->
+                <!--     </controls:ColorZone> -->
+                <!-- </ListBoxItem> -->
             </ListBox>
         </ScrollViewer>
-    </StackPanel>
+    </DockPanel>
 </UserControl>

@@ -7,14 +7,14 @@ namespace MinMaxFraction.Core;
 internal sealed class MMFraction
 {
     // Top
-    public double T0 { get; set; } // a
-    public double T1 { get; set; } // b
-    public double T2 { get; set; } // c
+    public double T0 { get; set; } = 0; // a
+    public double T1 { get; set; } = 0; // b
+    public double T2 { get; set; } = 0; // c
 
     // Bottom
-    public double B0 { get; set; } // e
-    public double B1 { get; set; } // f
-    public double B2 { get; set; } // g
+    public double B0 { get; set; } = 0; // e
+    public double B1 { get; set; } = 0; // f
+    public double B2 { get; set; } = 0; // g
 
     public MMPolynomial Calc()
     {

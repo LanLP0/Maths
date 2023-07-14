@@ -5,7 +5,7 @@ namespace MinMaxFraction.Core;
 //      ex^2 + fx + g
 //
 // This stage:
-// (eA - a)x^2 + (fA - b)x + (gA - c)
+// (eA - a)x^2 + (fA - b)x + (gA - c) = 0
 // V0^^^^^^      V1^^^^^^    V0^^^^^^
 
 internal sealed class MMPolynomial

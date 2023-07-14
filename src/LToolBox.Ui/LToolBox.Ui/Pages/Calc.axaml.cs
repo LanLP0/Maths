@@ -13,8 +13,6 @@ namespace LToolBox.Ui.Pages;
 public sealed partial class Calc : UserControl
 {
     private const int MaxHistoryLenght = 25;
-    private const double MaxFontSize = 45.0;
-    private const double MinFontSize = 10.0;
     private readonly CalcModel _calcModel;
 
     public Calc()
@@ -30,7 +28,7 @@ public sealed partial class Calc : UserControl
 
     private void MathInput_KeyDown(object? sender, KeyEventArgs e)
     {
-        if (e.Key is not (Key.Enter or Key.Return))
+        if (e.Key is not Key.Enter)
             return;
 
         e.Handled = true;
@@ -47,7 +45,6 @@ public sealed partial class Calc : UserControl
             ResultDisplay.Text = result.Exception!.Message; // Display error
 
             FocusInputBox();
-            // MathDisplay.FitContent(MaxFontSize, MinFontSize);
             return;
         }
 
@@ -64,22 +61,42 @@ public sealed partial class Calc : UserControl
 
         FocusInputBox();
         MathInput.Text = string.Empty;
-        // MathDisplay.FitContent(MaxFontSize, MinFontSize);
     }
 
     private void AddToHistory(string resultText)
     {
-        var textBlock = new TextBlock
+        var mathBlock = new TextBlock
         {
-            Text = $"{resultText}: {_calcModel.Math}", TextWrapping = TextWrapping.NoWrap,
-            TextTrimming = TextTrimming.CharacterEllipsis
+            Text = _calcModel.Math,
+            TextWrapping = TextWrapping.NoWrap,
+            TextTrimming = TextTrimming.CharacterEllipsis,
+            TextAlignment = TextAlignment.Left
         };
 
-        Histories.Insert(0,
-            new ListBoxItem
+        var resultBlock = new TextBlock
+        {
+            Text = resultText,
+            TextWrapping = TextWrapping.NoWrap,
+            TextTrimming = TextTrimming.CharacterEllipsis,
+            TextAlignment = TextAlignment.Right,
+            Foreground = Brushes.Aqua
+        };
+        resultBlock.SetValue(Grid.ColumnProperty, 2);
+        
+        var item = new ListBoxItem
+        {
+            Content = new Grid
             {
-                Content = textBlock
-            });
+                ColumnDefinitions = ColumnDefinitions.Parse("*, 5, Auto"),
+                Children =
+                {
+                    mathBlock,
+                    resultBlock
+                }
+            }
+        };
+
+        Histories.Insert(0, item);
 
         if (Histories.Count >= MaxHistoryLenght)
             Histories.RemoveAt(Histories.Count - 1);
@@ -89,7 +106,10 @@ public sealed partial class Calc : UserControl
 
     private void HistoryBox_OnDoubleTapped(object? sender, TappedEventArgs e)
     {
-        var text = ((HistoryBox.SelectedItem as ListBoxItem)!.Content! as TextBlock)!.Text!;
+        var historyItem = (ListBoxItem)HistoryBox.SelectedItem!;
+        var grid = (Grid)historyItem.Content!;
+        var mathBlock = (TextBlock)grid.Children[0];
+        var text = mathBlock.Text!;
         MathInput.Text = text.Substring(text.IndexOf(' ') + 1);
         FocusInputBox();
         e.Handled = true;
@@ -108,10 +128,6 @@ public sealed partial class Calc : UserControl
 
     private void MathInput_OnTextChanged(object? sender, TextChangedEventArgs e)
     {
-        // ResultDisplay.Text = MathInput.Text;
-        // ResultDisplay.FitContent(MaxFontSize, MinFontSize);
-        // return;
-
         if (string.IsNullOrWhiteSpace(MathInput.Text))
             return;
 
@@ -134,7 +150,5 @@ public sealed partial class Calc : UserControl
             resultText = result.Bool!.Value.ToString();
             ResultDisplay.Text = resultText;
         }
-
-        // ResultDisplay.FitContent(10);
     }
 }

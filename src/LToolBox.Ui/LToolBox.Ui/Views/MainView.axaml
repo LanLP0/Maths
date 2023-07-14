@@ -40,18 +40,19 @@
                         <ListBoxItem>
                             <TextBlock Text="MinMaxFrac" />
                         </ListBoxItem>
-                        <ListBoxItem>
-                            <TextBlock Text="ComplexCalc" />
-                        </ListBoxItem>
-                        <ListBoxItem>
-                            <TextBlock Text="Fact" />
-                        </ListBoxItem>
-                        <ListBoxItem>
-                            <TextBlock Text="Polynomial" />
-                        </ListBoxItem>
-                        <ListBoxItem>
-                            <TextBlock Text="IsPrime" />
-                        </ListBoxItem>
+                        <!-- TODO -->
+                        <!-- <ListBoxItem> -->
+                        <!--     <TextBlock Text="ComplexCalc" /> -->
+                        <!-- </ListBoxItem> -->
+                        <!-- <ListBoxItem> -->
+                        <!--     <TextBlock Text="Fact" /> -->
+                        <!-- </ListBoxItem> -->
+                        <!-- <ListBoxItem> -->
+                        <!--     <TextBlock Text="Polynomial" /> -->
+                        <!-- </ListBoxItem> -->
+                        <!-- <ListBoxItem> -->
+                        <!--     <TextBlock Text="IsPrime" /> -->
+                        <!-- </ListBoxItem> -->
                     </ListBox>
                 </StackPanel>
             </ScrollViewer>
