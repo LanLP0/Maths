@@ -19,8 +19,15 @@ public sealed partial class MainView : UserControl
         {
             // ignored
         }
-    
-        // LeftDrawer.IsPaneOpen = false;
+
         LeftDrawer.OptionalCloseLeftDrawer();
+        try
+        {
+            AppNavigator.SelectedIndex = AppChooser.SelectedIndex;
+        }
+        catch
+        {
+            // ignored
+        }
     }
 }

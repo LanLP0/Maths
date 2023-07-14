@@ -3,7 +3,7 @@
 internal static class StringExtension
 {
     /// <summary>
-    /// Check if a string contains only ASCII letters
+    ///     Check if a string contains only ASCII letters
     /// </summary>
     /// <param name="s"></param>
     /// <returns></returns>

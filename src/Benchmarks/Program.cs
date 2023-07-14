@@ -1,7 +1,4 @@
-﻿using System.Runtime.InteropServices;
-using BenchmarkDotNet.Running;
-using Benchmarks;
-using Common.Results;
+﻿using BenchmarkDotNet.Running;
 
 // var l = new LCalcBenchmarks();
 //

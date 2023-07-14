@@ -8,11 +8,11 @@ namespace LCalc.Helpers;
 internal static class CalculatorHelpers
 {
     private static readonly Random Rng = new();
-    
+
     //
     // Special functions
     //
-    
+
     public static Result<double> CalcSigma(List<IMathNode> maths, Scope scope)
     {
         if (maths.Count is not 4)
@@ -41,12 +41,12 @@ internal static class CalculatorHelpers
             return Err("sigma(): End cannot be less than start");
 
         var fn = maths[3];
-        
+
         // Setup variable
         var ogVarCollection = scope.Variables;
         var variable1 = new Variable(variable.Name, 0);
         scope.Variables = new SigmaCPiVariableCollection(variable1, ogVarCollection);
-        
+
         var setupResult = fn.SetupForSolving(scope, out var unknown);
         if (setupResult.Faulted)
             return setupResult;
@@ -58,7 +58,7 @@ internal static class CalculatorHelpers
         for (; startVal <= endVal; startVal++)
         {
             variable1.Value = startVal;
-            
+
             var runResult = fn.Calc(scope);
             if (runResult.Faulted)
                 return runResult;
@@ -69,7 +69,7 @@ internal static class CalculatorHelpers
         scope.Variables = ogVarCollection;
         return result;
     }
-    
+
     public static Result<double> CalcCPi(List<IMathNode> maths, Scope scope)
     {
         if (maths.Count is not 4)
@@ -98,12 +98,12 @@ internal static class CalculatorHelpers
             return Err("cpi(): End cannot be less than start");
 
         var fn = maths[3];
-        
+
         // Setup variable
         var ogVarCollection = scope.Variables;
         var variable1 = new Variable(variable.Name, 0);
         scope.Variables = new SigmaCPiVariableCollection(variable1, ogVarCollection);
-        
+
         var setupResult = fn.SetupForSolving(scope, out var unknown);
         if (setupResult.Faulted)
             return setupResult;
@@ -115,7 +115,7 @@ internal static class CalculatorHelpers
         for (; startVal <= endVal; startVal++)
         {
             variable1.Value = startVal;
-            
+
             var runResult = fn.Calc(scope);
             if (runResult.Faulted)
                 return runResult;
@@ -322,7 +322,7 @@ internal static class CalculatorHelpers
 
         return total;
     }
-    
+
     //
     // Misc
     //

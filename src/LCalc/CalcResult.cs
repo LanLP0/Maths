@@ -27,7 +27,7 @@ public class CalcResult
         Number = result;
         Exception = exception;
     }
-    
+
     internal CalcResult(bool? result, Exception? exception)
     {
         Bool = result;

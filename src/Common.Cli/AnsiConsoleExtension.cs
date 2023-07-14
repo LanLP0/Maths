@@ -53,7 +53,7 @@ public static class AnsiConsoleExtension
                         console.Markup(prompt);
                         console.MarkupLine(" [gray]No Value[/]");
                     }
-                    
+
                     ClearAsk(console, clear, hasErrorLine, newLine);
 
                     return default;
@@ -213,7 +213,7 @@ public static class AnsiConsoleExtension
                         console.Markup(prompt);
                         console.MarkupLine(" [gray]No Value[/]");
                     }
-                    
+
                     ClearAsk(console, clear, hasErrorLine, newLine);
 
                     return default;

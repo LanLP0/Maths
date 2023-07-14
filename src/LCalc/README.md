@@ -11,11 +11,12 @@ Calculate an expression with optional arguments
 <h6>`|`: or - `[]`: optional - `{}`: value</h6>
 > Custom function:  
 > `[{name}([args..])(=| ){expression}]`  
->  <h6>The square brackets around the function is required<br />Call the function by using `name()` just like normal functions</h6> 
+> <h6>The square brackets around the function is required<br />Call the function by using `name()` just like normal
+> functions</h6>
 > `name` The name of the custom function  
 > `expression` The expression  
 > `args` The arguments
-> 
+>
 > Arguments:  
 > `&{name}={value}`  Set a variable's value  
 > `&{name}`  Set calculator argument  
@@ -46,7 +47,7 @@ Calculate an expression with optional arguments
 > `sum({value} [values..])` `avg({value} [values..])` Sum, average  
 > `random([max|(min,max)])` Get random number in ranges: 0-1, 0-max, min-max
 > `sigma({arg}, {start}, {end}, {expression})`: Sigma (Σ)  
-> `cpi({arg}, {start}, {end}, {expression})`: Capital Pi (Π)  
+> `cpi({arg}, {start}, {end}, {expression})`: Capital Pi (Π)
 
 **__Special number__**
 > `0b{binary}`  Binary number  

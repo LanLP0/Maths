@@ -14,12 +14,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Common.Cli\Common.Cli.csproj" />
-        <ProjectReference Include="..\LCalc\LCalc.Core.csproj" />
+        <ProjectReference Include="..\Common.Cli\Common.Cli.csproj"/>
+        <ProjectReference Include="..\LCalc\LCalc.Core.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Spectre.Console.Cli" Version="0.46.0" />
+        <PackageReference Include="Spectre.Console.Cli" Version="0.47.0"/>
     </ItemGroup>
 
     <!--    <ItemGroup>-->

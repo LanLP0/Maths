@@ -17,8 +17,6 @@ public sealed partial class Calc : UserControl
     private const double MinFontSize = 10.0;
     private readonly CalcModel _calcModel;
 
-    private ItemCollection Histories => HistoryBox.Items;
-
     public Calc()
     {
         InitializeComponent();
@@ -27,6 +25,8 @@ public sealed partial class Calc : UserControl
         MathDisplay.TextTrimming = TextTrimming.CharacterEllipsis;
         MathInput.AddHandler(KeyDownEvent, MathInput_KeyDown, RoutingStrategies.Tunnel);
     }
+
+    private ItemCollection Histories => HistoryBox.Items;
 
     private void MathInput_KeyDown(object? sender, KeyEventArgs e)
     {

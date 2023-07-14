@@ -3,35 +3,35 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="clr-namespace:LToolBox.Ui.ViewModels"
+             xmlns:controls="clr-namespace:Material.Styles.Controls;assembly=Material.Styles"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="LToolBox.Ui.Pages.Calc">
     <!-- xmlns:p1="clr-namespace:Material.Styles.Assists;assembly=Material.Styles" -->
-    <!-- xmlns:controls="clr-namespace:Material.Styles.Controls;assembly=Material.Styles" -->
     <Design.DataContext>
         <vm:CalcModel />
     </Design.DataContext>
     <DockPanel>
-        <!-- <controls:ColorZone DockPanel.Dock="Top" CornerRadius="15" Background="#2b352d" Foreground="White" Margin="10, 0, 10, 0"> -->
-        <ContentControl DockPanel.Dock="Top" CornerRadius="15" Background="#2b352d" Margin="10, 0, 10, 0">
-            <DockPanel Height="120">
-                <TextBlock Name="MathDisplay" DockPanel.Dock="Top" TextAlignment="Right" FontSize="15"
-                           TextWrapping="NoWrap" Padding="10, 0, 10, 0" />
-                <TextBlock Name="ResultDisplay" DockPanel.Dock="Bottom" TextAlignment="Right" FontSize="45"
-                           TextWrapping="Wrap" Padding="10, 0, 10, 0" />
-            </DockPanel>
-        </ContentControl>
-        <!-- </controls:ColorZone> -->
+        <controls:ColorZone DockPanel.Dock="Top" CornerRadius="5" Background="#2b352d">
+            <ScrollViewer Height="200">
+                <DockPanel Margin="10, 5, 10, 5">
+                    <TextBlock Name="MathDisplay" DockPanel.Dock="Top" TextAlignment="Left" FontSize="15"
+                               TextWrapping="NoWrap" Text="Test" />
+                    <TextBlock Name="ResultDisplay" DockPanel.Dock="Bottom" TextAlignment="Left" FontSize="40"
+                               TextWrapping="Wrap"
+                               Text="asadsagdysagdgad gysagiygs agqwgggywqg dywqgdyg wqg8gdgysagdy ugsaygcsaygdauwq ajdhsagdhsagd agsdkhgasydgiyqwgdwq ashdgasygdugqwudgwqu agshdgaiyg" />
+                </DockPanel>
+            </ScrollViewer>
+        </controls:ColorZone>
         <Rectangle Height="10" DockPanel.Dock="Top" />
         <TextBox Name="MathInput" DockPanel.Dock="Top" TextChanged="MathInput_OnTextChanged"
-                 Text="{Binding Math, Mode=TwoWay}" Classes="filled" Height="60" Watermark="Calculation"
-                 Margin="10, 0, 10, 0" />
-        <Rectangle Height="5" DockPanel.Dock="Top" />
-        <StackPanel DockPanel.Dock="Top" Height="40" Orientation="Horizontal" HorizontalAlignment="Stretch">
-            <Button Click="ClearHistory" Content="Clear History" Margin="10, 0, 0, 0" />
-            <CheckBox Name="RawValueToggle" Content="Show raw value" IsChecked="False" Margin="10, 0, 0, 0" />
-            <Line Fill="White" />
+                 Text="{Binding Math, Mode=TwoWay}" Classes="filled" Height="60" Watermark="Calculation" />
+        <Rectangle Height="10" DockPanel.Dock="Top" />
+        <StackPanel DockPanel.Dock="Top" Height="50" Orientation="Horizontal" HorizontalAlignment="Stretch"
+                    Spacing="10">
+            <Button Click="ClearHistory" Content="Clear History" />
+            <CheckBox Name="RawValueToggle" Content="Show raw value" IsChecked="False" />
         </StackPanel>
-        <Separator Height="3" DockPanel.Dock="Top" />
+        <Separator Height="5" DockPanel.Dock="Top" />
         <ScrollViewer DockPanel.Dock="Bottom">
             <ListBox DoubleTapped="HistoryBox_OnDoubleTapped" AutoScrollToSelectedItem="True" Name="HistoryBox" />
         </ScrollViewer>

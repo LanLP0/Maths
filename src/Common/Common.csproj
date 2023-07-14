@@ -8,14 +8,16 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <InternalsVisibleTo Include="LCalc.Core" />
-        <InternalsVisibleTo Include="Delta.Core" />
-        <InternalsVisibleTo Include="ltb" />
-        <InternalsVisibleTo Include="LToolBox.Ui" />
+        <InternalsVisibleTo Include="LCalc.Core"/>
+        <InternalsVisibleTo Include="MinMaxFraction.Core"/>
+        <InternalsVisibleTo Include="ltb"/>
+        <InternalsVisibleTo Include="LToolBox.Ui"/>
+        <InternalsVisibleTo Include="Benchmarks"/>
+        <InternalsVisibleTo Include="Common.Cli"/>
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Rationals" Version="2.1.0" />
+        <PackageReference Include="Rationals" Version="2.1.0"/>
     </ItemGroup>
 
 </Project>

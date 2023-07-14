@@ -11,7 +11,6 @@ internal sealed class Scope
 
     public Scope(bool all) : this(all, all, all, all)
     {
-        
     }
 
     public Scope(bool isCustomFunctionAllowed, bool isCalculatorOptionAllowed, bool isVariableAllowed,

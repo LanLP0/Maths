@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Delta.Core", "src\Delta.Core\Delta.Core.csproj", "{2D23AAC7-8822-45D9-BC4A-15D473E038B6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MinMaxFraction.Core", "src\MinMaxFraction.Core\MinMaxFraction.Core.csproj", "{2D23AAC7-8822-45D9-BC4A-15D473E038B6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LToolBox", "src\LToolBox\LToolBox.csproj", "{5CAEE663-6608-4B30-BB6C-ED4B3331D998}"
 EndProject

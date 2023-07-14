@@ -15,7 +15,7 @@ public class Benchmarks
         "[a()=1]a()",
         "[a()=1][b()=1][c()=1][d()=1][e()=1][f()=1][g()=1][h()=1][j()=1][q()=1][k()=1]a()",
         "sigma(x, 1, 1000000, x)"
-        )]
+    )]
     // ReSharper disable once MemberCanBePrivate.Global
     public string Math { get; set; } = null!;
 

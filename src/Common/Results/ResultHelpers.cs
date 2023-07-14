@@ -6,7 +6,7 @@ internal static class ResultHelpers
     {
         return new Result();
     }
-    
+
     public static Result<T> Err<T>(string errMsg)
     {
         return Err<T>(new Exception(errMsg));

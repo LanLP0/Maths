@@ -1,7 +1,7 @@
 ﻿using System.Text;
+using Common.Cli;
 using LCalc;
 using Spectre.Console;
-using Common.Cli;
 
 internal sealed class Program
 {
@@ -19,7 +19,8 @@ internal sealed class Program
 
         if (!AnsiConsole.Profile.Capabilities.Interactive)
         {
-            AnsiConsole.MarkupLine("[red]This program needs to be run in interactive mode when run with no arguments[/]");
+            AnsiConsole.MarkupLine(
+                "[red]This program needs to be run in interactive mode when run with no arguments[/]");
             return;
         }
 
@@ -54,7 +55,7 @@ internal sealed class Program
             AnsiConsole.MarkupLine(buffer.ToString());
         }
     }
-    
+
     public static string GetResultText(CalcResult result)
     {
         if (result.Faulted)

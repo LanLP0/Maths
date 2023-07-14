@@ -595,7 +595,7 @@ internal sealed class MathTree
                     i = argEnd + 1;
                     if (math[i] is not ('=' or ' '))
                         return Err("Invalid custom function syntax");
-                    
+
                     break;
                 }
                 case 93: // ]

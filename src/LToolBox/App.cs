@@ -66,6 +66,7 @@ internal sealed class App : Command<Settings>
         if (settings.ToolId.HasValue)
         {
             var c = settings.ToolId.Value;
+            // ReSharper disable once RedundantCast
             var id = (int)c switch
             {
                 > 48 and < 58 => c - 49,
@@ -74,21 +75,23 @@ internal sealed class App : Command<Settings>
             };
 
             if (id == -1 || id >= _tools.Length)
+            {
                 AnsiConsole.MarkupLine("[red]> Invalid tool id[/]");
+            }
             else
             {
                 var tool = _tools[id];
                 AnsiConsole.MarkupLine("[green]>[/] Tool: [white]{0}[/]", tool.ToolName);
-                
+
                 tool.Execute();
             }
 
             if (settings.Quit)
                 return 0;
         }
-        
+
         AnsiConsole.MarkupLine(
-                "[Green]>[/] Type [Yellow]?[/] to get help about a tool, press [Yellow]Ctrl-C[/] to exit");
+            "[Green]>[/] Type [Yellow]?[/] to get help about a tool, press [Yellow]Ctrl-C[/] to exit");
 
         if (settings.Quit)
         {
@@ -156,7 +159,7 @@ public sealed class Settings : CommandSettings
     [Description("The tool to launch after startup")]
     [CommandOption("-t|--tool-id")]
     public char? ToolId { get; init; }
-    
+
     [Description("Quit after the first tool ran")]
     [CommandOption("-q|--quit")]
     [DefaultValue(false)]

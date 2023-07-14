@@ -11,7 +11,7 @@ namespace LCalc;
 public static class Calculator
 {
     /// <summary>
-    /// Calculate the expression
+    ///     Calculate the expression
     /// </summary>
     /// <param name="math">The expression</param>
     /// <returns>The result (formatted)</returns>
@@ -21,7 +21,7 @@ public static class Calculator
     }
 
     /// <summary>
-    /// Calculate the expression
+    ///     Calculate the expression
     /// </summary>
     /// <param name="math">The expression</param>
     /// <returns>The result (formatted)</returns>
@@ -33,7 +33,7 @@ public static class Calculator
     }
 
     /// <summary>
-    /// Calculate the expression
+    ///     Calculate the expression
     /// </summary>
     /// <param name="math">The expression</param>
     /// <param name="rawValueRequested">If the &raw argument exists</param>

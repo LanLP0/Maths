@@ -11,4 +11,9 @@
         <ProjectReference Include="..\Common\Common.csproj"/>
     </ItemGroup>
 
+    <ItemGroup>
+        <InternalsVisibleTo Include="ltb"/>
+        <InternalsVisibleTo Include="Benchmarks"/>
+    </ItemGroup>
+
 </Project>

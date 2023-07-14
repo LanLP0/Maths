@@ -97,7 +97,7 @@ internal sealed class BitwiseNotNode : IMathNode
     {
         if (IsFull())
             return _arg!.SetupForSolving(scope, out unknown);
-        
+
         unknown = string.Empty;
         return GenerateMissingValueError();
     }

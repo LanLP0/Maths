@@ -41,15 +41,6 @@ internal sealed class VariableCollection : IVariableCollection
         return _linkedCollection.Contains(name);
     }
 
-    private bool ContainsName(string name)
-    {
-        foreach (var variable in _variables)
-            if (variable.Name == name)
-                return true;
-
-        return false;
-    }
-
     public bool TryAdd(string name, double value)
     {
         return TryAdd(new Variable(name, value));
@@ -122,5 +113,14 @@ internal sealed class VariableCollection : IVariableCollection
     public void Link(IVariableCollection? variableCollection)
     {
         _linkedCollection = variableCollection;
+    }
+
+    private bool ContainsName(string name)
+    {
+        foreach (var variable in _variables)
+            if (variable.Name == name)
+                return true;
+
+        return false;
     }
 }

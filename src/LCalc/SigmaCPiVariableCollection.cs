@@ -3,23 +3,21 @@ using System.Diagnostics;
 
 namespace LCalc;
 
-// Used to override a single variable inside sigma() or cpi()
+/// <summary>
+/// Used by sigma() or cpi() to efficiently override a single variable
+/// </summary>
 internal sealed class SigmaCPiVariableCollection : IVariableCollection
 {
-    private readonly Variable _variable;
     private readonly IVariableCollection _linkedCollection;
-
-    public Variable Variable
-    {
-        get => _variable;
-    }
 
     public SigmaCPiVariableCollection(Variable variable, IVariableCollection linkedCollection)
     {
-        _variable = variable;
+        Variable = variable;
         _linkedCollection = linkedCollection;
     }
-    
+
+    public Variable Variable { get; }
+
     public IEnumerator<Variable> GetEnumerator()
     {
         throw new UnreachableException();
@@ -41,9 +39,9 @@ internal sealed class SigmaCPiVariableCollection : IVariableCollection
     {
         // We want this able to be the unknown to allow
         // overriding the default value in _linkedCollection
-        if (name == _variable.Name)
+        if (name == Variable.Name)
             return false;
-        
+
         return _linkedCollection.Contains(name);
     }
 
@@ -69,9 +67,9 @@ internal sealed class SigmaCPiVariableCollection : IVariableCollection
 
     public bool TryGet(string name, out double result)
     {
-        if (_variable.Name == name)
+        if (Variable.Name == name)
         {
-            result = _variable.Value;
+            result = Variable.Value;
             return true;
         }
 

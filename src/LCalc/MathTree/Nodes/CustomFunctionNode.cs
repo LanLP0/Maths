@@ -8,8 +8,8 @@ namespace LCalc.MathTree.Nodes;
 internal sealed class CustomFunctionNode : IMathNode
 {
     private readonly string _name;
-    private IMathNode? _node;
     private readonly VariableCollection _variables;
+    private IMathNode? _node;
 
     public CustomFunctionNode(string name, VariableCollection variables)
     {

@@ -2,7 +2,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using Common.Cli;
 using Common.Maths.Extension;
-using Delta.Core;
+using MinMaxFraction.Core;
 using Spectre.Console;
 
 namespace LToolBox.Tools;
@@ -70,18 +70,18 @@ internal sealed class MinMaxFracTool : Tool
         Console.WriteLine();
     }
 
-    public DeltaFraction? PromptFraction()
+    public MMFraction? PromptFraction()
     {
         var isUpper = true;
         var pos = 0;
-        var fraction = new DeltaFraction
+        var fraction = new MMFraction
         {
-            N0 = { NumberPart = 0 },
-            N1 = { NumberPart = 0 },
-            N2 = { NumberPart = 0 },
-            D0 = { NumberPart = 0 },
-            D1 = { NumberPart = 0 },
-            D2 = { NumberPart = 0 }
+            T0 = 0,
+            T1 = 0,
+            T2 = 0,
+            B0 = 0,
+            B1 = 0,
+            B2 = 0
         };
 
         RenderFraction(fraction, isUpper, pos);
@@ -111,7 +111,7 @@ internal sealed class MinMaxFracTool : Tool
                     break;
                 }
                 case { Key: ConsoleKey.LeftArrow }:
-                case { Key: ConsoleKey.H }: // Move next
+                case { Key: ConsoleKey.H }: // Move previous
                 {
                     if (pos is 0)
                     {
@@ -124,7 +124,7 @@ internal sealed class MinMaxFracTool : Tool
                     break;
                 }
                 case { Key: ConsoleKey.RightArrow }:
-                case { Key: ConsoleKey.L }: // Move previous
+                case { Key: ConsoleKey.L }: // Move next
                 {
                     if (pos >= 2)
                     {
@@ -199,7 +199,7 @@ internal sealed class MinMaxFracTool : Tool
         }
     }
 
-    private static void ChangeValueAndMoveNext(ref bool isUpper, DeltaFraction deltaFraction, [DisallowNull] int? val,
+    private static void ChangeValueAndMoveNext(ref bool isUpper, MMFraction fraction, [DisallowNull] int? val,
         ref int pos)
     {
         if (isUpper)
@@ -208,17 +208,17 @@ internal sealed class MinMaxFracTool : Tool
             {
                 case 0:
                 {
-                    deltaFraction.N0.NumberPart = val.Value;
+                    fraction.T0 = val.Value;
                     break;
                 }
                 case 1:
                 {
-                    deltaFraction.N1.NumberPart = val.Value;
+                    fraction.T1 = val.Value;
                     break;
                 }
                 default:
                 {
-                    deltaFraction.N2.NumberPart = val.Value;
+                    fraction.T2 = val.Value;
                     break;
                 }
             }
@@ -241,17 +241,17 @@ internal sealed class MinMaxFracTool : Tool
         {
             case 0:
             {
-                deltaFraction.D0.NumberPart = val.Value;
+                fraction.B0 = val.Value;
                 break;
             }
             case 1:
             {
-                deltaFraction.D1.NumberPart = val.Value;
+                fraction.B1 = val.Value;
                 break;
             }
             default:
             {
-                deltaFraction.D2.NumberPart = val.Value;
+                fraction.B2 = val.Value;
                 break;
             }
         }
@@ -260,7 +260,7 @@ internal sealed class MinMaxFracTool : Tool
             pos++;
     }
 
-    private void RenderFraction(DeltaFraction deltaFraction, bool isUpper, int pos)
+    private void RenderFraction(MMFraction fraction, bool isUpper, int pos)
     {
         // Clear space for the fraction and set the cursor to the right place
         Console.ClearLine();
@@ -269,101 +269,100 @@ internal sealed class MinMaxFracTool : Tool
         Console.Cursor.MoveUp();
         Console.ClearLine();
 
-        StringBuilder nomBuffer = new();
-        StringBuilder denomBuffer = new();
+        StringBuilder topBuffer = new();
+        StringBuilder bottomBuffer = new();
 
-        RenderPart(deltaFraction, isUpper, pos, nomBuffer, denomBuffer);
+        RenderTopBottom(fraction, isUpper, pos, topBuffer, bottomBuffer);
 
         // Calculate the real size by subtraction the markups
-        var nomBufferRealLength = nomBuffer.Length - 18 - (isUpper ? 10 : 0);
-        var denomBufferRealLength = denomBuffer.Length - 18 - (isUpper ? 0 : 10);
+        var topBufferRealLength = topBuffer.Length - 18 - (isUpper ? 10 : 0);
+        var bottomBufferRealLength = bottomBuffer.Length - 18 - (isUpper ? 0 : 10);
 
-        int dashCharsCount;
-        if (nomBufferRealLength >= denomBufferRealLength)
+        int dashCharCount;
+        if (topBufferRealLength >= bottomBufferRealLength)
         {
-            dashCharsCount = nomBufferRealLength + 2;
+            dashCharCount = topBufferRealLength + 2;
 
-            if (nomBufferRealLength != denomBufferRealLength)
+            if (topBufferRealLength != bottomBufferRealLength)
             {
-                var offset = (nomBufferRealLength - denomBufferRealLength) / 2;
-                denomBuffer.Insert(0, new string(' ', offset));
+                var offset = (topBufferRealLength - bottomBufferRealLength) / 2;
+                bottomBuffer.Insert(0, new string(' ', offset));
             }
         }
         else
         {
-            dashCharsCount = denomBufferRealLength + 2;
+            dashCharCount = bottomBufferRealLength + 2;
 
-            var offset = (denomBufferRealLength - nomBufferRealLength) / 2;
-            nomBuffer.Insert(0, new string(' ', offset));
+            var offset = (bottomBufferRealLength - topBufferRealLength) / 2;
+            topBuffer.Insert(0, new string(' ', offset));
         }
 
-        nomBuffer.Insert(0, "      ");
+        topBuffer.Insert(0, "      ");
 
-        nomBuffer.Append("\n A = ");
-        nomBuffer.Append(new string('-', dashCharsCount));
+        topBuffer.Append("\n A = ");
+        topBuffer.Append(new string('-', dashCharCount));
 
-        nomBuffer.Append("\n      ");
-        nomBuffer.Append(denomBuffer);
+        topBuffer.Append("\n      ");
+        topBuffer.Append(bottomBuffer);
 
-        Console.Markup(nomBuffer.ToString());
+        Console.Markup(topBuffer.ToString());
         Console.MoveCursorToStart();
     }
 
-    private static void RenderPart(DeltaFraction fraction, bool isUpper, int pos, StringBuilder nomBuffer,
-        StringBuilder denomBuffer)
+    private static void RenderTopBottom(MMFraction fraction, bool isUpper, int pos, StringBuilder topBuffer,
+        StringBuilder bottomBuffer)
     {
         if (isUpper)
         {
-            RenderSimpleVariableToBuffer(fraction.N0, pos is 0, nomBuffer);
-            nomBuffer.Append("[Cyan]x^2[/] + ");
-            RenderSimpleVariableToBuffer(fraction.N1, pos is 1, nomBuffer);
-            nomBuffer.Append("[Cyan]x[/] + ");
-            RenderSimpleVariableToBuffer(fraction.N2, pos is 2, nomBuffer);
-            RenderSimpleVariableToBuffer(fraction.D0, denomBuffer);
-            denomBuffer.Append("[Cyan]x^2[/] + ");
-            RenderSimpleVariableToBuffer(fraction.D1, denomBuffer);
-            denomBuffer.Append("[Cyan]x[/] + ");
-            RenderSimpleVariableToBuffer(fraction.D2, denomBuffer);
+            RenderVariableToBuffer(fraction.T0, pos is 0, topBuffer);
+            topBuffer.Append("[Cyan]x^2[/] + ");
+            RenderVariableToBuffer(fraction.T1, pos is 1, topBuffer);
+            topBuffer.Append("[Cyan]x[/] + ");
+            RenderVariableToBuffer(fraction.T2, pos is 2, topBuffer);
+            RenderVariableToBuffer(fraction.B0, bottomBuffer);
+            bottomBuffer.Append("[Cyan]x^2[/] + ");
+            RenderVariableToBuffer(fraction.B1, bottomBuffer);
+            bottomBuffer.Append("[Cyan]x[/] + ");
+            RenderVariableToBuffer(fraction.B2, bottomBuffer);
             return;
         }
 
-        RenderSimpleVariableToBuffer(fraction.N0, nomBuffer);
-        nomBuffer.Append("[Cyan]x^2[/] + ");
-        RenderSimpleVariableToBuffer(fraction.N1, nomBuffer);
-        nomBuffer.Append("[Cyan]x[/] + ");
-        RenderSimpleVariableToBuffer(fraction.N2, nomBuffer);
-        RenderSimpleVariableToBuffer(fraction.D0, pos is 0, denomBuffer);
-        denomBuffer.Append("[Cyan]x^2[/] + ");
-        RenderSimpleVariableToBuffer(fraction.D1, pos is 1, denomBuffer);
-        denomBuffer.Append("[Cyan]x[/] + ");
-        RenderSimpleVariableToBuffer(fraction.D2, pos is 2, denomBuffer);
+        RenderVariableToBuffer(fraction.T0, topBuffer);
+        topBuffer.Append("[Cyan]x^2[/] + ");
+        RenderVariableToBuffer(fraction.T1, topBuffer);
+        topBuffer.Append("[Cyan]x[/] + ");
+        RenderVariableToBuffer(fraction.T2, topBuffer);
+        RenderVariableToBuffer(fraction.B0, pos is 0, bottomBuffer);
+        bottomBuffer.Append("[Cyan]x^2[/] + ");
+        RenderVariableToBuffer(fraction.B1, pos is 1, bottomBuffer);
+        bottomBuffer.Append("[Cyan]x[/] + ");
+        RenderVariableToBuffer(fraction.B2, pos is 2, bottomBuffer);
     }
 
-    public void RenderDelta(FinalDelta finalDelta)
+    public void RenderDelta(MMDeltaResult mmDeltaResult)
     {
         var strBuilder = new StringBuilder();
 
-        RenderSimpleVariableToBuffer(finalDelta.T0, strBuilder);
+        RenderVariableToBuffer(mmDeltaResult.V0, strBuilder);
         strBuilder.Append("[Cyan]A^2[/] + ");
-        RenderSimpleVariableToBuffer(finalDelta.T1, strBuilder);
+        RenderVariableToBuffer(mmDeltaResult.V1, strBuilder);
         strBuilder.Append("[Cyan]A[/] + ");
-        RenderSimpleVariableToBuffer(finalDelta.T2, strBuilder);
+        RenderVariableToBuffer(mmDeltaResult.V2, strBuilder);
 
         Console.MarkupLine(strBuilder.ToString());
     }
 
-    private static void RenderSimpleVariableToBuffer(SimpleVariable simpleVariable, StringBuilder buffer)
+    private static void RenderVariableToBuffer(double variable, StringBuilder buffer)
     {
-        RenderSimpleVariableToBuffer(simpleVariable, false, buffer);
+        RenderVariableToBuffer(variable, false, buffer);
     }
 
-    private static void RenderSimpleVariableToBuffer(SimpleVariable simpleVariable, bool isSelected,
-        StringBuilder buffer)
+    private static void RenderVariableToBuffer(double variable, bool isSelected, StringBuilder buffer)
     {
         if (isSelected)
             buffer.Append("[Green]");
 
-        buffer.Append(simpleVariable.NumberPart);
+        buffer.Append(variable);
 
         if (isSelected)
             buffer.Append("[/]");

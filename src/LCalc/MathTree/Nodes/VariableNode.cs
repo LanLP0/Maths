@@ -6,20 +6,18 @@ namespace LCalc.MathTree.Nodes;
 
 internal sealed class VariableNode : IMathNode
 {
-    private readonly string _name;
-
-    public string Name => _name;
-
     public VariableNode(string name)
     {
-        _name = name;
+        Name = name;
     }
+
+    public string Name { get; }
 
     public int Priority { get; set; } = MathTree.ValueNodePriority;
 
     public Result<double> Calc(Scope scope)
     {
-        var result = scope.GetVariable(_name);
+        var result = scope.GetVariable(Name);
         if (result.Faulted)
             return result;
 
@@ -64,9 +62,9 @@ internal sealed class VariableNode : IMathNode
 
     public Result SetupForSolving(Scope scope, out string unknown)
     {
-        if (!scope.Variables.Contains(_name))
+        if (!scope.Variables.Contains(Name))
         {
-            unknown = _name;
+            unknown = Name;
             return Ok();
         }
 

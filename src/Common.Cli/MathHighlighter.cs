@@ -6,16 +6,16 @@ namespace Common.Cli;
 
 public sealed class MathHighlighter : IHighlighter
 {
-    private static readonly Style Grey = new(foreground: Color.Grey);
-    private static readonly Style Blue = new(foreground: Color.Blue);
-    private static readonly Style Yellow = new(foreground: Color.Yellow);
-    
-    private static string[] _keys =
+    private static readonly Style Grey = new(Color.Grey);
+    private static readonly Style Blue = new(Color.Blue);
+    private static readonly Style Yellow = new(Color.Yellow);
+
+    private static readonly string[] _keys =
     {
         "+", "-", "*", "/", "^", "%", "!",
         "|", "&", "~", ">", "<", "=", "[", "]"
     };
-    
+
     public Style? Highlight(string token)
     {
         if (token is "(" or ")")
@@ -26,7 +26,7 @@ public sealed class MathHighlighter : IHighlighter
 
         if (_keys.Contains(token))
             return Blue;
-        
+
         return null;
     }
 }

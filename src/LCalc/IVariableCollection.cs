@@ -3,7 +3,7 @@
 internal interface IVariableCollection : IEnumerable<Variable>
 {
     int Count { get; }
-    
+
     bool Contains(Variable variable);
     bool Contains(string name);
     bool TryAdd(string name, double value);

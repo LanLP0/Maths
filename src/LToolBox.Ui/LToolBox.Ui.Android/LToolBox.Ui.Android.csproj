@@ -13,7 +13,7 @@
     <PropertyGroup>
         <!--        <AndroidEnableProfiledAot>True</AndroidEnableProfiledAot>-->
         <RunAOTCompilation>True</RunAOTCompilation>
-        <EnableLLVM>True</EnableLLVM>
+        <!-- <EnableLLVM>True</EnableLLVM> -->
         <EmbedAssembliesIntoApk>True</EmbedAssembliesIntoApk>
     </PropertyGroup>
 

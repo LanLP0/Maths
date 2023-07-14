@@ -140,7 +140,7 @@ internal sealed class LeftShiftNode : IMathNode
             return rs;
         if (unknown == string.Empty)
             return _arg2!.SetupForSolving(scope, out unknown);
-        
+
         _arg2!.SetupForSolving(scope, out var unknown1);
         if (unknown1 != string.Empty && unknown1 != unknown)
             return Err("Too many unknowns");

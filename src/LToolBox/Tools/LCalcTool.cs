@@ -20,7 +20,7 @@ internal sealed class LCalcTool : Tool
     public override void Execute()
     {
         var highlighter = new MathHighlighter();
-    
+
         for (;;)
         {
             _buffer.Clear();

@@ -49,7 +49,7 @@ public readonly ref struct Result<T>
     {
         if (value.Success)
             return new Result();
-        
+
         return new Result(value.Exception!);
     }
 

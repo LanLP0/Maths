@@ -8,12 +8,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="RadLine" Version="0.6.0" />
-        <PackageReference Include="Spectre.Console.Cli" Version="0.46.0" />
+        <PackageReference Include="RadLine" Version="0.6.0"/>
+        <PackageReference Include="Spectre.Console.Cli" Version="0.47.0"/>
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Common\Common.csproj" />
+        <ProjectReference Include="..\Common\Common.csproj"/>
     </ItemGroup>
 
 </Project>
