@@ -2,7 +2,7 @@
 
 namespace LToolBox.Ui.ViewModels;
 
-public sealed class CalcModel : ViewModelBase
+public sealed class CalcViewModel : NavViewModelBase
 {
     private string _math = string.Empty;
 
@@ -11,4 +11,8 @@ public sealed class CalcModel : ViewModelBase
         get => _math;
         set => this.RaiseAndSetIfChanged(ref _math, value);
     }
+
+    public override string NavHeader { get; } = "LCalc";
+
+    public override string? IconKey { get; } = "CalculatorIcon";
 }

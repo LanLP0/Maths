@@ -7,8 +7,7 @@
         Width="550" Height="400"
         MinHeight="550" MinWidth="400"
         x:Class="LToolBox.Ui.Views.MainWindow"
-        Icon="/Assets/avalonia-logo.ico"
+        Icon="/Assets/Icon.ico"
         Title="LToolBox">
-
     <views:MainView />
 </Window>

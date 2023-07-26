@@ -11,7 +11,11 @@
         <entry key="src/LToolBox.Ui/LToolBox.Ui/Dark.axaml" value="src/LToolBox.Ui/LToolBox.Ui.Desktop/LToolBox.Ui.Desktop.csproj" />
         <entry key="src/LToolBox.Ui/LToolBox.Ui/MainWindow.axaml" value="src/LToolBox.Ui/LToolBox.Ui.Desktop/LToolBox.Ui.Desktop.csproj" />
         <entry key="src/LToolBox.Ui/LToolBox.Ui/Pages/Calc.axaml" value="src/LToolBox.Ui/LToolBox.Ui.Desktop/LToolBox.Ui.Desktop.csproj" />
+        <entry key="src/LToolBox.Ui/LToolBox.Ui/Pages/CalcPage.axaml" value="src/LToolBox.Ui/LToolBox.Ui.Desktop/LToolBox.Ui.Desktop.csproj" />
         <entry key="src/LToolBox.Ui/LToolBox.Ui/Pages/MinMaxFrac.axaml" value="src/LToolBox.Ui/LToolBox.Ui.Desktop/LToolBox.Ui.Desktop.csproj" />
+        <entry key="src/LToolBox.Ui/LToolBox.Ui/Pages/MinMaxFracPage.axaml" value="src/LToolBox.Ui/LToolBox.Ui.Desktop/LToolBox.Ui.Desktop.csproj" />
+        <entry key="src/LToolBox.Ui/LToolBox.Ui/Styling/Resouces.axaml" value="src/LToolBox.Ui/LToolBox.Ui.Desktop/LToolBox.Ui.Desktop.csproj" />
+        <entry key="src/LToolBox.Ui/LToolBox.Ui/Styling/Resources.axaml" value="src/LToolBox.Ui/LToolBox.Ui.Desktop/LToolBox.Ui.Desktop.csproj" />
         <entry key="src/LToolBox.Ui/LToolBox.Ui/Views/MainView.axaml" value="src/LToolBox.Ui/LToolBox.Ui.Desktop/LToolBox.Ui.Desktop.csproj" />
         <entry key="src/LToolBox.Ui/LToolBox.Ui/Views/MainWindow.axaml" value="src/LToolBox.Ui/LToolBox.Ui.Desktop/LToolBox.Ui.Desktop.csproj" />
       </map>

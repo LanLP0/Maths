@@ -2,16 +2,23 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              Name="LToolBox"
              xmlns:local="using:LToolBox.Ui"
-             xmlns:materialIcons="using:Material.Icons.Avalonia"
-             xmlns:themes="clr-namespace:Material.Styles.Themes;assembly=Material.Styles"
+             xmlns:sty="using:FluentAvalonia.Styling"
              x:Class="LToolBox.Ui.App">
+
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceInclude Source="avares://LToolBox.Ui/Styling/Resources.axaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
 
     <Application.DataTemplates>
         <local:ViewLocator />
     </Application.DataTemplates>
 
     <Application.Styles>
-        <themes:MaterialTheme BaseTheme="Dark" PrimaryColor="Purple" SecondaryColor="Indigo" />
-        <materialIcons:MaterialIconStyles />
+        <sty:FluentAvaloniaTheme PreferSystemTheme="True" PreferUserAccentColor="True" />
+        <!-- <StyleInclude Source="avares://FAControlsGallery/Styling/ControlsGalleryStyles.axaml" /> -->
     </Application.Styles>
 </Application>

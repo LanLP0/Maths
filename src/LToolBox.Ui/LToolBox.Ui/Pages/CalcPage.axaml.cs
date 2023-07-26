@@ -10,21 +10,25 @@ using LToolBox.Ui.ViewModels;
 
 namespace LToolBox.Ui.Pages;
 
-public sealed partial class Calc : UserControl
+public sealed partial class CalcPage : UserControl
 {
     private const int MaxHistoryLenght = 25;
-    private readonly CalcModel _calcModel;
+    private CalcViewModel? _vm;
 
-    public Calc()
+    public CalcPage()
     {
         InitializeComponent();
-        _calcModel = new CalcModel();
-        DataContext = _calcModel;
         MathDisplay.TextTrimming = TextTrimming.CharacterEllipsis;
         MathInput.AddHandler(KeyDownEvent, MathInput_KeyDown, RoutingStrategies.Tunnel);
     }
 
     private ItemCollection Histories => HistoryBox.Items;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        _vm = (CalcViewModel)DataContext!;
+    }
 
     private void MathInput_KeyDown(object? sender, KeyEventArgs e)
     {
@@ -36,9 +40,9 @@ public sealed partial class Calc : UserControl
         if (string.IsNullOrWhiteSpace(MathInput.Text))
             return;
 
-        MathDisplay.Text = _calcModel.Math;
+        MathDisplay.Text = _vm.Math;
 
-        var result = Calculator.CalcRaw(_calcModel.Math, out _);
+        var result = Calculator.CalcRaw(_vm.Math, out _);
 
         if (result.Faulted) // Error
         {
@@ -54,7 +58,7 @@ public sealed partial class Calc : UserControl
                 ? result.Number!.Value.ToString(CultureInfo.InvariantCulture)
                 : result.Number!.Value.Humanize();
         else
-            resultText = result.Number!.Value.ToString(CultureInfo.InvariantCulture);
+            resultText = result.Bool!.Value.ToString(CultureInfo.InvariantCulture);
 
         ResultDisplay.Text = resultText;
         AddToHistory(resultText);
@@ -67,7 +71,7 @@ public sealed partial class Calc : UserControl
     {
         var mathBlock = new TextBlock
         {
-            Text = _calcModel.Math,
+            Text = _vm.Math,
             TextWrapping = TextWrapping.NoWrap,
             TextTrimming = TextTrimming.CharacterEllipsis,
             TextAlignment = TextAlignment.Left
@@ -82,7 +86,7 @@ public sealed partial class Calc : UserControl
             Foreground = Brushes.Aqua
         };
         resultBlock.SetValue(Grid.ColumnProperty, 2);
-        
+
         var item = new ListBoxItem
         {
             Content = new Grid
@@ -132,7 +136,7 @@ public sealed partial class Calc : UserControl
             return;
 
         MathDisplay.Text = string.Empty; // Clear math display
-        var result = Calculator.CalcRaw(_calcModel.Math, out _);
+        var result = Calculator.CalcRaw(_vm.Math, out _);
 
         if (result.Faulted) // Ignore error
             return;
