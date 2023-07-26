@@ -15,18 +15,25 @@ public class NavigationFactory : INavigationPageFactory
 
     public Control GetPageFromObject(object target)
     {
-        if (target is CalcViewModel)
-            return new CalcPage
-            {
-                DataContext = target
-            };
+        if (target is not NavViewModelBase nvmb)
+            return null;
 
-        if (target is MinMaxFracViewModel)
-            return new MinMaxFracPage
-            {
-                DataContext = target
-            };
+        AppConfig.Instance.PageName = nvmb.NavHeader;
 
-        return null;
+        switch (target)
+        {
+            case CalcViewModel:
+                return new CalcPage
+                {
+                    DataContext = target
+                };
+            case MinMaxFracViewModel:
+                return new MinMaxFracPage
+                {
+                    DataContext = target
+                };
+            default:
+                return null;
+        }
     }
 }

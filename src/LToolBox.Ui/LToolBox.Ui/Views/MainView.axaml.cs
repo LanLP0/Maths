@@ -40,6 +40,7 @@ public sealed partial class MainView : UserControl
 
         Dispatcher.UIThread.Post(() =>
         {
+            object? target = null;
             foreach (var page in pages)
             {
                 var nvi = new NavigationViewItem
@@ -51,11 +52,16 @@ public sealed partial class MainView : UserControl
 
                 if (page.IconKey is not null)
                     nvi.IconSource = (IconSource)this.FindResource(page.IconKey)!;
+
+                // Restore previous page
+                if (page.NavHeader == AppConfig.Instance.PageName)
+                    target = nvi.Tag!;
             }
 
             NavView.MenuItemsSource = menuItems;
 
-            NavigationService.Instance.NavigateFromContext(menuItems[0].Tag!);
+            target ??= menuItems[0].Tag!;
+            NavigationService.Instance.NavigateFromContext(target);
         });
     }
 
