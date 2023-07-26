@@ -125,7 +125,7 @@ internal sealed class App : Command<Settings>
                 {
                     AnsiConsole.Console.ClearLine();
 
-                    AnsiConsole.Markup("[Green]>[/] Help: ");
+                    AnsiConsole.Markup("[Green]>[/] [white]Help:[/] ");
                     help = true;
 
                     continue;

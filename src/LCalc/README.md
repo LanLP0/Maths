@@ -45,7 +45,7 @@ Calculate an expression with optional arguments
 > `log({value})` Logarithm  
 > `sqrt({value})` `cbrt({value})` Square root, cube root  
 > `sum({value} [values..])` `avg({value} [values..])` Sum, average  
-> `random([max|(min,max)])` Get random number in ranges: 0-1, 0-max, min-max
+> `random([max|(min,max)])` Get random number in ranges: 0-1, 0-max, min-max  
 > `sigma({arg}, {start}, {end}, {expression})`: Sigma (Σ)  
 > `cpi({arg}, {start}, {end}, {expression})`: Capital Pi (Π)
 
