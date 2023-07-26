@@ -2,83 +2,26 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:vm="clr-namespace:LToolBox.Ui.ViewModels"
-             xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
-             xmlns:pages="clr-namespace:LToolBox.Ui.Pages"
+             xmlns:ui="using:FluentAvalonia.UI.Controls"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             xmlns:controls="clr-namespace:Material.Styles.Controls;assembly=Material.Styles"
              x:Class="LToolBox.Ui.Views.MainView">
     <!-- xmlns:controls="clr-namespace:Material.Styles.Controls;assembly=Material.Styles" -->
-    <UserControl.DataContext>
-        <vm:MainViewModel />
-    </UserControl.DataContext>
 
-    <!-- Snackbar will appear here -->
-    <!-- <controls:SnackbarHost HostName="Root"> -->
-    <controls:NavigationDrawer Name="LeftDrawer"
-                               LeftDrawerOpened="{Binding ElementName=NavDrawerSwitch, Path=IsChecked, Mode=TwoWay}"
-                               LeftDrawerWidth="278">
-        <controls:NavigationDrawer.LeftDrawerContent>
-            <!-- Side bar content -->
-            <ScrollViewer>
-                <StackPanel>
-                    <controls:ColorZone Mode="Accent">
-                        <StackPanel>
-                            <Rectangle Height="5" />
-                            <TextBlock TextAlignment="Center" FontWeight="Bold" FontSize="40" Text="LCalc" />
-                            <TextBlock TextAlignment="Center" FontWeight="Light" FontStyle="Italic" FontSize="12"
-                                       Text="by LanLP" />
-                            <Separator Height="5" />
-                        </StackPanel>
-                    </controls:ColorZone>
-                    <ListBox Name="AppChooser" SelectionMode="Single" AutoScrollToSelectedItem="True"
-                             PointerReleased="AppChooser_OnPointerReleased"
-                             SelectedItem="{Binding Path=SelectedItem, Mode=OneWayToSource}">
-                        <ListBoxItem IsSelected="True">
-                            <TextBlock Text="Calc" />
-                        </ListBoxItem>
-                        <ListBoxItem>
-                            <TextBlock Text="MinMaxFrac" />
-                        </ListBoxItem>
-                        <!-- TODO -->
-                        <!-- <ListBoxItem> -->
-                        <!--     <TextBlock Text="ComplexCalc" /> -->
-                        <!-- </ListBoxItem> -->
-                        <!-- <ListBoxItem> -->
-                        <!--     <TextBlock Text="Fact" /> -->
-                        <!-- </ListBoxItem> -->
-                        <!-- <ListBoxItem> -->
-                        <!--     <TextBlock Text="Polynomial" /> -->
-                        <!-- </ListBoxItem> -->
-                        <!-- <ListBoxItem> -->
-                        <!--     <TextBlock Text="IsPrime" /> -->
-                        <!-- </ListBoxItem> -->
-                    </ListBox>
-                </StackPanel>
-            </ScrollViewer>
-        </controls:NavigationDrawer.LeftDrawerContent>
-        <DockPanel>
-            <controls:ColorZone DockPanel.Dock="Top" Mode="PrimaryMid">
-                <Grid Height="50" ColumnDefinitions="Auto, *">
-                    <ToggleButton Grid.Column="0" Name="NavDrawerSwitch">
-                        <avalonia:MaterialIcon Height="30" Width="30" Kind="Menu" />
-                    </ToggleButton>
-                    <TextBlock FontSize="20" VerticalAlignment="Center" TextAlignment="Center" Grid.Column="1"
-                               Text="{Binding Path=SelectedItemText}" />
-                </Grid>
-            </controls:ColorZone>
-            <Carousel DockPanel.Dock="Bottom" Name="AppNavigator" Padding="10 10 10 10">
-                <Carousel.Styles>
-                    <Style Selector="Carousel">
-                        <Setter Property="PageTransition">
-                            <PageSlide Duration="0.25" SlideOutEasing="CircularEaseOut"
-                                       SlideInEasing="CircularEaseOut" />
-                        </Setter>
-                    </Style>
-                </Carousel.Styles>
-                <pages:Calc />
-                <pages:MinMaxFrac />
-            </Carousel>
-        </DockPanel>
-    </controls:NavigationDrawer>
+    <ui:NavigationView AlwaysShowHeader="True"
+                       PaneTitle="LToolBox"
+                       PaneDisplayMode="LeftCompact"
+                       Name="NavView"
+                       IsSettingsVisible="False"
+                       ItemInvoked="OnNavigationViewItemInvoked" BackRequested="OnNavigationViewBackRequested">
+        <ui:NavigationView.FooterMenuItems>
+            <ui:NavigationViewItem IconSource="DarkTheme" Content="Switch theme" Tag="theme-switch"
+                                   SelectsOnInvoked="False" />
+        </ui:NavigationView.FooterMenuItems>
+
+        <StackPanel>
+            <TextBlock Name="PageHeader" TextAlignment="Center" FontSize="30" />
+            <ui:Frame Name="FrameView" Padding="10" Navigated="OnFrameViewNavigated" />
+        </StackPanel>
+    </ui:NavigationView>
+
 </UserControl>

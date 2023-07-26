@@ -3,7 +3,7 @@ using ReactiveUI;
 
 namespace LToolBox.Ui.ViewModels;
 
-public sealed class MainViewModel : ViewModelBase
+public sealed class MainViewViewModel : ViewModelBase
 {
     private ListBoxItem _selectedItem;
 
