@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using Avalonia;
 using Avalonia.ReactiveUI;
 
@@ -12,6 +13,25 @@ internal sealed class Program
     [STAThread]
     public static void Main(string[] args)
     {
+        // Persistence config
+        
+        // Default to app.cfg in bin directory
+        // if the config directory is readonly
+        var cfgFilePath = "app.cfg";
+        try
+        {
+            var cfgDirectory = Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                "LanLP", "LToolBox");
+            Directory.CreateDirectory(cfgDirectory);
+            cfgFilePath = Path.Join(cfgDirectory, "app.cfg");
+        }
+        catch
+        {
+            // ignored
+        }
+        
+        App.SetSuspensionDriver(new DesktopSuspensionDriver(cfgFilePath));
+        
         BuildAvaloniaApp()
             .StartWithClassicDesktopLifetime(args);
     }
@@ -21,6 +41,7 @@ internal sealed class Program
     {
         return AppBuilder.Configure<App>()
             .UsePlatformDetect()
+            .WithInterFont()
             .LogToTrace()
             .UseReactiveUI();
     }

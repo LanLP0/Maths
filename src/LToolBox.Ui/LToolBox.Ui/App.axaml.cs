@@ -12,6 +12,16 @@ namespace LToolBox.Ui;
 
 public sealed class App : Application
 {
+    private static ISuspensionDriver? _suspensionDriver;
+
+    public static void SetSuspensionDriver(ISuspensionDriver suspensionDriver)
+    {
+        if (_suspensionDriver is not null)
+            return;
+
+        _suspensionDriver = suspensionDriver;
+    }
+    
     public override void Initialize()
     {
         AvaloniaXamlLoader.Load(this);
@@ -21,24 +31,12 @@ public sealed class App : Application
     {
         // Persistence config
 
-        // Default to app.cfg in bin directory
-        // if the config directory is readonly
-        var cfgFilePath = "app.cfg";
-        try
-        {
-            var cfgDirectory = Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-                "LanLP", "LToolBox");
-            Directory.CreateDirectory(cfgDirectory);
-            cfgFilePath = Path.Join(cfgDirectory, "app.cfg");
-        }
-        catch
-        {
-            // ignored
-        }
+        // If the platform is not supported
+        _suspensionDriver ??= new DummySuspensionDriver();
 
         var suspension = new AutoSuspendHelper(ApplicationLifetime);
         RxApp.SuspensionHost.CreateNewAppState = () => new AppConfig();
-        RxApp.SuspensionHost.SetupDefaultSuspendResume(new SuspensionDriver(cfgFilePath));
+        RxApp.SuspensionHost.SetupDefaultSuspendResume(_suspensionDriver);
         suspension.OnFrameworkInitializationCompleted();
 
         // Load/Create the saved config

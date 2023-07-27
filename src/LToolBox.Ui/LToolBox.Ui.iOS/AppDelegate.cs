@@ -5,6 +5,7 @@ using Avalonia.Controls;
 using Avalonia.iOS;
 using Avalonia.Media;
 using Avalonia.ReactiveUI;
+using LToolBox.Ui.Mobile;
 
 namespace LToolBox.Ui.iOS;
 
@@ -16,6 +17,10 @@ public partial class AppDelegate : AvaloniaAppDelegate<App>
 {
     protected override AppBuilder CustomizeAppBuilder(AppBuilder builder)
     {
-        return builder.UseReactiveUI();
+        App.SetSuspensionDriver(new MobileSuspensionDriver());
+        
+        return base.CustomizeAppBuilder(builder)
+            .WithInterFont()
+            .UseReactiveUI();
     }
 }

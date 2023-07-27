@@ -1,24 +1,19 @@
-﻿using System;
-using System.IO;
-using System.Reactive;
+﻿using System.Reactive;
 using System.Reactive.Linq;
 using System.Text.Json;
 using ReactiveUI;
+using Xamarin.Essentials;
 
-namespace LToolBox.Ui;
+namespace LToolBox.Ui.Mobile;
 
-public class SuspensionDriver : ISuspensionDriver
+public sealed class MobileSuspensionDriver : ISuspensionDriver
 {
-    private readonly string _file;
-
-    public SuspensionDriver(string file)
-    {
-        _file = file;
-    }
-
     public IObservable<object> LoadState()
     {
-        var lines = File.ReadAllText(_file);
+        if (!Preferences.ContainsKey("config"))
+            throw new Exception("config not set");
+        
+        var lines = Preferences.Get("config", string.Empty);
         var state = JsonSerializer.Deserialize<AppConfig>(lines);
         return Observable.Return(state)!;
     }
@@ -26,14 +21,13 @@ public class SuspensionDriver : ISuspensionDriver
     public IObservable<Unit> SaveState(object state)
     {
         var json = JsonSerializer.Serialize(state);
-        File.WriteAllText(_file, json);
+        Preferences.Set("config", json);
         return Observable.Return(Unit.Default);
     }
 
     public IObservable<Unit> InvalidateState()
     {
-        if (File.Exists(_file))
-            File.Delete(_file);
+        Preferences.Remove("config");
         return Observable.Return(Unit.Default);
     }
 }
