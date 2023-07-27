@@ -2,7 +2,7 @@
 
 namespace LCalc;
 
-public class CalcResult
+public sealed class CalcResult
 {
     internal CalcResult(Exception exception, string? steps = null)
     {

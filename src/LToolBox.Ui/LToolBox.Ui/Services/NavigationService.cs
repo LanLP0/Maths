@@ -6,7 +6,7 @@ using LToolBox.Ui.ViewModels;
 
 namespace LToolBox.Ui.Service;
 
-public class NavigationService
+public sealed class NavigationService
 {
     private Frame _frame;
     private TextBlock _pageHeader;

@@ -10,7 +10,7 @@ using MinMaxFraction.Core;
 
 namespace LToolBox.Ui.Pages;
 
-public partial class MinMaxFracPage : UserControl
+public sealed partial class MinMaxFracPage : UserControl
 {
     private const int HistoryLimit = 10;
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Text.Json;
@@ -9,35 +10,19 @@ namespace LToolBox.Ui.Browser;
 
 public sealed class BrowserSuspensionDriver : ISuspensionDriver
 {
-    private JsonSerializerOptions _options;
-
-    public BrowserSuspensionDriver()
-    {
-        _options = new JsonSerializerOptions
-        {
-            DictionaryKeyPolicy = JsonNamingPolicy.CamelCase,
-            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
-            IgnoreReadOnlyProperties = true,
-            PropertyNameCaseInsensitive = true,
-            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-            ReadCommentHandling = JsonCommentHandling.Skip,
-            WriteIndented = false
-        };
-    }
-
     public IObservable<object> LoadState()
     {
         var json = JavascriptStateStorage.Load();
         if (string.IsNullOrEmpty(json))
             throw new Exception();
         
-        var state = JsonSerializer.Deserialize<AppConfig>(json, _options);
+        var state = JsonSerializer.Deserialize<AppConfig>(json, Global.SerializerOptions);
         return Observable.Return(state)!;
     }
 
     public IObservable<Unit> SaveState(object state)
     {
-        var json = JsonSerializer.Serialize(state, _options);
+        var json = JsonSerializer.Serialize(state, Global.SerializerOptions);
         JavascriptStateStorage.Save(json);
         return Observable.Return(Unit.Default);
     }

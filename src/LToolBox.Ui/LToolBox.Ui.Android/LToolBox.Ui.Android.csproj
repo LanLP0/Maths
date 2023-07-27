@@ -32,7 +32,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\..\LToolBox.Ui.Mobile\LToolBox.Ui.Mobile.csproj" />
+        <ProjectReference Include="..\LToolBox.Ui.Mobile\LToolBox.Ui.Mobile.csproj" />
         <ProjectReference Include="..\LToolBox.Ui\LToolBox.Ui.csproj" />
     </ItemGroup>
 </Project>

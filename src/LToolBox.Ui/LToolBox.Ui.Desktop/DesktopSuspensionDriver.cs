@@ -11,33 +11,22 @@ namespace LToolBox.Ui.Desktop;
 public sealed class DesktopSuspensionDriver : ISuspensionDriver
 {
     private string _file;
-    private JsonSerializerOptions _options;
 
     public DesktopSuspensionDriver(string file)
     {
         _file = file;
-        _options = new JsonSerializerOptions
-        {
-            DictionaryKeyPolicy = JsonNamingPolicy.CamelCase,
-            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
-            IgnoreReadOnlyProperties = true,
-            PropertyNameCaseInsensitive = true,
-            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-            ReadCommentHandling = JsonCommentHandling.Skip,
-            WriteIndented = false
-        };
     }
 
     public IObservable<object> LoadState()
     {
         var lines = File.ReadAllText(_file);
-        var state = JsonSerializer.Deserialize<AppConfig>(lines, _options);
+        var state = JsonSerializer.Deserialize<AppConfig>(lines, Global.SerializerOptions);
         return Observable.Return(state)!;
     }
 
     public IObservable<Unit> SaveState(object state)
     {
-        var json = JsonSerializer.Serialize(state, _options);
+        var json = JsonSerializer.Serialize(state, Global.SerializerOptions);
         File.WriteAllText(_file, json);
         return Observable.Return(Unit.Default);
     }

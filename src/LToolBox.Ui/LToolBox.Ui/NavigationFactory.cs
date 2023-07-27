@@ -6,7 +6,7 @@ using LToolBox.Ui.ViewModels;
 
 namespace LToolBox.Ui;
 
-public class NavigationFactory : INavigationPageFactory
+public sealed class NavigationFactory : INavigationPageFactory
 {
     public Control GetPage(Type srcType)
     {

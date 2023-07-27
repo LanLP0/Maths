@@ -5,7 +5,7 @@ using LToolBox.Ui.ViewModels;
 
 namespace LToolBox.Ui;
 
-public class ViewLocator : IDataTemplate
+public sealed class ViewLocator : IDataTemplate
 {
     public Control? Build(object? data)
     {
