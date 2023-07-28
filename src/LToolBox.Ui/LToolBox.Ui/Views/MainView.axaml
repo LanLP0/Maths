@@ -3,25 +3,26 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:ui="using:FluentAvalonia.UI.Controls"
+             xmlns:vm="using:LToolBox.Ui.ViewModels"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="LToolBox.Ui.Views.MainView">
-    <!-- xmlns:controls="clr-namespace:Material.Styles.Controls;assembly=Material.Styles" -->
+             x:Class="LToolBox.Ui.Views.MainView"
+             SizeChanged="OnSizeChanged">
+    <Design.DataContext>
+        <vm:MainViewViewModel />
+    </Design.DataContext>
 
     <ui:NavigationView AlwaysShowHeader="True"
                        PaneTitle="LToolBox"
                        PaneDisplayMode="LeftCompact"
                        Name="NavView"
                        IsSettingsVisible="False"
+                       SelectedItem="{Binding SelectedItem}"
                        ItemInvoked="OnNavigationViewItemInvoked" BackRequested="OnNavigationViewBackRequested">
-        <ui:NavigationView.FooterMenuItems>
-            <ui:NavigationViewItem IconSource="DarkTheme" Content="Switch theme" Tag="theme-switch"
-                                   SelectsOnInvoked="False" />
-        </ui:NavigationView.FooterMenuItems>
 
-        <StackPanel>
-            <TextBlock Name="PageHeader" TextAlignment="Center" FontSize="30" />
-            <ui:Frame Name="FrameView" Padding="10" Navigated="OnFrameViewNavigated" />
-        </StackPanel>
+        <DockPanel>
+            <TextBlock DockPanel.Dock="Top" Name="PageHeader" Text="{Binding HeaderText}" TextAlignment="Center" FontSize="25" />
+            <ui:Frame DockPanel.Dock="Bottom" Name="FrameView" Padding="10" Navigated="OnFrameViewNavigated" />
+        </DockPanel>
     </ui:NavigationView>
 
 </UserControl>

@@ -18,7 +18,7 @@ public sealed class NavigationFactory : INavigationPageFactory
         if (target is not NavViewModelBase nvmb)
             return null;
 
-        AppConfig.Instance.PageName = nvmb.NavHeader;
+        AppState.Instance.PageName = nvmb.NavHeader;
 
         switch (target)
         {
@@ -29,6 +29,11 @@ public sealed class NavigationFactory : INavigationPageFactory
                 };
             case MinMaxFracViewModel:
                 return new MinMaxFracPage
+                {
+                    DataContext = target
+                };
+            case SettingsViewModel:
+                return new SettingsPage
                 {
                     DataContext = target
                 };

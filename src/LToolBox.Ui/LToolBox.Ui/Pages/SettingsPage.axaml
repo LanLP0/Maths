@@ -1,0 +1,37 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="LToolBox.Ui.Pages.SettingsPage"
+             xmlns:ui="using:FluentAvalonia.UI.Controls"
+             xmlns:vm="using:LToolBox.Ui.ViewModels">
+    
+    <Design.DataContext>
+        <vm:SettingsViewModel />
+    </Design.DataContext>
+    
+    <ScrollViewer>
+        <StackPanel Spacing="10">
+            <ui:SettingsExpander Header="App Theme"
+                                 IconSource="DarkTheme"
+                                 Description="Change the current app theme">
+
+                <ui:SettingsExpander.Footer>
+                    <ComboBox SelectedItem="{Binding CurrentAppTheme}"
+                              ItemsSource="{Binding AppThemes}"
+                              MinWidth="150" />
+                </ui:SettingsExpander.Footer>
+            </ui:SettingsExpander>
+            
+            <ui:SettingsExpander Header="Accent Color"
+                                 IconSource="ColorLine"
+                                 Description="Set a Accent Color">
+                
+                <ui:SettingsExpander.Footer>
+                    <ColorPicker Color="{Binding AccentColor}" />
+                </ui:SettingsExpander.Footer>
+            </ui:SettingsExpander>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

@@ -12,24 +12,24 @@ public sealed class BrowserSuspensionDriver : ISuspensionDriver
 {
     public IObservable<object> LoadState()
     {
-        var json = JavascriptStateStorage.Load();
+        var json = JavascriptStateManager.Load();
         if (string.IsNullOrEmpty(json))
             throw new Exception();
         
-        var state = JsonSerializer.Deserialize<AppConfig>(json, Global.SerializerOptions);
+        var state = JsonSerializer.Deserialize<AppState>(json, Global.SerializerOptions);
         return Observable.Return(state)!;
     }
 
     public IObservable<Unit> SaveState(object state)
     {
         var json = JsonSerializer.Serialize(state, Global.SerializerOptions);
-        JavascriptStateStorage.Save(json);
+        JavascriptStateManager.Save(json);
         return Observable.Return(Unit.Default);
     }
 
     public IObservable<Unit> InvalidateState()
     {
-        JavascriptStateStorage.Invalidate();
+        JavascriptStateManager.Invalidate();
         return Observable.Return(Unit.Default);
     }
 }

@@ -8,13 +8,10 @@
         <ApplicationVersion>1</ApplicationVersion>
         <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
         <AndroidPackageFormat>apk</AndroidPackageFormat>
-    </PropertyGroup>
-
-    <PropertyGroup>
-        <!--        <AndroidEnableProfiledAot>True</AndroidEnableProfiledAot>-->
-        <RunAOTCompilation>True</RunAOTCompilation>
+        <!--<AndroidEnableProfiledAot>True</AndroidEnableProfiledAot>-->
+        <!--<RunAOTCompilation>True</RunAOTCompilation>-->
         <!-- <EnableLLVM>True</EnableLLVM> -->
-        <EmbedAssembliesIntoApk>True</EmbedAssembliesIntoApk>
+        <!--<EmbedAssembliesIntoApk>True</EmbedAssembliesIntoApk>-->
     </PropertyGroup>
 
     <PropertyGroup>
@@ -28,11 +25,11 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Avalonia.Android" Version="$(AvaloniaVersion)" />
+        <PackageReference Include="Avalonia.Android" Version="$(AvaloniaVersion)"/>
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\LToolBox.Ui.Mobile\LToolBox.Ui.Mobile.csproj" />
-        <ProjectReference Include="..\LToolBox.Ui\LToolBox.Ui.csproj" />
+        <ProjectReference Include="..\LToolBox.Ui.Mobile\LToolBox.Ui.Mobile.csproj"/>
+        <ProjectReference Include="..\LToolBox.Ui\LToolBox.Ui.csproj"/>
     </ItemGroup>
 </Project>

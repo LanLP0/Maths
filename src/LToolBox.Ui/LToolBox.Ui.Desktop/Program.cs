@@ -2,6 +2,7 @@
 using System.IO;
 using Avalonia;
 using Avalonia.ReactiveUI;
+using Serilog;
 
 namespace LToolBox.Ui.Desktop;
 
@@ -14,7 +15,7 @@ internal sealed class Program
     public static void Main(string[] args)
     {
         // Persistence config
-        
+
         // Default to app.cfg in bin directory
         // if the config directory is readonly
         var cfgFilePath = "app.cfg";
@@ -29,9 +30,11 @@ internal sealed class Program
         {
             // ignored
         }
-        
+
         App.SetSuspensionDriver(new DesktopSuspensionDriver(cfgFilePath));
-        
+
+        App.LoggerConfiguration.WriteTo.Trace();
+
         BuildAvaloniaApp()
             .StartWithClassicDesktopLifetime(args);
     }
@@ -42,7 +45,6 @@ internal sealed class Program
         return AppBuilder.Configure<App>()
             .UsePlatformDetect()
             .WithInterFont()
-            .LogToTrace()
             .UseReactiveUI();
     }
 }

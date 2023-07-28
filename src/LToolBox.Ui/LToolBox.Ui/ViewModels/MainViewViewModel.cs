@@ -1,20 +1,19 @@
-﻿using Avalonia.Controls;
+using Avalonia.Controls;
+using FluentAvalonia.UI.Controls;
 using ReactiveUI;
 
 namespace LToolBox.Ui.ViewModels;
 
 public sealed class MainViewViewModel : ViewModelBase
 {
-    private ListBoxItem _selectedItem;
+    private NavigationViewItem _selectedItem;
 
-    public ListBoxItem SelectedItem
+    public NavigationViewItem SelectedItem
     {
+        get => _selectedItem;
         set
         {
-            _selectedItem = value;
-            this.RaisePropertyChanged(nameof(SelectedItemText));
+            this.RaiseAndSetIfChanged(ref _selectedItem, value);
         }
     }
-
-    public string SelectedItemText => _selectedItem?.Content is TextBlock textBlock ? textBlock.Text! : "LCalc";
 }

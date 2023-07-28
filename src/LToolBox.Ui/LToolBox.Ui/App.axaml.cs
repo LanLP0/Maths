@@ -1,18 +1,23 @@
-using System;
-using System.IO;
 using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
-using Avalonia.ReactiveUI;
+using LToolBox.Ui.Services;
 using LToolBox.Ui.ViewModels;
 using LToolBox.Ui.Views;
 using ReactiveUI;
+using Serilog;
+using Serilog.Core;
 
 namespace LToolBox.Ui;
 
 public sealed class App : Application
 {
     private static ISuspensionDriver? _suspensionDriver;
+    public static LoggerConfiguration LoggerConfiguration { get; } = new();
+    public static Logger? Logger { get; private set; }
+
+    public static GenericSuspendHelper SuspendHelper { get; } = new();
 
     public static void SetSuspensionDriver(ISuspensionDriver suspensionDriver)
     {
@@ -21,29 +26,22 @@ public sealed class App : Application
 
         _suspensionDriver = suspensionDriver;
     }
-    
+
     public override void Initialize()
     {
+        InitializeLogger();
+
         AvaloniaXamlLoader.Load(this);
     }
 
     public override void OnFrameworkInitializationCompleted()
     {
-        // Persistence config
+        ThemingService.Reload();
 
-        // If the platform is not supported
-        _suspensionDriver ??= new DummySuspensionDriver();
-
-        var suspension = new AutoSuspendHelper(ApplicationLifetime);
-        RxApp.SuspensionHost.CreateNewAppState = () => new AppConfig();
-        RxApp.SuspensionHost.SetupDefaultSuspendResume(_suspensionDriver);
-        suspension.OnFrameworkInitializationCompleted();
-
-        // Load/Create the saved config
-        AppConfig.Instance = RxApp.SuspensionHost.GetAppState<AppConfig>();
-        RestoreAppState();
-
-        Current!.ActualThemeVariantChanged += OnActualThemeVariantChanged;
+        if (!Design.IsDesignMode)
+            InitializeSuspensionDriver();
+        else
+            ThemingService.SwitchToDarkMode();
 
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             desktop.MainWindow = new MainWindow
@@ -59,13 +57,39 @@ public sealed class App : Application
         base.OnFrameworkInitializationCompleted();
     }
 
-    private void OnActualThemeVariantChanged(object? sender, EventArgs e)
+    private void InitializeSuspensionDriver()
     {
-        AppConfig.Instance.AppTheme = Current!.ActualThemeVariant;
+        // If the platform is not supported
+        _suspensionDriver ??= new DummySuspensionDriver();
+
+        RxApp.SuspensionHost.CreateNewAppState = () => AppState.Instance;
+        RxApp.SuspensionHost.SetupDefaultSuspendResume(_suspensionDriver);
+        if (ApplicationLifetime is IControlledApplicationLifetime lt)
+        {
+            lt.Exit += (_, _) => SuspendHelper.SaveState();
+            SuspendHelper.OnCreate();
+        }
+
+        // Load/Create the saved config
+        AppState.Instance = RxApp.SuspensionHost.GetAppState<AppState>();
+        RestoreAppState();
+    }
+
+    public static void InitializeLogger()
+    {
+        if (Logger is not null)
+            return;
+        
+        Avalonia.Logging.Logger.Sink = new AvaloniaLogger();
+
+        // Always write to trace
+        LoggerConfiguration.WriteTo.Trace();
+
+        Logger = LoggerConfiguration.CreateLogger();
     }
 
     private void RestoreAppState()
     {
-        Current!.RequestedThemeVariant = AppConfig.Instance.AppTheme;
+        ThemingService.SetTheme(AppState.Instance.AppTheme);
     }
 }

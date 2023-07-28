@@ -71,7 +71,7 @@ public sealed partial class CalcPage : UserControl
     {
         var mathBlock = new TextBlock
         {
-            Text = _vm.Math,
+            Text = _vm!.Math,
             TextWrapping = TextWrapping.NoWrap,
             TextTrimming = TextTrimming.CharacterEllipsis,
             TextAlignment = TextAlignment.Left

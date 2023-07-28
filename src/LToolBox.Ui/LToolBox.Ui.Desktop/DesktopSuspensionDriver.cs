@@ -3,14 +3,13 @@ using System.IO;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using ReactiveUI;
 
 namespace LToolBox.Ui.Desktop;
 
 public sealed class DesktopSuspensionDriver : ISuspensionDriver
 {
-    private string _file;
+    private readonly string _file;
 
     public DesktopSuspensionDriver(string file)
     {
@@ -20,7 +19,7 @@ public sealed class DesktopSuspensionDriver : ISuspensionDriver
     public IObservable<object> LoadState()
     {
         var lines = File.ReadAllText(_file);
-        var state = JsonSerializer.Deserialize<AppConfig>(lines, Global.SerializerOptions);
+        var state = JsonSerializer.Deserialize<AppState>(lines, Global.SerializerOptions);
         return Observable.Return(state)!;
     }
 
