@@ -1,4 +1,4 @@
-﻿namespace LCalc;
+﻿namespace LCalc.Variables;
 
 internal sealed class Variable
 {

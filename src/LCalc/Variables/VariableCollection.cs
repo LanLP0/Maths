@@ -1,6 +1,6 @@
 ﻿using System.Collections;
 
-namespace LCalc;
+namespace LCalc.Variables;
 
 internal sealed class VariableCollection : IVariableCollection
 {

@@ -1,16 +1,16 @@
 ﻿using System.Collections;
 using System.Diagnostics;
 
-namespace LCalc;
+namespace LCalc.Variables;
 
 /// <summary>
-///     Used by sigma() or cpi() to efficiently override a single variable
+///     Used to efficiently override a single variable
 /// </summary>
-internal sealed class SigmaCPiVariableCollection : IVariableCollection
+internal sealed class SingleVariableCollection : IVariableCollection
 {
-    private readonly IVariableCollection _linkedCollection;
+    private IVariableCollection? _linkedCollection;
 
-    public SigmaCPiVariableCollection(Variable variable, IVariableCollection linkedCollection)
+    public SingleVariableCollection(Variable variable, IVariableCollection? linkedCollection)
     {
         Variable = variable;
         _linkedCollection = linkedCollection;
@@ -20,49 +20,47 @@ internal sealed class SigmaCPiVariableCollection : IVariableCollection
 
     public IEnumerator<Variable> GetEnumerator()
     {
-        throw new UnreachableException();
+        yield return Variable;
     }
 
     IEnumerator IEnumerable.GetEnumerator()
     {
-        throw new UnreachableException();
+        return GetEnumerator();
     }
 
     public int Count => 1;
 
     public bool Contains(Variable variable)
     {
-        throw new UnreachableException();
+        return Contains(variable.Name);
     }
 
     public bool Contains(string name)
     {
-        // We want this able to be the unknown to allow
-        // overriding the default value in _linkedCollection
         if (name == Variable.Name)
             return false;
 
-        return _linkedCollection.Contains(name);
+        return _linkedCollection?.Contains(name) ?? false;
     }
 
     public bool TryAdd(string name, double value)
     {
-        throw new UnreachableException();
+        throw new NotImplementedException();
     }
 
     public bool TryAdd(Variable variable)
     {
-        throw new UnreachableException();
+        throw new NotImplementedException();
     }
 
     public void OverrideAdd(string name, double value)
     {
-        throw new UnreachableException();
+        throw new NotImplementedException();
     }
 
     public void OverrideAdd(Variable variable)
     {
-        throw new UnreachableException();
+        throw new NotImplementedException();
     }
 
     public bool TryGet(string name, out double result)
@@ -73,16 +71,20 @@ internal sealed class SigmaCPiVariableCollection : IVariableCollection
             return true;
         }
 
-        return _linkedCollection.TryGet(name, out result);
+        if (_linkedCollection is not null && _linkedCollection.TryGet(name, out result))
+            return true;
+
+        result = double.NaN;
+        return false;
     }
 
     public int Remove(string name)
     {
-        throw new UnreachableException();
+        throw new NotImplementedException();
     }
 
     public void Link(IVariableCollection? variableCollection)
     {
-        throw new UnreachableException();
+        _linkedCollection = variableCollection;
     }
 }

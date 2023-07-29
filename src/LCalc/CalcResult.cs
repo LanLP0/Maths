@@ -36,6 +36,7 @@ public sealed class CalcResult
 
     public bool IsBool => Bool.HasValue;
     public bool IsDouble => Number.HasValue;
+    public bool IsNumber => IsDouble;
     public bool Faulted => Exception is not null;
     public bool ContainSteps => Steps is not null;
 

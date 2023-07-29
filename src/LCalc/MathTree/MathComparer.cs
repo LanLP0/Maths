@@ -3,39 +3,16 @@ using System.Runtime.InteropServices;
 using System.Text;
 using Common.Results;
 
-namespace LCalc.MathTree.Nodes;
+namespace LCalc.MathTree;
 
-internal sealed class CompareNode : IMathNode
+// Not actually a node
+// IMathNode is used for convenience
+internal sealed class MathComparer : IMathNode
 {
     private readonly List<IMathNode> _args = new();
     private readonly List<CompareOp> _compareOps = new();
 
     public int Priority { get; set; } = MathTree.SpecialNodePriority;
-
-    bool IMathNode.AddNode(IMathNode node)
-    {
-        throw new UnreachableException();
-    }
-
-    public bool IsFull()
-    {
-        throw new UnreachableException();
-    }
-
-    public void ChangeLastNodeTo(IMathNode node)
-    {
-        throw new UnreachableException();
-    }
-
-    public Result GenerateMissingValueError()
-    {
-        throw new UnreachableException();
-    }
-
-    Result<double> IMathNode.Calc(Scope scope)
-    {
-        throw new UnreachableException();
-    }
 
     public Result RenderStep(StringBuilder buffer, int selectedLevel, Scope scope, int nodeLevel = 1,
         bool showTree = false)
@@ -145,6 +122,31 @@ internal sealed class CompareNode : IMathNode
         }
 
         return true;
+    }
+
+    bool IMathNode.AddNode(IMathNode node)
+    {
+        throw new NotImplementedException();
+    }
+
+    public bool IsFull()
+    {
+        throw new NotImplementedException();
+    }
+
+    public void ChangeLastNodeTo(IMathNode node)
+    {
+        throw new NotImplementedException();
+    }
+
+    Result<double> IMathNode.Calc(Scope scope)
+    {
+        throw new NotImplementedException();
+    }
+    
+    public Result GenerateMissingValueError()
+    {
+        throw new NotImplementedException();
     }
 
     internal void AddNode(IMathNode node)

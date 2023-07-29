@@ -19,8 +19,7 @@ internal sealed class Program
 
         if (!AnsiConsole.Profile.Capabilities.Interactive)
         {
-            AnsiConsole.MarkupLine(
-                "[red]This program needs to be run in interactive mode when run with no arguments[/]");
+            AnsiConsole.MarkupLine("[red]This program cannot be run in non-interactive mode[/]");
             return;
         }
 
@@ -29,6 +28,7 @@ internal sealed class Program
         var highlighter = new MathHighlighter();
         var buffer = new StringBuilder();
 
+        var prevAns = double.NaN;
         for (;;)
         {
             buffer.Clear();
@@ -39,7 +39,7 @@ internal sealed class Program
             if (input is "q")
                 return;
 
-            var result = Calculator.CalcRaw(input!, out var raw);
+            var result = Calculator.CalcRaw(input!, out var raw, prevAns: prevAns);
 
             if (result.ContainSteps)
             {
@@ -53,6 +53,9 @@ internal sealed class Program
             buffer.Append(result.RenderValue(raw));
 
             AnsiConsole.MarkupLine(buffer.ToString());
+
+            if (result.IsDouble)
+                prevAns = result.Number!.Value;
         }
     }
 

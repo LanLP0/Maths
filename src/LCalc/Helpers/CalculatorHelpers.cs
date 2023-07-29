@@ -2,6 +2,7 @@
 using Common.Results;
 using LCalc.MathTree;
 using LCalc.MathTree.Nodes;
+using LCalc.Variables;
 
 namespace LCalc.Helpers;
 
@@ -45,7 +46,7 @@ internal static class CalculatorHelpers
         // Setup variable
         var ogVarCollection = scope.Variables;
         var variable1 = new Variable(variable.Name, 0);
-        scope.Variables = new SigmaCPiVariableCollection(variable1, ogVarCollection);
+        scope.Variables = new SingleVariableCollection(variable1, ogVarCollection);
 
         var setupResult = fn.SetupForSolving(scope, out var unknown);
         if (setupResult.Faulted)
@@ -102,7 +103,7 @@ internal static class CalculatorHelpers
         // Setup variable
         var ogVarCollection = scope.Variables;
         var variable1 = new Variable(variable.Name, 0);
-        scope.Variables = new SigmaCPiVariableCollection(variable1, ogVarCollection);
+        scope.Variables = new SingleVariableCollection(variable1, ogVarCollection);
 
         var setupResult = fn.SetupForSolving(scope, out var unknown);
         if (setupResult.Faulted)

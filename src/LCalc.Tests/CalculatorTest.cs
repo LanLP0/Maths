@@ -167,7 +167,7 @@ public sealed class CalculatorTest
                                    + " (15 tries ended)"
 #endif
     )]
-    [InlineData("1 &solve", "No unknown to solve for")]
+    [InlineData("1 &solve", "Nothing to solve for")]
     [InlineData("x*y &solve", "Too many unknowns")]
     public void Calc_Should_Error(string math, string errorMsg)
     {

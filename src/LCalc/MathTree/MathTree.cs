@@ -5,6 +5,7 @@ using Common.Results;
 using LCalc.Extension;
 using LCalc.Helpers;
 using LCalc.MathTree.Nodes;
+using LCalc.Variables;
 
 namespace LCalc.MathTree;
 
@@ -22,7 +23,7 @@ internal sealed class MathTree
 
     public readonly Scope Scope;
 
-    private CompareNode? _compareNode;
+    private MathComparer? _comparer;
     private IMathNode? _root;
     private bool _spaceBeforeToken;
 
@@ -32,6 +33,9 @@ internal sealed class MathTree
         _stack = new NodeStack();
     }
 
+    /// <summary>
+    ///     Parse the math string into a tree
+    /// </summary>
     /// <remarks>This method should only be called once</remarks>
     public Result Parse(ReadOnlySpan<char> math)
     {
@@ -638,7 +642,7 @@ internal sealed class MathTree
             return Err("No expression found");
 
         _root = rootStack[0];
-        _compareNode?.AddNode(_root);
+        _comparer?.AddNode(_root);
         Scope.EndInit();
 
         return Ok();
@@ -882,11 +886,11 @@ internal sealed class MathTree
         var node = levelStack[0];
         levelStack.Clear();
 
-        _compareNode ??= new CompareNode();
+        _comparer ??= new MathComparer();
 
-        _compareNode.AddNode(node);
+        _comparer.AddNode(node);
         if (op.HasValue)
-            _compareNode.AddOp(op.Value);
+            _comparer.AddOp(op.Value);
         return true;
     }
 
@@ -904,14 +908,14 @@ internal sealed class MathTree
 
     public CalcResult Calc()
     {
-        if (_compareNode is not null)
-            return _compareNode.Calc(Scope).MapToCalcResult();
+        if (_comparer is not null)
+            return _comparer.Calc(Scope).MapToCalcResult();
 
         return _root!.Calc(Scope).MapToCalcResult();
     }
 
     public IMathNode GetTopNode()
     {
-        return _compareNode ?? _root!;
+        return _comparer ?? _root!;
     }
 }

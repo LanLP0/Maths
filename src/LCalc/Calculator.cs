@@ -1,6 +1,7 @@
 ﻿using System.Text;
 using Common.Results;
 using LCalc.Extension;
+using LCalc.MathTree;
 using LCalc.MathTree.Nodes;
 
 namespace LCalc;
@@ -14,20 +15,24 @@ public static class Calculator
     ///     Calculate the expression
     /// </summary>
     /// <param name="math">The expression</param>
+    /// <param name="steps">Render solving steps (result.Steps)</param>
+    /// <param name="prevAns">The previous answer (variable: ans)</param>
     /// <returns>The result (formatted)</returns>
-    public static string CalcFormatted(string math)
+    public static string CalcFormatted(string math, bool steps = false, double prevAns = double.NaN)
     {
-        return CalcFormatted((ReadOnlySpan<char>)math);
+        return CalcFormatted((ReadOnlySpan<char>)math, steps, prevAns);
     }
 
     /// <summary>
     ///     Calculate the expression
     /// </summary>
     /// <param name="math">The expression</param>
+    /// <param name="steps">Render solving steps (result.Steps)</param>
+    /// <param name="prevAns">The previous answer (variable: ans)</param>
     /// <returns>The result (formatted)</returns>
-    public static string CalcFormatted(ReadOnlySpan<char> math)
+    public static string CalcFormatted(ReadOnlySpan<char> math, bool steps = false, double prevAns = double.NaN)
     {
-        var result = CalcRaw(math, out var rawValueRequested);
+        var result = CalcRaw(math, out var rawValueRequested, steps, prevAns);
 
         return result.Render(rawValueRequested);
     }
@@ -37,8 +42,11 @@ public static class Calculator
     /// </summary>
     /// <param name="math">The expression</param>
     /// <param name="rawValueRequested">If the &raw argument exists</param>
+    /// <param name="steps">Render solving steps (result.Steps)</param>
+    /// <param name="prevAns">The previous answer (variable: ans)</param>
     /// <returns>The raw result</returns>
-    public static CalcResult CalcRaw(ReadOnlySpan<char> math, out bool rawValueRequested)
+    public static CalcResult CalcRaw(ReadOnlySpan<char> math, out bool rawValueRequested,
+        bool steps = false, double prevAns = double.NaN)
     {
         rawValueRequested = false;
 
@@ -62,16 +70,20 @@ public static class Calculator
                 return rs.Exception!;
 
             if (unknown == string.Empty)
-                return CalcResult.Err("No unknown to solve for");
+                return CalcResult.Err("Nothing to solve for");
 
             return NewtonRaphsonSolver.SolveFor(tree, unknown).MapToCalcResult();
         }
+        
+        // Override if needed
+        if (steps)
+            tree.Scope.SetStepByStepOpt();
+
+        if (!double.IsNaN(prevAns))
+            tree.Scope.SetVariable("ans", prevAns);
 
         var calcResult = tree.Calc();
-        if (!tree.Scope.GetStepByStepOpt())
-            return calcResult;
-
-        if (calcResult.Faulted)
+        if (!tree.Scope.GetStepByStepOpt() || calcResult.Faulted)
             return calcResult;
 
         var result1 = CalcStep(tree);
@@ -98,14 +110,14 @@ public static class Calculator
             if (i is 2)
                 continue;
 
-            if (i is 3 && root.Priority is MathTree.MathTree
-                    .ValueNodePriority) // Prevent the last line to be printed twice
+            // Prevent the last line to be printed twice
+            if (i is 3 && root.Priority is MathTree.MathTree.ValueNodePriority)
                 break;
 
             buffer.Append(Environment.NewLine);
         }
 
-        if (root is not CompareNode)
+        if (root is not MathComparer)
             return buffer.ToString();
 
         buffer.Append(Environment.NewLine);
