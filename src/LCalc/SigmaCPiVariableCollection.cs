@@ -4,7 +4,7 @@ using System.Diagnostics;
 namespace LCalc;
 
 /// <summary>
-/// Used by sigma() or cpi() to efficiently override a single variable
+///     Used by sigma() or cpi() to efficiently override a single variable
 /// </summary>
 internal sealed class SigmaCPiVariableCollection : IVariableCollection
 {

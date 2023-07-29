@@ -31,7 +31,7 @@ internal sealed class MMDeltaResult
             {
                 if (humanize)
                     return result1!.Value.Humanize();
-                
+
                 return result1!.Value.ToString();
             }
             case 2:

@@ -7,12 +7,13 @@ using LToolBox.Ui;
 using LToolBox.Ui.Browser;
 
 [assembly: SupportedOSPlatform("browser")]
-internal partial class Program
+
+internal class Program
 {
     private static async Task Main(string[] args)
     {
         App.SetSuspensionDriver(new BrowserSuspensionDriver());
-        
+
         await BuildAvaloniaApp()
             .WithInterFont()
             .UseReactiveUI()
@@ -20,5 +21,7 @@ internal partial class Program
     }
 
     public static AppBuilder BuildAvaloniaApp()
-        => AppBuilder.Configure<App>();
+    {
+        return AppBuilder.Configure<App>();
+    }
 }

@@ -2,7 +2,7 @@
 using System.IO;
 using System.Reactive;
 using System.Reactive.Linq;
-using System.Text.Json;
+using Newtonsoft.Json;
 using ReactiveUI;
 
 namespace LToolBox.Ui.Desktop;
@@ -18,14 +18,14 @@ public sealed class DesktopSuspensionDriver : ISuspensionDriver
 
     public IObservable<object> LoadState()
     {
-        var lines = File.ReadAllText(_file);
-        var state = JsonSerializer.Deserialize<AppState>(lines, Global.SerializerOptions);
+        var s = File.ReadAllText(_file);
+        var state = JsonConvert.DeserializeObject<AppState>(s);
         return Observable.Return(state)!;
     }
 
     public IObservable<Unit> SaveState(object state)
     {
-        var json = JsonSerializer.Serialize(state, Global.SerializerOptions);
+        var json = JsonConvert.SerializeObject(state);
         File.WriteAllText(_file, json);
         return Observable.Return(Unit.Default);
     }

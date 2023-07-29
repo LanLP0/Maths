@@ -12,14 +12,14 @@ public sealed class AvaloniaLogger : ILogSink
 
     public void Log(LogEventLevel level, string area, object? source, string messageTemplate)
     {
-        App.Logger?.Write(MapLogLevel(level), "{}-{}: {}",
+        App.Logger?.Write(MapLogLevel(level), "{source}-{name}: {message}",
             source?.GetType().FullName, area, messageTemplate);
     }
 
     public void Log(LogEventLevel level, string area, object? source, string messageTemplate,
         params object?[] propertyValues)
     {
-        App.Logger?.Write(MapLogLevel(level), "{}-{}: " + messageTemplate,
+        App.Logger?.Write(MapLogLevel(level), "{name}-{area}: " + messageTemplate,
             source?.GetType().FullName, area, propertyValues);
     }
 

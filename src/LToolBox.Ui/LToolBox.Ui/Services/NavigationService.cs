@@ -1,8 +1,6 @@
-﻿using Avalonia.Controls;
-using FluentAvalonia.UI.Controls;
+﻿using FluentAvalonia.UI.Controls;
 using FluentAvalonia.UI.Media.Animation;
 using FluentAvalonia.UI.Navigation;
-using LToolBox.Ui.ViewModels;
 
 namespace LToolBox.Ui.Services;
 
@@ -19,10 +17,10 @@ public sealed class NavigationService
     public void NavigateFromContext(object dataContext, NavigationTransitionInfo transitionInfo = null)
     {
         _frame.NavigateFromObject(dataContext,
-        new FrameNavigationOptions
-        {
-            IsNavigationStackEnabled = true,
-            TransitionInfoOverride = transitionInfo ?? new SuppressNavigationTransitionInfo()
-        });
+            new FrameNavigationOptions
+            {
+                IsNavigationStackEnabled = true,
+                TransitionInfoOverride = transitionInfo ?? new SuppressNavigationTransitionInfo()
+            });
     }
 }

@@ -6,9 +6,14 @@ namespace LToolBox.Ui.ViewModels;
 
 public sealed class SettingsViewModel : NavViewModelBase
 {
-    private AppTheme _currentAppTheme = ThemingService.AppTheme;
     private Color _accentColor = ThemingService.AccentColor;
-    
+    private AppTheme _currentAppTheme = ThemingService.AppTheme;
+
+    public SettingsViewModel()
+    {
+        ThemingService.OnThemeChange += OnThemeChange;
+    }
+
     public override string NavHeader { get; } = "Settings";
     public override string? IconKey { get; } = "SettingsIcon";
     public override bool IsFooter { get; } = true;
@@ -33,11 +38,6 @@ public sealed class SettingsViewModel : NavViewModelBase
             this.RaiseAndSetIfChanged(ref _accentColor, value);
             ThemingService.SetAccentColor(value);
         }
-    }
-
-    public SettingsViewModel()
-    {
-        ThemingService.OnThemeChange += OnThemeChange;
     }
 
     private void OnThemeChange(object? sender, AppTheme e)

@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Reactive;
 using System.Reactive.Linq;
-using System.Text.Json;
-using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 using ReactiveUI;
 
 namespace LToolBox.Ui.Browser;
@@ -15,14 +13,14 @@ public sealed class BrowserSuspensionDriver : ISuspensionDriver
         var json = JavascriptStateManager.Load();
         if (string.IsNullOrEmpty(json))
             throw new Exception();
-        
-        var state = JsonSerializer.Deserialize<AppState>(json, Global.SerializerOptions);
+
+        var state = JsonConvert.DeserializeObject<AppState>(json);
         return Observable.Return(state)!;
     }
 
     public IObservable<Unit> SaveState(object state)
     {
-        var json = JsonSerializer.Serialize(state, Global.SerializerOptions);
+        var json = JsonConvert.SerializeObject(state);
         JavascriptStateManager.Save(json);
         return Observable.Return(Unit.Default);
     }

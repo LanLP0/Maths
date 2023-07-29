@@ -3,7 +3,6 @@ using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using LToolBox.Ui.Services;
-using LToolBox.Ui.ViewModels;
 using LToolBox.Ui.Views;
 using ReactiveUI;
 using Serilog;
@@ -44,15 +43,9 @@ public sealed class App : Application
             ThemingService.SwitchToDarkMode();
 
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
-            desktop.MainWindow = new MainWindow
-            {
-                DataContext = new MainViewViewModel()
-            };
+            desktop.MainWindow = new MainWindow();
         else if (ApplicationLifetime is ISingleViewApplicationLifetime singleViewPlatform)
-            singleViewPlatform.MainView = new MainView
-            {
-                DataContext = new MainViewViewModel()
-            };
+            singleViewPlatform.MainView = new MainView();
 
         base.OnFrameworkInitializationCompleted();
     }
@@ -72,24 +65,26 @@ public sealed class App : Application
 
         // Load/Create the saved config
         AppState.Instance = RxApp.SuspensionHost.GetAppState<AppState>();
-        RestoreAppState();
+        RestoreTheme();
     }
 
     public static void InitializeLogger()
     {
         if (Logger is not null)
             return;
-        
-        Avalonia.Logging.Logger.Sink = new AvaloniaLogger();
 
-        // Always write to trace
+#if DEBUG
+        Avalonia.Logging.Logger.Sink = new AvaloniaLogger();
         LoggerConfiguration.WriteTo.Trace();
+        LoggerConfiguration.WriteTo.Debug();
+#endif
 
         Logger = LoggerConfiguration.CreateLogger();
     }
 
-    private void RestoreAppState()
+    private void RestoreTheme()
     {
         ThemingService.SetTheme(AppState.Instance.AppTheme);
+        ThemingService.SetAccentColor(AppState.Instance.AccentColor);
     }
 }

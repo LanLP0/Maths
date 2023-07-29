@@ -3,7 +3,7 @@
  * Save the app state
  * @param {string} state The app state as text
  */
-function save(state){
+function save(state) {
     let storage = window.localStorage;
     storage.setItem("config", state);
 }
@@ -12,7 +12,7 @@ function save(state){
  * Load the app state as text
  * @return {string} The app stored state as text
  */
-function load(){
+function load() {
     let storage = window.localStorage;
     return storage.getItem("config");
 }
@@ -20,18 +20,18 @@ function load(){
 /**
  * Invalidate the app state
  */
-function invalidate(){
+function invalidate() {
     let storage = window.localStorage;
     storage.removeItem("config");
 }
 
-import { dotnet } from './dotnet.js'
+import {dotnet} from './dotnet.js'
 
 const is_browser = typeof window != "undefined";
 if (!is_browser) throw new Error(`Expected to be running in a browser`);
 
 
-const { setModuleImports, getAssemblyExports, getConfig } = await dotnet
+const {setModuleImports, getAssemblyExports, getConfig} = await dotnet
     .withDiagnosticTracing(false)
     .withApplicationArgumentsFromQuery()
     .create();

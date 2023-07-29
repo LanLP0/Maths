@@ -1,4 +1,3 @@
-using Avalonia.Controls;
 using FluentAvalonia.UI.Windowing;
 
 namespace LToolBox.Ui.Views;
@@ -9,6 +8,7 @@ public sealed partial class MainWindow : AppWindow
     {
         TitleBar.ExtendsContentIntoTitleBar = true;
         TitleBar.TitleBarHitTestType = TitleBarHitTestType.Complex;
+
         InitializeComponent();
     }
 }

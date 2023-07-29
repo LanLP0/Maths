@@ -9,7 +9,6 @@ namespace LToolBox.Ui.Services;
 public static class ThemingService
 {
     private static AppTheme _appTheme;
-    private static Color _accentColor = Color.Parse("#6933FFCD");
 
     public static AppTheme AppTheme
     {
@@ -21,7 +20,7 @@ public static class ThemingService
         }
     }
 
-    public static Color AccentColor => _accentColor;
+    public static Color AccentColor { get; private set; } = Color.Parse("#6933FFCD");
 
     public static event EventHandler<AppTheme>? OnThemeChange;
 
@@ -37,7 +36,7 @@ public static class ThemingService
             AppTheme.Light => AppTheme.Dark,
             _ => throw new ArgumentOutOfRangeException()
         };
-        
+
         SetTheme(theme);
     }
 
@@ -45,14 +44,14 @@ public static class ThemingService
     {
         if (theme == AppTheme)
             return;
-        
+
         Application.Current!.RequestedThemeVariant = theme switch
         {
             AppTheme.Dark => ThemeVariant.Dark,
             AppTheme.Light => ThemeVariant.Light,
             _ => throw new ArgumentOutOfRangeException(nameof(theme), theme, null)
         };
-        
+
         OnThemeChange?.Invoke(null, theme);
 
         AppTheme = theme;
@@ -76,11 +75,11 @@ public static class ThemingService
 
     public static void SetAccentColor(Color color)
     {
-        _accentColor = color;
+        AccentColor = color;
         AppState.Instance.AccentColor = color;
-        
+
         Application.Current!.Resources["OverlayBackgroundColor"] = new SolidColorBrush(color, color.A / 255.0);
-        
+
         var fluentStyle = (FluentAvaloniaTheme)Application.Current.Styles[0];
         fluentStyle.CustomAccentColor = color;
     }

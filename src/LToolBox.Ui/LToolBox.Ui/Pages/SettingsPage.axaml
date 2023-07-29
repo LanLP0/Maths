@@ -10,9 +10,10 @@
     <Design.DataContext>
         <vm:SettingsViewModel />
     </Design.DataContext>
-    
+
     <ScrollViewer>
         <StackPanel Spacing="10">
+            
             <ui:SettingsExpander Header="App Theme"
                                  IconSource="DarkTheme"
                                  Description="Change the current app theme">
@@ -23,15 +24,16 @@
                               MinWidth="150" />
                 </ui:SettingsExpander.Footer>
             </ui:SettingsExpander>
-            
+
             <ui:SettingsExpander Header="Accent Color"
                                  IconSource="ColorLine"
                                  Description="Set a Accent Color">
-                
+
                 <ui:SettingsExpander.Footer>
                     <ColorPicker Color="{Binding AccentColor}" />
                 </ui:SettingsExpander.Footer>
             </ui:SettingsExpander>
+            
         </StackPanel>
     </ScrollViewer>
 </UserControl>

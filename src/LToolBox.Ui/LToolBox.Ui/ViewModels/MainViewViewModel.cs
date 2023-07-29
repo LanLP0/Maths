@@ -1,4 +1,3 @@
-using Avalonia.Controls;
 using FluentAvalonia.UI.Controls;
 using ReactiveUI;
 
@@ -11,9 +10,6 @@ public sealed class MainViewViewModel : ViewModelBase
     public NavigationViewItem SelectedItem
     {
         get => _selectedItem;
-        set
-        {
-            this.RaiseAndSetIfChanged(ref _selectedItem, value);
-        }
+        set => this.RaiseAndSetIfChanged(ref _selectedItem, value);
     }
 }

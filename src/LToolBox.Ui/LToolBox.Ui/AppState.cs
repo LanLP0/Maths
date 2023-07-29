@@ -13,6 +13,6 @@ public class AppState
     [DataMember] public AppTheme AppTheme { get; set; } = ThemingService.AppTheme;
 
     [DataMember] public Color AccentColor { get; set; } = ThemingService.AccentColor;
-        
+
     [DataMember] public string PageName { get; set; } = CalcViewModel.NavHeaderName;
 }

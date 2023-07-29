@@ -1,25 +1,24 @@
 using System.Collections.Generic;
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Media;
 using Avalonia.Threading;
 using FluentAvalonia.UI.Controls;
 using FluentAvalonia.UI.Navigation;
 using LToolBox.Ui.Services;
 using LToolBox.Ui.ViewModels;
-using ColorChangedEventArgs = Avalonia.Controls.ColorChangedEventArgs;
 
 namespace LToolBox.Ui.Views;
 
 public sealed partial class MainView : UserControl
 {
-    private MainViewViewModel _vm;
-    
+    private readonly MainViewViewModel _vm;
+
     public MainView()
     {
-        InitializeComponent();
+        _vm = new MainViewViewModel();
+        DataContext = _vm;
 
-        _vm = (MainViewViewModel)DataContext!;
+        InitializeComponent();
     }
 
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
@@ -66,7 +65,7 @@ public sealed partial class MainView : UserControl
                 if (page.NavHeader == AppState.Instance.PageName)
                     target = nvi.Tag!;
             }
-            
+
             // Quick option to switch theme mode
             footerItems.Insert(0, new NavigationViewItem
             {
@@ -109,16 +108,16 @@ public sealed partial class MainView : UserControl
         {
             if (nvi.Tag != nvmb)
                 continue;
-            
+
             _vm.SelectedItem = nvi;
             return;
         }
-        
+
         foreach (NavigationViewItem nvi in NavView.FooterMenuItemsSource)
         {
             if (nvi.Tag != nvmb)
                 continue;
-            
+
             _vm.SelectedItem = nvi;
             return;
         }
