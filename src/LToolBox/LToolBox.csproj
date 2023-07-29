@@ -2,7 +2,7 @@
 
     <PropertyGroup>
         <OutputType>Exe</OutputType>
-        <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
+        <TargetFramework>net7.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <AssemblyName>ltb</AssemblyName>
@@ -17,9 +17,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Common.Cli\Common.Cli.csproj"/>
+        <ProjectReference Include="..\LCalc.Cli\LCalc.Cli.csproj"/>
         <ProjectReference Include="..\MinMaxFraction.Core\MinMaxFraction.Core.csproj"/>
-        <ProjectReference Include="..\LCalc\LCalc.Core.csproj"/>
     </ItemGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Debug'">

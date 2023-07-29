@@ -9,18 +9,19 @@ namespace LCalc.MathTree.Nodes;
 internal sealed class FunctionCallNode : IMathNode
 {
     private readonly List<IMathNode> _args = new();
-    private readonly string _name;
 
     public FunctionCallNode(string name)
     {
-        _name = name;
+        Name = name;
     }
+
+    public string Name { get; set; }
 
     public int Priority { get; set; } = MathTree.SpecialNodePriority;
 
     public Result<double> Calc(Scope scope)
     {
-        switch (_name) // Special functions that need the raw IMathNode
+        switch (Name) // Special functions that need the raw IMathNode
         {
             case "sigma":
                 return CalculatorHelpers.CalcSigma(_args, scope);
@@ -40,7 +41,7 @@ internal sealed class FunctionCallNode : IMathNode
             math[i] = rs.Value;
         }
 
-        switch (_name)
+        switch (Name)
         {
             case "rng":
             case "random":
@@ -80,8 +81,8 @@ internal sealed class FunctionCallNode : IMathNode
             default:
                 var customFunctions = scope.CustomFunctions;
                 if (customFunctions is null)
-                    return Err($"Unknown function {_name}()");
-                return customFunctions.Execute(_name, math);
+                    return Err($"Unknown function {Name}()");
+                return customFunctions.Execute(Name, math);
         }
     }
 
@@ -118,7 +119,7 @@ internal sealed class FunctionCallNode : IMathNode
     }
 
     public Result RenderStep(StringBuilder buffer, int selectedLevel, Scope scope, int nodeLevel = 1,
-        bool showTree = false)
+        bool showTree = false, bool latex = false)
     {
         nodeLevel++;
         if (nodeLevel == selectedLevel)
@@ -131,33 +132,40 @@ internal sealed class FunctionCallNode : IMathNode
             return Ok();
         }
 
-        buffer.Append(_name);
-        buffer.Append('(');
+        if (!latex)
+            return Name switch
+            {
+                "abs" => RenderAbs(buffer, selectedLevel, scope, nodeLevel, showTree, latex),
+                "sigma" => RenderSigmaCpi(buffer, selectedLevel, scope, nodeLevel, showTree, latex, true),
+                "cpi" => RenderSigmaCpi(buffer, selectedLevel, scope, nodeLevel, showTree, latex, false),
+                _ => RenderNormal(buffer, selectedLevel, scope, nodeLevel, showTree, latex)
+            };
 
-        var args = CollectionsMarshal.AsSpan(_args);
-        for (var i = 0; i < args.Length; i++)
+        return Name switch
         {
-            var result = args[i].RenderStep(buffer, selectedLevel, scope, nodeLevel, showTree);
-            if (result.Faulted)
-                return result;
-
-            if (i == args.Length - 1)
-                continue;
-
-            buffer.Append(',');
-            buffer.Append(' ');
-        }
-
-        buffer.Append(')');
-
-        return Ok();
+            "abs" => RenderAbs(buffer, selectedLevel, scope, nodeLevel, showTree, latex),
+            "sqrt" => RenderSqrtCbrt(buffer, selectedLevel, scope, nodeLevel, showTree, true),
+            "cbrt" => RenderSqrtCbrt(buffer, selectedLevel, scope, nodeLevel, showTree, false),
+            "ceiling" => RenderCeilingFloor(buffer, selectedLevel, scope, nodeLevel, showTree, true),
+            "floor" => RenderCeilingFloor(buffer, selectedLevel, scope, nodeLevel, showTree, false),
+            "sigma" => RenderSigmaCpi(buffer, selectedLevel, scope, nodeLevel, showTree, latex, true),
+            "cpi" => RenderSigmaCpi(buffer, selectedLevel, scope, nodeLevel, showTree, latex, false),
+            _ => RenderNormal(buffer, selectedLevel, scope, nodeLevel, showTree, latex)
+        };
     }
 
     public Result<int> GetDepth()
     {
-        var max = 0;
-        foreach (var arg in _args)
+        var limit = Name switch
         {
+            "sigma" or "cpi" => 3,
+            _ => _args.Count
+        };
+
+        var max = 0;
+        for (var i = 0; i < limit; i++)
+        {
+            var arg = _args[i];
             var result = arg.GetDepth();
             if (result.Faulted)
                 return result;
@@ -187,6 +195,119 @@ internal sealed class FunctionCallNode : IMathNode
                 return rs;
         }
 
+        return Ok();
+    }
+
+    private Result RenderAbs(StringBuilder buffer, int selectedLevel, Scope scope, int nodeLevel, bool showTree,
+        bool latex)
+    {
+        var arg = _args[0];
+
+        buffer.Append('|');
+
+        var result = arg.RenderStep(buffer, selectedLevel, scope, nodeLevel, showTree, latex);
+        if (result.Faulted)
+            return result;
+
+        buffer.Append('|');
+        return Ok();
+    }
+
+    private Result RenderSqrtCbrt(StringBuilder buffer, int selectedLevel, Scope scope, int nodeLevel,
+        bool showTree, bool isSqrt)
+    {
+        var arg = _args[0];
+
+        buffer.Append(isSqrt ? @"\sqrt{" : @"\sqrt[3]{");
+
+        var result = arg.RenderStep(buffer, selectedLevel, scope, nodeLevel, showTree, true);
+        if (result.Faulted)
+            return result;
+
+        buffer.Append('}');
+        return Ok();
+    }
+
+    private Result RenderCeilingFloor(StringBuilder buffer, int selectedLevel, Scope scope, int nodeLevel,
+        bool showTree, bool isCeiling)
+    {
+        var arg = _args[0];
+
+        buffer.Append(isCeiling ? @"\lceil " : @"\lfloor ");
+
+        var result = arg.RenderStep(buffer, selectedLevel, scope, nodeLevel, showTree, true);
+        if (result.Faulted)
+            return result;
+
+        buffer.Append(isCeiling ? @"\rceil " : @"\rfloor ");
+        return Ok();
+    }
+
+    private Result RenderSigmaCpi(StringBuilder buffer, int selectedLevel, Scope scope, int nodeLevel, bool showTree,
+        bool latex, bool isSigma)
+    {
+        var args = CollectionsMarshal.AsSpan(_args);
+
+        if (latex)
+        {
+            buffer.Append(isSigma ? @"\sum" : @"\prod");
+            buffer.Append(@"\limits_{");
+            buffer.Append((args[0] as VariableNode)!.Name);
+            buffer.Append('=');
+        }
+        else
+        {
+            buffer.Append(isSigma ? "sigma(" : "cpi(");
+            buffer.Append((args[0] as VariableNode)!.Name);
+            buffer.Append(", ");
+        }
+
+        var result = args[1].RenderStep(buffer, selectedLevel, scope, nodeLevel, showTree, latex);
+        if (result.Faulted)
+            return result;
+
+        buffer.Append(latex ? @"}^{" : ", ");
+
+        result = args[2].RenderStep(buffer, selectedLevel, scope, nodeLevel, showTree, latex);
+        if (result.Faulted)
+            return result;
+
+        if (latex)
+            buffer.Append('}');
+        else
+            buffer.Append(", ");
+
+        if (latex && args[3] is not (ExponentNode or BitwiseNotNode))
+            args[3].Priority = MathTree.ValueNodePriority;
+
+        // This shouldn't be calculated and sometime should be put in brackets
+        result = args[3].RenderStep(buffer, -1, scope, 0, showTree, latex);
+
+        if (!latex)
+            buffer.Append(')');
+        return result;
+    }
+
+    private Result RenderNormal(StringBuilder buffer, int selectedLevel, Scope scope, int nodeLevel, bool showTree,
+        bool latex)
+    {
+        buffer.Append(Name);
+        buffer.Append('(');
+
+        var args = CollectionsMarshal.AsSpan(_args);
+        for (var i = 0; i < args.Length; i++)
+        {
+            var result = args[i].RenderStep(buffer, selectedLevel, scope, nodeLevel, showTree, latex);
+            if (result.Faulted)
+                return result;
+
+            if (i == args.Length - 1)
+                continue;
+
+            buffer.Append(", ");
+        }
+
+        buffer.Append(')');
         return Ok();
     }
 }

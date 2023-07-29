@@ -50,7 +50,7 @@ internal sealed class CustomFunctionNode : IMathNode
     }
 
     public Result RenderStep(StringBuilder buffer, int selectedLevel, Scope scope, int nodeLevel = 1,
-        bool showTree = false)
+        bool showTree = false, bool latex = false)
     {
         throw new UnreachableException();
     }

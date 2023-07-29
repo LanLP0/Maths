@@ -74,7 +74,7 @@ internal sealed class BitwiseAndNode : IMathNode
     }
 
     public Result RenderStep(StringBuilder buffer, int selectedLevel, Scope scope, int nodeLevel = 1,
-        bool showTree = false)
+        bool showTree = false, bool latex = false)
     {
         if (!IsFull())
             return GenerateMissingValueError();
@@ -92,13 +92,13 @@ internal sealed class BitwiseAndNode : IMathNode
         if (isEncased || showTree)
             buffer.Append('(');
 
-        var result = _arg1!.RenderStep(buffer, selectedLevel, scope, nodeLevel, showTree);
+        var result = _arg1!.RenderStep(buffer, selectedLevel, scope, nodeLevel, showTree, latex);
         if (result.Faulted)
             return result;
-        buffer.Append(' ');
-        buffer.Append('&');
-        buffer.Append(' ');
-        result = _arg2!.RenderStep(buffer, selectedLevel, scope, nodeLevel, showTree);
+
+        buffer.Append(latex ? " \\mathbin{\\&} " : " & ");
+
+        result = _arg2!.RenderStep(buffer, selectedLevel, scope, nodeLevel, showTree, latex);
         if (result.Faulted)
             return result;
 

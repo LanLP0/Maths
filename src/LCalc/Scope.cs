@@ -17,7 +17,7 @@ internal sealed class Scope
     public Scope(bool isCustomFunctionAllowed, bool isCalculatorOptionAllowed, bool isVariableAllowed,
         bool isCompareAllowed)
     {
-        Option = 0;
+        Option = CalculatorOption.None;
 
         if (isVariableAllowed)
             Option = CalculatorOption.VariableAllowed;
@@ -33,13 +33,35 @@ internal sealed class Scope
         Variables = new VariableCollection();
     }
 
+    public Scope(CalculatorOption options)
+    {
+        Option = SanitizeOptions(options);
+
+        Variables = new VariableCollection();
+        CustomFunctions = new CustomFunctionCollection();
+    }
+
     public CalculatorOption Option { get; set; }
     public CustomFunctionCollection? CustomFunctions { get; set; }
     public IVariableCollection Variables { get; set; }
 
-    public bool CustomFunctionAllowed => CustomFunctions is not null;
+    public bool IsCustomFunctionAllowed => CustomFunctions is not null;
     public bool IsCompareAllowed => (Option & CalculatorOption.CompareAllowed) != 0;
     public bool IsCalculatorOptionAllowed => (Option & CalculatorOption.CalculatorOptionAllowed) != 0;
+    public bool IsVariableAllowed => (Option & CalculatorOption.VariableAllowed) != 0;
+
+    private static CalculatorOption SanitizeOptions(CalculatorOption options)
+    {
+        if ((options & CalculatorOption.Tree) != 0)
+            options |= CalculatorOption.Step;
+
+        if ((options & CalculatorOption.LaTeXDoc) != 0)
+            options |= CalculatorOption.LaTeX | CalculatorOption.Step;
+
+        if ((options & CalculatorOption.LaTeX) != 0)
+            options |= CalculatorOption.Step;
+        return options;
+    }
 
     public Result<double> GetVariable(string name)
     {
@@ -54,36 +76,20 @@ internal sealed class Scope
 
     public Result SetVariable(string name, double value)
     {
-        if ((Option & CalculatorOption.VariableAllowed) == 0)
-            return Err("Variable not allowed in this scope");
-
         if (Variables.TryAdd(name, value))
             return Ok();
 
         return Err($"Variable '{name}' had already been set");
     }
 
-    public Result SetStepByStepOpt()
+    public void SetOpt(CalculatorOption op)
     {
-        if (!IsCalculatorOptionAllowed)
-            return Err("Cannot set calculator option in this scope");
-
-        Option |= CalculatorOption.StepByStep;
-        return Ok();
+        Option |= op;
     }
 
     public bool GetStepByStepOpt()
     {
-        return (Option & CalculatorOption.StepByStep) != 0;
-    }
-
-    public Result SetRawValueOpt()
-    {
-        if (!IsCalculatorOptionAllowed)
-            return Err("Cannot set calculator option in this scope");
-
-        Option |= CalculatorOption.Raw;
-        return Ok();
+        return (Option & CalculatorOption.Step) != 0;
     }
 
     public bool GetRawValueOpt()
@@ -91,27 +97,9 @@ internal sealed class Scope
         return (Option & CalculatorOption.Raw) != 0;
     }
 
-    public Result SetShowTreeOpt()
-    {
-        if (!IsCalculatorOptionAllowed)
-            return Err("Cannot set calculator option in this scope");
-
-        Option |= CalculatorOption.ShowTree;
-        return Ok();
-    }
-
     public bool GetShowTreeOpt()
     {
-        return (Option & CalculatorOption.ShowTree) != 0;
-    }
-
-    public Result SetSolveOpt()
-    {
-        if (!IsCalculatorOptionAllowed)
-            return Err("Cannot set calculator option in this scope");
-
-        Option |= CalculatorOption.Solve;
-        return Ok();
+        return (Option & CalculatorOption.Tree) != 0;
     }
 
     public bool GetSolveOpt()
@@ -119,20 +107,14 @@ internal sealed class Scope
         return (Option & CalculatorOption.Solve) != 0;
     }
 
-    public Result<CustomFunctionCollection> GetFnCollection()
+    public bool GetLaTeXOpt()
     {
-        if (CustomFunctions is null)
-            return Err<CustomFunctionCollection>("Custom function not allowed in this scope");
-
-        return CustomFunctions!;
+        return (Option & CalculatorOption.LaTeX) != 0;
     }
 
-    public Result AddFn(CustomFunction.CustomFunction fn)
+    public bool GetLaTeXDocOpt()
     {
-        if (CustomFunctions is null)
-            return Err<CustomFunctionCollection>("Custom function not allowed in this scope");
-
-        return CustomFunctions!.Add(fn);
+        return (Option & CalculatorOption.LaTeXDoc) != 0;
     }
 
     public void EndInit()

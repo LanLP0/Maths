@@ -51,7 +51,7 @@ internal sealed class BitwiseNotNode : IMathNode
 
 
     public Result RenderStep(StringBuilder buffer, int selectedLevel, Scope scope, int nodeLevel = 1,
-        bool showTree = false)
+        bool showTree = false, bool latex = false)
     {
         if (!IsFull())
             return GenerateMissingValueError();
@@ -69,8 +69,12 @@ internal sealed class BitwiseNotNode : IMathNode
         if (isEncased || showTree)
             buffer.Append('(');
 
-        buffer.Append('~');
-        var result = _arg!.RenderStep(buffer, selectedLevel, scope, nodeLevel, showTree);
+        if (latex)
+            buffer.Append(" \\sim\\! ");
+        else
+            buffer.Append('~');
+
+        var result = _arg!.RenderStep(buffer, selectedLevel, scope, nodeLevel, showTree, latex);
         if (result.Faulted)
             return result;
 

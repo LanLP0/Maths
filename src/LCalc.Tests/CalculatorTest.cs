@@ -40,8 +40,8 @@ public sealed class CalculatorTest
     // Bitwise
     [InlineData("2&3", "2")]
     [InlineData("~2", "-3")]
-    [InlineData("2|3", "3")]
-    [InlineData("1|6", "7")]
+    [InlineData("2||3", "3")]
+    [InlineData("1||6", "7")]
     [InlineData("2<<3", "16")]
     [InlineData("5>>2", "1")]
     [InlineData("12^^10", "6")]
@@ -52,6 +52,7 @@ public sealed class CalculatorTest
     [InlineData("sum(1 2 3)", "6")]
     [InlineData("avg(1 2 3 4 5)", "3")]
     [InlineData("abs(-1)", "1")]
+    [InlineData("|-abs(-|-1|)|", "1")]
     [InlineData("cbrt(8)", "2")]
     [InlineData("sqrt(4)", "2")]
     [InlineData("ceiling(4.5)", "5")]
@@ -125,8 +126,8 @@ public sealed class CalculatorTest
     [InlineData("null!", "Unknown variable 'null'")]
     [InlineData("2.5<<2.5", "Value(s) of operator << must be integer")]
     [InlineData("50!<<50!", "Value(s) of operator << must be between 2^31 and -2^31")]
-    [InlineData("2.5|2.5", "Value(s) of operator | must be integer")]
-    [InlineData("100!|100!", "Value(s) of operator | must be between 2^63 and -2^63")]
+    [InlineData("2.5||2.5", "Value(s) of operator || must be integer")]
+    [InlineData("100!||100!", "Value(s) of operator || must be between 2^63 and -2^63")]
     [InlineData("-n", "Unknown variable 'n'")]
     [InlineData("1~", "Invalid operator ~")]
     [InlineData("1&", "Missing value after operator &")]
@@ -197,30 +198,42 @@ public sealed class CalculatorTest
         """)]
     [InlineData("abs(sin(((~1>>2<<2)^2!/1000*50-40+1))) &step",
         """
-        abs(sin((((~1 >> 2 << 2) ^ 2!) / 1000 * 50 - 40 + 1)))
-        abs(sin(((-4 ^ 2!) / 1000 * 50 - 40 + 1)))
-        abs(sin((20922789888000 / 1000 * 50 - 40 + 1)))
-        abs(sin(1046139494361))
-        abs(-0.6293194965251864)
+        |sin((((~1 >> 2 << 2) ^ 2!) / 1000 * 50 - 40 + 1))|
+        |sin(((-4 ^ 2!) / 1000 * 50 - 40 + 1))|
+        |sin((20922789888000 / 1000 * 50 - 40 + 1))|
+        |sin(1046139494361)|
+        |-0.6293194965251864|
         Result: 0.629319
         """)]
     [InlineData("abs(sin(((~1>>2<<2)^2!/1000*50-40+1))) &tree",
         """
-        abs(sin((((((((((~1) >> 2) << 2) ^ 2)!) / 1000) * 50) - 40) + 1)))
-        abs(sin(((((((-4 ^ 2)!) / 1000) * 50) - 40) + 1)))
-        abs(sin(((((20922789888000 / 1000) * 50) - 40) + 1)))
-        abs(sin(1046139494361))
-        abs(-0.6293194965251864)
+        |sin((((((((((~1) >> 2) << 2) ^ 2)!) / 1000) * 50) - 40) + 1))|
+        |sin(((((((-4 ^ 2)!) / 1000) * 50) - 40) + 1))|
+        |sin(((((20922789888000 / 1000) * 50) - 40) + 1))|
+        |sin(1046139494361)|
+        |-0.6293194965251864|
         Result: 0.629319
         """)]
     [InlineData("abs(1+(2+3))==2+4!= (1+(2+(3+4))) &step",
         """
-        abs(1 + (2 + 3)) == 2 + 4 != (1 + (2 + (3 + 4)))
-        abs(1 + (2 + 3)) == 2 + 4 != (1 + (2 + 7))
-        abs(1 + 5) == 2 + 4 != (1 + 9)
+        |1 + (2 + 3)| == 2 + 4 != (1 + (2 + (3 + 4)))
+        |1 + (2 + 3)| == 2 + 4 != (1 + (2 + 7))
+        |1 + 5| == 2 + 4 != (1 + 9)
         6 == 2 + 4 != 10
         6 == 6 != 10
         Result: True
+        """)]
+    [InlineData("sigma(x, 1, 100, -1*x) &latex",
+        """
+        \sum\limits_{x=1}^{100}(-1 \times x)
+        Result: -5050
+        """)]
+    [InlineData("cpi(x, floor(sqrt(6)), ceiling(cbrt(999)), x^x) &latex",
+        """
+        \prod\limits_{x=\lfloor \sqrt{6}\rfloor }^{\lceil \sqrt[3]{999}\rceil }x ^ {x}\\
+        \prod\limits_{x=\lfloor 2.449489742783178\rfloor }^{\lceil 9.99666555493786\rceil }x ^ {x}\\
+        \prod\limits_{x=2}^{10}x ^ {x}
+        Result: 2.1577941222941857E+44
         """)]
     public void Calc_Should_ReturnCorrectStep(string math, string output)
     {

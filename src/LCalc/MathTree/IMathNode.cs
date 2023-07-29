@@ -24,7 +24,7 @@ internal interface IMathNode
 
     /// <remarks>Note: Run Calc before to catch errors</remarks>
     public Result RenderStep(StringBuilder buffer, int selectedLevel, Scope scope, int nodeLevel = 1,
-        bool showTree = false);
+        bool showTree = false, bool latex = false);
 
     public Result<int> GetDepth();
 

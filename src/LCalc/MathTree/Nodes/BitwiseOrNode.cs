@@ -18,7 +18,7 @@ internal sealed class BitwiseOrNode : IMathNode
         var result = _arg1!.Calc(scope);
         if (result.Faulted)
             return result;
-        var result1 = OperatorHelpers.ToInt64(result.Value, "|");
+        var result1 = OperatorHelpers.ToInt64(result.Value, "||");
         if (result1.Faulted)
             return result1.Exception!;
         var num1 = result1.Value;
@@ -26,7 +26,7 @@ internal sealed class BitwiseOrNode : IMathNode
         result = _arg2!.Calc(scope);
         if (result.Faulted)
             return result;
-        result1 = OperatorHelpers.ToInt64(result.Value, "|");
+        result1 = OperatorHelpers.ToInt64(result.Value, "||");
         if (result1.Faulted)
             return result1.Exception!;
         var num2 = result1.Value;
@@ -68,14 +68,14 @@ internal sealed class BitwiseOrNode : IMathNode
     public Result GenerateMissingValueError()
     {
         if (_arg1 is null)
-            return Err("Missing value before operator |");
+            return Err("Missing value before operator ||");
 
-        return Err("Missing value after operator |");
+        return Err("Missing value after operator ||");
     }
 
 
     public Result RenderStep(StringBuilder buffer, int selectedLevel, Scope scope, int nodeLevel = 1,
-        bool showTree = false)
+        bool showTree = false, bool latex = false)
     {
         if (!IsFull())
             return GenerateMissingValueError();
@@ -93,13 +93,13 @@ internal sealed class BitwiseOrNode : IMathNode
         if (isEncased || showTree)
             buffer.Append('(');
 
-        var result = _arg1!.RenderStep(buffer, selectedLevel, scope, nodeLevel, showTree);
+        var result = _arg1!.RenderStep(buffer, selectedLevel, scope, nodeLevel, showTree, latex);
         if (result.Faulted)
             return result;
-        buffer.Append(' ');
-        buffer.Append('|');
-        buffer.Append(' ');
-        result = _arg2!.RenderStep(buffer, selectedLevel, scope, nodeLevel, showTree);
+
+        buffer.Append(latex ? @" \| " : " || ");
+
+        result = _arg2!.RenderStep(buffer, selectedLevel, scope, nodeLevel, showTree, latex);
         if (result.Faulted)
             return result;
 

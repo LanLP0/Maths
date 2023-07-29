@@ -6,7 +6,7 @@ namespace Common.Cli;
 
 public sealed class MathHighlighter : IHighlighter
 {
-    private static readonly Style Grey = new(Color.Grey);
+    private static readonly Style White = new(Color.White);
     private static readonly Style Blue = new(Color.Blue);
     private static readonly Style Yellow = new(Color.Yellow);
 
@@ -19,7 +19,7 @@ public sealed class MathHighlighter : IHighlighter
     public Style? Highlight(string token)
     {
         if (token is "(" or ")")
-            return Grey;
+            return White;
 
         if (token.LettersOnly())
             return Yellow;

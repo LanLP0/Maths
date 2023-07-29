@@ -120,9 +120,35 @@ internal sealed class MathTree
                     if (result.Faulted)
                         return result;
 
-                    result = AddNode(new BitwiseOrNode());
-                    if (result.Faulted)
-                        return result;
+                    if (math.TryGetValueAt(i + 1, out var nextChar) && nextChar is '|')
+                    {
+                        result = AddNode(new BitwiseOrNode());
+                        if (result.Faulted)
+                            return result;
+
+                        // Skip over two
+                        i++;
+                        break;
+                    }
+
+                    // Abs
+                    var firstNode = _stack.CurrentLevel.FirstOrDefault(EmptyNode.Shared);
+
+                    if (firstNode is not FunctionCallNode fnNode)
+                    {
+                        MoveDownLevelWithFnCallNode("$abs");
+                        break;
+                    }
+
+                    if (fnNode.Name is not "$abs")
+                    {
+                        MoveDownLevelWithFnCallNode("$abs");
+                        break;
+                    }
+
+                    fnNode.Name = "abs";
+                    MoveUpLevel();
+
                     break;
                 }
                 case 37: // %
@@ -202,6 +228,7 @@ internal sealed class MathTree
                     if (levelStack.Count is 0)
                     {
                         node.AddNode(EmptyNode.Shared);
+                        node.Priority = ValueNodePriority;
                         levelStack.Add(node);
                         break;
                     }
@@ -211,6 +238,7 @@ internal sealed class MathTree
                         break;
 
                     node.AddNode(EmptyNode.Shared);
+                    node.Priority = ValueNodePriority;
                     if (AddValueNode(levelStack, node))
                         break;
 
@@ -254,6 +282,14 @@ internal sealed class MathTree
                     var result = ParseAndSetNode(buffer, ref tokenType, Scope);
                     if (result.Faulted)
                         return result;
+
+                    if (_stack.CurrentLevel.Count is 0)
+                        return Err("Invalid expression");
+
+                    var firstNode = _stack.CurrentLevel[0];
+
+                    if (firstNode is FunctionCallNode { Name: "$abs" })
+                        return Err("Invalid abs syntax");
 
                     result = MoveUpLevel();
                     if (result.Faulted)
@@ -522,7 +558,7 @@ internal sealed class MathTree
                 }
                 case 91: // [
                 {
-                    if (!Scope.CustomFunctionAllowed)
+                    if (!Scope.IsCustomFunctionAllowed)
                         return Err("Custom function is not allowed in this scope");
 
                     if (isInCustomFunction)
@@ -604,7 +640,7 @@ internal sealed class MathTree
                 }
                 case 93: // ]
                 {
-                    if (!Scope.CustomFunctionAllowed)
+                    if (!Scope.IsCustomFunctionAllowed)
                         return Err("Custom function is not allowed in this scope");
 
                     if (_stack.CurrentLevel.FirstOrDefault() is not CustomFunctionNode cNode)
@@ -669,37 +705,28 @@ internal sealed class MathTree
                 resultNode = new VariableNode(buffer.ToString());
                 break;
             case TokenType.CalculatorOption:
+                if (!scope.IsCalculatorOptionAllowed)
+                    return Err("Calculator option not allowed in this scope");
+
                 buffer.Remove(0, 1);
                 var op = buffer.ToString();
 
-                Result result;
-                switch (op)
+                scope.SetOpt(op switch
                 {
-                    case "raw":
-                        result = scope.SetRawValueOpt();
-                        break;
-                    case "step":
-                        result = scope.SetStepByStepOpt();
-                        break;
-                    case "tree":
-                        scope.SetStepByStepOpt();
-                        result = scope.SetShowTreeOpt();
-                        break;
-                    case "solve":
-                        result = scope.SetSolveOpt();
-                        break;
-                    default:
-                        result = scope.IsCalculatorOptionAllowed
-                            ? Ok()
-                            : Err("Calculator option not allowed in this scope");
-                        break;
-                }
-
-                if (result.Faulted)
-                    return result;
+                    "raw" => CalculatorOption.Raw,
+                    "step" => CalculatorOption.Step,
+                    "tree" => CalculatorOption.Step | CalculatorOption.Tree,
+                    "solve" => CalculatorOption.Solve,
+                    "latex" => CalculatorOption.Step | CalculatorOption.LaTeX,
+                    "latexdoc" => CalculatorOption.Step | CalculatorOption.LaTeX | CalculatorOption.LaTeXDoc,
+                    _ => CalculatorOption.None
+                });
 
                 break;
             case TokenType.VariableSet:
+                if (!scope.IsVariableAllowed)
+                    return Err("Variable not allowed in this scope");
+
                 buffer.Remove(0, 1); // Remove the &
                 Span<char> str = stackalloc char[buffer.Length];
                 buffer.CopyTo(0, str, str.Length);
@@ -707,6 +734,7 @@ internal sealed class MathTree
                 var splitIndex = str.IndexOf('=');
                 var firstHalf = str.Slice(0, splitIndex);
                 var secondHalf = str.Slice(splitIndex + 1);
+
                 var parseResult = CalculatorHelpers.ParseNumber(secondHalf);
                 if (parseResult.Faulted)
                     return parseResult.Exception!;

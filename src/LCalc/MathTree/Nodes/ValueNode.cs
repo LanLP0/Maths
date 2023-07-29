@@ -42,7 +42,7 @@ internal sealed class ValueNode : IMathNode
     }
 
     public Result RenderStep(StringBuilder buffer, int selectedLevel, Scope scope, int nodeLevel = 1,
-        bool showTree = false)
+        bool showTree = false, bool latex = false)
     {
         buffer.Append(_value);
         return Ok();

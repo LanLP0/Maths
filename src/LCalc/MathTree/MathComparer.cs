@@ -15,7 +15,7 @@ internal sealed class MathComparer : IMathNode
     public int Priority { get; set; } = MathTree.SpecialNodePriority;
 
     public Result RenderStep(StringBuilder buffer, int selectedLevel, Scope scope, int nodeLevel = 1,
-        bool showTree = false)
+        bool showTree = false, bool latex = false)
     {
         var args = CollectionsMarshal.AsSpan(_args);
         for (var i = 0; i < args.Length; i++)
@@ -25,7 +25,7 @@ internal sealed class MathComparer : IMathNode
                 var arg = args[i];
                 if (arg.Priority is not MathTree.ValueNodePriority)
                 {
-                    var result = arg.RenderStep(buffer, selectedLevel, scope, nodeLevel, showTree);
+                    var result = arg.RenderStep(buffer, selectedLevel, scope, nodeLevel, showTree, latex);
                     if (result.Faulted)
                         return result;
                 }
@@ -36,7 +36,7 @@ internal sealed class MathComparer : IMathNode
             }
             else
             {
-                var result = args[i].RenderStep(buffer, selectedLevel, scope, nodeLevel, showTree);
+                var result = args[i].RenderStep(buffer, selectedLevel, scope, nodeLevel, showTree, latex);
                 if (result.Faulted)
                     return result;
             }
@@ -44,16 +44,27 @@ internal sealed class MathComparer : IMathNode
             if (i >= _args.Count - 1)
                 continue;
 
-            var op = _compareOps[i] switch
-            {
-                CompareOp.Equal => "==",
-                CompareOp.Difference => "!=",
-                CompareOp.GreaterThanOrEqual => ">=",
-                CompareOp.LessThanOrEqual => "<=",
-                CompareOp.GreaterThan => ">",
-                CompareOp.LessThan => "<",
-                _ => throw new UnreachableException()
-            };
+            var op = latex
+                ? _compareOps[i] switch
+                {
+                    CompareOp.Equal => "=",
+                    CompareOp.Difference => "\\neq",
+                    CompareOp.GreaterThanOrEqual => "\\ge",
+                    CompareOp.LessThanOrEqual => "\\le",
+                    CompareOp.GreaterThan => ">",
+                    CompareOp.LessThan => "<",
+                    _ => throw new ArgumentOutOfRangeException()
+                }
+                : _compareOps[i] switch
+                {
+                    CompareOp.Equal => "==",
+                    CompareOp.Difference => "!=",
+                    CompareOp.GreaterThanOrEqual => ">=",
+                    CompareOp.LessThanOrEqual => "<=",
+                    CompareOp.GreaterThan => ">",
+                    CompareOp.LessThan => "<",
+                    _ => throw new UnreachableException()
+                };
 
             buffer.Append(' ');
             buffer.Append(op);
@@ -82,6 +93,31 @@ internal sealed class MathComparer : IMathNode
     {
         unknown = string.Empty;
         return Err("Compare is not allowed in solve mode");
+    }
+
+    bool IMathNode.AddNode(IMathNode node)
+    {
+        throw new NotImplementedException();
+    }
+
+    public bool IsFull()
+    {
+        throw new NotImplementedException();
+    }
+
+    public void ChangeLastNodeTo(IMathNode node)
+    {
+        throw new NotImplementedException();
+    }
+
+    Result<double> IMathNode.Calc(Scope scope)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Result GenerateMissingValueError()
+    {
+        throw new NotImplementedException();
     }
 
     internal Result<bool> Calc(Scope scope)
@@ -122,31 +158,6 @@ internal sealed class MathComparer : IMathNode
         }
 
         return true;
-    }
-
-    bool IMathNode.AddNode(IMathNode node)
-    {
-        throw new NotImplementedException();
-    }
-
-    public bool IsFull()
-    {
-        throw new NotImplementedException();
-    }
-
-    public void ChangeLastNodeTo(IMathNode node)
-    {
-        throw new NotImplementedException();
-    }
-
-    Result<double> IMathNode.Calc(Scope scope)
-    {
-        throw new NotImplementedException();
-    }
-    
-    public Result GenerateMissingValueError()
-    {
-        throw new NotImplementedException();
     }
 
     internal void AddNode(IMathNode node)

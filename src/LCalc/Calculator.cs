@@ -2,7 +2,6 @@
 using Common.Results;
 using LCalc.Extension;
 using LCalc.MathTree;
-using LCalc.MathTree.Nodes;
 
 namespace LCalc;
 
@@ -15,24 +14,26 @@ public static class Calculator
     ///     Calculate the expression
     /// </summary>
     /// <param name="math">The expression</param>
-    /// <param name="steps">Render solving steps (result.Steps)</param>
+    /// <param name="options">Calculator options (will override options set within the math string)</param>
     /// <param name="prevAns">The previous answer (variable: ans)</param>
     /// <returns>The result (formatted)</returns>
-    public static string CalcFormatted(string math, bool steps = false, double prevAns = double.NaN)
+    public static string CalcFormatted(string math, CalculatorOption options = CalculatorOption.None,
+        double prevAns = double.NaN)
     {
-        return CalcFormatted((ReadOnlySpan<char>)math, steps, prevAns);
+        return CalcFormatted((ReadOnlySpan<char>)math, options, prevAns);
     }
 
     /// <summary>
     ///     Calculate the expression
     /// </summary>
     /// <param name="math">The expression</param>
-    /// <param name="steps">Render solving steps (result.Steps)</param>
+    /// <param name="options">Calculator options (will override options set within the math string)</param>
     /// <param name="prevAns">The previous answer (variable: ans)</param>
     /// <returns>The result (formatted)</returns>
-    public static string CalcFormatted(ReadOnlySpan<char> math, bool steps = false, double prevAns = double.NaN)
+    public static string CalcFormatted(ReadOnlySpan<char> math, CalculatorOption options = CalculatorOption.None,
+        double prevAns = double.NaN)
     {
-        var result = CalcRaw(math, out var rawValueRequested, steps, prevAns);
+        var result = CalcRaw(math, out var rawValueRequested, options, prevAns);
 
         return result.Render(rawValueRequested);
     }
@@ -42,11 +43,11 @@ public static class Calculator
     /// </summary>
     /// <param name="math">The expression</param>
     /// <param name="rawValueRequested">If the &raw argument exists</param>
-    /// <param name="steps">Render solving steps (result.Steps)</param>
+    /// <param name="options">Calculator options (will override options set within the math string)</param>
     /// <param name="prevAns">The previous answer (variable: ans)</param>
     /// <returns>The raw result</returns>
     public static CalcResult CalcRaw(ReadOnlySpan<char> math, out bool rawValueRequested,
-        bool steps = false, double prevAns = double.NaN)
+        CalculatorOption options = CalculatorOption.None, double prevAns = double.NaN)
     {
         rawValueRequested = false;
 
@@ -56,10 +57,13 @@ public static class Calculator
         Span<char> math1 = stackalloc char[math.Length];
         math.ToLowerInvariant(math1);
 
-        var tree = new MathTree.MathTree();
+        var scope = options != CalculatorOption.None ? new Scope(options) : new Scope();
+
+        var tree = new MathTree.MathTree(scope);
         var result = tree.Parse(math1);
         if (result.Faulted)
             return result.Exception!;
+
         rawValueRequested = tree.Scope.GetRawValueOpt();
 
         if (tree.Scope.GetSolveOpt())
@@ -74,10 +78,6 @@ public static class Calculator
 
             return NewtonRaphsonSolver.SolveFor(tree, unknown).MapToCalcResult();
         }
-        
-        // Override if needed
-        if (steps)
-            tree.Scope.SetStepByStepOpt();
 
         if (!double.IsNaN(prevAns))
             tree.Scope.SetVariable("ans", prevAns);
@@ -100,10 +100,24 @@ public static class Calculator
         if (maxDepth.Faulted)
             return maxDepth.Exception!;
 
+        var treeOpt = tree.Scope.GetShowTreeOpt();
+        var latex = tree.Scope.GetLaTeXOpt();
+        var latexDoc = tree.Scope.GetLaTeXDocOpt();
+
         var buffer = new StringBuilder();
+        if (latexDoc)
+            buffer.Append(
+                """
+                \documentclass{article}
+                \usepackage{amsmath}
+                \begin{document}
+                \begin{gather*}
+                
+                """);
+
         for (var i = maxDepth.Value + 1; i > 1; i--)
         {
-            var result = root.RenderStep(buffer, i, tree.Scope, 1, tree.Scope.GetShowTreeOpt());
+            var result = root.RenderStep(buffer, i, tree.Scope, 1, treeOpt, latex);
             if (result.Faulted)
                 return result;
 
@@ -114,15 +128,59 @@ public static class Calculator
             if (i is 3 && root.Priority is MathTree.MathTree.ValueNodePriority)
                 break;
 
+            if (latex)
+                buffer.Append("\\\\");
             buffer.Append(Environment.NewLine);
         }
 
         if (root is not MathComparer)
-            return buffer.ToString();
+        {
+            if (latexDoc)
+                buffer.Append(
+                    """
+                    
+                    \end{gather*}
+                    \end{document}
+                    """);
 
+            return buffer.ToString();
+        }
+
+        if (latex)
+            buffer.Append("\\\\");
         buffer.Append(Environment.NewLine);
-        root.RenderStep(buffer, 1, tree.Scope, 1, tree.Scope.GetShowTreeOpt());
+
+        root.RenderStep(buffer, 1, tree.Scope, 1, treeOpt, latex);
+
+        // There is a duplicate
+        if (CheckLastTwo(buffer, latex, out var s))
+        {
+            var index = s.LastIndexOf(latex ? "\\\\" : Environment.NewLine, StringComparison.Ordinal);
+
+            buffer.Remove(index, buffer.Length - index);
+        }
+
+        if (latexDoc)
+            buffer.Append(
+                """
+                
+                \end{gather*}
+                \end{document}
+                """);
 
         return buffer.ToString();
+
+        bool CheckLastTwo(StringBuilder buffer, bool latex, out string s)
+        {
+            s = buffer.ToString();
+            var lines = s.Split(Environment.NewLine);
+
+            var line1 = lines[^2];
+            var line2 = lines[^1];
+
+            if (latex) return line1 == line2 + "\\\\";
+
+            return line1 == line2;
+        }
     }
 }

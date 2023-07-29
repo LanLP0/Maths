@@ -74,7 +74,7 @@ internal sealed class DivideNode : IMathNode
 
 
     public Result RenderStep(StringBuilder buffer, int selectedLevel, Scope scope, int nodeLevel = 1,
-        bool showTree = false)
+        bool showTree = false, bool latex = false)
     {
         if (!IsFull())
             return GenerateMissingValueError();
@@ -89,20 +89,26 @@ internal sealed class DivideNode : IMathNode
             return Ok();
         }
 
-        if (isEncased || showTree)
+        if ((isEncased || showTree) && !latex)
             buffer.Append('(');
 
-        var result = _arg1!.RenderStep(buffer, selectedLevel, scope, nodeLevel, showTree);
-        if (result.Faulted)
-            return result;
-        buffer.Append(' ');
-        buffer.Append('/');
-        buffer.Append(' ');
-        result = _arg2!.RenderStep(buffer, selectedLevel, scope, nodeLevel, showTree);
+        if (latex)
+            buffer.Append("\\frac{");
+
+        var result = _arg1!.RenderStep(buffer, selectedLevel, scope, nodeLevel, showTree, latex);
         if (result.Faulted)
             return result;
 
-        if (isEncased || showTree)
+        buffer.Append(latex ? "}{" : " / ");
+
+        result = _arg2!.RenderStep(buffer, selectedLevel, scope, nodeLevel, showTree, latex);
+        if (result.Faulted)
+            return result;
+
+        if (latex)
+            buffer.Append('}');
+
+        if ((isEncased || showTree) && !latex)
             buffer.Append(')');
 
         return Ok();

@@ -1,6 +1,5 @@
-﻿using System.Text;
-using Common.Cli;
-using LCalc;
+﻿using LCalc;
+using LCalc.Cli;
 using Spectre.Console;
 
 internal sealed class Program
@@ -25,45 +24,6 @@ internal sealed class Program
 
         AnsiConsole.MarkupLine("Press [Yellow]Ctrl-C[/] to exit");
 
-        var highlighter = new MathHighlighter();
-        var buffer = new StringBuilder();
-
-        var prevAns = double.NaN;
-        for (;;)
-        {
-            buffer.Clear();
-
-            var input = AnsiConsole.Console.Ask<string>("[white]Expression:[/]", clear: false, newLine: false,
-                highlighter: highlighter);
-
-            if (input is "q")
-                return;
-
-            var result = Calculator.CalcRaw(input!, out var raw, prevAns: prevAns);
-
-            if (result.ContainSteps)
-            {
-                buffer.Append(result.Steps);
-                buffer.Append(Environment.NewLine);
-            }
-
-            buffer.Append("[white]");
-            buffer.Append(GetResultText(result));
-            buffer.Append("[/] ");
-            buffer.Append(result.RenderValue(raw));
-
-            AnsiConsole.MarkupLine(buffer.ToString());
-
-            if (result.IsDouble)
-                prevAns = result.Number!.Value;
-        }
-    }
-
-    public static string GetResultText(CalcResult result)
-    {
-        if (result.Faulted)
-            return "Error:";
-
-        return "Result:";
+        Cli.RunLoop();
     }
 }

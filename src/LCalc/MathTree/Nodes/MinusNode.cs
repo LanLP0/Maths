@@ -75,12 +75,12 @@ internal sealed class MinusNode : IMathNode
 
 
     public Result RenderStep(StringBuilder buffer, int selectedLevel, Scope scope, int nodeLevel = 1,
-        bool showTree = false)
+        bool showTree = false, bool latex = false)
     {
         if (!IsFull())
             return GenerateMissingValueError();
 
-        var isEncased = Priority == MathTree.ValueNodePriority;
+        var isEncased = Priority == MathTree.ValueNodePriority && _arg1 is not EmptyNode;
         if (isEncased)
             nodeLevel++;
 
@@ -97,19 +97,23 @@ internal sealed class MinusNode : IMathNode
         if (_arg1 is EmptyNode)
         {
             buffer.Append('-');
-            result = _arg2!.RenderStep(buffer, selectedLevel, scope, nodeLevel, showTree);
+            result = _arg2!.RenderStep(buffer, selectedLevel, scope, nodeLevel, showTree, latex);
             if (result.Faulted)
                 return result;
+
+            if (isEncased || showTree)
+                buffer.Append(')');
+
             return Ok();
         }
 
-        result = _arg1!.RenderStep(buffer, selectedLevel, scope, nodeLevel, showTree);
+        result = _arg1!.RenderStep(buffer, selectedLevel, scope, nodeLevel, showTree, latex);
         if (result.Faulted)
             return result;
-        buffer.Append(' ');
-        buffer.Append('-');
-        buffer.Append(' ');
-        result = _arg2!.RenderStep(buffer, selectedLevel, scope, nodeLevel, showTree);
+
+        buffer.Append(" - ");
+
+        result = _arg2!.RenderStep(buffer, selectedLevel, scope, nodeLevel, showTree, latex);
         if (result.Faulted)
             return result;
 

@@ -45,8 +45,15 @@ internal sealed class VariableNode : IMathNode
     }
 
     public Result RenderStep(StringBuilder buffer, int selectedLevel, Scope scope, int nodeLevel = 1,
-        bool showTree = false)
+        bool showTree = false, bool latex = false)
     {
+        // This allow for variable to be rendered in sigma() or cpi()
+        if (selectedLevel is -1)
+        {
+            buffer.Append(Name);
+            return Ok();
+        }
+
         var result = Calc(scope);
         if (result.Faulted)
             return result;

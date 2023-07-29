@@ -6,7 +6,7 @@ namespace LCalc.MathTree.Nodes;
 
 internal sealed class EmptyNode : IMathNode
 {
-    public static EmptyNode Shared = new();
+    public static EmptyNode Shared { get; } = new();
 
     public int Priority { get; set; } = MathTree.ValueNodePriority;
 
@@ -36,7 +36,7 @@ internal sealed class EmptyNode : IMathNode
     }
 
     public Result RenderStep(StringBuilder buffer, int selectedLevel, Scope scope, int nodeLevel = 1,
-        bool showTree = false)
+        bool showTree = false, bool latex = false)
     {
         return Ok();
     }

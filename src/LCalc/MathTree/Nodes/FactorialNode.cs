@@ -62,7 +62,7 @@ internal sealed class FactorialNode : IMathNode
 
 
     public Result RenderStep(StringBuilder buffer, int selectedLevel, Scope scope, int nodeLevel = 1,
-        bool showTree = false)
+        bool showTree = false, bool latex = false)
     {
         if (!IsFull())
             return GenerateMissingValueError();
@@ -80,9 +80,10 @@ internal sealed class FactorialNode : IMathNode
         if (isEncased || showTree)
             buffer.Append('(');
 
-        var result = _arg!.RenderStep(buffer, selectedLevel, scope, nodeLevel, showTree);
+        var result = _arg!.RenderStep(buffer, selectedLevel, scope, nodeLevel, showTree, latex);
         if (result.Faulted)
             return result;
+
         buffer.Append('!');
 
         if (isEncased || showTree)
