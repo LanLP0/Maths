@@ -97,27 +97,27 @@ public sealed class CalcResult
             case Format.Hex:
                 var isNeg = result < 0;
                 
-                result = Math.Abs(result);
+                result = Math.Round(Math.Abs(result));
                 if (result > long.MaxValue)
-                    return (isNeg ? "-" : "") + "0x…ffffffff";
+                    return (isNeg ? "-" : "") + "0x..fffffff";
                 var l = (long)result;
 
                 return (isNeg ? "-0x" : "0x") + Convert.ToString(l, 16);
             case Format.Octal:
                 var isNeg1 = result < 0;
                 
-                result = Math.Abs(result);
+                result = Math.Round(Math.Abs(result));
                 if (result > long.MaxValue)
-                    return (isNeg1 ? "-" : "") + "0o…77777777";
+                    return (isNeg1 ? "-" : "") + "0o..7777777";
                 var l1 = (long)result;
 
                 return (isNeg1 ? "-0o" : "0o") + Convert.ToString(l1, 8);
             case Format.Binary:
                 var isNeg2 = result < 0;
                 
-                result = Math.Abs(result);
+                result = Math.Round(Math.Abs(result));
                 if (result > int.MaxValue)
-                    return (isNeg2 ? "-" : "") + "0b…11111111";
+                    return (isNeg2 ? "-" : "") + "0b..1111111";
                 var i = (int)result;
 
                 return (isNeg2 ? "-0b" : "0b") + Convert.ToString(i, 2);
