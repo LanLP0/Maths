@@ -79,6 +79,21 @@ public sealed class CalculatorTest
     [InlineData("[f(a)=a] f(1) &a=2", "1")]
     [InlineData("[f(a) a] f(1) &a=2", "1")]
     [InlineData("[a()=1] [b(x)=x] a()", "1")] // Variables is not shared between functions
+    // Output format
+    [InlineData("134/3 &fmt=raw", "44.666667")]
+    [InlineData("134/3 &fmt=hex", "0x2d")]
+    [InlineData("134/3 &fmt=oct", "0o55")]
+    [InlineData("134/3 &fmt=bin", "0b101101")]
+    [InlineData("1/0 &fmt=hex", "0x..fffffff")]
+    [InlineData("1/0 &fmt=oct", "0o..7777777")]
+    [InlineData("1/0 &fmt=bin", "0b..1111111")]
+    [InlineData("-134/3 &fmt=raw", "-44.666667")]
+    [InlineData("-134/3 &fmt=hex", "-0x2d")]
+    [InlineData("-134/3 &fmt=oct", "-0o55")]
+    [InlineData("-134/3 &fmt=bin", "-0b101101")]
+    [InlineData("-1/0 &fmt=hex", "-0x..fffffff")]
+    [InlineData("-1/0 &fmt=oct", "-0o..7777777")]
+    [InlineData("-1/0 &fmt=bin", "-0b..1111111")]
     // Solve mode
     [InlineData("x^5-2x+1 &solve", "0.51879")]
     [InlineData("x+1 &solve", "-1")]
