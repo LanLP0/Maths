@@ -19,7 +19,7 @@ public static class Calculator
     /// <param name="format">The format to use when rendering the result</param>
     /// <returns>The result (formatted)</returns>
     public static string CalcFormatted(string math, CalculatorOption options = CalculatorOption.None,
-        double prevAns = double.NaN, Format format = default)
+        double prevAns = double.NaN, Format? format = default)
     {
         return CalcFormatted((ReadOnlySpan<char>)math, options, prevAns, format);
     }
@@ -33,12 +33,12 @@ public static class Calculator
     /// <param name="format">The format to use when rendering the result</param>
     /// <returns>The result (formatted)</returns>
     public static string CalcFormatted(ReadOnlySpan<char> math, CalculatorOption options = CalculatorOption.None,
-        double prevAns = double.NaN, Format format = default)
+        double prevAns = double.NaN, Format? format = default)
     {
         var result = CalcRaw(math, options, prevAns);
 
-        if (format.IsValid())
-            result.Format = format;
+        if (format.HasValue && format.Value.IsValid())
+            result.Format = format.Value;
 
         return result.Render();
     }
