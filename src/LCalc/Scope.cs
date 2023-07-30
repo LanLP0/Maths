@@ -44,6 +44,7 @@ internal sealed class Scope
     public CalculatorOption Option { get; set; }
     public CustomFunctionCollection? CustomFunctions { get; set; }
     public IVariableCollection Variables { get; set; }
+    public Format Format { get; set; } = Format.Human;
 
     public bool IsCustomFunctionAllowed => CustomFunctions is not null;
     public bool IsCompareAllowed => (Option & CalculatorOption.CompareAllowed) != 0;
@@ -90,11 +91,6 @@ internal sealed class Scope
     public bool GetStepByStepOpt()
     {
         return (Option & CalculatorOption.Step) != 0;
-    }
-
-    public bool GetRawValueOpt()
-    {
-        return (Option & CalculatorOption.Raw) != 0;
     }
 
     public bool GetShowTreeOpt()

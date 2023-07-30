@@ -4,34 +4,24 @@ namespace LCalc;
 
 public sealed class CalcResult
 {
-    internal CalcResult(Exception exception, string? steps = null)
-    {
-        Exception = exception;
-        Steps = steps;
-    }
-
-    internal CalcResult(bool result, string? steps = null)
-    {
-        Bool = result;
-        Steps = steps;
-    }
-
-    internal CalcResult(double result, string? steps = null)
-    {
-        Number = result;
-        Steps = steps;
-    }
-
-    internal CalcResult(double? result, Exception? exception)
+    internal CalcResult(double? result, Exception? exception, Format format)
     {
         Number = result;
         Exception = exception;
+        Format = format;
     }
 
-    internal CalcResult(bool? result, Exception? exception)
+    internal CalcResult(bool? result, Exception? exception, Format format)
     {
         Bool = result;
         Exception = exception;
+        Format = format;
+    }
+
+    internal CalcResult(Exception exception, Format format)
+    {
+        Exception = exception;
+        Format = format;
     }
 
     public bool IsBool => Bool.HasValue;
@@ -47,6 +37,8 @@ public sealed class CalcResult
     public Exception? Exception { get; }
 
     public string? Steps { get; private set; }
+    
+    public Format Format { get; set; }
 
     internal CalcResult WithSteps(string steps)
     {
@@ -54,7 +46,11 @@ public sealed class CalcResult
         return this;
     }
 
-    public string RenderValue(bool raw = false)
+    /// <summary>
+    ///     Render just the value
+    /// </summary>
+    /// <returns></returns>
+    public string RenderValue()
     {
         if (Faulted)
             return Exception!.Message;
@@ -62,18 +58,19 @@ public sealed class CalcResult
         if (IsBool)
             return Bool!.Value.ToString();
 
-        if (raw)
-            return Number!.Value.ToString(CultureInfo.InvariantCulture);
-
-        return Number!.Value.Humanize();
+        return RenderNumber(Number!.Value);
     }
 
-    public string Render(bool raw = false)
+    /// <summary>
+    ///     Render the result (including the step(s))
+    /// </summary>
+    /// <returns></returns>
+    public string Render()
     {
-        if (Faulted) // Err
+        if (Faulted)
             return $"Error: {Exception!.Message}";
 
-        if (IsBool) // Bool
+        if (IsBool)
         {
             if (ContainSteps)
                 return $"{Steps}{Environment.NewLine}Result: {Bool!}";
@@ -81,34 +78,57 @@ public sealed class CalcResult
         }
 
         var result = Number!.Value;
+        var raw = Format is Format.Raw;
         if (raw)
             result = Math.Round(result, 6);
 
         if (ContainSteps)
-            return
-                $"{Steps}{Environment.NewLine}Result: {(raw ? result.ToString(CultureInfo.InvariantCulture) : result.Humanize())}";
+            return $"{Steps}{Environment.NewLine}Result: {RenderNumber(result)}";
 
-        return $"Result: {(raw ? result.ToString(CultureInfo.InvariantCulture) : result.Humanize())}";
+        return $"Result: {RenderNumber(result)}";
     }
 
-    public static CalcResult Err(string message)
+    private string RenderNumber(double result)
     {
-        return new CalcResult(new Exception(message));
+        switch (Format)
+        {
+            case Format.Raw:
+                return result.ToString(CultureInfo.InvariantCulture);
+            case Format.Hex:
+                var isNeg = result < 0;
+                
+                result = Math.Abs(result);
+                if (result > long.MaxValue)
+                    return (isNeg ? "-" : "") + "0x…ffffffff";
+                var l = (long)result;
+
+                return (isNeg ? "-0x" : "0x") + Convert.ToString(l, 16);
+            case Format.Octal:
+                var isNeg1 = result < 0;
+                
+                result = Math.Abs(result);
+                if (result > long.MaxValue)
+                    return (isNeg1 ? "-" : "") + "0o…77777777";
+                var l1 = (long)result;
+
+                return (isNeg1 ? "-0o" : "0o") + Convert.ToString(l1, 8);
+            case Format.Binary:
+                var isNeg2 = result < 0;
+                
+                result = Math.Abs(result);
+                if (result > int.MaxValue)
+                    return (isNeg2 ? "-" : "") + "0b…11111111";
+                var i = (int)result;
+
+                return (isNeg2 ? "-0b" : "0b") + Convert.ToString(i, 2);
+            default:
+                return result.Humanize();
+        }
     }
 
-    public static implicit operator CalcResult(Exception exception)
+    internal static CalcResult Err(string message)
     {
-        return new CalcResult(exception);
-    }
-
-    public static implicit operator CalcResult(bool result)
-    {
-        return new CalcResult(result);
-    }
-
-    public static implicit operator CalcResult(double result)
-    {
-        return new CalcResult(result);
+        return new CalcResult(new Exception(message), default);
     }
 
     public override string ToString()

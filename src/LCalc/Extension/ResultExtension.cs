@@ -4,13 +4,13 @@ namespace LCalc.Extension;
 
 internal static class ResultExtension
 {
-    public static CalcResult MapToCalcResult(this Result<double> result)
+    public static CalcResult MapToCalcResult(this Result<double> result, Format format)
     {
-        return new CalcResult(result.Value, result.Exception);
+        return new CalcResult(result.Value, result.Exception, format);
     }
 
-    public static CalcResult MapToCalcResult(this Result<bool> result)
+    public static CalcResult MapToCalcResult(this Result<bool> result, Format format)
     {
-        return new CalcResult(result.Value, result.Exception);
+        return new CalcResult(result.Value, result.Exception, format);
     }
 }

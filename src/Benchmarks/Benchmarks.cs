@@ -31,7 +31,7 @@ public class Benchmarks
     [Benchmark(Baseline = true)]
     public void LCalcRaw()
     {
-        Calculator.CalcRaw(Math, out _);
+        Calculator.CalcRaw(Math);
     }
 
     [Benchmark]

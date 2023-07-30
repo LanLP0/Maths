@@ -22,7 +22,7 @@ public static class Cli
             if (input is "q")
                 return;
 
-            var result = Calculator.CalcRaw(input!, out var raw, prevAns: prevAns);
+            var result = Calculator.CalcRaw(input!, prevAns: prevAns);
 
             if (result.ContainSteps)
             {
@@ -33,7 +33,7 @@ public static class Cli
             buffer.Append("[white]");
             buffer.Append(GetResultText(result));
             buffer.Append("[/] ");
-            buffer.Append(result.RenderValue(raw));
+            buffer.Append(result.RenderValue());
 
             AnsiConsole.MarkupLine(buffer.ToString());
 

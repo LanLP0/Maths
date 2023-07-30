@@ -1,16 +1,19 @@
 # LCalc
+```
+A fast and efficient string calculator
 
-A fast and efficient string calculator  
-**Usage**  
-Calculator.CalcFormatted() calculate and format the output  
-Calculator.CalcRaw() calculate the expression the return the raw result  
-**Description**    
-Calculate an expression with optional arguments
+-- Usage --
+Calculator.CalcFormatted()   Calculate and format the output  
+Calculator.CalcRaw()         Calculate the expression the return the raw result
+```
 
 ## Syntax
 
-`[custom functions..] {expression} [args..]`  
-<h6>`|`: or - `[]`: optional - `{}`: value</h6>
+`[custom functions..] {expression} [args..]`
+- `|`  or
+- `()`  group
+- `[]`  optional
+- `{}`  value
 > **__Custom function__**  
 > `[{name}([args..])(=| ){expression}]`  
 > <h6>The square brackets around the function is required<br />Call the function by using `name()` just like normal
@@ -20,14 +23,24 @@ Calculate an expression with optional arguments
 > `args` The arguments
 
 > **__Arguments__**  
-> `&{name}={value}`  Set a variable's value  
-> `&{name}`  Set calculator argument  
+> `&{name}={number}`  Set a variable's value  
+> `&{name}` or `&{name}={text}`  Set calculator argument  
 > `&step` Add solving steps  
 > `&tree` Like &step but wrap every node with a `()`  
 > `&r&aw` See raw value  
 > `&solve` Solve for the unknown variable so that the result is 0  
 > `&latex` Add solving steps in LaTeX syntax  
-> `&latexdoc` Add solving steps in LaTeX syntax and wrap everything in a LaTeX document
+> `&latexdoc` Add solving steps in LaTeX syntax and wrap everything in a LaTeX document  
+> ```
+> &fmt={format} or &format={format}  Change output result format
+> 
+> format:                            Default format is human
+> human                              Easy to read format
+> none|raw                           No format
+> hex                                Format in hex
+> octal|oct                          Format in octal
+> binary|bin                         Format in binary
+> ```
 
 > **__Comparison operators__**  
 > `==` Equal  

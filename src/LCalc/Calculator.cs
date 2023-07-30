@@ -16,11 +16,12 @@ public static class Calculator
     /// <param name="math">The expression</param>
     /// <param name="options">Calculator options (will override options set within the math string)</param>
     /// <param name="prevAns">The previous answer (variable: ans)</param>
+    /// <param name="format">The format to use when rendering the result</param>
     /// <returns>The result (formatted)</returns>
     public static string CalcFormatted(string math, CalculatorOption options = CalculatorOption.None,
-        double prevAns = double.NaN)
+        double prevAns = double.NaN, Format format = default)
     {
-        return CalcFormatted((ReadOnlySpan<char>)math, options, prevAns);
+        return CalcFormatted((ReadOnlySpan<char>)math, options, prevAns, format);
     }
 
     /// <summary>
@@ -29,30 +30,31 @@ public static class Calculator
     /// <param name="math">The expression</param>
     /// <param name="options">Calculator options (will override options set within the math string)</param>
     /// <param name="prevAns">The previous answer (variable: ans)</param>
+    /// <param name="format">The format to use when rendering the result</param>
     /// <returns>The result (formatted)</returns>
     public static string CalcFormatted(ReadOnlySpan<char> math, CalculatorOption options = CalculatorOption.None,
-        double prevAns = double.NaN)
+        double prevAns = double.NaN, Format format = default)
     {
-        var result = CalcRaw(math, out var rawValueRequested, options, prevAns);
+        var result = CalcRaw(math, options, prevAns);
 
-        return result.Render(rawValueRequested);
+        if (format.IsValid())
+            result.Format = format;
+
+        return result.Render();
     }
 
     /// <summary>
     ///     Calculate the expression
     /// </summary>
     /// <param name="math">The expression</param>
-    /// <param name="rawValueRequested">If the &raw argument exists</param>
     /// <param name="options">Calculator options (will override options set within the math string)</param>
     /// <param name="prevAns">The previous answer (variable: ans)</param>
     /// <returns>The raw result</returns>
-    public static CalcResult CalcRaw(ReadOnlySpan<char> math, out bool rawValueRequested,
-        CalculatorOption options = CalculatorOption.None, double prevAns = double.NaN)
+    public static CalcResult CalcRaw(ReadOnlySpan<char> math,  CalculatorOption options = CalculatorOption.None,
+        double prevAns = double.NaN)
     {
-        rawValueRequested = false;
-
         if (math.Length is 0)
-            return new Exception("No expression found");
+            return CalcResult.Err("No expression found");
 
         Span<char> math1 = stackalloc char[math.Length];
         math.ToLowerInvariant(math1);
@@ -62,33 +64,31 @@ public static class Calculator
         var tree = new MathTree.MathTree(scope);
         var result = tree.Parse(math1);
         if (result.Faulted)
-            return result.Exception!;
+            return result.Exception!.ToCalcResult();
 
-        rawValueRequested = tree.Scope.GetRawValueOpt();
-
-        if (tree.Scope.GetSolveOpt())
+        if (scope.GetSolveOpt())
         {
             var node = tree.GetTopNode();
-            var rs = node.SetupForSolving(tree.Scope, out var unknown);
+            var rs = node.SetupForSolving(scope, out var unknown);
             if (rs.Faulted)
-                return rs.Exception!;
+                return rs.Exception!.ToCalcResult();
 
             if (unknown == string.Empty)
                 return CalcResult.Err("Nothing to solve for");
 
-            return NewtonRaphsonSolver.SolveFor(tree, unknown).MapToCalcResult();
+            return NewtonRaphsonSolver.SolveFor(tree, unknown).MapToCalcResult(scope.Format);
         }
 
         if (!double.IsNaN(prevAns))
-            tree.Scope.SetVariable("ans", prevAns);
+            scope.SetVariable("ans", prevAns);
 
         var calcResult = tree.Calc();
-        if (!tree.Scope.GetStepByStepOpt() || calcResult.Faulted)
+        if (!scope.GetStepByStepOpt() || calcResult.Faulted)
             return calcResult;
 
         var result1 = CalcStep(tree);
         if (result1.Faulted)
-            return result1.Exception!;
+            return result1.Exception!.ToCalcResult();
 
         return calcResult.WithSteps(result1.Value!);
     }

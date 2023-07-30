@@ -359,8 +359,7 @@ internal sealed class MathTree
                 case >= 97 and <= 122: // a-z
                 {
                     if (tokenType is not (TokenType.Empty or TokenType.SpecialNumber or TokenType.Variable
-                        or TokenType.CalculatorOption
-                        or TokenType.AdvancedCalculatorOption))
+                        or TokenType.CalculatorOption or TokenType.AdvancedCalculatorOption))
                     {
                         var result = ParseAndSetNode(buffer, ref tokenType, Scope);
                         if (result.Faulted)
@@ -392,7 +391,7 @@ internal sealed class MathTree
 
                     if (tokenType is TokenType.CalculatorOption)
                     {
-                        if (nextChar.IsDigit() || nextChar == '-')
+                        if (nextChar.IsDigit() || nextChar is '-')
                         {
                             tokenType = TokenType.VariableSet;
                             buffer.Append(c);
@@ -407,7 +406,7 @@ internal sealed class MathTree
                         break;
                     }
 
-                    if (nextChar != '=')
+                    if (nextChar is not '=')
                         return Err("Invalid symbol =");
 
                     // the op is ==
@@ -711,17 +710,71 @@ internal sealed class MathTree
                 buffer.Remove(0, 1);
                 var op = buffer.ToString();
 
-                scope.SetOpt(op switch
+                switch (op)
                 {
-                    "raw" => CalculatorOption.Raw,
-                    "step" => CalculatorOption.Step,
-                    "tree" => CalculatorOption.Step | CalculatorOption.Tree,
-                    "solve" => CalculatorOption.Solve,
-                    "latex" => CalculatorOption.Step | CalculatorOption.LaTeX,
-                    "latexdoc" => CalculatorOption.Step | CalculatorOption.LaTeX | CalculatorOption.LaTeXDoc,
-                    _ => CalculatorOption.None
-                });
+                    case "raw":
+                        scope.Format = Format.Raw;
+                        break;
+                    case "step":
+                        scope.SetOpt(CalculatorOption.Step);
+                        break;
+                    case "tree":
+                        scope.SetOpt(CalculatorOption.Step | CalculatorOption.Tree);
+                        break;
+                    case "solve":
+                        scope.SetOpt(CalculatorOption.Solve);
+                        break;
+                    case "latex":
+                        scope.SetOpt(CalculatorOption.Step | CalculatorOption.LaTeX);
+                        break;
+                    case "latexdoc":
+                        scope.SetOpt(CalculatorOption.Step | CalculatorOption.LaTeX | CalculatorOption.LaTeXDoc);
+                        break;
+                }
+                break;
+            case TokenType.AdvancedCalculatorOption:
+                if (!scope.IsCalculatorOptionAllowed)
+                    return Err("Calculator option not allowed in this scope");
+                
+                // Remove the first &
+                Span<char> opt = stackalloc char[buffer.Length - 1];
+                buffer.CopyTo(1, opt, opt.Length);
 
+                var splitPos = opt.IndexOf('=');
+
+                var key = opt.Slice(0, splitPos);
+                var val = opt.Slice(splitPos + 1);
+
+                switch (key)
+                {
+                    case "format":
+                    case "fmt":
+                        switch (val)
+                        {
+                            case "human":
+                                scope.Format = Format.Human;
+                                break;
+                            case "none":
+                            case "raw":
+                                scope.Format = Format.Raw;
+                                break;
+                            case "hex":
+                                scope.Format = Format.Hex;
+                                break;
+                            case "octal":
+                            case "oct":
+                                scope.Format = Format.Octal;
+                                break;
+                            case "binary":
+                            case "bin":
+                                scope.Format = Format.Binary;
+                                break;
+                            default:
+                                return Err($"Unknown format: {val}");
+                        }
+                        break;
+                }
+                
                 break;
             case TokenType.VariableSet:
                 if (!scope.IsVariableAllowed)
@@ -743,8 +796,6 @@ internal sealed class MathTree
                 if (setVarResult.Faulted)
                     return setVarResult;
 
-                break;
-            case TokenType.AdvancedCalculatorOption:
                 break;
             default:
                 throw new UnreachableException();
@@ -937,9 +988,9 @@ internal sealed class MathTree
     public CalcResult Calc()
     {
         if (_comparer is not null)
-            return _comparer.Calc(Scope).MapToCalcResult();
+            return _comparer.Calc(Scope).MapToCalcResult(Scope.Format);
 
-        return _root!.Calc(Scope).MapToCalcResult();
+        return _root!.Calc(Scope).MapToCalcResult(Scope.Format);
     }
 
     public IMathNode GetTopNode()

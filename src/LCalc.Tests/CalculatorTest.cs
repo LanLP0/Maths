@@ -253,7 +253,7 @@ public sealed class CalculatorTest
         for (var i = 0; i <= 100; i++)
         {
             // Act
-            var result = Calculator.CalcRaw(math, out _);
+            var result = Calculator.CalcRaw(math);
             var num = result.Number!;
 
             // Assert

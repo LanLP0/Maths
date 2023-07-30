@@ -40,9 +40,9 @@ public sealed partial class CalcPage : UserControl
         if (string.IsNullOrWhiteSpace(MathInput.Text))
             return;
 
-        MathDisplay.Text = _vm.Math;
+        MathDisplay.Text = _vm!.Math;
 
-        var result = Calculator.CalcRaw(_vm.Math, out _);
+        var result = Calculator.CalcRaw(_vm.Math);
 
         if (result.Faulted) // Error
         {
@@ -52,13 +52,8 @@ public sealed partial class CalcPage : UserControl
             return;
         }
 
-        string resultText;
-        if (result.IsDouble)
-            resultText = RawValueToggle.IsChecked!.Value
-                ? result.Number!.Value.ToString(CultureInfo.InvariantCulture)
-                : result.Number!.Value.Humanize();
-        else
-            resultText = result.Bool!.Value.ToString(CultureInfo.InvariantCulture);
+        result.Format = RawValueToggle.IsChecked!.Value ? Format.Raw : Format.Human;
+        var resultText = result.RenderValue();
 
         ResultDisplay.Text = resultText;
         AddToHistory(resultText);
@@ -136,23 +131,14 @@ public sealed partial class CalcPage : UserControl
             return;
 
         MathDisplay.Text = string.Empty; // Clear math display
-        var result = Calculator.CalcRaw(_vm.Math, out _);
+        var result = Calculator.CalcRaw(_vm!.Math);
 
         if (result.Faulted) // Ignore error
             return;
 
-        string resultText;
-        if (result.IsDouble)
-        {
-            resultText = RawValueToggle.IsChecked!.Value
-                ? result.Number!.Value.ToString(CultureInfo.InvariantCulture)
-                : result.Number!.Value.Humanize();
-            ResultDisplay.Text = resultText;
-        }
-        else
-        {
-            resultText = result.Bool!.Value.ToString();
-            ResultDisplay.Text = resultText;
-        }
+        result.Format = RawValueToggle.IsChecked!.Value ? Format.Raw : Format.Human;
+        var resultText = result.RenderValue();
+
+        ResultDisplay.Text = resultText;
     }
 }
