@@ -93,6 +93,7 @@ public sealed class CalcResult
         switch (Format)
         {
             case Format.Raw:
+                result = Math.Round(result, 6);
                 return result.ToString(CultureInfo.InvariantCulture);
             case Format.Hex:
                 var isNeg = result < 0;

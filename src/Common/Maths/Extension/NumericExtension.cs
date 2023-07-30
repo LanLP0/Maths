@@ -43,8 +43,9 @@ internal static class NumericExtension
             case double.NaN:
                 return "NaN";
             case double.PositiveInfinity:
-            case double.NegativeInfinity:
                 return "∞";
+            case double.NegativeInfinity:
+                return "-∞";
         }
 
         var num1 = Math.Abs(num);
