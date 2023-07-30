@@ -112,6 +112,7 @@ public sealed class CalculatorTest
     }
 
     [Theory]
+    // Function
     [InlineData("a,b", "',' can only be used in function calls")]
     [InlineData("a+(b,c)", "',' can only be used in function calls")]
     [InlineData("null()", "Unknown function null()")]
@@ -133,6 +134,8 @@ public sealed class CalculatorTest
     [InlineData("log()", "log() takes exactly one argument")]
     [InlineData("random(1 a)", "Unknown variable 'a'")]
     [InlineData("log()&step", "log() takes exactly one argument")]
+    [InlineData("|-1)", "Invalid abs syntax")]
+    // Misc
     [InlineData("", "No expression found")]
     [InlineData("(1", "Invalid number of braces")]
     [InlineData("1==(1", "Invalid number of braces")]
@@ -152,8 +155,10 @@ public sealed class CalculatorTest
     [InlineData("1-&a=100", "Missing value after operator -")]
     [InlineData("&a=", "Missing variable value")]
     [InlineData("&a=1&a=1", "Variable 'a' had already been set")]
+    [InlineData("0xjkl", "Invalid hex number")]
     [InlineData("0b21", "Invalid binary number")]
     [InlineData("0o9", "Invalid octal number")]
+    // Custom function
     [InlineData("[t()=t()]t()", "Function loop is not allowed")]
     [InlineData("[a()=)]", "Invalid amount of braces in custom function")]
     [InlineData("[a(x x)=1]", "Duplicated variables in custom function")]
@@ -248,6 +253,19 @@ public sealed class CalculatorTest
         \prod\limits_{x=\lfloor \sqrt{6}\rfloor }^{\lceil \sqrt[3]{999}\rceil }x ^ {x}\\
         \prod\limits_{x=\lfloor 2.449489742783178\rfloor }^{\lceil 9.99666555493786\rceil }x ^ {x}\\
         \prod\limits_{x=2}^{10}x ^ {x}
+        Result: 2.1577941222941857E+44
+        """)]
+    [InlineData("cpi(x, floor(sqrt(6)), ceiling(cbrt(999)), x^x) &latexdoc",
+        """
+        \documentclass{article}
+        \usepackage{amsmath}
+        \begin{document}
+        \begin{gather*}
+        \prod\limits_{x=\lfloor \sqrt{6}\rfloor }^{\lceil \sqrt[3]{999}\rceil }x ^ {x}\\
+        \prod\limits_{x=\lfloor 2.449489742783178\rfloor }^{\lceil 9.99666555493786\rceil }x ^ {x}\\
+        \prod\limits_{x=2}^{10}x ^ {x}
+        \end{gather*}
+        \end{document}
         Result: 2.1577941222941857E+44
         """)]
     public void Calc_Should_ReturnCorrectStep(string math, string output)
