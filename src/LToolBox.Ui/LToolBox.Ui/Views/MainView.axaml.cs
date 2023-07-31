@@ -75,8 +75,8 @@ public sealed partial class MainView : UserControl
                 SelectsOnInvoked = false
             });
 
-            NavView.MenuItemsSource = menuItems;
             NavView.FooterMenuItemsSource = footerItems;
+            NavView.MenuItemsSource = menuItems;
 
             target ??= menuItems[0].Tag!;
             NavigationService.Instance.NavigateFromContext(target);

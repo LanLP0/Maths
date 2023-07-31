@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
@@ -13,6 +14,7 @@ namespace LToolBox.Ui.Pages;
 public sealed partial class CalcPage : UserControl
 {
     private const int MaxHistoryLenght = 25;
+    private double _prevAns = Double.NaN;
     private CalcViewModel? _vm;
 
     public CalcPage()
@@ -42,7 +44,7 @@ public sealed partial class CalcPage : UserControl
 
         MathDisplay.Text = _vm!.Math;
 
-        var result = Calculator.CalcRaw(_vm.Math);
+        var result = Calculator.CalcRaw(_vm.Math, prevAns: _prevAns);
 
         if (result.Faulted) // Error
         {
@@ -52,7 +54,11 @@ public sealed partial class CalcPage : UserControl
             return;
         }
 
-        result.Format = RawValueToggle.IsChecked!.Value ? Format.Raw : Format.Human;
+        if (result.IsNumber)
+            _prevAns = result.Number!.Value;
+
+        if (RawValueToggle.IsChecked!.Value)
+            result.Format = Format.Raw;
         var resultText = result.RenderValue();
 
         ResultDisplay.Text = resultText;
@@ -136,7 +142,8 @@ public sealed partial class CalcPage : UserControl
         if (result.Faulted) // Ignore error
             return;
 
-        result.Format = RawValueToggle.IsChecked!.Value ? Format.Raw : Format.Human;
+        if (RawValueToggle.IsChecked!.Value)
+            result.Format = Format.Raw;
         var resultText = result.RenderValue();
 
         ResultDisplay.Text = resultText;

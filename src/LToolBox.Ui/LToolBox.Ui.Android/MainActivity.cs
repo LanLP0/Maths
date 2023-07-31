@@ -1,12 +1,12 @@
 ﻿using Android.App;
+using Android.Content;
 using Android.Content.PM;
 using Android.OS;
+using Android.Preferences;
 using Android.Util;
 using Avalonia;
 using Avalonia.Android;
 using Avalonia.ReactiveUI;
-using LToolBox.Ui.Mobile;
-using Xamarin.Essentials;
 
 namespace LToolBox.Ui.Android;
 
@@ -32,7 +32,8 @@ public sealed class MainActivity : AvaloniaMainActivity<App>
         App.LoggerConfiguration.WriteTo.Sink<LogCatSink>();
         App.InitializeLogger(); // Early init to use in suspension driver
 
-        App.SetSuspensionDriver(new MobileSuspensionDriver());
+        var cfg = GetPreferences(FileCreationMode.Private);
+        App.SetSuspensionDriver(new AndroidSuspensionDriver(cfg));
 
         return base.CustomizeAppBuilder(builder)
             .WithInterFont()
@@ -63,13 +64,5 @@ public sealed class MainActivity : AvaloniaMainActivity<App>
             App.SuspendHelper.OnResume();
 
         base.OnCreate(savedInstanceState);
-        Platform.Init(this, savedInstanceState);
-    }
-
-    public override void OnRequestPermissionsResult(int requestCode, string[] permissions, Permission[] grantResults)
-    {
-        Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 }

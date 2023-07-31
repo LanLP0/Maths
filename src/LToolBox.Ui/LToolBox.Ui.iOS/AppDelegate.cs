@@ -10,8 +10,6 @@ public class AppDelegate : AvaloniaAppDelegate<App>
 {
     protected override AppBuilder CustomizeAppBuilder(AppBuilder builder)
     {
-        App.SetSuspensionDriver(new MobileSuspensionDriver());
-
         return base.CustomizeAppBuilder(builder)
             .WithInterFont()
             .UseReactiveUI();

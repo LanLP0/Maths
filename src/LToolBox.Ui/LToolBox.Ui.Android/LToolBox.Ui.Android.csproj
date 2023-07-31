@@ -25,11 +25,10 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Avalonia.Android" Version="$(AvaloniaVersion)"/>
+        <PackageReference Include="Avalonia.Android" Version="$(AvaloniaVersion)" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\LToolBox.Ui.Mobile\LToolBox.Ui.Mobile.csproj"/>
-        <ProjectReference Include="..\LToolBox.Ui\LToolBox.Ui.csproj"/>
+        <ProjectReference Include="..\LToolBox.Ui\LToolBox.Ui.csproj" />
     </ItemGroup>
 </Project>
