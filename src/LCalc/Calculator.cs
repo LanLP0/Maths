@@ -50,7 +50,7 @@ public static class Calculator
     /// <param name="options">Calculator options (will override options set within the math string)</param>
     /// <param name="prevAns">The previous answer (variable: ans)</param>
     /// <returns>The raw result</returns>
-    public static CalcResult CalcRaw(ReadOnlySpan<char> math,  CalculatorOption options = CalculatorOption.None,
+    public static CalcResult CalcRaw(ReadOnlySpan<char> math, CalculatorOption options = CalculatorOption.None,
         double prevAns = double.NaN)
     {
         if (math.Length is 0)

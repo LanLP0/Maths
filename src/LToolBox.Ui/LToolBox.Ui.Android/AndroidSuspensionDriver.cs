@@ -10,8 +10,8 @@ namespace LToolBox.Ui.Android;
 
 public sealed class AndroidSuspensionDriver : ISuspensionDriver
 {
-    private ISharedPreferences _config;
     private const string ConfigKey = "config";
+    private readonly ISharedPreferences _config;
 
     public AndroidSuspensionDriver(ISharedPreferences config)
     {
@@ -30,11 +30,11 @@ public sealed class AndroidSuspensionDriver : ISuspensionDriver
     {
         Log.Debug(MainActivity.LogTag, "SaveState");
         var json = JsonConvert.SerializeObject(state);
-        
+
         var editor = _config.Edit()!;
         editor.PutString(ConfigKey, json);
         editor.Commit();
-        
+
         return Observable.Return(Unit.Default);
     }
 
@@ -44,7 +44,7 @@ public sealed class AndroidSuspensionDriver : ISuspensionDriver
         var editor = _config.Edit()!;
         editor.PutString(ConfigKey, string.Empty);
         editor.Commit();
-        
+
         return Observable.Return(Unit.Default);
     }
 }

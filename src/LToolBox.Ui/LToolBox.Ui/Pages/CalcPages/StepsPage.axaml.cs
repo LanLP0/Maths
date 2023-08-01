@@ -22,7 +22,7 @@ public partial class StepsPage : UserControl
     {
         if (NavigationService.GoBack())
             return;
-        
+
         NavigationService.NavigateFromContext(new CalcPageViewModel());
     }
 }

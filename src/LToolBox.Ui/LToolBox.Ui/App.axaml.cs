@@ -1,3 +1,4 @@
+using System;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
@@ -7,7 +8,6 @@ using LToolBox.Ui.Views;
 using ReactiveUI;
 using Serilog;
 using Serilog.Core;
-using System;
 
 namespace LToolBox.Ui;
 

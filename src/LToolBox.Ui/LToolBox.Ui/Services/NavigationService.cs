@@ -17,10 +17,9 @@ public static class NavigationService
     {
         if (!_frame.CanGoBack)
             return false;
-        
+
         _frame.GoBack();
         return true;
-
     }
 
     public static void NavigateFromContext(object dataContext, NavigationTransitionInfo transitionInfo = null)

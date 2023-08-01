@@ -8,6 +8,6 @@
     <ui:SymbolIconSource x:Key="DarkThemeIcon" Symbol="DarkTheme" />
 
     <SolidColorBrush x:Key="OverlayBackgroundColor" Color="#D6F418FF" />
-    
+
     <Thickness x:Key="CornerRadius1">5</Thickness>
 </ResourceDictionary>

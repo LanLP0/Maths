@@ -7,26 +7,26 @@
              xmlns:vmc="using:LToolBox.Ui.ViewModels.CalcPageViewModels"
              xmlns:ctrls="using:FluentAvalonia.UI.Controls"
              x:Class="LToolBox.Ui.Pages.CalcPages.StepsPage">
-    
+
     <Design.DataContext>
         <vmc:StepsPageViewModel />
     </Design.DataContext>
-    
+
     <Border Background="{DynamicResource OverlayBackgroundColor}" CornerRadius="5" Padding="5">
         <Grid>
             <ScrollViewer>
                 <StackPanel>
-                    
+
                     <Viewbox MaxWidth="200" HorizontalAlignment="Left">
                         <mth:FormulaBlock Name="FormulaBlock" Formula="{Binding Formula}"
                                           Foreground="{DynamicResource TextControlForeground}" />
                     </Viewbox>
                     <TextBlock Name="ResultBlock" FontSize="25" Foreground="Aqua"
                                Text="{Binding Path=ResultText}" />
-                    
-                    </StackPanel>
+
+                </StackPanel>
             </ScrollViewer>
-            
+
             <Button Name="ExitButton" VerticalAlignment="Top" HorizontalAlignment="Right" Click="ExitButtonClicked">
                 <StackPanel Orientation="Horizontal" Spacing="5">
                     <ctrls:SymbolIcon Symbol="Cancel" FontSize="20" />

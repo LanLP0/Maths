@@ -37,7 +37,7 @@ public sealed class CalcResult
     public Exception? Exception { get; }
 
     public string? Steps { get; private set; }
-    
+
     public Format Format { get; set; }
 
     internal CalcResult WithSteps(string steps)
@@ -97,7 +97,7 @@ public sealed class CalcResult
                 return result.ToString(CultureInfo.InvariantCulture);
             case Format.Hex:
                 var isNeg = result < 0;
-                
+
                 result = Math.Round(Math.Abs(result));
                 if (result > long.MaxValue)
                     return (isNeg ? "-" : "") + "0x..fffffff";
@@ -106,7 +106,7 @@ public sealed class CalcResult
                 return (isNeg ? "-0x" : "0x") + Convert.ToString(l, 16);
             case Format.Octal:
                 var isNeg1 = result < 0;
-                
+
                 result = Math.Round(Math.Abs(result));
                 if (result > long.MaxValue)
                     return (isNeg1 ? "-" : "") + "0o..7777777";
@@ -115,7 +115,7 @@ public sealed class CalcResult
                 return (isNeg1 ? "-0o" : "0o") + Convert.ToString(l1, 8);
             case Format.Binary:
                 var isNeg2 = result < 0;
-                
+
                 result = Math.Round(Math.Abs(result));
                 if (result > int.MaxValue)
                     return (isNeg2 ? "-" : "") + "0b..1111111";

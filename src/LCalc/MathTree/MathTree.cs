@@ -731,11 +731,12 @@ internal sealed class MathTree
                         scope.SetOpt(CalculatorOption.Step | CalculatorOption.LaTeX | CalculatorOption.LaTeXDoc);
                         break;
                 }
+
                 break;
             case TokenType.AdvancedCalculatorOption:
                 if (!scope.IsCalculatorOptionAllowed)
                     return Err("Calculator option not allowed in this scope");
-                
+
                 // Remove the first &
                 Span<char> opt = stackalloc char[buffer.Length - 1];
                 buffer.CopyTo(1, opt, opt.Length);
@@ -772,9 +773,10 @@ internal sealed class MathTree
                             default:
                                 return Err($"Unknown format: {val}");
                         }
+
                         break;
                 }
-                
+
                 break;
             case TokenType.VariableSet:
                 if (!scope.IsVariableAllowed)

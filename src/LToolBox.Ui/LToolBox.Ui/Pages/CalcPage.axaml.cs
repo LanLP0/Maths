@@ -1,5 +1,4 @@
-﻿using System;
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media;
@@ -14,9 +13,9 @@ namespace LToolBox.Ui.Pages;
 public sealed partial class CalcPage : UserControl
 {
     private const int MaxHistoryLenght = 25;
-    private double _prevAns = Double.NaN;
-    private CalcPageViewModel? _vm;
+    private double _prevAns = double.NaN;
     private CalcResult _result;
+    private CalcPageViewModel? _vm;
 
     public CalcPage()
     {
@@ -45,8 +44,9 @@ public sealed partial class CalcPage : UserControl
 
         MathDisplay.Text = _vm!.Math;
 
-        const CalculatorOption option = CalculatorOption.LaTeX | CalculatorOption.NoLaTeXDoc | CalculatorOption.VariableAllowed
-            | CalculatorOption.CompareAllowed | CalculatorOption.CalculatorOptionAllowed;
+        const CalculatorOption option = CalculatorOption.LaTeX | CalculatorOption.NoLaTeXDoc |
+                                        CalculatorOption.VariableAllowed
+                                        | CalculatorOption.CompareAllowed | CalculatorOption.CalculatorOptionAllowed;
         var result = Calculator.CalcRaw(_vm.Math, option, _prevAns);
 
         if (result.Faulted) // Error
@@ -145,7 +145,7 @@ public sealed partial class CalcPage : UserControl
     {
         if (string.IsNullOrWhiteSpace(MathInput.Text))
             return;
-        
+
         ErrorDisplay.Hide();
         ShowStepsButton.Hide();
 

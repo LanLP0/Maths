@@ -1,19 +1,12 @@
 using System;
 using Avalonia.Controls;
 using LCalc;
-using ReactiveUI;
 
 namespace LToolBox.Ui.ViewModels.CalcPageViewModels;
 
 public class StepsPageViewModel : NavViewModelBase
 {
-    private CalcResult _result;
-    
-    public override string NavHeader { get; } = "Steps";
-    public override string? IconKey { get; } = null;
-
-    public string? Formula => _result.Steps;
-    public string ResultText => $"Result: {_result.RenderValue()}";
+    private readonly CalcResult _result;
 
     public StepsPageViewModel()
     {
@@ -27,4 +20,10 @@ public class StepsPageViewModel : NavViewModelBase
     {
         _result = result;
     }
+
+    public override string NavHeader { get; } = "Steps";
+    public override string? IconKey { get; } = null;
+
+    public string? Formula => _result.Steps;
+    public string ResultText => $"Result: {_result.RenderValue()}";
 }

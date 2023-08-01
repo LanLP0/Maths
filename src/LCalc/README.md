@@ -1,4 +1,5 @@
 # LCalc
+
 ```
 A fast and efficient string calculator
 
@@ -10,10 +11,12 @@ Calculator.CalcRaw()         Calculate the expression the return the raw result
 ## Syntax
 
 `[custom functions..] {expression} [args..]`
+
 - `|`  or
 - `()`  group
 - `[]`  optional
 - `{}`  value
+
 > **__Custom function__**  
 > `[{name}([args..])(=| ){expression}]`  
 > <h6>The square brackets around the function is required<br />Call the function by using `name()` just like normal

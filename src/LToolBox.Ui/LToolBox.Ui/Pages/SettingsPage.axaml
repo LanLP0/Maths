@@ -6,14 +6,14 @@
              x:Class="LToolBox.Ui.Pages.SettingsPage"
              xmlns:ui="using:FluentAvalonia.UI.Controls"
              xmlns:vm="using:LToolBox.Ui.ViewModels">
-    
+
     <Design.DataContext>
         <vm:SettingsPageViewModel />
     </Design.DataContext>
 
     <ScrollViewer>
         <StackPanel Spacing="10">
-            
+
             <ui:SettingsExpander Header="App Theme"
                                  IconSource="DarkTheme"
                                  Description="Change the current app theme">
@@ -33,7 +33,7 @@
                     <ColorPicker Color="{Binding AccentColor}" />
                 </ui:SettingsExpander.Footer>
             </ui:SettingsExpander>
-            
+
         </StackPanel>
     </ScrollViewer>
 </UserControl>

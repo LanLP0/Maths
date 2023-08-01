@@ -5,8 +5,8 @@
         <Nullable>enable</Nullable>
         <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
         <UserSecretsId>5486eb00-e06b-4d0b-b487-183a0af34dee</UserSecretsId>
-		<ApplicationIcon>Icon.ico</ApplicationIcon>
-		<AssemblyName>ltoolbox</AssemblyName>
+        <ApplicationIcon>Icon.ico</ApplicationIcon>
+        <AssemblyName>ltoolbox</AssemblyName>
     </PropertyGroup>
 
     <PropertyGroup>

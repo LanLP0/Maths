@@ -12,12 +12,12 @@
                         CornerRadius="5, 5, 0, 0">
             <ScrollViewer HorizontalScrollBarVisibility="Auto">
                 <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Margin="10">
-                    
+
                     <TextBlock VerticalAlignment="Center" Text="A  =  " />
 
                     <StackPanel>
                         <StackPanel Orientation="Horizontal" Margin="10 5" Spacing="5">
-                            
+
                             <TextBox KeyDown="InputT0_OnKeyDown" Classes="filled" Name="InputT0" Width="60"
                                      Watermark="0" />
                             <TextBlock Text="x^2  +  " VerticalAlignment="Center" />
@@ -26,13 +26,13 @@
                             <TextBlock Text="x  +  " VerticalAlignment="Center" />
                             <TextBox KeyDown="InputT2_OnKeyDown" Classes="filled" Name="InputT2" Width="60"
                                      Watermark="0" />
-                            
+
                         </StackPanel>
 
                         <Separator Foreground="White" Margin="0" />
 
                         <StackPanel Orientation="Horizontal" Margin="10 5" Spacing="5">
-                            
+
                             <TextBox KeyDown="InputB0_OnKeyDown" Classes="filled" Name="InputB0" Width="60"
                                      Watermark="0" />
                             <TextBlock Text="x^2  +  " VerticalAlignment="Center" />
@@ -41,7 +41,7 @@
                             <TextBlock Text="x  +  " VerticalAlignment="Center" />
                             <TextBox KeyDown="InputB2_OnKeyDown" Classes="filled" Name="InputB2" Width="60"
                                      Watermark="0" />
-                            
+
                         </StackPanel>
                     </StackPanel>
                 </StackPanel>
@@ -49,15 +49,15 @@
         </ContentControl>
 
         <Grid DockPanel.Dock="Top" Margin="0 10 0 0" ColumnDefinitions="*, 5, Auto, 5, Auto">
-            
+
             <Button Grid.Column="0" Click="SubmitPressed" Name="SubmitButton" Content="Submit"
                     HorizontalAlignment="Stretch" />
-            
+
             <Button Grid.Column="2" Click="ClearHistoryButtonPressed" Name="ClearHistoryButton"
                     Content="Clear History" />
-            
+
             <Button Grid.Column="4" Click="ClearButtonPressed" Name="ClearButton" Content="Clear" />
-            
+
         </Grid>
 
         <TextBlock DockPanel.Dock="Top" Name="ExceptionDisplay" Margin="0 5 0 0"
@@ -66,13 +66,13 @@
         <ListBox DoubleTapped="HistoryBox_OnDoubleTapped" Name="HistoryBox" AutoScrollToSelectedItem="True"
                  Margin="0 10 0 0" DockPanel.Dock="Bottom"
                  Background="{DynamicResource OverlayBackgroundColor}">
-            
+
             <ListBox.Styles>
-                
+
                 <Style Selector="ListBoxItem">
                     <Setter Property="CornerRadius" Value="5" />
                 </Style>
-                
+
             </ListBox.Styles>
             <!-- Template for item -->
             <!-- <ListBoxItem> -->

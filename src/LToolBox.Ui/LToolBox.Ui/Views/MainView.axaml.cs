@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Threading;
 using FluentAvalonia.UI.Controls;
 using FluentAvalonia.UI.Navigation;
 using LToolBox.Ui.Services;
@@ -42,7 +41,7 @@ public sealed partial class MainView : UserControl
 
         var menuItems = new List<NavigationViewItemBase>(2);
         var footerItems = new List<NavigationViewItemBase>(2);
-        
+
         object? target = null;
         foreach (var page in pages)
         {

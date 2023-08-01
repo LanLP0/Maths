@@ -2,7 +2,6 @@
 using Android.Content;
 using Android.Content.PM;
 using Android.OS;
-using Android.Preferences;
 using Android.Util;
 using Avalonia;
 using Avalonia.Android;

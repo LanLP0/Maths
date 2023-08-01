@@ -6,7 +6,7 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              xmlns:ctrls="using:FluentAvalonia.UI.Controls"
              x:Class="LToolBox.Ui.Pages.CalcPage">
-    
+
     <Design.DataContext>
         <vm:CalcPageViewModel />
     </Design.DataContext>
@@ -16,15 +16,15 @@
                         Background="{DynamicResource OverlayBackgroundColor}">
             <Grid>
                 <DockPanel Margin="10, 5, 10, 5" Height="200">
-                    
+
                     <TextBlock Name="MathDisplay" DockPanel.Dock="Top" TextAlignment="Right" FontSize="15"
                                TextWrapping="NoWrap" />
-                    
+
                     <Viewbox HorizontalAlignment="Right">
                         <TextBlock Name="ResultDisplay" DockPanel.Dock="Bottom"
                                    TextWrapping="Wrap" Foreground="Aqua" />
                     </Viewbox>
-                    
+
                 </DockPanel>
                 <ScrollViewer Name="DisplayOverlay">
                     <StackPanel>
@@ -38,27 +38,27 @@
 
         <TextBox Name="MathInput" DockPanel.Dock="Top" TextChanged="MathInput_OnTextChanged" Margin="0 5"
                  Text="{Binding Math, Mode=TwoWay}" Height="60" Watermark="Calculation" />
-        
+
         <TextBlock DockPanel.Dock="Top" Name="ErrorDisplay" Margin="0 0 0 5"
                    Foreground="Red" IsVisible="False" />
 
         <Grid DockPanel.Dock="Top" ColumnDefinitions="*, 5, Auto" Margin="0 5">
-            
+
             <Button Grid.Column="0" Click="ClearHistory" Content="Clear History" HorizontalAlignment="Stretch" />
             <CheckBox Grid.Column="2" Name="RawValueToggle" Content="Show Raw Value" IsChecked="False" />
-            
+
         </Grid>
 
         <ListBox DockPanel.Dock="Bottom" DoubleTapped="HistoryBox_OnDoubleTapped" AutoScrollToSelectedItem="True"
                  Name="HistoryBox" Margin="0 5 0 0" CornerRadius="5"
                  Background="{DynamicResource OverlayBackgroundColor}">
-            
+
             <ListBox.Styles>
                 <Style Selector="ListBoxItem">
                     <Setter Property="CornerRadius" Value="5" />
                 </Style>
             </ListBox.Styles>
-            
+
         </ListBox>
     </DockPanel>
 </UserControl>
