@@ -113,6 +113,11 @@ internal sealed class Scope
         return (Option & CalculatorOption.LaTeXDoc) != 0;
     }
 
+    public bool GetNoLaTeXDocOpt()
+    {
+        return (Option & CalculatorOption.NoLaTeXDoc) != 0;
+    }
+
     public void EndInit()
     {
         if (CustomFunctions is null)

@@ -102,7 +102,7 @@ public static class Calculator
 
         var treeOpt = tree.Scope.GetShowTreeOpt();
         var latex = tree.Scope.GetLaTeXOpt();
-        var latexDoc = tree.Scope.GetLaTeXDocOpt();
+        var latexDoc = tree.Scope.GetLaTeXDocOpt() && !tree.Scope.GetNoLaTeXDocOpt();
 
         var buffer = new StringBuilder();
         if (latexDoc)

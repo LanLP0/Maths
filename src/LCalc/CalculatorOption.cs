@@ -11,5 +11,10 @@ public enum CalculatorOption
     CompareAllowed = 1 << 4,
     CalculatorOptionAllowed = 1 << 5,
     LaTeX = 1 << 6,
-    LaTeXDoc = 1 << 7
+    LaTeXDoc = 1 << 7,
+    /// <summary>
+    ///     Allows latex but not latexdoc, useful for situation<br />
+    ///     when the full doc is not needed and should not be used
+    /// </summary>
+    NoLaTeXDoc = 1 << 8
 }

@@ -31,6 +31,7 @@ Calculator.CalcRaw()         Calculate the expression the return the raw result
 > `&solve` Solve for the unknown variable so that the result is 0  
 > `&latex` Add solving steps in LaTeX syntax  
 > `&latexdoc` Add solving steps in LaTeX syntax and wrap everything in a LaTeX document  
+> `nolatexdoc` Allow &latex but not &latexdoc (Set through code)
 > ```
 > &fmt={format} or &format={format}  Change output result format
 > 
