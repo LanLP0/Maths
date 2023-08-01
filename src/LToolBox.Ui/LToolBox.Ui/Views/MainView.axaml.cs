@@ -26,7 +26,7 @@ public sealed partial class MainView : UserControl
         base.OnAttachedToVisualTree(e);
 
         FrameView.NavigationPageFactory = new NavigationFactory();
-        NavigationService.Instance.SetFrame(FrameView);
+        NavigationService.SetFrame(FrameView);
 
         InitializeNavPages();
     }
@@ -35,52 +35,49 @@ public sealed partial class MainView : UserControl
     {
         var pages = new NavViewModelBase[]
         {
-            new CalcViewModel(),
-            new MinMaxFracViewModel(),
-            new SettingsViewModel()
+            new CalcPageViewModel(),
+            new MinMaxFracPageViewModel(),
+            new SettingsPageViewModel()
         };
 
         var menuItems = new List<NavigationViewItemBase>(2);
         var footerItems = new List<NavigationViewItemBase>(2);
-
-        Dispatcher.UIThread.Post(() =>
+        
+        object? target = null;
+        foreach (var page in pages)
         {
-            object? target = null;
-            foreach (var page in pages)
+            var nvi = new NavigationViewItem
             {
-                var nvi = new NavigationViewItem
-                {
-                    Content = page.NavHeader,
-                    Tag = page
-                };
-                if (page.IsFooter)
-                    footerItems.Add(nvi);
-                else
-                    menuItems.Add(nvi);
+                Content = page.NavHeader,
+                Tag = page
+            };
+            if (page.IsFooter)
+                footerItems.Add(nvi);
+            else
+                menuItems.Add(nvi);
 
-                if (page.IconKey is not null)
-                    nvi.IconSource = (IconSource)this.FindResource(page.IconKey)!;
+            if (page.IconKey is not null)
+                nvi.IconSource = (IconSource)this.FindResource(page.IconKey)!;
 
-                // Restore previous page
-                if (page.NavHeader == AppState.Instance.PageName)
-                    target = nvi.Tag!;
-            }
+            // Restore previous page
+            if (page.NavHeader == AppState.Instance.PageName)
+                target = nvi.Tag!;
+        }
 
-            // Quick option to switch theme mode
-            footerItems.Insert(0, new NavigationViewItem
-            {
-                Content = "Switch Theme",
-                Tag = "theme-switch",
-                IconSource = (IconSource)this.FindResource("DarkThemeIcon")!,
-                SelectsOnInvoked = false
-            });
-
-            NavView.FooterMenuItemsSource = footerItems;
-            NavView.MenuItemsSource = menuItems;
-
-            target ??= menuItems[0].Tag!;
-            NavigationService.Instance.NavigateFromContext(target);
+        // Quick option to switch theme mode
+        footerItems.Insert(0, new NavigationViewItem
+        {
+            Content = "Switch Theme",
+            Tag = "theme-switch",
+            IconSource = (IconSource)this.FindResource("DarkThemeIcon")!,
+            SelectsOnInvoked = false
         });
+
+        NavView.MenuItemsSource = menuItems;
+        NavView.FooterMenuItemsSource = footerItems;
+
+        target ??= menuItems[0].Tag!;
+        NavigationService.NavigateFromContext(target);
     }
 
     private void OnNavigationViewBackRequested(object sender, NavigationViewBackRequestedEventArgs e)
@@ -95,7 +92,7 @@ public sealed partial class MainView : UserControl
 
         if (nvi.Tag is "theme-switch") ThemingService.SwitchThemeMode();
 
-        NavigationService.Instance.NavigateFromContext(nvi.Tag, e.RecommendedNavigationTransitionInfo);
+        NavigationService.NavigateFromContext(nvi.Tag, e.RecommendedNavigationTransitionInfo);
     }
 
     private void OnFrameViewNavigated(object sender, NavigationEventArgs e)
@@ -121,6 +118,8 @@ public sealed partial class MainView : UserControl
             _vm.SelectedItem = nvi;
             return;
         }
+
+        _vm.SelectedItem = null!;
     }
 
     private void OnSizeChanged(object? sender, SizeChangedEventArgs e)

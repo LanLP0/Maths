@@ -30,7 +30,6 @@ public sealed class MainActivity : AvaloniaMainActivity<App>
     protected override AppBuilder CustomizeAppBuilder(AppBuilder builder)
     {
         App.LoggerConfiguration.WriteTo.Sink<LogCatSink>();
-        App.InitializeLogger(); // Early init to use in suspension driver
 
         var cfg = GetPreferences(FileCreationMode.Private);
         App.SetSuspensionDriver(new AndroidSuspensionDriver(cfg));

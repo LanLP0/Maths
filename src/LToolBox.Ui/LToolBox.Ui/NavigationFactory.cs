@@ -2,7 +2,9 @@
 using Avalonia.Controls;
 using FluentAvalonia.UI.Controls;
 using LToolBox.Ui.Pages;
+using LToolBox.Ui.Pages.CalcPages;
 using LToolBox.Ui.ViewModels;
+using LToolBox.Ui.ViewModels.CalcPageViewModels;
 
 namespace LToolBox.Ui;
 
@@ -10,7 +12,7 @@ public sealed class NavigationFactory : INavigationPageFactory
 {
     public Control GetPage(Type srcType)
     {
-        return null;
+        throw new NotImplementedException();
     }
 
     public Control GetPageFromObject(object target)
@@ -22,18 +24,23 @@ public sealed class NavigationFactory : INavigationPageFactory
 
         switch (target)
         {
-            case CalcViewModel:
+            case CalcPageViewModel:
                 return new CalcPage
                 {
                     DataContext = target
                 };
-            case MinMaxFracViewModel:
+            case MinMaxFracPageViewModel:
                 return new MinMaxFracPage
                 {
                     DataContext = target
                 };
-            case SettingsViewModel:
+            case SettingsPageViewModel:
                 return new SettingsPage
+                {
+                    DataContext = target
+                };
+            case StepsPageViewModel:
+                return new StepsPage
                 {
                     DataContext = target
                 };

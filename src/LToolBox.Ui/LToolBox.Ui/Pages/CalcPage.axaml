@@ -4,31 +4,45 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="clr-namespace:LToolBox.Ui.ViewModels"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             xmlns:ctrls="using:FluentAvalonia.UI.Controls"
              x:Class="LToolBox.Ui.Pages.CalcPage">
     
     <Design.DataContext>
-        <vm:CalcViewModel />
+        <vm:CalcPageViewModel />
     </Design.DataContext>
 
     <DockPanel>
-        <ContentControl DockPanel.Dock="Top" CornerRadius="5" Background="{DynamicResource OverlayBackgroundColor}">
-            <ScrollViewer Height="200">
-                <DockPanel Margin="10, 5, 10, 5">
+        <ContentControl DockPanel.Dock="Top" CornerRadius="5"
+                        Background="{DynamicResource OverlayBackgroundColor}">
+            <Grid>
+                <DockPanel Margin="10, 5, 10, 5" Height="200">
                     
-                    <TextBlock Name="MathDisplay" DockPanel.Dock="Top" TextAlignment="Left" FontSize="15"
+                    <TextBlock Name="MathDisplay" DockPanel.Dock="Top" TextAlignment="Right" FontSize="15"
                                TextWrapping="NoWrap" />
                     
-                    <TextBlock Name="ResultDisplay" DockPanel.Dock="Bottom" TextAlignment="Left" FontSize="40"
-                               TextWrapping="Wrap" />
+                    <Viewbox HorizontalAlignment="Right">
+                        <TextBlock Name="ResultDisplay" DockPanel.Dock="Bottom"
+                                   TextWrapping="Wrap" Foreground="Aqua" />
+                    </Viewbox>
                     
                 </DockPanel>
-            </ScrollViewer>
+                <ScrollViewer Name="DisplayOverlay">
+                    <StackPanel>
+                        <Button Name="ShowStepsButton" Click="ShowStepsButtonClicked" IsVisible="False">
+                            <ctrls:SymbolIcon Symbol="AlignLeft" />
+                        </Button>
+                    </StackPanel>
+                </ScrollViewer>
+            </Grid>
         </ContentControl>
 
-        <TextBox Name="MathInput" DockPanel.Dock="Top" TextChanged="MathInput_OnTextChanged" Margin="0 10 0 0"
-                 Text="{Binding Math, Mode=TwoWay}" Classes="filled" Height="80" Watermark="Calculation" />
+        <TextBox Name="MathInput" DockPanel.Dock="Top" TextChanged="MathInput_OnTextChanged" Margin="0 5"
+                 Text="{Binding Math, Mode=TwoWay}" Height="60" Watermark="Calculation" />
+        
+        <TextBlock DockPanel.Dock="Top" Name="ErrorDisplay" Margin="0 0 0 5"
+                   Foreground="Red" IsVisible="False" />
 
-        <Grid DockPanel.Dock="Top" ColumnDefinitions="*, 5, Auto" Margin="0 10 0 0">
+        <Grid DockPanel.Dock="Top" ColumnDefinitions="*, 5, Auto" Margin="0 5">
             
             <Button Grid.Column="0" Click="ClearHistory" Content="Clear History" HorizontalAlignment="Stretch" />
             <CheckBox Grid.Column="2" Name="RawValueToggle" Content="Show Raw Value" IsChecked="False" />
@@ -36,7 +50,7 @@
         </Grid>
 
         <ListBox DockPanel.Dock="Bottom" DoubleTapped="HistoryBox_OnDoubleTapped" AutoScrollToSelectedItem="True"
-                 Name="HistoryBox" Margin="0 10 0 0" CornerRadius="5"
+                 Name="HistoryBox" Margin="0 5 0 0" CornerRadius="5"
                  Background="{DynamicResource OverlayBackgroundColor}">
             
             <ListBox.Styles>

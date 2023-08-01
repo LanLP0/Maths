@@ -4,17 +4,26 @@ using FluentAvalonia.UI.Navigation;
 
 namespace LToolBox.Ui.Services;
 
-public sealed class NavigationService
+public static class NavigationService
 {
-    private Frame _frame;
-    public static NavigationService Instance { get; } = new();
+    private static Frame _frame;
 
-    public void SetFrame(Frame f)
+    public static void SetFrame(Frame f)
     {
         _frame = f;
     }
 
-    public void NavigateFromContext(object dataContext, NavigationTransitionInfo transitionInfo = null)
+    public static bool GoBack()
+    {
+        if (!_frame.CanGoBack)
+            return false;
+        
+        _frame.GoBack();
+        return true;
+
+    }
+
+    public static void NavigateFromContext(object dataContext, NavigationTransitionInfo transitionInfo = null)
     {
         _frame.NavigateFromObject(dataContext,
             new FrameNavigationOptions

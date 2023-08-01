@@ -14,5 +14,5 @@ public class AppState
 
     [DataMember] public Color AccentColor { get; set; } = ThemingService.AccentColor;
 
-    [DataMember] public string PageName { get; set; } = CalcViewModel.NavHeaderName;
+    [DataMember] public string PageName { get; set; } = CalcPageViewModel.NavHeaderName;
 }

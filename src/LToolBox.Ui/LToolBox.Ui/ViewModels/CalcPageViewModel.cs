@@ -2,7 +2,7 @@
 
 namespace LToolBox.Ui.ViewModels;
 
-public sealed class CalcViewModel : NavViewModelBase
+public sealed class CalcPageViewModel : NavViewModelBase
 {
     public const string NavHeaderName = "LCalc";
     private string _math = string.Empty;

@@ -4,14 +4,14 @@ using ReactiveUI;
 
 namespace LToolBox.Ui.ViewModels;
 
-public sealed class SettingsViewModel : NavViewModelBase
+public sealed class SettingsPageViewModel : NavViewModelBase
 {
     private Color _accentColor = ThemingService.AccentColor;
     private AppTheme _currentAppTheme = ThemingService.AppTheme;
 
-    public SettingsViewModel()
+    public SettingsPageViewModel()
     {
-        ThemingService.OnThemeChange += OnThemeChange;
+        ThemingService.OnThemeChanged += OnThemeChanged;
     }
 
     public override string NavHeader { get; } = "Settings";
@@ -40,7 +40,7 @@ public sealed class SettingsViewModel : NavViewModelBase
         }
     }
 
-    private void OnThemeChange(object? sender, AppTheme e)
+    private void OnThemeChanged(object? sender, AppTheme e)
     {
         this.RaiseAndSetIfChanged(ref _currentAppTheme, e, nameof(CurrentAppTheme));
     }

@@ -5,6 +5,7 @@
       <map>
         <entry key="src/LToolBox.Ui/LToolBox.Ui/App.axaml" value="src/LToolBox.Ui/LToolBox.Ui.Desktop/LToolBox.Ui.Desktop.csproj" />
         <entry key="src/LToolBox.Ui/LToolBox.Ui/Pages/CalcPage.axaml" value="src/LToolBox.Ui/LToolBox.Ui.Desktop/LToolBox.Ui.Desktop.csproj" />
+        <entry key="src/LToolBox.Ui/LToolBox.Ui/Pages/CalcPages/StepsPage.axaml" value="src/LToolBox.Ui/LToolBox.Ui.Desktop/LToolBox.Ui.Desktop.csproj" />
         <entry key="src/LToolBox.Ui/LToolBox.Ui/Pages/MinMaxFracPage.axaml" value="src/LToolBox.Ui/LToolBox.Ui.Desktop/LToolBox.Ui.Desktop.csproj" />
         <entry key="src/LToolBox.Ui/LToolBox.Ui/Pages/SettingsPage.axaml" value="src/LToolBox.Ui/LToolBox.Ui.Desktop/LToolBox.Ui.Desktop.csproj" />
         <entry key="src/LToolBox.Ui/LToolBox.Ui/Styling/Resources.axaml" value="src/LToolBox.Ui/LToolBox.Ui.Desktop/LToolBox.Ui.Desktop.csproj" />

@@ -7,8 +7,9 @@
     <DockPanel>
         <ContentControl DockPanel.Dock="Top" FontSize="20"
                         Background="{DynamicResource OverlayBackgroundColor}"
-                        BorderBrush="White" BorderThickness="0 0 0 1"
-                        CornerRadius="5 5 0 0">
+                        BorderBrush="{DynamicResource TextControlBorderBrush}"
+                        BorderThickness="0, 0, 0, 1"
+                        CornerRadius="5, 5, 0, 0">
             <ScrollViewer HorizontalScrollBarVisibility="Auto">
                 <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Margin="10">
                     

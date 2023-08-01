@@ -1,13 +1,13 @@
 ﻿using System;
-using System.Globalization;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media;
-using Common.Maths.Extension;
 using LCalc;
 using LToolBox.Ui.Extension;
+using LToolBox.Ui.Services;
 using LToolBox.Ui.ViewModels;
+using LToolBox.Ui.ViewModels.CalcPageViewModels;
 
 namespace LToolBox.Ui.Pages;
 
@@ -15,7 +15,8 @@ public sealed partial class CalcPage : UserControl
 {
     private const int MaxHistoryLenght = 25;
     private double _prevAns = Double.NaN;
-    private CalcViewModel? _vm;
+    private CalcPageViewModel? _vm;
+    private CalcResult _result;
 
     public CalcPage()
     {
@@ -29,7 +30,7 @@ public sealed partial class CalcPage : UserControl
     protected override void OnInitialized()
     {
         base.OnInitialized();
-        _vm = (CalcViewModel)DataContext!;
+        _vm = (CalcPageViewModel)DataContext!;
     }
 
     private void MathInput_KeyDown(object? sender, KeyEventArgs e)
@@ -44,14 +45,23 @@ public sealed partial class CalcPage : UserControl
 
         MathDisplay.Text = _vm!.Math;
 
-        var result = Calculator.CalcRaw(_vm.Math, prevAns: _prevAns);
+        const CalculatorOption option = CalculatorOption.LaTeX | CalculatorOption.NoLaTeXDoc | CalculatorOption.VariableAllowed
+            | CalculatorOption.CompareAllowed | CalculatorOption.CalculatorOptionAllowed;
+        var result = Calculator.CalcRaw(_vm.Math, option, _prevAns);
 
         if (result.Faulted) // Error
         {
-            ResultDisplay.Text = result.Exception!.Message; // Display error
+            ErrorDisplay.Text = result.Exception!.Message; // Display error
+            ErrorDisplay.Show();
 
             FocusInputBox();
             return;
+        }
+
+        if (result.Steps is not null)
+        {
+            _result = result;
+            ShowStepsButton.Show();
         }
 
         if (result.IsNumber)
@@ -135,6 +145,9 @@ public sealed partial class CalcPage : UserControl
     {
         if (string.IsNullOrWhiteSpace(MathInput.Text))
             return;
+        
+        ErrorDisplay.Hide();
+        ShowStepsButton.Hide();
 
         MathDisplay.Text = string.Empty; // Clear math display
         var result = Calculator.CalcRaw(_vm!.Math);
@@ -147,5 +160,10 @@ public sealed partial class CalcPage : UserControl
         var resultText = result.RenderValue();
 
         ResultDisplay.Text = resultText;
+    }
+
+    private void ShowStepsButtonClicked(object? sender, RoutedEventArgs e)
+    {
+        NavigationService.NavigateFromContext(new StepsPageViewModel(_result));
     }
 }

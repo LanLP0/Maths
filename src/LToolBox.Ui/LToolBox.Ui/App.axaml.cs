@@ -7,6 +7,7 @@ using LToolBox.Ui.Views;
 using ReactiveUI;
 using Serilog;
 using Serilog.Core;
+using System;
 
 namespace LToolBox.Ui;
 
@@ -35,12 +36,10 @@ public sealed class App : Application
 
     public override void OnFrameworkInitializationCompleted()
     {
-        ThemingService.Reload();
-
         if (!Design.IsDesignMode)
             InitializeSuspensionDriver();
         else
-            ThemingService.SwitchToDarkMode();
+            ThemingService.SetTheme(AppTheme.Dark, true);
 
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             desktop.MainWindow = new MainWindow();
@@ -55,7 +54,7 @@ public sealed class App : Application
         // If the platform is not supported
         _suspensionDriver ??= new DummySuspensionDriver();
 
-        RxApp.SuspensionHost.CreateNewAppState = () => AppState.Instance;
+        RxApp.SuspensionHost.CreateNewAppState = () => new AppState();
         RxApp.SuspensionHost.SetupDefaultSuspendResume(_suspensionDriver);
         if (ApplicationLifetime is IControlledApplicationLifetime lt)
         {
@@ -84,7 +83,14 @@ public sealed class App : Application
 
     private void RestoreTheme()
     {
-        ThemingService.SetTheme(AppState.Instance.AppTheme);
-        ThemingService.SetAccentColor(AppState.Instance.AccentColor);
+        try
+        {
+            ThemingService.SetTheme(AppState.Instance.AppTheme, true);
+            ThemingService.SetAccentColor(AppState.Instance.AccentColor);
+        }
+        catch (Exception e)
+        {
+            Logger?.Error("{error}", e);
+        }
     }
 }

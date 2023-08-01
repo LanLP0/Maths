@@ -20,7 +20,8 @@
                        ItemInvoked="OnNavigationViewItemInvoked" BackRequested="OnNavigationViewBackRequested">
 
         <DockPanel>
-            <TextBlock DockPanel.Dock="Top" Name="PageHeader" Text="{Binding HeaderText}" TextAlignment="Center"
+            <TextBlock DockPanel.Dock="Top" Name="PageHeader" Text="{Binding HeaderText}"
+                       TextAlignment="Center"
                        FontSize="25" />
             <ui:Frame DockPanel.Dock="Bottom" Name="FrameView" Padding="10" Navigated="OnFrameViewNavigated" />
         </DockPanel>

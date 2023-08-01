@@ -8,7 +8,7 @@ namespace LToolBox.Ui.Services;
 
 public static class ThemingService
 {
-    private static AppTheme _appTheme;
+    private static AppTheme _appTheme = AppTheme.Dark;
 
     public static AppTheme AppTheme
     {
@@ -20,9 +20,9 @@ public static class ThemingService
         }
     }
 
-    public static Color AccentColor { get; private set; } = Color.Parse("#6933FFCD");
+    public static Color AccentColor { get; private set; } = Color.Parse("#D6F418FF");
 
-    public static event EventHandler<AppTheme>? OnThemeChange;
+    public static event EventHandler<AppTheme>? OnThemeChanged;
 
     /// <summary>
     ///     Switch between the Dark & Light variant of the theme
@@ -40,9 +40,9 @@ public static class ThemingService
         SetTheme(theme);
     }
 
-    public static void SetTheme(AppTheme theme)
+    public static void SetTheme(AppTheme theme, bool firstSet = false)
     {
-        if (theme == AppTheme)
+        if (theme == AppTheme && !firstSet)
             return;
 
         Application.Current!.RequestedThemeVariant = theme switch
@@ -52,25 +52,9 @@ public static class ThemingService
             _ => throw new ArgumentOutOfRangeException(nameof(theme), theme, null)
         };
 
-        OnThemeChange?.Invoke(null, theme);
+        OnThemeChanged?.Invoke(null, theme);
 
         AppTheme = theme;
-    }
-
-    public static void SwitchToLightMode()
-    {
-        if (AppTheme is AppTheme.Light)
-            return;
-
-        SwitchThemeMode();
-    }
-
-    public static void SwitchToDarkMode()
-    {
-        if (AppTheme is AppTheme.Dark)
-            return;
-
-        SwitchThemeMode();
     }
 
     public static void SetAccentColor(Color color)
@@ -82,14 +66,5 @@ public static class ThemingService
 
         var fluentStyle = (FluentAvaloniaTheme)Application.Current.Styles[0];
         fluentStyle.CustomAccentColor = color;
-    }
-
-    /// <summary>
-    ///     Reload the current theme
-    /// </summary>
-    public static void Reload()
-    {
-        var theme = Application.Current!.ActualThemeVariant;
-        AppTheme = theme.Key == ThemeVariant.Dark.Key ? AppTheme.Dark : AppTheme.Light;
     }
 }
