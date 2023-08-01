@@ -250,8 +250,7 @@ internal sealed class FunctionCallNode : IMathNode
 
         if (latex)
         {
-            buffer.Append(isSigma ? @"\sum" : @"\prod");
-            buffer.Append(@"\limits_{");
+            buffer.Append(isSigma ? @"\sum_{" : @"\prod_{");
             buffer.Append((args[0] as VariableNode)!.Name);
             buffer.Append('=');
         }
