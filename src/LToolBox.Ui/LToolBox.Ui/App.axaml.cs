@@ -54,7 +54,7 @@ public sealed class App : Application
         // If the platform is not supported
         _suspensionDriver ??= new DummySuspensionDriver();
 
-        RxApp.SuspensionHost.CreateNewAppState = () => new AppState();
+        RxApp.SuspensionHost.CreateNewAppState = () => new();
         RxApp.SuspensionHost.SetupDefaultSuspendResume(_suspensionDriver);
         if (ApplicationLifetime is IControlledApplicationLifetime lt)
         {
@@ -83,14 +83,7 @@ public sealed class App : Application
 
     private void RestoreTheme()
     {
-        try
-        {
-            ThemingService.SetTheme(AppState.Instance.AppTheme, true);
-            ThemingService.SetAccentColor(AppState.Instance.AccentColor);
-        }
-        catch (Exception e)
-        {
-            Logger?.Error("{error}", e);
-        }
+        ThemingService.SetTheme(AppState.Instance.AppTheme, true);
+        ThemingService.SetAccentColor(AppState.Instance.AccentColor);
     }
 }

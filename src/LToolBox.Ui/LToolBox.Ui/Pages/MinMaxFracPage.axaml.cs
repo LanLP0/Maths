@@ -75,7 +75,7 @@ public sealed partial class MinMaxFracPage : UserControl
 
     private void SubmitPressed(object? sender, RoutedEventArgs e)
     {
-        ExceptionDisplay.Hide();
+        ErrorDisplay.Hide();
 
         var fraction = new MMFraction();
         try
@@ -100,15 +100,15 @@ public sealed partial class MinMaxFracPage : UserControl
             var pos2 = exception.Message.IndexOf('\'', ++pos);
             var input = exception.Message.Substring(pos, pos2 - pos);
 
-            ExceptionDisplay.Text = $"'{input}' is not a number";
-            ExceptionDisplay.Show();
+            ErrorDisplay.Text = $"'{input}' is not a number";
+            ErrorDisplay.Show();
             return;
         }
 
         if (!fraction.Validate())
         {
-            ExceptionDisplay.Text = "The fraction cannot contains a zero nominator or denominator";
-            ExceptionDisplay.Show();
+            ErrorDisplay.Text = "The fraction cannot contains a zero nominator or denominator";
+            ErrorDisplay.Show();
             return;
         }
 
@@ -223,7 +223,7 @@ public sealed partial class MinMaxFracPage : UserControl
 
     private void ClearButtonPressed(object? sender, RoutedEventArgs e)
     {
-        ExceptionDisplay.Hide();
+        ErrorDisplay.Hide();
         InputT0.Text = string.Empty;
         InputT1.Text = string.Empty;
         InputT2.Text = string.Empty;

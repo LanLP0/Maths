@@ -40,7 +40,7 @@
                  Text="{Binding Math, Mode=TwoWay}" Height="60" Watermark="Calculation" />
 
         <TextBlock DockPanel.Dock="Top" Name="ErrorDisplay" Margin="0 0 0 5"
-                   Foreground="Red" IsVisible="False" />
+                   Foreground="Red" IsVisible="False" TextWrapping="Wrap" />
 
         <Grid DockPanel.Dock="Top" ColumnDefinitions="*, 5, Auto" Margin="0 5">
 

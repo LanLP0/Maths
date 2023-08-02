@@ -19,8 +19,8 @@ public sealed class DesktopSuspensionDriver : ISuspensionDriver
     public IObservable<object> LoadState()
     {
         var s = File.ReadAllText(_file);
-        var state = JsonConvert.DeserializeObject<AppState>(s);
-        return Observable.Return(state)!;
+        var state = JsonConvert.DeserializeObject<AppState>(s) ?? new AppState();
+        return Observable.Return(state);
     }
 
     public IObservable<Unit> SaveState(object state)

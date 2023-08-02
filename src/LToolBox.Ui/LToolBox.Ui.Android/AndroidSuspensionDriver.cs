@@ -22,8 +22,8 @@ public sealed class AndroidSuspensionDriver : ISuspensionDriver
     {
         Log.Debug(MainActivity.LogTag, "LoadState");
         var s = _config.GetString(ConfigKey, string.Empty)!;
-        var state = JsonConvert.DeserializeObject<AppState>(s);
-        return Observable.Return(state)!;
+        var state = JsonConvert.DeserializeObject<AppState>(s) ?? new AppState();
+        return Observable.Return(state);
     }
 
     public IObservable<Unit> SaveState(object state)

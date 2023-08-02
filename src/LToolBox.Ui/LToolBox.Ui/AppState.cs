@@ -1,18 +1,23 @@
-﻿using System.Runtime.Serialization;
-using Avalonia.Media;
+﻿using Avalonia.Media;
 using LToolBox.Ui.Services;
 using LToolBox.Ui.ViewModels;
 
 namespace LToolBox.Ui;
 
-[DataContract]
 public class AppState
 {
-    [IgnoreDataMember] public static AppState Instance = new();
+    public static AppState Instance = new();
 
-    [DataMember] public AppTheme AppTheme { get; set; } = ThemingService.AppTheme;
+    public AppTheme AppTheme { get; set; }
+    
+    public Color AccentColor { get; set; }
 
-    [DataMember] public Color AccentColor { get; set; } = ThemingService.AccentColor;
+    public string PageName { get; set; }
 
-    [DataMember] public string PageName { get; set; } = CalcPageViewModel.NavHeaderName;
+    public AppState()
+    {
+        AppTheme = ThemingService.AppTheme;
+        AccentColor = ThemingService.AccentColor;
+        PageName = CalcPageViewModel.NavHeaderName;
+    }
 }

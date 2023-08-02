@@ -19,10 +19,10 @@
 
                     <Viewbox MaxWidth="200" HorizontalAlignment="Left">
                         <mth:FormulaBlock Name="FormulaBlock" Formula="{Binding Formula}"
-                                          Foreground="{DynamicResource TextControlForeground}" />
+                                          Foreground="{DynamicResource TextControlForeground}" Padding="0 5" />
                     </Viewbox>
                     <TextBlock Name="ResultBlock" FontSize="25" Foreground="Aqua"
-                               Text="{Binding Path=ResultText}" />
+                               Text="{Binding Path=ResultText}" TextWrapping="Wrap" />
 
                 </StackPanel>
             </ScrollViewer>
