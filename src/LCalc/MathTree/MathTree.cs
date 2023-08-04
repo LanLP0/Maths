@@ -50,7 +50,16 @@ internal sealed class MathTree
 
             switch ((int)c)
             {
-                case >= 48 and <= 57: // 0-9
+                case 48: // 0
+                case 49: // 1
+                case 50: // 2
+                case 51: // 3
+                case 52: // 4
+                case 53: // 5
+                case 54: // 6
+                case 55: // 7
+                case 56: // 8
+                case 57: // 9
                 {
                     var result = Ok();
                     if (tokenType is not (TokenType.Number or TokenType.VariableSet or TokenType.SpecialNumber))
@@ -356,7 +365,32 @@ internal sealed class MathTree
                     buffer.Append('.');
                     break;
                 }
-                case >= 97 and <= 122: // a-z
+                case 97:  // a
+                case 98:  // b
+                case 99:  // c
+                case 100: // d
+                case 101: // e
+                case 102: // f
+                case 103: // g
+                case 104: // h
+                case 105: // i
+                case 106: // j
+                case 107: // k
+                case 108: // l
+                case 109: // m
+                case 110: // n
+                case 111: // o
+                case 112: // p
+                case 113: // q
+                case 114: // r
+                case 115: // s
+                case 116: // t
+                case 117: // u
+                case 118: // v
+                case 119: // w
+                case 120: // x
+                case 121: // y
+                case 122: // z
                 {
                     if (tokenType is not (TokenType.Empty or TokenType.SpecialNumber or TokenType.Variable
                         or TokenType.CalculatorOption or TokenType.AdvancedCalculatorOption))
@@ -602,7 +636,32 @@ internal sealed class MathTree
                         var chr = math[i];
                         switch ((int)chr)
                         {
-                            case > 96 and < 122: // a-z
+                            case 97:  // a
+                            case 98:  // b
+                            case 99:  // c
+                            case 100: // d
+                            case 101: // e
+                            case 102: // f
+                            case 103: // g
+                            case 104: // h
+                            case 105: // i
+                            case 106: // j
+                            case 107: // k
+                            case 108: // l
+                            case 109: // m
+                            case 110: // n
+                            case 111: // o
+                            case 112: // p
+                            case 113: // q
+                            case 114: // r
+                            case 115: // s
+                            case 116: // t
+                            case 117: // u
+                            case 118: // v
+                            case 119: // w
+                            case 120: // x
+                            case 121: // y
+                            case 122: // z
                             {
                                 buffer.Append(chr);
                                 break;
