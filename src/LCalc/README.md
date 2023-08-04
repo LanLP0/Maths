@@ -30,7 +30,7 @@ Calculator.CalcRaw()         Calculate the expression the return the raw result
 > `&{name}` or `&{name}={text}`  Set calculator argument  
 > `&step` Add solving steps  
 > `&tree` Like &step but wrap every node with a `()`  
-> `&r&aw` See raw value  
+> `&raw` See raw value  
 > `&solve` Solve for the unknown variable so that the result is 0  
 > `&latex` Add solving steps in LaTeX syntax  
 > `&latexdoc` Add solving steps in LaTeX syntax and wrap everything in a LaTeX document  
