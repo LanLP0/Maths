@@ -29,7 +29,7 @@ public class Benchmarks
 
     // [Benchmark(Baseline = true)]
     [Benchmark(Baseline = true)]
-    public void ParseAndCalc()
+    public void All()
     {
         Calculator.CalcRaw(Math);
     }
