@@ -110,6 +110,12 @@ public static class Calculator
         return calcResult;
     }
 
+    /// <summary>
+    ///     Render an expression
+    /// </summary>
+    /// <param name="math">The expression</param>
+    /// <param name="latex">Where to render in latex format or not</param>
+    /// <returns></returns>
     public static string? RenderExpression(ReadOnlySpan<char> math, bool latex = false)
     {
         var tree = new MathTree.MathTree();

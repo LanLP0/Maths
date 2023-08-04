@@ -4,8 +4,9 @@
 A fast and efficient string calculator
 
 -- Usage --
-Calculator.CalcFormatted()   Calculate and format the output  
-Calculator.CalcRaw()         Calculate the expression the return the raw result
+Calculator.CalcFormatted()     Calculate and format the output
+Calculator.CalcRaw()           Calculate the expression the return the raw result
+Calculator.RenderExpression()  Render an expression
 ```
 
 ## Syntax
