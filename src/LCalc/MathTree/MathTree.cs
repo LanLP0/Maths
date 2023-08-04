@@ -575,6 +575,9 @@ internal sealed class MathTree
                     if (buffer.Length is 0)
                         return Err("Custom function name cannot be empty");
 
+                    if (math.Length <= i)
+                        return Err("Invalid custom function syntax");
+                    
                     if (math[i] is not '(')
                         return Err("Invalid custom function syntax");
 
@@ -627,13 +630,13 @@ internal sealed class MathTree
 
                         buffer.Clear();
                     }
-
-                    MoveDownLevel();
-                    _stack.CurrentLevel.Add(new CustomFunctionNode(name, args));
-
+                    
                     i = argEnd + 1;
                     if (math[i] is not ('=' or ' '))
                         return Err("Invalid custom function syntax");
+
+                    MoveDownLevel();
+                    _stack.CurrentLevel.Add(new CustomFunctionNode(name, args));
 
                     break;
                 }
@@ -980,7 +983,7 @@ internal sealed class MathTree
 
     private void ReadLettersToBuffer(StringBuilder buffer, ReadOnlySpan<char> math, ref int index)
     {
-        for (; index <= math.Length; index++)
+        for (; index < math.Length; index++)
         {
             var chr = math[index];
             if (!chr.IsLowerLetter())
