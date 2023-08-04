@@ -29,22 +29,22 @@ public class Benchmarks
 
     // [Benchmark(Baseline = true)]
     [Benchmark(Baseline = true)]
-    public void LCalcRaw()
+    public void ParseAndCalc()
     {
         Calculator.CalcRaw(Math);
     }
 
     [Benchmark]
-    public void LCalcParse()
+    public void Parse()
     {
         var tree = new MathTree();
         tree.Parse(Math);
     }
 
     [Benchmark]
-    public Result<double> LCalcCalc()
+    public CalcResult Calc()
     {
-        return Tree.GetTopNode().Calc(Tree.Scope);
+        return Tree.Calc();
     }
 
     [GlobalSetup]
