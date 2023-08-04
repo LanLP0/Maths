@@ -662,6 +662,10 @@ internal sealed class MathTree
                     isInCustomFunction = false;
                     break;
                 }
+                default:
+                {
+                    return Err($"Invalid character '{math[i]}'");
+                }
             }
 
             if (tokenType is TokenType.Empty)
