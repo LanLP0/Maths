@@ -32,7 +32,7 @@ public sealed class MainActivity : AvaloniaMainActivity<App>
 
         var cfg = GetPreferences(FileCreationMode.Private);
         App.SetSuspensionDriver(new AndroidSuspensionDriver(cfg));
-        
+
         // App.SetSuspensionDriver(new MobileSuspensionDriver());
 
         return base.CustomizeAppBuilder(builder)

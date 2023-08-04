@@ -1,4 +1,3 @@
-using System;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
@@ -54,7 +53,7 @@ public sealed class App : Application
         // If the platform is not supported
         _suspensionDriver ??= new DummySuspensionDriver();
 
-        RxApp.SuspensionHost.CreateNewAppState = () => new();
+        RxApp.SuspensionHost.CreateNewAppState = () => new AppState();
         RxApp.SuspensionHost.SetupDefaultSuspendResume(_suspensionDriver);
         if (ApplicationLifetime is IControlledApplicationLifetime lt)
         {

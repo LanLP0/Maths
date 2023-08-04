@@ -54,9 +54,7 @@ internal sealed class Scope
     public void FinalizeOption()
     {
         if ((Option & CalculatorOption.LaTeX) != 0 && (Option & CalculatorOption.Render) == 0)
-        {
             Option |= CalculatorOption.Step;
-        }
     }
 
     private static CalculatorOption SanitizeOptions(CalculatorOption options)
@@ -66,7 +64,7 @@ internal sealed class Scope
 
         if ((options & CalculatorOption.LaTeXDoc) != 0)
             options |= CalculatorOption.Step | CalculatorOption.LaTeX;
-        
+
         return options;
     }
 

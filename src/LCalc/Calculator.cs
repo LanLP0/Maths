@@ -65,7 +65,7 @@ public static class Calculator
         var result = tree.Parse(math1);
         if (result.Faulted)
             return result.Exception!.ToCalcResult();
-        
+
         scope.FinalizeOption();
 
         if (scope.GetSolveOpt())
@@ -145,13 +145,13 @@ public static class Calculator
         if (render)
         {
             buffer.Append(RenderExpression(tree, latex));
-            
+
             if (latex)
                 buffer.Append(@"\\");
-            
+
             buffer.Append(Environment.NewLine);
         }
-        
+
         if (latexDoc)
             buffer.Append(
                 """
@@ -159,7 +159,7 @@ public static class Calculator
                 \usepackage{amsmath}
                 \begin{document}
                 \begin{gather*}
-                
+
                 """);
 
         for (var i = maxDepth.Value + 1; i > 1; i--)
@@ -176,21 +176,19 @@ public static class Calculator
                 break;
 
             if (latex)
-                buffer.Append("\\\\");
+                buffer.Append(@"\\");
             buffer.Append(Environment.NewLine);
         }
 
         if (render && CheckFirstTwo(buffer, latex, out var line1))
-        {
             buffer.Remove(0, line1.Length + Environment.NewLine.Length);
-        }
 
         if (root is not MathComparer)
         {
             if (latexDoc)
                 buffer.Append(
                     """
-                    
+
                     \end{gather*}
                     \end{document}
                     """);
@@ -199,7 +197,7 @@ public static class Calculator
         }
 
         if (latex)
-            buffer.Append("\\\\");
+            buffer.Append(@"\\");
         buffer.Append(Environment.NewLine);
 
         root.RenderStep(buffer, 1, tree.Scope, 1, treeOpt, latex);
@@ -207,7 +205,7 @@ public static class Calculator
         // Check for duplicates
         if (CheckLastTwo(buffer, latex, out var s))
         {
-            var index = s.LastIndexOf(latex ? "\\\\" : Environment.NewLine, StringComparison.Ordinal);
+            var index = s.LastIndexOf(latex ? @"\\" : Environment.NewLine, StringComparison.Ordinal);
 
             buffer.Remove(index, buffer.Length - index);
         }
@@ -215,13 +213,13 @@ public static class Calculator
         if (latexDoc)
             buffer.Append(
                 """
-                
+
                 \end{gather*}
                 \end{document}
                 """);
 
         return buffer.ToString();
-        
+
         bool CheckFirstTwo(StringBuilder buffer, bool latex, out string line1)
         {
             var s = buffer.ToString();
@@ -247,7 +245,7 @@ public static class Calculator
             var line1 = lines[^2];
             var line2 = lines[^1];
 
-            if (latex) return line1 == line2 + "\\\\";
+            if (latex) return line1 == line2 + @"\\";
 
             return line1 == line2;
         }

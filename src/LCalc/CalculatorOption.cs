@@ -18,7 +18,7 @@ public enum CalculatorOption
     ///     when the full doc is not needed and should not be used
     /// </summary>
     NoLaTeXDoc = 1 << 8,
-    
+
     /// <summary>
     ///     Render the expression as the first step line
     /// </summary>

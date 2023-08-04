@@ -148,7 +148,7 @@ public sealed partial class MinMaxFracPage : UserControl
                         {
                             IsVisible = false,
                             Text =
-                                $"{fraction.T0}\\{fraction.T1}\\{fraction.T2}\\{fraction.B0}\\{fraction.B1}\\{fraction.B2}"
+                                $@"{fraction.T0}\{fraction.T1}\{fraction.T2}\{fraction.B0}\{fraction.B1}\{fraction.B2}"
                         },
                         new StackPanel
                         {

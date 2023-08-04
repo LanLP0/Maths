@@ -70,7 +70,7 @@ internal sealed class BitwiseNotNode : IMathNode
             buffer.Append('(');
 
         if (latex)
-            buffer.Append(" \\sim\\! ");
+            buffer.Append(@" \sim\! ");
         else
             buffer.Append('~');
 
