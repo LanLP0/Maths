@@ -44,9 +44,9 @@ public sealed partial class CalcPage : UserControl
 
         MathDisplay.Text = _vm!.Math;
 
-        const CalculatorOption option = CalculatorOption.LaTeX | CalculatorOption.NoLaTeXDoc |
-                                        CalculatorOption.VariableAllowed
-                                        | CalculatorOption.CompareAllowed | CalculatorOption.CalculatorOptionAllowed;
+        const CalculatorOption option = CalculatorOption.LaTeX | CalculatorOption.NoLaTeXDoc | CalculatorOption.Step |
+                                        CalculatorOption.VariableAllowed | CalculatorOption.Render |
+                                        CalculatorOption.CompareAllowed | CalculatorOption.CalculatorOptionAllowed;
         var result = Calculator.CalcRaw(_vm.Math, option, _prevAns);
 
         if (result.Faulted) // Error
