@@ -8,16 +8,9 @@ public class AppState
 {
     public static AppState Instance = new();
 
-    public AppState()
-    {
-        AppTheme = ThemingService.AppTheme;
-        AccentColor = ThemingService.AccentColor;
-        PageName = CalcPageViewModel.NavHeaderName;
-    }
+    public AppTheme AppTheme { get; set; } = ThemingService.AppTheme;
 
-    public AppTheme AppTheme { get; set; }
+    public Color AccentColor { get; set; } = ThemingService.AccentColor;
 
-    public Color AccentColor { get; set; }
-
-    public string PageName { get; set; }
+    public string PageName { get; set; } = CalcPageViewModel.NavHeaderName;
 }

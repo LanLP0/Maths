@@ -71,9 +71,9 @@ public sealed class App : Application
         if (Logger is not null)
             return;
 
-#if DEBUG
         Avalonia.Logging.Logger.Sink = new AvaloniaLogger();
         LoggerConfiguration.WriteTo.Trace();
+#if DEBUG
         LoggerConfiguration.WriteTo.Debug();
 #endif
 
