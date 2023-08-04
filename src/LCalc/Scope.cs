@@ -51,16 +51,22 @@ internal sealed class Scope
     public bool IsCalculatorOptionAllowed => (Option & CalculatorOption.CalculatorOptionAllowed) != 0;
     public bool IsVariableAllowed => (Option & CalculatorOption.VariableAllowed) != 0;
 
+    public void FinalizeOption()
+    {
+        if ((Option & CalculatorOption.LaTeX) != 0 && (Option & CalculatorOption.Render) == 0)
+        {
+            Option |= CalculatorOption.Step;
+        }
+    }
+
     private static CalculatorOption SanitizeOptions(CalculatorOption options)
     {
         if ((options & CalculatorOption.Tree) != 0)
             options |= CalculatorOption.Step;
 
         if ((options & CalculatorOption.LaTeXDoc) != 0)
-            options |= CalculatorOption.LaTeX | CalculatorOption.Step;
-
-        if ((options & CalculatorOption.LaTeX) != 0)
-            options |= CalculatorOption.Step;
+            options |= CalculatorOption.Step | CalculatorOption.LaTeX;
+        
         return options;
     }
 
@@ -116,6 +122,11 @@ internal sealed class Scope
     public bool GetNoLaTeXDocOpt()
     {
         return (Option & CalculatorOption.NoLaTeXDoc) != 0;
+    }
+
+    public bool GetRenderOpt()
+    {
+        return (Option & CalculatorOption.Render) != 0;
     }
 
     public void EndInit()

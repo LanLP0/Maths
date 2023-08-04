@@ -725,10 +725,13 @@ internal sealed class MathTree
                         scope.SetOpt(CalculatorOption.Solve);
                         break;
                     case "latex":
-                        scope.SetOpt(CalculatorOption.Step | CalculatorOption.LaTeX);
+                        scope.SetOpt(CalculatorOption.LaTeX);
                         break;
                     case "latexdoc":
                         scope.SetOpt(CalculatorOption.Step | CalculatorOption.LaTeX | CalculatorOption.LaTeXDoc);
+                        break;
+                    case "render":
+                        scope.SetOpt(CalculatorOption.Render);
                         break;
                 }
 

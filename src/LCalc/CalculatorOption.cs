@@ -17,5 +17,10 @@ public enum CalculatorOption
     ///     Allows latex but not latexdoc, useful for situation<br />
     ///     when the full doc is not needed and should not be used
     /// </summary>
-    NoLaTeXDoc = 1 << 8
+    NoLaTeXDoc = 1 << 8,
+    
+    /// <summary>
+    ///     Render the expression as the first step line
+    /// </summary>
+    Render = 1 << 9
 }

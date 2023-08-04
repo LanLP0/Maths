@@ -65,6 +65,8 @@ public static class Calculator
         var result = tree.Parse(math1);
         if (result.Faulted)
             return result.Exception!.ToCalcResult();
+        
+        scope.FinalizeOption();
 
         if (scope.GetSolveOpt())
         {
@@ -83,17 +85,51 @@ public static class Calculator
             scope.SetVariable("ans", prevAns);
 
         var calcResult = tree.Calc();
-        if (!scope.GetStepByStepOpt() || calcResult.Faulted)
+        if (result.Faulted)
             return calcResult;
 
-        var result1 = CalcStep(tree);
-        if (result1.Faulted)
-            return result1.Exception!.ToCalcResult();
+        if (scope.GetStepByStepOpt())
+        {
+            var result1 = CalcWithStep(tree);
+            if (result1.Faulted)
+                return result1.Exception!.ToCalcResult();
 
-        return calcResult.WithSteps(result1.Value!);
+            return calcResult.WithSteps(result1.Value!);
+        }
+
+        if (scope.GetRenderOpt())
+        {
+            var expressionText = RenderExpression(tree, scope.GetLaTeXOpt());
+
+            if (expressionText is null)
+                return calcResult;
+
+            return calcResult.WithSteps(expressionText);
+        }
+
+        return calcResult;
     }
 
-    private static Result<string> CalcStep(MathTree.MathTree tree)
+    public static string? RenderExpression(ReadOnlySpan<char> math, bool latex = false)
+    {
+        var tree = new MathTree.MathTree();
+        tree.Parse(math);
+
+        return RenderExpression(tree, latex);
+    }
+
+    private static string? RenderExpression(MathTree.MathTree tree, bool latex = false)
+    {
+        var buffer = new StringBuilder();
+
+        var result = tree.GetTopNode().RenderStep(buffer, -1, tree.Scope, 0, false, latex);
+        if (result.Faulted)
+            return null;
+
+        return buffer.ToString();
+    }
+
+    private static Result<string> CalcWithStep(MathTree.MathTree tree)
     {
         var root = tree.GetTopNode();
         var maxDepth = root.GetDepth();
@@ -103,8 +139,19 @@ public static class Calculator
         var treeOpt = tree.Scope.GetShowTreeOpt();
         var latex = tree.Scope.GetLaTeXOpt();
         var latexDoc = tree.Scope.GetLaTeXDocOpt() && !tree.Scope.GetNoLaTeXDocOpt();
+        var render = tree.Scope.GetRenderOpt();
 
         var buffer = new StringBuilder();
+        if (render)
+        {
+            buffer.Append(RenderExpression(tree, latex));
+            
+            if (latex)
+                buffer.Append(@"\\");
+            
+            buffer.Append(Environment.NewLine);
+        }
+        
         if (latexDoc)
             buffer.Append(
                 """
@@ -133,6 +180,11 @@ public static class Calculator
             buffer.Append(Environment.NewLine);
         }
 
+        if (render && CheckFirstTwo(buffer, latex, out var line1))
+        {
+            buffer.Remove(0, line1.Length + Environment.NewLine.Length);
+        }
+
         if (root is not MathComparer)
         {
             if (latexDoc)
@@ -152,7 +204,7 @@ public static class Calculator
 
         root.RenderStep(buffer, 1, tree.Scope, 1, treeOpt, latex);
 
-        // There is a duplicate
+        // Check for duplicates
         if (CheckLastTwo(buffer, latex, out var s))
         {
             var index = s.LastIndexOf(latex ? "\\\\" : Environment.NewLine, StringComparison.Ordinal);
@@ -169,6 +221,23 @@ public static class Calculator
                 """);
 
         return buffer.ToString();
+        
+        bool CheckFirstTwo(StringBuilder buffer, bool latex, out string line1)
+        {
+            var s = buffer.ToString();
+            var lines = s.Split(Environment.NewLine);
+
+            line1 = lines[0];
+            var line2 = lines[1];
+
+            if (line1 == line2)
+                return true;
+
+            if (!latex)
+                return false;
+
+            return line1 == line2 + @"\\";
+        }
 
         bool CheckLastTwo(StringBuilder buffer, bool latex, out string s)
         {
