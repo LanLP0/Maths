@@ -9,7 +9,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\LCalc\LCalc.Core.csproj"/>
+        <ProjectReference Include="..\LCalc\LCalc.csproj" />
         <!--        <ProjectReference Include="..\LToolBox\LToolBox.csproj" />-->
     </ItemGroup>
 

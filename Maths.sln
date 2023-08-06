@@ -8,11 +8,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "src\Common\Common
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Benchmarks", "src\Benchmarks\Benchmarks.csproj", "{88570625-7699-4A11-A81B-B4D769A36850}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LCalc.Core", "src\LCalc\LCalc.Core.csproj", "{4B54A3C9-8B56-4E22-B591-E13667B95FB7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LCalc", "src\LCalc\LCalc.csproj", "{4B54A3C9-8B56-4E22-B591-E13667B95FB7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LCalc.Cli", "src\LCalc.Cli\LCalc.Cli.csproj", "{13A39599-64E7-40E7-9440-68763F93361F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LCalc.Tests", "src\LCalc.Tests\LCalc.Tests.csproj", "{08068DCF-01C3-413D-8E94-EC2FF6887F56}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LCalc.Tests", "test\LCalc.Tests\LCalc.Tests.csproj", "{08068DCF-01C3-413D-8E94-EC2FF6887F56}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Cli", "src\Common.Cli\Common.Cli.csproj", "{C2D601E0-187E-4FF4-A279-68B8D59ECDD9}"
 EndProject

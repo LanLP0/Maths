@@ -26,7 +26,7 @@
     <ItemGroup>
         <ProjectReference Include="..\..\Common\Common.csproj"/>
         <ProjectReference Include="..\..\MinMaxFraction.Core\MinMaxFraction.Core.csproj"/>
-        <ProjectReference Include="..\..\LCalc\LCalc.Core.csproj"/>
+        <ProjectReference Include="..\..\LCalc\LCalc.csproj" />
     </ItemGroup>
 
     <ItemGroup>

@@ -8,14 +8,14 @@
         <PackAsTool>true</PackAsTool>
         <ToolCommandName>lcalc</ToolCommandName>
         <PackageVersion>0.0.0.0</PackageVersion>
-        <AssemblyName>LCalc</AssemblyName>
+        <AssemblyName>calc</AssemblyName>
         <!--        <PublishAot>true</PublishAot>-->
         <StripSymbols>true</StripSymbols>
     </PropertyGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\Common.Cli\Common.Cli.csproj"/>
-        <ProjectReference Include="..\LCalc\LCalc.Core.csproj"/>
+        <ProjectReference Include="..\LCalc\LCalc.csproj" />
     </ItemGroup>
 
     <ItemGroup>

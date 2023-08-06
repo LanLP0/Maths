@@ -1,14 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFrameworks>netstandard2.1;net6.0;net7.0</TargetFrameworks>
+        <TargetFramework>netstandard2.1</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <LangVersion>latest</LangVersion>
     </PropertyGroup>
 
     <ItemGroup>
-        <InternalsVisibleTo Include="LCalc.Core"/>
+        <InternalsVisibleTo Include="LCalc"/>
         <InternalsVisibleTo Include="MinMaxFraction.Core"/>
         <InternalsVisibleTo Include="ltb"/>
         <InternalsVisibleTo Include="LToolBox.Ui"/>
