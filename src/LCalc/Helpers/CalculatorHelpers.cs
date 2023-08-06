@@ -502,7 +502,7 @@ internal static class CalculatorHelpers
         foreach (var chr in s)
         {
             int val;
-            // ReSharper disable once RedundantCast
+            
             switch ((int)chr)
             {
                 case 97:  // a

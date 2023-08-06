@@ -1,24 +1,13 @@
-﻿namespace LCalc.MathTree;
+﻿using Common;
+
+namespace LCalc.MathTree;
 
 internal sealed class NodeStack
 {
-    private readonly LinkedList<List<IMathNode>> _list;
-    private LinkedListNode<List<IMathNode>> _current;
-
-    public NodeStack()
-    {
-        _list = new LinkedList<List<IMathNode>>();
-        _current = new LinkedListNode<List<IMathNode>>(new List<IMathNode>());
-        _list.AddLast(_current);
-    }
+    private LinkedNode<List<IMathNode>> _current = new(new List<IMathNode>());
 
     public List<IMathNode>? PreviousLevel => _current.Previous?.Value;
     public List<IMathNode> CurrentLevel => _current.Value;
-
-    public void AddLevel()
-    {
-        _list.AddLast(new List<IMathNode>());
-    }
 
     public bool MoveUp()
     {
@@ -30,13 +19,15 @@ internal sealed class NodeStack
         return true;
     }
 
-    public bool MoveDownAndClear()
+    public void MoveDownAndClear()
     {
         if (!MoveDown())
-            return false;
+        {
+            _current.AddAfter(new LinkedNode<List<IMathNode>>(new List<IMathNode>()));
+            _current = _current.Next!;
+        }
 
         ClearLevel();
-        return true;
     }
 
     public bool MoveDown()

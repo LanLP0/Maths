@@ -19,7 +19,7 @@ internal sealed class MathTree
     public const int ExpFacNodePriority = 2;
     public const int BitwiseNodePriority = 3;
     public const int ValueNodePriority = 4;
-    private readonly NodeStack _stack;
+    private readonly NodeStack _stack = new();
 
     public readonly Scope Scope;
 
@@ -27,10 +27,13 @@ internal sealed class MathTree
     private IMathNode? _root;
     private bool _spaceBeforeToken;
 
-    public MathTree(Scope? scope = null)
+    public MathTree() : this(new Scope())
     {
-        Scope = scope ?? new Scope();
-        _stack = new NodeStack();
+    }
+
+    public MathTree(Scope scope)
+    {
+        Scope = scope;
     }
 
     /// <summary>
@@ -984,11 +987,7 @@ internal sealed class MathTree
 
     private void MoveDownLevel()
     {
-        if (_stack.MoveDownAndClear())
-            return;
-
-        _stack.AddLevel();
-        _stack.MoveDown();
+        _stack.MoveDownAndClear();
     }
 
     private void MoveDownLevelWithFnCallNode(string fnName)
