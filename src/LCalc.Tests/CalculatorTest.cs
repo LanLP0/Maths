@@ -1,288 +1,307 @@
+using System.Threading.Tasks;
+using DiffEngine;
+using VerifyTests;
+using VerifyXunit;
 using Xunit;
+using static VerifyXunit.Verifier;
+// ReSharper disable InconsistentNaming
 
 namespace LCalc.Tests;
 
+[UsesVerify]
 public sealed class CalculatorTest
 {
-    [Theory]
-    // Normal
-    [InlineData("-1", "-1")]
-    [InlineData("2*-1", "-2")]
-    [InlineData("1+2", "3")]
-    [InlineData("1-2", "-1")]
-    [InlineData("1*2", "2")]
-    [InlineData("25%6", "1")]
-    [InlineData("25%*8", "2")]
-    [InlineData("2^3^2", "512")]
-    [InlineData("3!", "6")]
-    [InlineData("0!", "1")] // Special case: 0! = 1
-    // Rounding
-    [InlineData("1/2", "0.5")]
-    [InlineData("1/4", "0.25")]
-    [InlineData("1/8", "1/8")]
-    [InlineData("1/3", "1/3")]
-    [InlineData("((1))", "1")]
-    // Variable
-    [InlineData("3a&a=2", "6")]
-    [InlineData("a&a=1", "1")]
-    [InlineData("1-&a=70a", "-69")]
-    [InlineData("a3&a=2", "8")]
-    [InlineData("a3&a=-2", "-8")]
-    // Special number
-    [InlineData("25%", "0.25")]
-    [InlineData("0x1e240", "123456")]
-    [InlineData("0o361100", "123456")]
-    [InlineData("0b11110001001000000", "123456")]
-    // Special number in a function
-    [InlineData("[f()=0x1e240]f()", "123456")]
-    [InlineData("[f()=0o361100]f()", "123456")]
-    [InlineData("[f()=0b11110001001000000]f()", "123456")]
-    // Bitwise
-    [InlineData("2&3", "2")]
-    [InlineData("~2", "-3")]
-    [InlineData("2||3", "3")]
-    [InlineData("1||6", "7")]
-    [InlineData("2<<3", "16")]
-    [InlineData("5>>2", "1")]
-    [InlineData("12^^10", "6")]
-    // Compare
-    [InlineData("1!=0<=2>=2==2<3>1", "True")]
-    [InlineData("1>2", "False")]
-    // Function
-    [InlineData("sum(1 2 3)", "6")]
-    [InlineData("avg(1 2 3 4 5)", "3")]
-    [InlineData("abs(-1)", "1")]
-    [InlineData("|-abs(-|-1|)|", "1")]
-    [InlineData("cbrt(8)", "2")]
-    [InlineData("sqrt(4)", "2")]
-    [InlineData("ceiling(4.5)", "5")]
-    [InlineData("round(5.5)", "6")]
-    [InlineData("round(1.123456789 5) &raw", "1.12346")]
-    [InlineData("floor(4.5)", "4")]
-    [InlineData("gcd(6 9)", "3")]
-    [InlineData("lcm(1 2 3 4)", "12")]
-    [InlineData("gcd(0 3)", "3")]
-    [InlineData("gcd(12 0)", "0")]
-    [InlineData("sin(1)", "0.017452")]
-    [InlineData("cos(1)", "0.999848")]
-    [InlineData("tan(1)", "0.017455")]
-    [InlineData("cot(38)", "1.279942")]
-    [InlineData("log(3)", "1.098612")]
-    [InlineData("sigma(x 1 4 x*10)", "100")]
-    [InlineData("cpi(x 1 4 x*10)", "240000")]
-    // Custom function
-    [InlineData("[foo(a b c)=a^(b+c)]foo(2 1 foo(2 1 1))", "32")]
-    [InlineData("[foo(a)=a%6] foo(25)", "1")]
-    [InlineData("[foo(a)=a%] foo(25)", "0.25")]
-    [InlineData("[foo(a)=a%*8] foo(25)", "2")]
-    [InlineData("[t()=a()][a()=c] t() &c=1", "1")]
-    [InlineData("[f(a)=a] f(1) &a=2", "1")]
-    [InlineData("[f(a) a] f(1) &a=2", "1")]
-    [InlineData("[a()=1] [b(x)=x] a()", "1")] // Variables is not shared between functions
-    // Output format
-    [InlineData("134/3 &fmt=raw", "44.666667")]
-    [InlineData("134/3 &fmt=hex", "0x2d")]
-    [InlineData("134/3 &fmt=oct", "0o55")]
-    [InlineData("134/3 &fmt=bin", "0b101101")]
-    [InlineData("1/0 &fmt=hex", "0x..fffffff")]
-    [InlineData("1/0 &fmt=oct", "0o..7777777")]
-    [InlineData("1/0 &fmt=bin", "0b..1111111")]
-    [InlineData("-134/3 &fmt=raw", "-44.666667")]
-    [InlineData("-134/3 &fmt=hex", "-0x2d")]
-    [InlineData("-134/3 &fmt=oct", "-0o55")]
-    [InlineData("-134/3 &fmt=bin", "-0b101101")]
-    [InlineData("-1/0 &fmt=hex", "-0x..fffffff")]
-    [InlineData("-1/0 &fmt=oct", "-0o..7777777")]
-    [InlineData("-1/0 &fmt=bin", "-0b..1111111")]
-    // Solve mode
-    [InlineData("x^5-2x+1 &solve", "0.51879")]
-    [InlineData("x+1 &solve", "-1")]
-    [InlineData("[f(x)=x^2-2x+1] f(x) &solve", "0.999991")]
-    [InlineData("x!-6 &solve", "3")]
-    public void Result_Should_BeExpected(string math, string result)
+    private static readonly VerifySettings _settings;
+
+    static CalculatorTest()
     {
-        // Arrange
-        var output = $"Result: {result}";
-
-        // Act
-        var result1 = Calculator.CalcFormatted(math);
-
-        // Assert
-        Assert.Equal(output, result1);
+        _settings = new VerifySettings();
+        _settings.UseDirectory("test-results");
+        DiffRunner.MaxInstancesToLaunch(3);
     }
 
-    [Theory]
-    // Function
-    [InlineData("a,b", "',' can only be used in function calls")]
-    [InlineData("a+(b,c)", "',' can only be used in function calls")]
-    [InlineData("null()", "Unknown function null()")]
-    [InlineData("sum()", "sum() takes at least one argument")]
-    [InlineData("avg()", "avg() takes at least one argument")]
-    [InlineData("abs()", "abs() accept exactly 1 argument")]
-    [InlineData("cbrt()", "cbrt() accept exactly 1 argument")]
-    [InlineData("sqrt()", "sqrt() accept exactly 1 argument")]
-    [InlineData("ceiling()", "ceiling() accept exactly 1 argument")]
-    [InlineData("round()", "round() accept exactly 1 - 2 argument")]
-    [InlineData("floor()", "floor() accept exactly 1 argument")]
-    [InlineData("gcd()", "gcd() require at least 1 argument")]
-    [InlineData("lcm()", "lcm() require at least 1 argument")]
-    [InlineData("random(1 2 3)", "random() takes at most 2 arguments")]
-    [InlineData("cos()", "cos() takes exactly one argument")]
-    [InlineData("sin()", "sin() takes exactly one argument")]
-    [InlineData("tan()", "tan() takes exactly one argument")]
-    [InlineData("cot()", "cot() takes exactly one argument")]
-    [InlineData("log()", "log() takes exactly one argument")]
-    [InlineData("random(1 a)", "Unknown variable 'a'")]
-    [InlineData("log()&step", "log() takes exactly one argument")]
-    [InlineData("|-1)", "Invalid abs syntax")]
-    [InlineData("sin(,,,)", "No value before ','")]
-    // Misc
-    [InlineData("", "No expression found")]
-    [InlineData("(1", "Invalid number of braces")]
-    [InlineData("1==(1", "Invalid number of braces")]
-    [InlineData("((1)&step", "Invalid number of braces")]
-    [InlineData("1-", "Missing value after operator -")]
-    [InlineData("null!", "Unknown variable 'null'")]
-    [InlineData("2.5<<2.5", "Value(s) of operator << must be integer")]
-    [InlineData("50!<<50!", "Value(s) of operator << must be between 2^31 and -2^31")]
-    [InlineData("2.5||2.5", "Value(s) of operator || must be integer")]
-    [InlineData("100!||100!", "Value(s) of operator || must be between 2^63 and -2^63")]
-    [InlineData("-n", "Unknown variable 'n'")]
-    [InlineData("1~", "Invalid operator ~")]
-    [InlineData("1&", "Missing value after operator &")]
-    [InlineData("1+", "Missing value after operator +")]
-    [InlineData("+1", "Missing value before operator +")]
-    [InlineData("1 1", "Missing operator")]
-    [InlineData("1-&a=100", "Missing value after operator -")]
-    [InlineData("&a=", "Missing variable/option value")]
-    [InlineData("&a=1&a=1", "Variable 'a' had already been set")]
-    [InlineData("0xjkl", "Invalid hex number")]
-    [InlineData("0b21", "Invalid binary number")]
-    [InlineData("0o9", "Invalid octal number")]
-    // Custom function
-    [InlineData("[t()=t()]t()", "Function loop is not allowed")]
-    [InlineData("[a()=)]", "Invalid amount of braces in custom function")]
-    [InlineData("[a(x x)=1]", "Duplicated variables in custom function")]
-    [InlineData("[a(])", "Invalid custom function syntax")]
-    [InlineData("[a(1)]", "Invalid character in custom function arg space '1'")]
-    [InlineData("[a()=1", "Invalid custom function syntax")]
-    [InlineData("[a():1]", "Invalid custom function syntax")]
-    [InlineData("[a()1]", "Invalid custom function syntax")]
-    // Sigma & CPi
-    [InlineData("sigma(x, 3, 1, x*10)", "sigma(): End cannot be less than start")]
-    [InlineData("sigma(x, -3, 3)", "sigma() takes exactly 4 arguments")]
-    [InlineData("sigma(y, -3, 3, x*10)", "sigma(): Invalid variable name")]
-    [InlineData("sigma(x, -3, 3, 10)", "sigma(): Invalid variable name")]
-    [InlineData("sigma(x-1, 1, 1, x)", "sigma(): First argument must be a variable")]
-    [InlineData("sigma(x, 1.1, 2, x)", "sigma(): Start must be an integer")]
-    [InlineData("sigma(x, 1, 2.1, x)", "sigma(): End must be an integer")]
-    [InlineData("cpi(x, 3, 1, x*10)", "cpi(): End cannot be less than start")]
-    [InlineData("cpi(x, -3, 3)", "cpi() takes exactly 4 arguments")]
-    [InlineData("cpi(y, -3, 3, x*10)", "cpi(): Invalid variable name")]
-    [InlineData("cpi(x, -3, 3, 10)", "cpi(): Invalid variable name")]
-    [InlineData("cpi(x-1, 1, 1, x)", "cpi(): First argument must be a variable")]
-    [InlineData("cpi(x, 1.1, 2, x)", "cpi(): Start must be an integer")]
-    [InlineData("cpi(x, 1, 2.1, x)", "cpi(): End must be an integer")]
-    // Solve mode
-    [InlineData("abs(x)+1 &solve", "Cannot solve"
-#if DEBUG
-        + " (15 tries ended)"
-#endif
-    )]
-    [InlineData("1 &solve", "Nothing to solve for")]
-    [InlineData("x*y &solve", "Too many unknowns")]
-    public void Calc_Should_Error(string math, string errorMsg)
+    private readonly string[] Result_Should_BeExpected_Cases = {
+        // Misc
+        "-1",
+        "2*-1",
+        "1+2",
+        "1-2",
+        "1*2",
+        "25%6",
+        "25%*8",
+        "2^3^2",
+        "3!",
+        "0!",
+        "1/2",
+        "1/4",
+        "1/8",
+        "1/3",
+        "((1))",
+        "0123",
+        "-1",
+        "a.5 &a=4",
+        ".5",
+        // Variable
+        "3a&a=2",
+        "a&a=1",
+        "1-&a=70a",
+        "a3&a=2",
+        "a3&a=-2",
+        // Special value
+        "25%",
+        "-0x1e240",
+        "0x1e240",
+        "0o361100",
+        "0b11110001001000000",
+        // Custom function
+        "[f()=0x1e240]f()",
+        "[f()=0o361100]f()",
+        "[f()=0b11110001001000000]f()",
+        // Bitwise
+        "2&3",
+        "~2",
+        "2||3",
+        "1||6",
+        "2<<3",
+        "5>>2",
+        "12^^10",
+        // Compare
+        "1!=0<=2>=2==2<3>1",
+        "1>2",
+        // Function
+        "sum(1 2 3)",
+        "avg(1 2 3 4 5)",
+        "abs(-1)",
+        "|-abs(-|-1|)|",
+        "1+|-2|",
+        "cbrt(8)",
+        "sqrt(4)",
+        "ceiling(4.5)",
+        "round(5.5)",
+        "round(1.123456789 5) &raw",
+        "floor(4.5)",
+        "gcd(6 9)",
+        "lcm(1 2 3 4)",
+        "gcd(0 3)",
+        "gcd(12 0)",
+        "sin(1)",
+        "cos(1)",
+        "tan(1)",
+        "cot(38)",
+        "log(3)",
+        "sigma(x 1 4 x*10)",
+        "cpi(x 1 4 x*10)",
+        // Custom function
+        "[foo(a b c)=a^(b+c)]foo(2 1 foo(2 1 1))",
+        "[foo(a)=a%6] foo(25)",
+        "[foo(a)=a%] foo(25)",
+        "[foo(a)=a%*8] foo(25)",
+        "[t()=a()][a()=c] t() &c=1",
+        "[f(a)=a] f(1) &a=2",
+        "[f(a) a] f(1) &a=2",
+        "[a()=1] [b(x)=x] a()",
+        // Format
+        "134/3 &fmt=human",
+        "134/3 &fmt=raw",
+        "134/3 &fmt=hex",
+        "134/3 &fmt=oct",
+        "134/3 &fmt=bin",
+        "1/0 &fmt=hex",
+        "1/0 &fmt=oct",
+        "1/0 &fmt=bin",
+        "-134/3 &fmt=raw",
+        "-134/3 &fmt=hex",
+        "-134/3 &fmt=oct",
+        "-134/3 &fmt=bin",
+        "-1/0 &fmt=hex",
+        "-1/0 &fmt=oct",
+        "-1/0 &fmt=bin",
+        // Solve
+        "x^5-2x+1 &solve",
+        "x+1 &solve",
+        "[f(x)=x^2-2x+1] f(x) &solve",
+        "x!-6 &solve"
+    };
+    
+    [Fact]
+    public Task Result_Should_BeExpected()
     {
         // Arrange
-        var output = $"Error: {errorMsg}";
-
+        var results = new CalcTestResult[Result_Should_BeExpected_Cases.Length];
+        
         // Act
-        var result = Calculator.CalcFormatted(math);
+        for (var i = 0; i < Result_Should_BeExpected_Cases.Length; i++)
+        {
+            var c = Result_Should_BeExpected_Cases[i];
+            
+            var result = Calculator.CalcFormatted(c);
+            results[i] = new CalcTestResult
+            {
+                Math = c,
+                Output = result
+            };
+        }
 
         // Assert
-        Assert.Equal(output, result);
+        return Verify(results, _settings);
     }
 
-    [Theory]
-    [InlineData("1+(1+1)&step",
-        """
-        1 + (1 + 1)
-        1 + 2
-        Result: 3
-        """)]
-    [InlineData("[foo(a b c)=a^(b+c)]foo(2 1 (1+foo(2 1 1))) &step",
-        """
-        foo(2, 1, (1 + foo(2, 1, 1)))
-        foo(2, 1, (1 + 4))
-        foo(2, 1, 5)
-        Result: 64
-        """)]
-    [InlineData("abs(sin(((~1>>2<<2)^2!/1000*50-40+1))) &step",
-        """
-        |sin((((~1 >> 2 << 2) ^ 2!) / 1000 * 50 - 40 + 1))|
-        |sin(((-4 ^ 2!) / 1000 * 50 - 40 + 1))|
-        |sin((20922789888000 / 1000 * 50 - 40 + 1))|
-        |sin(1046139494361)|
-        |-0.6293194965251864|
-        Result: 0.629319
-        """)]
-    [InlineData("abs(sin(((~1>>2<<2)^2!/1000*50-40+1))) &tree",
-        """
-        |sin((((((((((~1) >> 2) << 2) ^ 2)!) / 1000) * 50) - 40) + 1))|
-        |sin(((((((-4 ^ 2)!) / 1000) * 50) - 40) + 1))|
-        |sin(((((20922789888000 / 1000) * 50) - 40) + 1))|
-        |sin(1046139494361)|
-        |-0.6293194965251864|
-        Result: 0.629319
-        """)]
-    [InlineData("abs(1+(2+3))==2+4!= (1+(2+(3+4))) &step",
-        """
-        |1 + (2 + 3)| == 2 + 4 != (1 + (2 + (3 + 4)))
-        |1 + (2 + 3)| == 2 + 4 != (1 + (2 + 7))
-        |1 + 5| == 2 + 4 != (1 + 9)
-        6 == 2 + 4 != 10
-        6 == 6 != 10
-        Result: True
-        """)]
-    [InlineData("sigma(x, 1, 100, -1*x) &latex",
-        """
-        \sum_{x=1}^{100}(-1 \times x)
-        Result: -5050
-        """)]
-    [InlineData("cpi(x, floor(sqrt(6)), ceiling(cbrt(999)), x^x) &latex",
-        """
-        \prod_{x=\lfloor \sqrt{6}\rfloor }^{\lceil \sqrt[3]{999}\rceil }x ^ {x}\\
-        \prod_{x=\lfloor 2.449489742783178\rfloor }^{\lceil 9.99666555493786\rceil }x ^ {x}\\
-        \prod_{x=2}^{10}x ^ {x}
-        Result: 2.1577941222941857E+44
-        """)]
-    [InlineData("cpi(x, floor(sqrt(6)), ceiling(cbrt(999)), x^x) &latexdoc",
-        """
-        \documentclass{article}
-        \usepackage{amsmath}
-        \begin{document}
-        \begin{gather*}
-        \prod_{x=\lfloor \sqrt{6}\rfloor }^{\lceil \sqrt[3]{999}\rceil }x ^ {x}\\
-        \prod_{x=\lfloor 2.449489742783178\rfloor }^{\lceil 9.99666555493786\rceil }x ^ {x}\\
-        \prod_{x=2}^{10}x ^ {x}
-        \end{gather*}
-        \end{document}
-        Result: 2.1577941222941857E+44
-        """)]
-    public void Calc_Should_ReturnCorrectStep(string math, string output)
+    private readonly string[] Error_ShouldBe_Expected_Cases = {
+        // Function
+        "1,2",
+        "1+(2,3)",
+        "null()",
+        "sum()",
+        "avg()",
+        "abs()",
+        "cbrt()",
+        "sqrt()",
+        "ceiling()",
+        "round()",
+        "round(1.234, 6)",
+        "floor()",
+        "gcd()",
+        "gcd(1.1 2.2)",
+        "gcd(1 2.2)",
+        "lcm()",
+        "lcm(1.1 2.2)",
+        "lcm(1 2.2)",
+        "random(1 2 3)",
+        "random(1 a)",
+        "cos()",
+        "sin()",
+        "tan()",
+        "cot()",
+        "log()",
+        "|-1)",
+        "sin(,,,)",
+        // Misc
+        "",
+        "(1",
+        "()",
+        "1)",
+        "1==(1",
+        "((1)&step",
+        "1-",
+        "null!",
+        "2.5<<2.5",
+        "50!<<50!",
+        "2.5||2.5",
+        "100!||100!",
+        "-n",
+        "1~",
+        "1&",
+        "1+",
+        "+1",
+        "1 1",
+        "2^3^ ^",
+        "1-&a=100",
+        "&a=",
+        "&a=1&a=1",
+        "1 &fmt=error",
+        "(1==2",
+        // Special number
+        "0x",
+        "0b",
+        "0o",
+        "0xfg",
+        "0b12",
+        "0o89",
+        // Custom function
+        "[t()=t()]t()",
+        "[a()=)]",
+        "[a(x x)=1]",
+        "[a(])",
+        "[a(1)]",
+        "[a()=1",
+        "[a():1]",
+        "[a()1]",
+        "[a()=1] a(2)",
+        // Sigma & CPi
+        "sigma(x, 3, 1, x*10)",
+        "sigma(x, -3, 3)",
+        "sigma(y, -3, 3, x*10)",
+        "sigma(x, -3, 3, 10)",
+        "sigma(x-1, 1, 1, x)",
+        "sigma(x, 1.1, 2, x)",
+        "sigma(x, 1, 2.1, x)",
+        "cpi(x, 3, 1, x*10)",
+        "cpi(x, -3, 3)",
+        "cpi(y, -3, 3, x*10)",
+        "cpi(x, -3, 3, 10)",
+        "cpi(x-1, 1, 1, x)",
+        "cpi(x, 1.1, 2, x)",
+        "cpi(x, 1, 2.1, x)",
+        // Solve
+        "abs(x)+1 &solve",
+        "1 &solve",
+        "x*y &solve"
+    };
+
+    [Fact]
+    public Task Error_ShouldBe_Expected()
     {
+        // Arrange
+        var results = new CalcTestResult[Error_ShouldBe_Expected_Cases.Length];
+        
         // Act
-        var result = Calculator.CalcFormatted(math);
+        for (var i = 0; i < Error_ShouldBe_Expected_Cases.Length; i++)
+        {
+            var c = Error_ShouldBe_Expected_Cases[i];
+            
+            var result = Calculator.CalcFormatted(c);
+            results[i] = new CalcTestResult
+            {
+                Math = c,
+                Output = result
+            };
+        }
 
         // Assert
-        Assert.Equal(output, result);
+        return Verify(results, _settings);
+    }
+
+    private readonly string[] Step_ShouldBe_Expected_Cases = {
+        "1+(1+1)&step",
+        "[foo(a b c)=a^(b+c)]foo(2 1 (1+foo(2 1 1))) &step",
+        "abs(sin(((~1>>2<<2)^2!/1000*50-40+1))) &step",
+        "abs(sin(((~1>>2<<2)^2!/1000*50-40+1))) &tree",
+        "abs(1+(2+3))==2+4!= (1+(2+(3+4))) &step",
+        "sigma(x, 1, 100, -1*x) &latex",
+        "cpi(x, floor(sqrt(6)), ceiling(cbrt(999)), x^x) &latex",
+        "cpi(x, floor(sqrt(6)), ceiling(cbrt(999)), x^x) &latexdoc",
+        "cpi(x, floor(sqrt(6)), ceiling(cbrt(999)), x^x) &render",
+        "1+(2+a) &a=10 &step &render"
+    };
+
+    [Fact]
+    public Task Step_ShouldBe_Expected()
+    {
+        // Arrange
+        var results = new CalcTestResult[Step_ShouldBe_Expected_Cases.Length];
+        
+        // Act
+        for (var i = 0; i < Step_ShouldBe_Expected_Cases.Length; i++)
+        {
+            var c = Step_ShouldBe_Expected_Cases[i];
+            
+            var result = Calculator.CalcFormatted(c);
+            results[i] = new CalcTestResult
+            {
+                Math = c,
+                Output = result
+            };
+        }
+
+        // Assert
+        return Verify(results, _settings);
     }
 
     [Theory]
     [InlineData("random()", 0, 1)]
     [InlineData("random(5)", 0, 5)]
     [InlineData("random(5 10)", 5, 10)]
-    public void Random_Should_BeInRange(string math, double lowerEnd, double upperEnd)
+    public void Random_ShouldBe_InExpectedRange(string math, double lowerEnd, double upperEnd)
     {
         for (var i = 0; i <= 100; i++)
         {

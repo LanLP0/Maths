@@ -74,7 +74,7 @@ internal sealed class Scope
             return variable;
 
         if ((Option & CalculatorOption.VariableAllowed) == 0)
-            return Err<double>("Variable not allowed in this scope");
+            return Err<double>("Variable not allowed");
 
         return Err<double>($"Unknown variable '{name}'");
     }
@@ -129,9 +129,6 @@ internal sealed class Scope
 
     public void EndInit()
     {
-        if (CustomFunctions is null)
-            return;
-
-        CustomFunctions.End(Variables, Option);
+        CustomFunctions?.End(Variables, Option);
     }
 }

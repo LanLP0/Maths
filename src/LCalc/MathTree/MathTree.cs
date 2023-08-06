@@ -601,7 +601,7 @@ internal sealed class MathTree
                 case 91: // [
                 {
                     if (!Scope.IsCustomFunctionAllowed)
-                        return Err("Custom function is not allowed in this scope");
+                        return Err("Custom function is not allowed");
 
                     if (isInsideCustomFunction)
                         return Err("Invalid char '['");
@@ -778,7 +778,7 @@ internal sealed class MathTree
                 break;
             case TokenType.CalculatorOption:
                 if (!scope.IsCalculatorOptionAllowed)
-                    return Err("Calculator option not allowed in this scope");
+                    return Err("Calculator option not allowed");
 
                 buffer.Remove(0, 1);
                 var op = buffer.ToString();
@@ -811,7 +811,7 @@ internal sealed class MathTree
                 break;
             case TokenType.AdvancedCalculatorOption:
                 if (!scope.IsCalculatorOptionAllowed)
-                    return Err("Calculator option not allowed in this scope");
+                    return Err("Calculator option not allowed");
 
                 // Remove the first &
                 Span<char> opt = stackalloc char[buffer.Length - 1];
@@ -856,7 +856,7 @@ internal sealed class MathTree
                 break;
             case TokenType.VariableSet:
                 if (!scope.IsVariableAllowed)
-                    return Err("Variable not allowed in this scope");
+                    return Err("Variable not allowed");
 
                 buffer.Remove(0, 1); // Remove the &
                 Span<char> str = stackalloc char[buffer.Length];
@@ -893,12 +893,7 @@ internal sealed class MathTree
         if (levelStack.Count is 0)
         {
             if (node.Priority != ValueNodePriority)
-            {
-                if (node is not MinusNode minusNode)
-                    return node.GenerateMissingValueError();
-
-                minusNode.AddNode(EmptyNode.Shared);
-            }
+                return node.GenerateMissingValueError();
 
             levelStack.Add(node);
             return Ok();
@@ -1034,14 +1029,10 @@ internal sealed class MathTree
     private Result<bool> AddToCompare(CompareOp? op = null)
     {
         if (!Scope.IsCompareAllowed)
-            return Err<bool>("Compare not allowed in this scope");
+            return Err<bool>("Compare not allowed");
 
-        while (_stack.PreviousLevel is not null)
-        {
-            var result = MoveUpLevel();
-            if (result.Faulted)
-                return result;
-        }
+        if (_stack.PreviousLevel is not null)
+            return Err("Invalid expression");
 
         var levelStack = _stack.CurrentLevel;
         if (levelStack.Count is 0)

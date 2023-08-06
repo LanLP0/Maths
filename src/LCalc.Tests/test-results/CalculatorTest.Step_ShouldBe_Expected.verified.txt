@@ -1,0 +1,89 @@
+﻿[
+  {
+    Math: 1+(1+1)&step,
+    Output:
+1 + (1 + 1)
+1 + 2
+Result: 3
+  },
+  {
+    Math: [foo(a b c)=a^(b+c)]foo(2 1 (1+foo(2 1 1))) &step,
+    Output:
+foo(2, 1, (1 + foo(2, 1, 1)))
+foo(2, 1, (1 + 4))
+foo(2, 1, 5)
+Result: 64
+  },
+  {
+    Math: abs(sin(((~1>>2<<2)^2!/1000*50-40+1))) &step,
+    Output:
+|sin((((~1 >> 2 << 2) ^ 2!) / 1000 * 50 - 40 + 1))|
+|sin(((-4 ^ 2!) / 1000 * 50 - 40 + 1))|
+|sin((20922789888000 / 1000 * 50 - 40 + 1))|
+|sin(1046139494361)|
+|-0.6293194965251864|
+Result: 0.629319
+  },
+  {
+    Math: abs(sin(((~1>>2<<2)^2!/1000*50-40+1))) &tree,
+    Output:
+|sin((((((((((~1) >> 2) << 2) ^ 2)!) / 1000) * 50) - 40) + 1))|
+|sin(((((((-4 ^ 2)!) / 1000) * 50) - 40) + 1))|
+|sin(((((20922789888000 / 1000) * 50) - 40) + 1))|
+|sin(1046139494361)|
+|-0.6293194965251864|
+Result: 0.629319
+  },
+  {
+    Math: abs(1+(2+3))==2+4!= (1+(2+(3+4))) &step,
+    Output:
+|1 + (2 + 3)| == 2 + 4 != (1 + (2 + (3 + 4)))
+|1 + (2 + 3)| == 2 + 4 != (1 + (2 + 7))
+|1 + 5| == 2 + 4 != (1 + 9)
+6 == 2 + 4 != 10
+6 == 6 != 10
+Result: True
+  },
+  {
+    Math: sigma(x, 1, 100, -1*x) &latex,
+    Output:
+\sum_{x=1}^{100}(-1 \times x)
+Result: -5050
+  },
+  {
+    Math: cpi(x, floor(sqrt(6)), ceiling(cbrt(999)), x^x) &latex,
+    Output:
+\prod_{x=\lfloor \sqrt{6}\rfloor }^{\lceil \sqrt[3]{999}\rceil }x ^ {x}\\
+\prod_{x=\lfloor 2.449489742783178\rfloor }^{\lceil 9.99666555493786\rceil }x ^ {x}\\
+\prod_{x=2}^{10}x ^ {x}
+Result: 2.1577941222941857E+44
+  },
+  {
+    Math: cpi(x, floor(sqrt(6)), ceiling(cbrt(999)), x^x) &latexdoc,
+    Output:
+\documentclass{article}
+\usepackage{amsmath}
+\begin{document}
+\begin{gather*}
+\prod_{x=\lfloor \sqrt{6}\rfloor }^{\lceil \sqrt[3]{999}\rceil }x ^ {x}\\
+\prod_{x=\lfloor 2.449489742783178\rfloor }^{\lceil 9.99666555493786\rceil }x ^ {x}\\
+\prod_{x=2}^{10}x ^ {x}
+\end{gather*}
+\end{document}
+Result: 2.1577941222941857E+44
+  },
+  {
+    Math: cpi(x, floor(sqrt(6)), ceiling(cbrt(999)), x^x) &render,
+    Output:
+cpi(x, floor(sqrt(6)), ceiling(cbrt(999)), x ^ x)
+Result: 2.1577941222941857E+44
+  },
+  {
+    Math: 1+(2+a) &a=10 &step &render,
+    Output:
+1 + (2 + a)
+1 + (2 + 10)
+1 + 12
+Result: 13
+  }
+]

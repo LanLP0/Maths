@@ -85,7 +85,7 @@ public static class Calculator
             scope.SetVariable("ans", prevAns);
 
         var calcResult = tree.Calc();
-        if (result.Faulted)
+        if (calcResult.Faulted)
             return calcResult;
 
         if (scope.GetStepByStepOpt())
