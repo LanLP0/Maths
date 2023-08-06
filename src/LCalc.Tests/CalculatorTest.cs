@@ -135,6 +135,7 @@ public sealed class CalculatorTest
     [InlineData("random(1 a)", "Unknown variable 'a'")]
     [InlineData("log()&step", "log() takes exactly one argument")]
     [InlineData("|-1)", "Invalid abs syntax")]
+    [InlineData("sin(,,,)", "No value before ','")]
     // Misc
     [InlineData("", "No expression found")]
     [InlineData("(1", "Invalid number of braces")]
@@ -153,7 +154,7 @@ public sealed class CalculatorTest
     [InlineData("+1", "Missing value before operator +")]
     [InlineData("1 1", "Missing operator")]
     [InlineData("1-&a=100", "Missing value after operator -")]
-    [InlineData("&a=", "Missing variable value")]
+    [InlineData("&a=", "Missing variable/option value")]
     [InlineData("&a=1&a=1", "Variable 'a' had already been set")]
     [InlineData("0xjkl", "Invalid hex number")]
     [InlineData("0b21", "Invalid binary number")]
@@ -185,7 +186,7 @@ public sealed class CalculatorTest
     // Solve mode
     [InlineData("abs(x)+1 &solve", "Cannot solve"
 #if DEBUG
-                                   + " (15 tries ended)"
+        + " (15 tries ended)"
 #endif
     )]
     [InlineData("1 &solve", "Nothing to solve for")]
@@ -245,14 +246,14 @@ public sealed class CalculatorTest
         """)]
     [InlineData("sigma(x, 1, 100, -1*x) &latex",
         """
-        \sum\limits_{x=1}^{100}(-1 \times x)
+        \sum_{x=1}^{100}(-1 \times x)
         Result: -5050
         """)]
     [InlineData("cpi(x, floor(sqrt(6)), ceiling(cbrt(999)), x^x) &latex",
         """
-        \prod\limits_{x=\lfloor \sqrt{6}\rfloor }^{\lceil \sqrt[3]{999}\rceil }x ^ {x}\\
-        \prod\limits_{x=\lfloor 2.449489742783178\rfloor }^{\lceil 9.99666555493786\rceil }x ^ {x}\\
-        \prod\limits_{x=2}^{10}x ^ {x}
+        \prod_{x=\lfloor \sqrt{6}\rfloor }^{\lceil \sqrt[3]{999}\rceil }x ^ {x}\\
+        \prod_{x=\lfloor 2.449489742783178\rfloor }^{\lceil 9.99666555493786\rceil }x ^ {x}\\
+        \prod_{x=2}^{10}x ^ {x}
         Result: 2.1577941222941857E+44
         """)]
     [InlineData("cpi(x, floor(sqrt(6)), ceiling(cbrt(999)), x^x) &latexdoc",
@@ -261,9 +262,9 @@ public sealed class CalculatorTest
         \usepackage{amsmath}
         \begin{document}
         \begin{gather*}
-        \prod\limits_{x=\lfloor \sqrt{6}\rfloor }^{\lceil \sqrt[3]{999}\rceil }x ^ {x}\\
-        \prod\limits_{x=\lfloor 2.449489742783178\rfloor }^{\lceil 9.99666555493786\rceil }x ^ {x}\\
-        \prod\limits_{x=2}^{10}x ^ {x}
+        \prod_{x=\lfloor \sqrt{6}\rfloor }^{\lceil \sqrt[3]{999}\rceil }x ^ {x}\\
+        \prod_{x=\lfloor 2.449489742783178\rfloor }^{\lceil 9.99666555493786\rceil }x ^ {x}\\
+        \prod_{x=2}^{10}x ^ {x}
         \end{gather*}
         \end{document}
         Result: 2.1577941222941857E+44

@@ -25,7 +25,7 @@ internal sealed class LinkedNode<T>
     {
         if (_prev is not null)
             _prev._next = node;
-        
+
         _prev = node;
         _prev._next = this;
     }

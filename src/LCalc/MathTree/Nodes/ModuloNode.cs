@@ -78,7 +78,7 @@ internal sealed class ModuloNode : IMathNode
         if (!IsFull())
             return GenerateMissingValueError();
 
-        var isEncased = Priority == MathTree.ValueNodePriority;
+        var isEncased = Priority is MathTree.ValueNodePriority;
         if (isEncased)
             nodeLevel++;
 
@@ -121,7 +121,7 @@ internal sealed class ModuloNode : IMathNode
             return num2;
 
         return Math.Max(num1.Value, num2.Value) +
-               (Priority == MathTree.ValueNodePriority ? 1 : 0);
+            (Priority is MathTree.ValueNodePriority ? 1 : 0);
     }
 
     public Result SetupForSolving(Scope scope, out string unknown)

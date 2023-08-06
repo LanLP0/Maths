@@ -12,7 +12,7 @@ namespace LCalc.MathTree;
 internal sealed class MathTree
 {
     // The order of operation
-    // Higher is more likely to interact
+    // Lower is more likely to interact
     public const int SpecialNodePriority = -1;
     public const int PlusMinusNodePriority = 0;
     public const int MulDivModNodePriority = 1;
@@ -44,7 +44,7 @@ internal sealed class MathTree
     {
         var buffer = new StringBuilder();
         var tokenType = TokenType.Empty;
-        var isInCustomFunction = false;
+        var isInsideCustomFunction = false;
 
         for (var i = 0; i < math.Length; i++)
         {
@@ -64,17 +64,19 @@ internal sealed class MathTree
                 case 56: // 8
                 case 57: // 9
                 {
-                    var result = Ok();
-                    if (tokenType is not (TokenType.Number or TokenType.VariableSet or TokenType.SpecialNumber))
-                        result = ParseAndSetNode(buffer, ref tokenType, Scope);
-                    if (result.Faulted)
-                        return result;
+                    if (tokenType is not (TokenType.Empty or TokenType.Number or TokenType.VariableSet or
+                        TokenType.SpecialNumber))
+                    {
+                        var result = ParseAndSetNode(buffer, ref tokenType, Scope);
+                        if (result.Faulted)
+                            return result;
+                    }
 
                     buffer.Append(c);
 
                     if (tokenType is TokenType.Empty)
                     {
-                        if (c == '0' && math.TryGetValueAt(i + 1, out c))
+                        if (c is '0' && math.TryGetValueAt(i + 1, out c))
                         {
                             if (c is not ('x' or 'b' or 'o'))
                             {
@@ -144,7 +146,13 @@ internal sealed class MathTree
                     }
 
                     // Abs
-                    var firstNode = _stack.CurrentLevel.FirstOrDefault(EmptyNode.Shared);
+                    if (_stack.CurrentLevel.Count is 0)
+                    {
+                        MoveDownLevelWithFnCallNode("$abs");
+                        break;
+                    }
+
+                    var firstNode = _stack.CurrentLevel[0];
 
                     if (firstNode is not FunctionCallNode fnNode)
                     {
@@ -166,61 +174,34 @@ internal sealed class MathTree
                 case 37: // %
                 {
                     Result result;
-                    if (!math.TryGetValueAt(i + 1, out var nextChar))
+                    if (math.TryGetValueAt(i + 1, out var nextChar) &&
+                        (nextChar.IsLowerLetter() || nextChar.IsDigit()))
                     {
-                        if (tokenType is TokenType.Number)
-                        {
-                            buffer.Append(c);
-                            result = ParseAndSetNode(buffer, ref tokenType, Scope);
-                            if (result.Faulted)
-                                return result;
-                            break;
-                        }
-
-                        if (tokenType != TokenType.Variable)
-                            return Err("Invalid operator %");
-
                         result = ParseAndSetNode(buffer, ref tokenType, Scope);
                         if (result.Faulted)
                             return result;
 
-                        var levelStack = _stack.CurrentLevel;
-                        AddFnNode(levelStack, new DivideNode());
-                        AddValueNode(levelStack, new ValueNode(100));
-                        break;
-                    }
-
-                    if (!nextChar.IsLowerLetter() && !nextChar.IsDigit())
-                    {
-                        if (tokenType is TokenType.Number)
-                        {
-                            buffer.Append(c);
-                            result = ParseAndSetNode(buffer, ref tokenType, Scope);
-                            if (result.Faulted)
-                                return result;
-                            break;
-                        }
-
-                        if (tokenType != TokenType.Variable)
-                            return Err("Invalid operator %");
-
-                        result = ParseAndSetNode(buffer, ref tokenType, Scope);
+                        result = AddNode(new ModuloNode());
                         if (result.Faulted)
                             return result;
-
-                        var levelStack = _stack.CurrentLevel;
-                        AddFnNode(levelStack, new DivideNode());
-                        AddValueNode(levelStack, new ValueNode(100));
                         break;
                     }
+
+                    // Percentage
 
                     result = ParseAndSetNode(buffer, ref tokenType, Scope);
                     if (result.Faulted)
                         return result;
 
-                    result = AddNode(new ModuloNode());
-                    if (result.Faulted)
-                        return result;
+                    var levelStack = _stack.CurrentLevel;
+                    if (levelStack.Count is 0 || levelStack.Last().Priority is not ValueNodePriority)
+                        return Err("Invalid operator '%'");
+
+                    var divNode = new DivideNode();
+                    divNode.Priority = ValueNodePriority;
+                    AddFnNode(levelStack, divNode);
+                    AddValueNode(levelStack, new ValueNode(100));
+
                     break;
                 }
                 case 45: // -
@@ -236,7 +217,7 @@ internal sealed class MathTree
                         return result;
 
                     var levelStack = _stack.CurrentLevel;
-                    IMathNode node = new MinusNode();
+                    var node = new MinusNode();
                     if (levelStack.Count is 0)
                     {
                         node.AddNode(EmptyNode.Shared);
@@ -245,8 +226,8 @@ internal sealed class MathTree
                         break;
                     }
 
-                    var addResult = AddFnNode(levelStack, node);
-                    if (!addResult.Faulted)
+                    result = AddFnNode(levelStack, node);
+                    if (!result.Faulted)
                         break;
 
                     node.AddNode(EmptyNode.Shared);
@@ -263,14 +244,14 @@ internal sealed class MathTree
                         return result;
 
                     var levelStack = _stack.CurrentLevel;
-                    var bitwiseNotNode = new BitwiseNotNode();
+                    var node = new BitwiseNotNode();
                     if (levelStack.Count is 0)
                     {
-                        levelStack.Add(bitwiseNotNode);
+                        levelStack.Add(node);
                         break;
                     }
 
-                    if (!AddValueNode(levelStack, bitwiseNotNode))
+                    if (!AddValueNode(levelStack, node))
                         return Err("Invalid operator ~");
 
                     break;
@@ -320,15 +301,18 @@ internal sealed class MathTree
                     if (levelStack.Count is 0)
                         return Err("',' can only be used in function calls");
 
-                    if (levelStack.First() is not FunctionCallNode functionCallNode)
+                    if (levelStack.First() is not FunctionCallNode fnNode)
                         return Err("',' can only be used in function calls");
 
                     var result = ParseAndSetNode(buffer, ref tokenType, Scope);
                     if (result.Faulted)
                         return result;
 
+                    if (levelStack.Count is 1)
+                        return Err("No value before ','");
+
                     levelStack.Clear();
-                    levelStack.Add(functionCallNode);
+                    levelStack.Add(fnNode);
 
                     break;
                 }
@@ -340,6 +324,9 @@ internal sealed class MathTree
 
                     if (math.TryGetValueAt(i + 1, out var nextChar) && nextChar.IsLowerLetter())
                     {
+                        if (isInsideCustomFunction)
+                            return Err("Cannot set variable/option inside custom function");
+
                         buffer.Append(c);
                         tokenType = TokenType.CalculatorOption;
                         break;
@@ -422,7 +409,8 @@ internal sealed class MathTree
                     if (!math.TryGetValueAt(i + 1, out var nextChar))
                     {
                         if (tokenType is TokenType.CalculatorOption)
-                            return Err("Missing variable value");
+                            return Err("Missing variable/option value");
+
                         return Err("Invalid symbol =");
                     }
 
@@ -436,7 +424,7 @@ internal sealed class MathTree
                         }
 
                         if (!nextChar.IsLowerLetter())
-                            return Err("Invalid symbol =");
+                            return Err("Invalid character '='");
 
                         tokenType = TokenType.AdvancedCalculatorOption;
                         buffer.Append(c);
@@ -444,9 +432,12 @@ internal sealed class MathTree
                     }
 
                     if (nextChar is not '=')
-                        return Err("Invalid symbol =");
+                        return Err("Invalid character '='");
 
                     // the op is ==
+                    if (isInsideCustomFunction)
+                        return Err("Comparison is not allowed inside custom function");
+
                     result = AddToCompare(CompareOp.Equal);
                     if (result.Faulted)
                         return result;
@@ -476,6 +467,9 @@ internal sealed class MathTree
                         }
                         case '=':
                         {
+                            if (isInsideCustomFunction)
+                                return Err("Comparison is not allowed inside custom function");
+
                             var result1 = AddToCompare(CompareOp.GreaterThanOrEqual);
                             if (result1.Faulted)
                                 return result1;
@@ -486,6 +480,9 @@ internal sealed class MathTree
                         }
                         default:
                         {
+                            if (isInsideCustomFunction)
+                                return Err("Comparison is not allowed inside custom function");
+
                             var result1 = AddToCompare(CompareOp.GreaterThan);
                             if (result1.Faulted)
                                 return result1;
@@ -518,6 +515,9 @@ internal sealed class MathTree
                         }
                         case '=':
                         {
+                            if (isInsideCustomFunction)
+                                return Err("Comparison is not allowed inside custom function");
+
                             var result1 = AddToCompare(CompareOp.LessThanOrEqual);
                             if (result1.Faulted)
                                 return result1;
@@ -528,6 +528,9 @@ internal sealed class MathTree
                         }
                         default:
                         {
+                            if (isInsideCustomFunction)
+                                return Err("Comparison is not allowed inside custom function");
+
                             var result1 = AddToCompare(CompareOp.LessThan);
                             if (result1.Faulted)
                                 return result1;
@@ -553,8 +556,11 @@ internal sealed class MathTree
                         break;
                     }
 
-                    if (c == '=')
+                    if (c is '=')
                     {
+                        if (isInsideCustomFunction)
+                            return Err("Comparison is not allowed inside custom function");
+
                         var result1 = AddToCompare(CompareOp.Difference);
                         if (result1.Faulted)
                             return result1;
@@ -578,7 +584,7 @@ internal sealed class MathTree
                     if (!math.TryGetValueAt(i + 1, out c))
                         return Err("Invalid operator ^");
 
-                    if (c == '^')
+                    if (c is '^')
                     {
                         result = AddNode(new BitwiseXorNode());
                         if (result.Faulted)
@@ -597,7 +603,7 @@ internal sealed class MathTree
                     if (!Scope.IsCustomFunctionAllowed)
                         return Err("Custom function is not allowed in this scope");
 
-                    if (isInCustomFunction)
+                    if (isInsideCustomFunction)
                         return Err("Invalid char '['");
 
                     var result = ParseAndSetNode(buffer, ref tokenType, Scope);
@@ -614,7 +620,7 @@ internal sealed class MathTree
 
                     if (math.Length <= i)
                         return Err("Invalid custom function syntax");
-                    
+
                     if (math[i] is not '(')
                         return Err("Invalid custom function syntax");
 
@@ -692,7 +698,7 @@ internal sealed class MathTree
 
                         buffer.Clear();
                     }
-                    
+
                     i = argEnd + 1;
                     if (math[i] is not ('=' or ' '))
                         return Err("Invalid custom function syntax");
@@ -700,28 +706,26 @@ internal sealed class MathTree
                     MoveDownLevel();
                     _stack.CurrentLevel.Add(new CustomFunctionNode(name, args));
 
+                    isInsideCustomFunction = true;
                     break;
                 }
                 case 93: // ]
                 {
-                    if (!Scope.IsCustomFunctionAllowed)
-                        return Err("Custom function is not allowed in this scope");
-
-                    if (_stack.CurrentLevel.FirstOrDefault() is not CustomFunctionNode cNode)
+                    if (_stack.CurrentLevel.FirstOrDefault() is not CustomFunctionNode cfnNode)
                         return Err("Invalid custom function");
 
                     var result = ParseAndSetNode(buffer, ref tokenType, Scope);
                     if (result.Faulted)
                         return result;
 
-                    if (!cNode.IsFull())
+                    if (!cfnNode.IsFull())
                         return Err("Missing custom function body");
 
-                    var fn = cNode.ToCustomFunction(Scope.CustomFunctions!);
+                    var fn = cfnNode.ToCustomFunction(Scope.CustomFunctions!);
                     Scope.CustomFunctions!.Add(fn);
 
                     _stack.MoveUp();
-                    isInCustomFunction = false;
+                    isInsideCustomFunction = false;
                     break;
                 }
                 default:
@@ -927,34 +931,45 @@ internal sealed class MathTree
     private Result AddFnNode(List<IMathNode> levelStack, IMathNode node)
     {
         var stack = CollectionsMarshal.AsSpan(levelStack);
-        for (var stackIndex = 0; stackIndex < stack.Length;)
-        {
-            var node1 = stack[stackIndex];
-
-            if (node1 is ExponentNode && node is ExponentNode) // Special case
+        var i = 0;
+        if (node is ExponentNode)
+            for (;;)
             {
-                stackIndex++;
-                continue;
+                var node1 = stack[i];
+
+                if (node1 is not ExponentNode)
+                    break;
+
+                i++;
+                if (i < stack.Length)
+                    continue;
+
+                i--;
+                break;
             }
 
-            if (!(stackIndex == levelStack.Count - 1 || node1.Priority >= node.Priority))
+        for (; i < stack.Length;)
+        {
+            var node1 = stack[i];
+
+            if (i != levelStack.Count - 1 && node1.Priority < node.Priority)
             {
-                stackIndex++;
+                i++;
                 continue;
             }
 
             // Interact
 
-            if (node1.Priority == SpecialNodePriority)
+            if (node1.Priority is SpecialNodePriority)
                 return node.GenerateMissingValueError();
 
-            if (node1.Priority != ValueNodePriority && !node1.IsFull())
+            if (node1.Priority is not ValueNodePriority && !node1.IsFull())
                 return node1.GenerateMissingValueError();
 
             node.AddNode(node1);
-            if (stackIndex is not 0) levelStack[stackIndex - 1].ChangeLastNodeTo(node);
+            if (i is not 0) levelStack[i - 1].ChangeLastNodeTo(node);
 
-            levelStack.Insert(stackIndex, node);
+            levelStack.Insert(i, node);
             return Ok();
         }
 

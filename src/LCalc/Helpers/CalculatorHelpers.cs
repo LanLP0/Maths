@@ -330,29 +330,17 @@ internal static class CalculatorHelpers
 
     public static Result<double> ParseNumber(ReadOnlySpan<char> value)
     {
-        var e = 0.0;
-
-        if (value[value.Length - 1] == '%')
-        {
-            if (!double.TryParse(value.Slice(0, value.Length - 1), out var result))
-                return Err<double>($"{value.ToString()} is not a number");
-
-            e = result / 100;
-            return e;
-        }
-
-        if (value[0] == '-')
+        if (value[0] is '-')
         {
             if (value.Length is 1)
                 return Err("- is not a number");
 
-            if (value[1] != '0')
+            if (value[1] is not '0')
             {
                 if (!double.TryParse(value, out var result))
                     return Err<double>($"{value.ToString()} is not a number");
 
-                e = result;
-                return e;
+                return result;
             }
 
             if (value.Length is 2)
@@ -360,73 +348,32 @@ internal static class CalculatorHelpers
                 if (!double.TryParse(value, out var result))
                     return Err($"{value.ToString()} is not a number");
 
-                e = result;
-                return e;
+                return result;
             }
 
-            switch (value[2])
-            {
-                case 'x': // hex num
-                {
-                    if (value.Length < 3)
-                        return Err($"{value.ToString()} is not a number");
+            var rs = ParseSpecialNumber(value.Slice(1));
+            if (rs.Faulted)
+                return rs;
 
-                    var result = HexStringToNumber(value.Slice(3));
-                    if (result.Faulted)
-                        return Err<double>(result.Exception!);
-
-                    e = -result.Value;
-                    break;
-                }
-                case 'b': // binary num
-                {
-                    if (value.Length < 3)
-                        return Err($"{value.ToString()} is not a number");
-
-                    var result = BinaryStringToNumber(value.Slice(3));
-                    if (result.Faulted)
-                        return Err<double>(result.Exception!);
-
-                    e = -result.Value;
-                    break;
-                }
-                case 'o': // octal num
-                {
-                    if (value.Length < 3)
-                        return Err($"{value.ToString()} is not a number");
-
-                    var result = OctalStringToNumber(value.Slice(3));
-                    if (result.Faulted)
-                        return Err<double>(result.Exception!);
-
-                    e = -result.Value;
-                    break;
-                }
-                default:
-                {
-                    if (!double.TryParse(value, out var result))
-                        return Err($"{value.ToString()} is not a number");
-
-                    e = result;
-                    break;
-                }
-            }
-
-            return e;
+            return -rs.Value;
         }
 
-        if (value[0] != '0')
+        if (value[0] is not '0')
         {
             if (!double.TryParse(value, out var result))
                 return Err<double>($"{value.ToString()} is not a number");
 
-            e = result;
-            return e;
+            return result;
         }
 
         if (value.Length is 1)
-            return e;
+            return 0.0;
 
+        return ParseSpecialNumber(value);
+    }
+
+    private static Result<double> ParseSpecialNumber(ReadOnlySpan<char> value)
+    {
         switch (value[1])
         {
             case 'x': // hex num
@@ -438,8 +385,7 @@ internal static class CalculatorHelpers
                 if (result.Faulted)
                     return Err<double>(result.Exception!);
 
-                e = result.Value;
-                break;
+                return result.Value;
             }
             case 'b': // binary num
             {
@@ -450,8 +396,7 @@ internal static class CalculatorHelpers
                 if (result.Faulted)
                     return Err<double>(result.Exception!);
 
-                e = result.Value;
-                break;
+                return result.Value;
             }
             case 'o': // octal num
             {
@@ -462,20 +407,16 @@ internal static class CalculatorHelpers
                 if (result.Faulted)
                     return Err<double>(result.Exception!);
 
-                e = result.Value;
-                break;
+                return result.Value;
             }
             default:
             {
                 if (!double.TryParse(value, out var result))
                     return Err($"{value.ToString()} is not a number");
 
-                e = result;
-                break;
+                return result;
             }
         }
-
-        return e;
     }
 
     public static Result<double> OctalStringToNumber(ReadOnlySpan<char> s)
@@ -502,7 +443,7 @@ internal static class CalculatorHelpers
         foreach (var chr in s)
         {
             int val;
-            
+
             switch ((int)chr)
             {
                 case 97:  // a

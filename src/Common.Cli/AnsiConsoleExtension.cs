@@ -115,7 +115,7 @@ public static class AnsiConsoleExtension
         while (true)
         {
             var rawKey = console.Input.ReadKey(true);
-            if (rawKey == null) continue;
+            if (rawKey is null) continue;
 
             var key = rawKey.Value;
             switch (key.Key)

@@ -33,6 +33,6 @@ internal sealed class MMFraction
     public bool Validate()
     {
         return T0 != 0 && T1 != 0 && T2 != 0 &&
-               B0 != 0 && B1 != 0 && B2 != 0;
+            B0 != 0 && B1 != 0 && B2 != 0;
     }
 }

@@ -33,7 +33,7 @@ internal static class NewtonRaphsonSolver
             if (fx.Faulted)
                 return Err<double>("Cannot solve"
 #if DEBUG
-                                   + " (f(x) failed)"
+                    + " (f(x) failed)"
 #endif
                 );
 
@@ -44,7 +44,7 @@ internal static class NewtonRaphsonSolver
             if (dfx.Faulted)
                 return Err<double>("Cannot solve"
 #if DEBUG
-                                   + " (f'(x) failed)"
+                    + " (f'(x) failed)"
 #endif
                 );
 
@@ -52,7 +52,7 @@ internal static class NewtonRaphsonSolver
             if (Math.Abs(dfx.Value) < Epsilon)
                 return Err("Cannot solve"
 #if DEBUG
-                           + " (dfx = 0)"
+                    + " (dfx = 0)"
 #endif
                 );
 
@@ -82,7 +82,7 @@ internal static class NewtonRaphsonSolver
             if (y.Faulted)
                 return Err("Cannot solve"
 #if DEBUG
-                           + ' ' + y.Exception!.Message
+                    + ' ' + y.Exception!.Message
 #endif
                 );
 
@@ -117,7 +117,7 @@ internal static class NewtonRaphsonSolver
 
         return Err("Cannot solve"
 #if DEBUG
-                   + " (15 tries ended)"
+            + " (15 tries ended)"
 #endif
         );
     }

@@ -80,7 +80,7 @@ internal sealed class MinusNode : IMathNode
         if (!IsFull())
             return GenerateMissingValueError();
 
-        var isEncased = Priority == MathTree.ValueNodePriority && _arg1 is not EmptyNode;
+        var isEncased = Priority is MathTree.ValueNodePriority && _arg1 is not EmptyNode;
         if (isEncased)
             nodeLevel++;
 
@@ -137,7 +137,7 @@ internal sealed class MinusNode : IMathNode
             return num2;
 
         return Math.Max(num1.Value, num2.Value) +
-               (Priority == MathTree.ValueNodePriority ? 1 : 0);
+            (Priority is MathTree.ValueNodePriority ? 1 : 0);
     }
 
     public Result SetupForSolving(Scope scope, out string unknown)

@@ -74,7 +74,7 @@ internal sealed class App : Command<Settings>
                 _ => -1
             };
 
-            if (id == -1 || id >= _tools.Length)
+            if (id is -1 || id >= _tools.Length)
             {
                 AnsiConsole.MarkupLine("[red]> Invalid tool id[/]");
             }
