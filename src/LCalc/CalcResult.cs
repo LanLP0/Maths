@@ -2,7 +2,7 @@
 
 namespace LCalc;
 
-public sealed class CalcResult
+public struct CalcResult
 {
     internal CalcResult(double? result, Exception? exception, Format format)
     {
