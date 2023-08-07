@@ -24,7 +24,10 @@ internal sealed class LinkedNode<T>
     public void AddPrevious(LinkedNode<T> node)
     {
         if (_prev is not null)
+        {
             _prev._next = node;
+            node._prev = _prev;
+        }
 
         _prev = node;
         _prev._next = this;
@@ -33,10 +36,37 @@ internal sealed class LinkedNode<T>
     public void AddAfter(LinkedNode<T> node)
     {
         if (_next is not null)
-            _next._prev = this;
+        {
+            _next._prev = node;
+            node._next = _next;
+        }
 
         _next = node;
         _next._prev = this;
+    }
+
+    public void ReplacePrevious(LinkedNode<T> node)
+    {
+        node._prev = _prev?._prev;
+        node._next = this;
+        _prev = node;
+    }
+
+    public void ReplaceNext(LinkedNode<T> node)
+    {
+        node._next = _next?._next;
+        node._prev = this;
+        _next = node;
+    }
+
+    public void RemoveNext()
+    {
+        _next = _next?._next;
+    }
+    
+    public void RemovePrevious()
+    {
+        _prev = _prev?._prev;
     }
 
     /// <summary>Gets a reference to the value held by the node.</summary>
