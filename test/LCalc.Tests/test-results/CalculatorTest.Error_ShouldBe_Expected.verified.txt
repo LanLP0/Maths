@@ -1,0 +1,334 @@
+﻿[
+  {
+    Math: 1,2,
+    Output: Error: ',' can only be used in function calls
+  },
+  {
+    Math: 1+(2,3),
+    Output: Error: ',' can only be used in function calls
+  },
+  {
+    Math: null(),
+    Output: Error: Unknown function null()
+  },
+  {
+    Math: sum(),
+    Output: Error: sum() takes at least one argument
+  },
+  {
+    Math: avg(),
+    Output: Error: avg() takes at least one argument
+  },
+  {
+    Math: abs(),
+    Output: Error: abs() accept exactly 1 argument
+  },
+  {
+    Math: cbrt(),
+    Output: Error: cbrt() accept exactly 1 argument
+  },
+  {
+    Math: sqrt(),
+    Output: Error: sqrt() accept exactly 1 argument
+  },
+  {
+    Math: ceiling(),
+    Output: Error: ceiling() accept exactly 1 argument
+  },
+  {
+    Math: round(),
+    Output: Error: round() accept exactly 1 - 2 argument
+  },
+  {
+    Math: round(1.234, 6),
+    Output: Error: digits must be between 0 - 5
+  },
+  {
+    Math: floor(),
+    Output: Error: floor() accept exactly 1 argument
+  },
+  {
+    Math: gcd(),
+    Output: Error: gcd() require at least 1 argument
+  },
+  {
+    Math: gcd(1.1 2.2),
+    Output: Error: gcd() only accept integers
+  },
+  {
+    Math: gcd(1 2.2),
+    Output: Error: gcd() only accept integers
+  },
+  {
+    Math: lcm(),
+    Output: Error: lcm() require at least 1 argument
+  },
+  {
+    Math: lcm(1.1 2.2),
+    Output: Error: lcm() only accept integers
+  },
+  {
+    Math: lcm(1 2.2),
+    Output: Error: lcm() only accept integers
+  },
+  {
+    Math: random(1 2 3),
+    Output: Error: random() takes at most 2 arguments
+  },
+  {
+    Math: random(1 a),
+    Output: Error: Unknown variable 'a'
+  },
+  {
+    Math: cos(),
+    Output: Error: cos() takes exactly one argument
+  },
+  {
+    Math: sin(),
+    Output: Error: sin() takes exactly one argument
+  },
+  {
+    Math: tan(),
+    Output: Error: tan() takes exactly one argument
+  },
+  {
+    Math: cot(),
+    Output: Error: cot() takes exactly one argument
+  },
+  {
+    Math: log(),
+    Output: Error: log() takes exactly one argument
+  },
+  {
+    Math: |-1),
+    Output: Error: Invalid abs syntax
+  },
+  {
+    Math: sin(,,,),
+    Output: Error: No value before ','
+  },
+  {
+    Math: ,
+    Output: Error: No expression found
+  },
+  {
+    Math: (1,
+    Output: Error: Invalid number of braces
+  },
+  {
+    Math: (),
+    Output: Error: Invalid expression
+  },
+  {
+    Math: 1),
+    Output: Error: Invalid expression
+  },
+  {
+    Math: 1==(1,
+    Output: Error: Invalid number of braces
+  },
+  {
+    Math: ((1)&step,
+    Output: Error: Invalid number of braces
+  },
+  {
+    Math: 1-,
+    Output: Error: Missing value after operator -
+  },
+  {
+    Math: null!,
+    Output: Error: Unknown variable 'null'
+  },
+  {
+    Math: 2.5<<2.5,
+    Output: Error: Value(s) of operator << must be integer
+  },
+  {
+    Math: 50!<<50!,
+    Output: Error: Value(s) of operator << must be between 2^31 and -2^31
+  },
+  {
+    Math: 2.5||2.5,
+    Output: Error: Value(s) of operator || must be integer
+  },
+  {
+    Math: 100!||100!,
+    Output: Error: Value(s) of operator || must be between 2^63 and -2^63
+  },
+  {
+    Math: -n,
+    Output: Error: Unknown variable 'n'
+  },
+  {
+    Math: 1~,
+    Output: Error: Invalid operator ~
+  },
+  {
+    Math: 1&,
+    Output: Error: Missing value after operator &
+  },
+  {
+    Math: 1+,
+    Output: Error: Missing value after operator +
+  },
+  {
+    Math: +1,
+    Output: Error: Missing value before operator +
+  },
+  {
+    Math: 1 1,
+    Output: Error: Missing operator
+  },
+  {
+    Math: 2^3^ ^,
+    Output: Error: Invalid operator ^
+  },
+  {
+    Math: 1-&a=100,
+    Output: Error: Missing value after operator -
+  },
+  {
+    Math: &a=,
+    Output: Error: Missing variable/option value
+  },
+  {
+    Math: &a=1&a=1,
+    Output: Error: Variable 'a' had already been set
+  },
+  {
+    Math: 1 &fmt=error,
+    Output: Error: Unknown format: error
+  },
+  {
+    Math: (1==2,
+    Output: Error: Invalid expression
+  },
+  {
+    Math: 0x,
+    Output: Error: 0x is not a number
+  },
+  {
+    Math: 0b,
+    Output: Error: 0b is not a number
+  },
+  {
+    Math: 0o,
+    Output: Error: 0o is not a number
+  },
+  {
+    Math: 0xfg,
+    Output: Error: Invalid hex number
+  },
+  {
+    Math: 0b12,
+    Output: Error: Invalid binary number
+  },
+  {
+    Math: 0o89,
+    Output: Error: Invalid octal number
+  },
+  {
+    Math: [t()=t()]t(),
+    Output: Error: Function loop is not allowed
+  },
+  {
+    Math: [a()=)],
+    Output: Error: Invalid amount of braces in custom function
+  },
+  {
+    Math: [a(x x)=1],
+    Output: Error: Duplicated variables in custom function
+  },
+  {
+    Math: [a(]),
+    Output: Error: Invalid custom function syntax
+  },
+  {
+    Math: [a(1)],
+    Output: Error: Invalid character in custom function arg space '1'
+  },
+  {
+    Math: [a()=1,
+    Output: Error: Invalid custom function syntax
+  },
+  {
+    Math: [a():1],
+    Output: Error: Invalid custom function syntax
+  },
+  {
+    Math: [a()1],
+    Output: Error: Invalid custom function syntax
+  },
+  {
+    Math: [a()=1] a(2),
+    Output: Error: Invalid number of args
+  },
+  {
+    Math: sigma(x, 3, 1, x*10),
+    Output: Error: sigma(): End cannot be less than start
+  },
+  {
+    Math: sigma(x, -3, 3),
+    Output: Error: sigma() takes exactly 4 arguments
+  },
+  {
+    Math: sigma(y, -3, 3, x*10),
+    Output: Error: sigma(): Invalid variable name
+  },
+  {
+    Math: sigma(x, -3, 3, 10),
+    Output: Error: sigma(): Invalid variable name
+  },
+  {
+    Math: sigma(x-1, 1, 1, x),
+    Output: Error: sigma(): First argument must be a variable
+  },
+  {
+    Math: sigma(x, 1.1, 2, x),
+    Output: Error: sigma(): Start must be an integer
+  },
+  {
+    Math: sigma(x, 1, 2.1, x),
+    Output: Error: sigma(): End must be an integer
+  },
+  {
+    Math: cpi(x, 3, 1, x*10),
+    Output: Error: cpi(): End cannot be less than start
+  },
+  {
+    Math: cpi(x, -3, 3),
+    Output: Error: cpi() takes exactly 4 arguments
+  },
+  {
+    Math: cpi(y, -3, 3, x*10),
+    Output: Error: cpi(): Invalid variable name
+  },
+  {
+    Math: cpi(x, -3, 3, 10),
+    Output: Error: cpi(): Invalid variable name
+  },
+  {
+    Math: cpi(x-1, 1, 1, x),
+    Output: Error: cpi(): First argument must be a variable
+  },
+  {
+    Math: cpi(x, 1.1, 2, x),
+    Output: Error: cpi(): Start must be an integer
+  },
+  {
+    Math: cpi(x, 1, 2.1, x),
+    Output: Error: cpi(): End must be an integer
+  },
+  {
+    Math: abs(x)+1 &solve,
+    Output: Error: Cannot solve (15 tries ended)
+  },
+  {
+    Math: 1 &solve,
+    Output: Error: Nothing to solve for
+  },
+  {
+    Math: x*y &solve,
+    Output: Error: Too many unknowns
+  }
+]
