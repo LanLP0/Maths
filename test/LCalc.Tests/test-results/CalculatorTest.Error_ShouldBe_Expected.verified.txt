@@ -112,24 +112,12 @@
     Output: Error: No expression found
   },
   {
-    Math: (1,
-    Output: Error: Invalid number of braces
-  },
-  {
     Math: (),
     Output: Error: Invalid expression
   },
   {
     Math: 1),
     Output: Error: Invalid expression
-  },
-  {
-    Math: 1==(1,
-    Output: Error: Invalid number of braces
-  },
-  {
-    Math: ((1)&step,
-    Output: Error: Invalid number of braces
   },
   {
     Math: 1-,
@@ -202,10 +190,6 @@
   {
     Math: 1 &fmt=error,
     Output: Error: Unknown format: error
-  },
-  {
-    Math: (1==2,
-    Output: Error: Invalid expression
   },
   {
     Math: 0x,

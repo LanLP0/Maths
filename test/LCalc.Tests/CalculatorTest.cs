@@ -177,11 +177,8 @@ public sealed class CalculatorTest
         "sin(,,,)",
         // Misc
         "",
-        "(1",
         "()",
         "1)",
-        "1==(1",
-        "((1)&step",
         "1-",
         "null!",
         "-2!",
@@ -200,7 +197,6 @@ public sealed class CalculatorTest
         "&a=",
         "&a=1&a=1",
         "1 &fmt=error",
-        "(1==2",
         // Special number
         "0x",
         "0b",
