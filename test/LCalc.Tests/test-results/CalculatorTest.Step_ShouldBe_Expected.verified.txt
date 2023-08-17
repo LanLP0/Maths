@@ -45,6 +45,14 @@ Result: 0.629319
 Result: True
   },
   {
+    Math: 1-|2-(3+(4 &render &step,
+    Output:
+1 - |2 - (3 + 4)|
+1 - |2 - 7|
+1 - 5
+Result: -4
+  },
+  {
     Math: sigma(x, 1, 100, -1*x) &latex,
     Output:
 \sum_{x=1}^{100}(-1 \times x)

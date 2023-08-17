@@ -76,6 +76,10 @@
     Output: Result: 0.5
   },
   {
+    Math: 1-|2-(3+(4,
+    Output: Result: -4
+  },
+  {
     Math: 3a&a=2,
     Output: Result: 6
   },

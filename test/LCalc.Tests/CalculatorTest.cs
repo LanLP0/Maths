@@ -41,6 +41,7 @@ public sealed class CalculatorTest
         "-1",
         "a.5 &a=4",
         ".5",
+        "1-|2-(3+(4", // Implicit braces
         // Variable
         "3a&a=2",
         "a&a=1",
@@ -264,6 +265,7 @@ public sealed class CalculatorTest
         "abs(sin(((~1>>2<<2)^2!/1000*50-40+1))) &step",
         "abs(sin(((~1>>2<<2)^2!/1000*50-40+1))) &tree",
         "abs(1+(2+3))==2+4!= (1+(2+(3+4))) &step",
+        "1-|2-(3+(4 &render &step", // Implicit braces
         "sigma(x, 1, 100, -1*x) &latex",
         "cpi(x, floor(sqrt(6)), ceiling(cbrt(999)), x^x) &latex",
         "cpi(x, floor(sqrt(6)), ceiling(cbrt(999)), x^x) &latexdoc",
