@@ -184,6 +184,7 @@ public sealed class CalculatorTest
         "((1)&step",
         "1-",
         "null!",
+        "-2!",
         "2.5<<2.5",
         "50!<<50!",
         "2.5||2.5",

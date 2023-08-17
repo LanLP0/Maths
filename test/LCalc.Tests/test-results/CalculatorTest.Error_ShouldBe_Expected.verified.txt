@@ -140,6 +140,10 @@
     Output: Error: Unknown variable 'null'
   },
   {
+    Math: -2!,
+    Output: Error: Operator ! only accept positive value
+  },
+  {
     Math: 2.5<<2.5,
     Output: Error: Value(s) of operator << must be integer
   },
