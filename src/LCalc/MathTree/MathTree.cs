@@ -786,8 +786,9 @@ internal sealed class MathTree
         if (result2.Faulted)
             return result2;
 
-        if (_stack.PreviousLevel is not null) // If not at the first level
-            return Err("Invalid number of braces");
+        var moveUpRs = MoveUpToTop();
+        if (moveUpRs.Faulted)
+            return moveUpRs;
 
         var rootStack = _stack.CurrentLevel;
         if (rootStack.Count is 0)
@@ -1070,13 +1071,41 @@ internal sealed class MathTree
         return AddNode(node);
     }
 
+    private Result MoveUpToTop()
+    {
+        var currentLevel = _stack.CurrentLevel;
+        while (_stack.MoveUp())
+        {
+            if (currentLevel.Count is 0)
+                return Err("Invalid expression");
+            
+            var node = currentLevel.First();
+            if (node is CustomFunctionNode)
+                return Err("Invalid amount of braces in custom function");
+
+            if (node is FunctionCallNode fnNode && fnNode.Name[0] is '$')
+                fnNode.Name = fnNode.Name.Substring(1);
+
+            node.Priority = ValueNodePriority;
+
+            var rs = AddNode(node);
+            if (rs.Faulted)
+                return rs;
+            
+            currentLevel = _stack.CurrentLevel;
+        }
+
+        return Ok();
+    }
+
     private Result<bool> AddToCompare(CompareOp? op = null)
     {
         if (!Scope.IsCompareAllowed)
             return Err<bool>("Compare not allowed");
 
-        if (_stack.PreviousLevel is not null)
-            return Err("Invalid expression");
+        var rs = MoveUpToTop();
+        if (rs.Faulted)
+            return rs;
 
         var levelStack = _stack.CurrentLevel;
         if (levelStack.Count is 0)
