@@ -215,26 +215,70 @@ internal sealed class MathTree
                     var result = ParseAndSetNode(buffer, ref tokenType, Scope);
                     if (result.Faulted)
                         return result;
-
-                    var levelStack = _stack.CurrentLevel;
+                    
                     var node = new MinusNode();
-                    if (levelStack.Count is 0)
+                    if (_stack.CurrentLevel.Count is 0)
                     {
                         node.AddNode(EmptyNode.Shared);
                         node.Priority = ValueNodePriority;
-                        levelStack.Add(node);
+                        
+                        _stack.CurrentLevel.Add(node);
                         break;
                     }
 
-                    result = AddFnNode(levelStack, node);
-                    if (!result.Faulted)
-                        break;
+                    var lastNonValueNode = GetLastNonValueNode();
+                    if (lastNonValueNode is null)
+                    {
+                        // Try to add as a operator first
+                        var rs = AddFnNode(_stack.CurrentLevel, node);
+                        if (rs.Success)
+                            break;
+                        
+                        // Add as a negative value
+                        node.AddNode(EmptyNode.Shared);
+                        node.Priority = ValueNodePriority;
+                        
+                        if (AddValueNode(_stack.CurrentLevel, node))
+                            break;
+                    
+                        return Err("Invalid operator -");
+                    }
 
+                    if (lastNonValueNode.IsFull())
+                    {
+                        // Then this is an operator
+                        
+                        var rs = AddFnNode(_stack.CurrentLevel, node);
+                        if (rs.Faulted)
+                            return rs;
+                        
+                        break;
+                    }
+
+                    if (lastNonValueNode is FunctionCallNode)
+                    {
+                        // Try to add as a operator first
+                        var rs = AddFnNode(_stack.CurrentLevel, node);
+                        if (rs.Success)
+                            break;
+                        
+                        // Add as a negative value
+                        node.AddNode(EmptyNode.Shared);
+                        node.Priority = ValueNodePriority;
+                        
+                        if (AddValueNode(_stack.CurrentLevel, node))
+                            break;
+                    
+                        return Err("Invalid operator -");
+                    }
+                    
+                    // This is a negative value
                     node.AddNode(EmptyNode.Shared);
                     node.Priority = ValueNodePriority;
-                    if (AddValueNode(levelStack, node))
+                        
+                    if (AddValueNode(_stack.CurrentLevel, node))
                         break;
-
+                    
                     return Err("Invalid operator -");
                 }
                 case 126: // ~
@@ -968,7 +1012,7 @@ internal sealed class MathTree
             return Ok();
         }
 
-        throw new UnreachableException();
+        return Err();
     }
 
     private bool AddValueNode(List<IMathNode> levelStack, IMathNode node)
@@ -1047,6 +1091,22 @@ internal sealed class MathTree
         if (op.HasValue)
             _comparer.AddOp(op.Value);
         return true;
+    }
+
+    private IMathNode? GetLastNonValueNode()
+    {
+        var stackLevel = CollectionsMarshal.AsSpan(_stack.CurrentLevel);
+
+        for (var i = stackLevel.Length - 1; i >= 0; i--)
+        {
+            var node = stackLevel[i];
+            if (node.Priority is ValueNodePriority)
+                continue;
+
+            return node;
+        }
+
+        return null;
     }
 
     private void ReadLettersToBuffer(StringBuilder buffer, ReadOnlySpan<char> math, ref int index)
