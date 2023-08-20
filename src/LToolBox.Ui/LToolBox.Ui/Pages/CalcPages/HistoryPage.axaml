@@ -14,7 +14,7 @@
     <DockPanel>
         <Button DockPanel.Dock="Top" Name="ExitButton" BorderThickness="0" Background="Transparent"
                 HorizontalAlignment="Left" Foreground="{DynamicResource SystemAccentColor}"
-                Click="ExitButtonClicked" Content="&lt; Return" />
+                Click="ExitButtonClicked" Content="&lt; Return" Margin="0 0 0 10" />
         
         <ScrollViewer DockPanel.Dock="Bottom">
             <ListBox Name="HistoryBox" ItemsSource="{Binding History}"
