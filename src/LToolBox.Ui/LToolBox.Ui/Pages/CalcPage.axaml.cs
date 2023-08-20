@@ -24,21 +24,6 @@ public partial class CalcPage : UserControl
     private CalcResult _result;
     private HistoryPageViewModel _historyVm = new();
 
-    private int CaretIndex
-    {
-        get => OskInput.IsVisible ? OskInput.CaretIndex : MainInput.CaretIndex;
-        set
-        {
-            if (OskInput.IsVisible)
-            {
-                OskInput.CaretIndex = value;
-                return;
-            }
-
-            MainInput.CaretIndex = value;
-        }
-    }
-
     public CalcPage()
     {
         InitializeComponent();
@@ -47,21 +32,20 @@ public partial class CalcPage : UserControl
         Kb2.KeyClicked.Subscribe(Observer.Create<string>(Kb2_KeyClicked));
 
         // TODO: Windows Phones & Linux Phones
-        var isDesktop = OperatingSystem.IsWindows() || OperatingSystem.IsLinux() || OperatingSystem.IsMacOS() ||
+        _isDesktop = OperatingSystem.IsWindows() || OperatingSystem.IsLinux() || OperatingSystem.IsMacOS() ||
             OperatingSystem.IsMacCatalyst();
 
-        _isDesktop = isDesktop;
-        if (isDesktop)
+        if (_isDesktop)
         {
             OskInput.IsVisible = true;
+            OskInput.Focusable = true;
             OskInput.RemoveHandler(LostFocusEvent, OskInput_OnLostFocus);
+            // OskInput.AddHandler(LostFocusEvent, (_, _) => OskInput.Focus());
 
             KeyboardButton.IsVisible = false;
             KeyboardButton.IsEnabled = false;
             MainInput.IsVisible = false;
             MainInput.IsEnabled = false;
-
-            OskInput.Focus();
         }
     }
 
@@ -69,13 +53,14 @@ public partial class CalcPage : UserControl
     {
         _vm = (CalcPageViewModel)DataContext!;
         _vm.InputTextChanged += InputTextChanged;
-
-        base.OnInitialized();
     }
 
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
     {
         MainInput.ShowCaret();
+        if (OskInput.IsVisible)
+            OskInput.Focus();
+        
         if (_historyVm.ChosenHistory is null)
             return;
         
@@ -83,8 +68,10 @@ public partial class CalcPage : UserControl
 
         _vm.InputText = _historyVm.ChosenHistory.Math;
         _vm.OutputText = _historyVm.ChosenHistory.Result;
-        
-        CaretIndex = _vm.InputText.Length;
+
+        _historyVm.ChosenHistory = null;
+        ShowStepsButton.IsVisible = false;
+        _vm.CaretIndex = _vm.InputText.Length;
     }
 
     private void InputTextChanged(object? sender, EventArgs e)
@@ -105,17 +92,6 @@ public partial class CalcPage : UserControl
         }).Wait(TimeSpan.FromMilliseconds(100));
     }
 
-    private void SwitchToInputLayout()
-    {
-        if (!ResultLayout.IsVisible)
-            return;
-
-        _vm.OutputText = string.Empty;
-        ResultLayout.IsVisible = false;
-        InputLayout.IsVisible = true;
-        ShowStepsButton.IsVisible = false;
-    }
-
     private void Kb1_KeyClicked(string key)
     {
         if (!key.StartsWith('$'))
@@ -127,7 +103,7 @@ public partial class CalcPage : UserControl
         switch (key)
         {
             case "$braces":
-                var caretIndex = CaretIndex;
+                var caretIndex = _vm.CaretIndex;
                 if (caretIndex is 0)
                 {
                     AddText("(");
@@ -190,17 +166,17 @@ public partial class CalcPage : UserControl
         {
             case "$cfn":
                 AddText("[()=]");
-                CaretIndex -= 4;
+                _vm.CaretIndex -= 4;
                 SwitchOsk();
                 break;
             case "$fncall":
                 AddText("()");
-                CaretIndex -= 2;
+                _vm.CaretIndex -= 2;
                 SwitchOsk();
                 break;
             case "$assign":
                 AddText("&=");
-                CaretIndex -= 1;
+                _vm.CaretIndex -= 1;
                 SwitchOsk();
                 break;
             case "$switch":
@@ -221,12 +197,19 @@ public partial class CalcPage : UserControl
         if (prevText.Length is 0)
         {
             _vm.InputText = s;
-            CaretIndex += s.Length;
+            _vm.CaretIndex += s.Length;
 
             return;
         }
 
-        var caretIndex = CaretIndex;
+        var caretIndex = _vm.CaretIndex;
+        if (prevText.Length == caretIndex)
+        {
+            _vm.InputText += s;
+            _vm.CaretIndex += s.Length;
+            
+            return;
+        }
 
         var first = prevText.Slice(0, caretIndex);
         var second = prevText.Slice(caretIndex);
@@ -240,7 +223,7 @@ public partial class CalcPage : UserControl
         var newText = buffer.ToString();
 
         _vm.InputText = newText;
-        CaretIndex += s.Length;
+        _vm.CaretIndex += s.Length;
     }
 
     private void KeyboardButton_OnTapped(object? sender, TappedEventArgs e)
@@ -267,9 +250,9 @@ public partial class CalcPage : UserControl
 
             OskInput.IsVisible = true;
             MainInput.IsVisible = false;
+            MainInput.IsEnabled = false;
 
             OskInput.Focus();
-            OskInput.CaretIndex = MainInput.CaretIndex;
             return;
         }
 
@@ -278,8 +261,7 @@ public partial class CalcPage : UserControl
 
         MainInput.IsVisible = true;
         OskInput.IsVisible = false;
-
-        MainInput.CaretIndex = OskInput.CaretIndex;
+        OskInput.IsEnabled = false;
     }
 
     private void MainInput_OnPointerPressed(object? sender, PointerPressedEventArgs e)
@@ -305,11 +287,18 @@ public partial class CalcPage : UserControl
         if (string.IsNullOrEmpty(_vm.InputText))
             return;
         
-        var caretIndex = CaretIndex;
+        var caretIndex = _vm.CaretIndex;
         if (caretIndex is 0)
             return;
 
         var text = _vm.InputText.AsSpan();
+        if (caretIndex == text.Length)
+        {
+            _vm.InputText = text.Slice(0, --caretIndex).ToString();
+            _vm.CaretIndex = caretIndex;
+            return;
+        }
+        
         var first = text.Slice(0, caretIndex - 1);
         var second = text.Slice(caretIndex);
 
@@ -318,7 +307,7 @@ public partial class CalcPage : UserControl
         buffer.Append(second);
 
         _vm.InputText = buffer.ToString();
-        CaretIndex--;
+        _vm.CaretIndex--;
     }
     
     private void DeleteAll()
@@ -334,6 +323,7 @@ public partial class CalcPage : UserControl
         if (string.IsNullOrWhiteSpace(math))
             return;
 
+        _vm.InputText = string.Empty;
         _vm.OutputText = math;
 
         const CalculatorOption option = CalculatorOption.LaTeX | CalculatorOption.NoLaTeXDoc | CalculatorOption.Step |
@@ -347,13 +337,11 @@ public partial class CalcPage : UserControl
             ResultOutput.IsVisible = false;
             ErrorOutput.IsVisible = true;
             
-            ResultLayout.IsVisible = true;
-            InputLayout.IsVisible = false;
+            SwitchLayout(false);
             
             return;
         }
         
-        _vm.InputText = string.Empty;
         _result = result;
 
         ResultOutput.Text = result.RenderValue();
@@ -371,10 +359,34 @@ public partial class CalcPage : UserControl
         ResultOutput.IsVisible = true;
         ErrorOutput.IsVisible = false;
 
-        ResultLayout.IsVisible = true;
-        InputLayout.IsVisible = false;
+        SwitchLayout(false);
 
         ShowStepsButton.IsVisible = true;
+    }
+    
+    private void SwitchToInputLayout()
+    {
+        if (!ResultLayout.IsVisible)
+            return;
+        
+        SwitchLayout(true);
+    }
+
+    private void SwitchLayout(bool isInput)
+    {
+        ResultLayout.IsVisible = !isInput;
+        InputLayout.IsVisible = isInput;
+        InputLayout.IsEnabled = isInput;
+
+        if (isInput)
+        {
+            if (OskInput.IsVisible)
+                OskInput.Focus();
+            
+            return;
+        }
+
+        Focus();
     }
 
     private void ShowStepsButtonClicked(object? sender, RoutedEventArgs e)
@@ -397,8 +409,9 @@ public partial class CalcPage : UserControl
                 case Key.Home:
                 case Key.Escape:
                 case Key.Back:
-                    ResultLayout.IsVisible = false;
-                    InputLayout.IsVisible = true;
+                    e.Handled = true;
+                    
+                    SwitchLayout(true);
                     break;
                 case Key.A:
                 case Key.B:
@@ -426,6 +439,8 @@ public partial class CalcPage : UserControl
                 case Key.X:
                 case Key.Y:
                 case Key.Z:
+                    e.Handled = true;
+                    
                     var key = (e.KeyModifiers & KeyModifiers.Shift) != 0
                         ? e.Key.ToString()
                         : e.Key.ToString().ToLowerInvariant();
@@ -451,10 +466,15 @@ public partial class CalcPage : UserControl
                 case Key.D6:
                 case Key.D7:
                 case Key.D8:
+                    e.Handled = true;
+                    
                     var number = e.Key.ToString()[^1];
                     AddText(number.ToString());
+                    
                     break;
                 case Key.D9:
+                    e.Handled = true;
+                    
                     if ((e.KeyModifiers & KeyModifiers.Shift) != 0)
                     {
                         AddText("(");
@@ -465,12 +485,18 @@ public partial class CalcPage : UserControl
                     break;
                 case Key.Subtract:
                 case Key.OemMinus:
+                    e.Handled = true;
+                    
                     AddText("-");
                     break;
                 case Key.OemTilde:
+                    e.Handled = true;
+                    
                     AddText("~");
                     break;
                 case Key.OemPipe:
+                    e.Handled = true;
+                    
                     AddText("|");
                     break;
             }
@@ -480,6 +506,8 @@ public partial class CalcPage : UserControl
             switch (e.Key)
             {
                 case Key.Return:
+                    e.Handled = true;
+                    
                     Submit();
                     break;
             }

@@ -7,6 +7,7 @@ public class CalcPageViewModel : NavViewModelBase
 {
     private string _inputText = string.Empty;
     private string _outputText = string.Empty;
+    private int _caretIndex;
 
     public const string NavHeaderName = "LCalc";
     public override string NavHeader { get; } = NavHeaderName;
@@ -33,5 +34,11 @@ public class CalcPageViewModel : NavViewModelBase
     {
         get => _outputText;
         set => this.RaiseAndSetIfChanged(ref _outputText, value);
+    }
+
+    public int CaretIndex
+    {
+        get => _caretIndex;
+        set => this.RaiseAndSetIfChanged(ref _caretIndex, value);
     }
 }

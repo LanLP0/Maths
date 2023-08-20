@@ -60,6 +60,7 @@ public class VirtualKey : TemplatedControl
     protected override void OnInitialized()
     {
         DataContext = this;
+        Focusable = false;
 
         _keyboard = this.FindAncestorOfType<VirtualKeyboard>();
 
@@ -79,6 +80,7 @@ public class VirtualKey : TemplatedControl
         {
             var button = new Button
             {
+                Focusable = false,
                 CornerRadius = new CornerRadius(int.MaxValue),
                 Padding = new Thickness(20),
                 Margin = new Thickness(10),

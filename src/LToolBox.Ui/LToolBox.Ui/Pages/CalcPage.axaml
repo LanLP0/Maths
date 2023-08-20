@@ -7,6 +7,7 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              xmlns:fac="using:FluentAvalonia.UI.Controls"
              x:Class="LToolBox.Ui.Pages.CalcPage"
+             Focusable="True"
              KeyDown="Page_OnKeyDown">
     <Design.DataContext>
         <vm:CalcPageViewModel />
@@ -42,14 +43,16 @@
                 <TextBox Name="OskInput" IsVisible="False" TextWrapping="Wrap" FontSize="30"
                          LostFocus="OskInput_OnLostFocus" BorderThickness="0"
                          Text="{Binding InputText}"
-                         TextAlignment="Right" />
+                         TextAlignment="Right"
+                         CaretIndex="{Binding CaretIndex, Mode=TwoWay}" />
 
                 <Border Padding="{StaticResource TextControlThemePadding}"
                         Cursor="Ibeam" PointerPressed="MainInput_OnPointerPressed">
                     <TextPresenter Name="MainInput" Focusable="True" TextWrapping="Wrap" FontSize="30"
                                    CaretBrush="{DynamicResource TextControlForeground}"
                                    Text="{Binding InputText}"
-                                   TextAlignment="Right"/>
+                                   TextAlignment="Right"
+                                   CaretIndex="{Binding CaretIndex}" />
                 </Border>
             </StackPanel>
         </ScrollViewer>
@@ -80,14 +83,16 @@
             </Button>
             
             <Button Grid.Column="4" Name="DeleteAllButton" Click="DeleteAllButton_OnClick"
-                    Background="Transparent" BorderThickness="0">
+                    Background="Transparent" BorderThickness="0"
+                    Focusable="False">
                 <Viewbox>
                     <fac:IconSourceElement IconSource="{StaticResource DeleteAllIcon}" />
                 </Viewbox>
             </Button>
             
             <Button Grid.Column="5" Name="DeleteButton" Click="DeleteButton_OnClick"
-                    Background="Transparent" BorderThickness="0">
+                    Background="Transparent" BorderThickness="0"
+                    Focusable="False">
                 <Viewbox>
                     <fac:IconSourceElement IconSource="{StaticResource DeleteIcon}" />
                 </Viewbox>
@@ -113,7 +118,7 @@
                 <ctrl:VirtualKey ctrl:VirtualKeyboard.Column="0" ctrl:VirtualKeyboard.Row="2"
                                  Key="1" IconSource="{StaticResource OneIcon}" />
                 <ctrl:VirtualKey ctrl:VirtualKeyboard.Column="2" ctrl:VirtualKeyboard.Row="2"
-                                 Key="2" IconSource="{StaticResource TwoIcon}" />
+                                 Key="2" IconSource="{StaticResource TwoIcon}" Focusable="False" />
                 <ctrl:VirtualKey ctrl:VirtualKeyboard.Column="4" ctrl:VirtualKeyboard.Row="2"
                                  Key="3" IconSource="{StaticResource ThreeIcon}" />
                 <ctrl:VirtualKey ctrl:VirtualKeyboard.Column="6" ctrl:VirtualKeyboard.Row="2"
