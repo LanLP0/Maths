@@ -22,7 +22,6 @@ public partial class CalcPage : UserControl
     private double _prevAns = double.NaN;
     private CalcResult _result;
     private HistoryPageViewModel _historyVm = new();
-    private int _selectedKb = 1;
 
     public CalcPage()
     {
@@ -155,7 +154,6 @@ public partial class CalcPage : UserControl
             case "$switch":
                 Kb1Vb.IsVisible = false;
                 Kb2Vb.IsVisible = true;
-                _selectedKb = 2;
                 break;
         }
     }
@@ -188,7 +186,6 @@ public partial class CalcPage : UserControl
             case "$switch":
                 Kb2Vb.IsVisible = false;
                 Kb1Vb.IsVisible = true;
-                _selectedKb = 1;
                 break;
             case "$enter":
                 Submit();
@@ -251,9 +248,6 @@ public partial class CalcPage : UserControl
             OskInput.IsVisible = true;
             MainInput.IsVisible = false;
 
-            // Disable all keyboards
-            RestoreKeyboardVisibility(0);
-
             OskInput.Focus();
             OskInput.CaretIndex = MainInput.CaretIndex;
             return;
@@ -264,16 +258,8 @@ public partial class CalcPage : UserControl
 
         MainInput.IsVisible = true;
         OskInput.IsVisible = false;
-        
-        RestoreKeyboardVisibility(_selectedKb);
 
         MainInput.CaretIndex = OskInput.CaretIndex;
-    }
-
-    private void RestoreKeyboardVisibility(int selectedKb)
-    {
-        Kb1Vb.IsVisible = selectedKb is 1;
-        Kb2Vb.IsVisible = selectedKb is 2;
     }
 
     private void MainInput_OnPointerPressed(object? sender, PointerPressedEventArgs e)
