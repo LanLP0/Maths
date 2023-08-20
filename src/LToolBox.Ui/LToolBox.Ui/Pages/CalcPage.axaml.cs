@@ -5,6 +5,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using Avalonia.Platform;
 using Common;
 using LCalc;
 using LToolBox.Ui.Services;
@@ -30,7 +31,9 @@ public partial class CalcPage : UserControl
         Kb1.KeyClicked.Subscribe(Observer.Create<string>(Kb1_KeyClicked));
         Kb2.KeyClicked.Subscribe(Observer.Create<string>(Kb2_KeyClicked));
 
-        var isDesktop = false; // TODO: add check
+        // TODO: Windows Phones & Linux Phones
+        var isDesktop = OperatingSystem.IsWindows() || OperatingSystem.IsLinux() || OperatingSystem.IsMacOS() ||
+            OperatingSystem.IsMacCatalyst();
 
         _isDesktop = isDesktop;
         if (isDesktop)
@@ -42,6 +45,8 @@ public partial class CalcPage : UserControl
             KeyboardButton.IsEnabled = false;
             MainInput.IsVisible = false;
             MainInput.IsEnabled = false;
+
+            MainInput.Focus();
         }
     }
 
