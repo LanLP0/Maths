@@ -17,25 +17,25 @@
         <ScrollViewer Name="ResultLayout" Height="100" Padding="5" IsVisible="False"
                       DockPanel.Dock="Top" Margin="0 0 0 10">
             <StackPanel>
-                
+
                 <TextBlock Name="MathOutput" TextAlignment="Right" FontSize="15"
                            TextWrapping="NoWrap" TextTrimming="CharacterEllipsis"
                            Text="{Binding OutputText}" />
-                
+
                 <TextBlock Name="ResultOutput" TextAlignment="Right" FontSize="30"
                            TextWrapping="Wrap" IsVisible="False"
                            Text="{Binding OutputText}"
                            Foreground="{DynamicResource SystemAccentColor}" />
-                
+
                 <TextBlock Name="ErrorOutput" TextAlignment="Right" FontSize="30"
                            TextWrapping="Wrap" Foreground="Red" IsVisible="False"
                            Text="{Binding OutputText}" />
             </StackPanel>
         </ScrollViewer>
-        
+
         <ScrollViewer Name="InputLayout" Height="100" Padding="5" DockPanel.Dock="Top" Margin="0 0 0 10">
             <StackPanel>
-                
+
                 <TextBlock Name="ImmediateOutput" TextAlignment="Right" FontSize="15"
                            Text="{Binding OutputText}" TextWrapping="NoWrap"
                            Foreground="{DynamicResource SystemAccentColor}" />
@@ -71,17 +71,17 @@
                     <fac:IconSourceElement IconSource="{StaticResource CalculatorIcon}" />
                 </Viewbox>
             </Button>
-            
+
             <Button Grid.Column="1" Name="HistoryButton" Click="HistoryButton_OnClick"
                     Background="Transparent" BorderThickness="0" IsVisible="False">
                 <fac:SymbolIcon Symbol="Clock" />
             </Button>
-            
+
             <Button Grid.Column="2" Name="ShowStepsButton" Click="ShowStepsButtonClicked"
                     Background="Transparent" BorderThickness="0" IsVisible="False">
                 <fac:SymbolIcon Symbol="AlignLeft" />
             </Button>
-            
+
             <Button Grid.Column="4" Name="DeleteAllButton" Click="DeleteAllButton_OnClick"
                     Background="Transparent" BorderThickness="0"
                     Focusable="False">
@@ -89,7 +89,7 @@
                     <fac:IconSourceElement IconSource="{StaticResource DeleteAllIcon}" />
                 </Viewbox>
             </Button>
-            
+
             <Button Grid.Column="5" Name="DeleteButton" Click="DeleteButton_OnClick"
                     Background="Transparent" BorderThickness="0"
                     Focusable="False">
@@ -98,7 +98,7 @@
                 </Viewbox>
             </Button>
         </Grid>
-        
+
         <Separator DockPanel.Dock="Top" Margin="0 2 0 5" />
 
         <Viewbox Name="Kb1Vb" DockPanel.Dock="Bottom">

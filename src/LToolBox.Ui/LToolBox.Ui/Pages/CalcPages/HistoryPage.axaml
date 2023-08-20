@@ -3,19 +3,18 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:ui="clr-namespace:LToolBox.Ui"
-             xmlns:controls="clr-namespace:FluentAvalonia.UI.Controls;assembly=FluentAvalonia"
              xmlns:vm="clr-namespace:LToolBox.Ui.ViewModels.CalcPageViewModels"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="LToolBox.Ui.Pages.CalcPages.HistoryPage">
     <Design.DataContext>
         <vm:HistoryPageViewModel />
     </Design.DataContext>
-    
+
     <DockPanel>
         <Button DockPanel.Dock="Top" Name="ExitButton" BorderThickness="0" Background="Transparent"
                 HorizontalAlignment="Left" Foreground="{DynamicResource SystemAccentColor}"
                 Click="ExitButtonClicked" Content="&lt; Return" Margin="0 0 0 10" />
-        
+
         <ScrollViewer DockPanel.Dock="Bottom">
             <ListBox Name="HistoryBox" ItemsSource="{Binding History}"
                      DoubleTapped="HistoryBox_OnDoubleTapped" AutoScrollToSelectedItem="True">
@@ -23,10 +22,10 @@
                     <DataTemplate DataType="ui:MathHistory">
                         <Grid ColumnDefinitions="*, 5, Auto">
                             <TextBlock Grid.Column="0" Text="{Binding Math}" TextWrapping="Wrap" />
-                            
+
                             <TextBlock Grid.Column="2" Text="{Binding Result}"
-                                     Foreground="{DynamicResource SystemAccentColor}"
-                                     TextAlignment="Right" VerticalAlignment="Center" />
+                                       Foreground="{DynamicResource SystemAccentColor}"
+                                       TextAlignment="Right" VerticalAlignment="Center" />
 
                         </Grid>
                     </DataTemplate>

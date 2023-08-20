@@ -68,7 +68,7 @@
 
         <TextBlock DockPanel.Dock="Top" Name="ErrorDisplay" Margin="0 5 0 0"
                    Foreground="Red" IsVisible="False" TextWrapping="Wrap" />
-        
+
         <Separator DockPanel.Dock="Top" Margin="0 2 0 5" />
 
         <ScrollViewer DockPanel.Dock="Bottom">
@@ -85,16 +85,16 @@
                                     <TextBlock Text="{Binding FracBottomText}" Margin="5 0" />
                                 </StackPanel>
                             </StackPanel>
-                            
+
                             <TextBlock Text="{Binding PolynomialText}" />
-                            
+
                             <TextBlock Text="{Binding ResultText}"
-                                       Foreground="{DynamicResource SystemAccentColor}"/>
-                            
+                                       Foreground="{DynamicResource SystemAccentColor}" />
+
                         </StackPanel>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
-                
+
             </ListBox>
         </ScrollViewer>
     </DockPanel>

@@ -215,13 +215,13 @@ internal sealed class MathTree
                     var result = ParseAndSetNode(buffer, ref tokenType, Scope);
                     if (result.Faulted)
                         return result;
-                    
+
                     var node = new MinusNode();
                     if (_stack.CurrentLevel.Count is 0)
                     {
                         node.AddNode(EmptyNode.Shared);
                         node.Priority = ValueNodePriority;
-                        
+
                         _stack.CurrentLevel.Add(node);
                         break;
                     }
@@ -233,25 +233,25 @@ internal sealed class MathTree
                         var rs = AddFnNode(_stack.CurrentLevel, node);
                         if (rs.Success)
                             break;
-                        
+
                         // Add as a negative value
                         node.AddNode(EmptyNode.Shared);
                         node.Priority = ValueNodePriority;
-                        
+
                         if (AddValueNode(_stack.CurrentLevel, node))
                             break;
-                    
+
                         return Err("Invalid operator -");
                     }
 
                     if (lastNonValueNode.IsFull())
                     {
                         // Then this is an operator
-                        
+
                         var rs = AddFnNode(_stack.CurrentLevel, node);
                         if (rs.Faulted)
                             return rs;
-                        
+
                         break;
                     }
 
@@ -261,24 +261,24 @@ internal sealed class MathTree
                         var rs = AddFnNode(_stack.CurrentLevel, node);
                         if (rs.Success)
                             break;
-                        
+
                         // Add as a negative value
                         node.AddNode(EmptyNode.Shared);
                         node.Priority = ValueNodePriority;
-                        
+
                         if (AddValueNode(_stack.CurrentLevel, node))
                             break;
-                    
+
                         return Err("Invalid operator -");
                     }
-                    
+
                     // This is a negative value
                     node.AddNode(EmptyNode.Shared);
                     node.Priority = ValueNodePriority;
-                        
+
                     if (AddValueNode(_stack.CurrentLevel, node))
                         break;
-                    
+
                     return Err("Invalid operator -");
                 }
                 case 126: // ~
@@ -1078,7 +1078,7 @@ internal sealed class MathTree
         {
             if (currentLevel.Count is 0)
                 return Err("Invalid expression");
-            
+
             var node = currentLevel.First();
             if (node is CustomFunctionNode)
                 return Err("Invalid amount of braces in custom function");
@@ -1091,7 +1091,7 @@ internal sealed class MathTree
             var rs = AddNode(node);
             if (rs.Faulted)
                 return rs;
-            
+
             currentLevel = _stack.CurrentLevel;
         }
 

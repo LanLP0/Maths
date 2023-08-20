@@ -7,7 +7,11 @@ namespace LToolBox.Ui.Controls;
 public class VirtualKeyboard : Grid
 {
     public new static readonly AttachedProperty<int> ColumnProperty = Grid.ColumnProperty;
-    
+
+    public new static readonly AttachedProperty<int> RowProperty = Grid.RowProperty;
+
+    public Subject<string> KeyClicked = new();
+
     public new static int GetColumn(Control element)
     {
         return element.GetValue(ColumnProperty);
@@ -17,9 +21,7 @@ public class VirtualKeyboard : Grid
     {
         element.SetValue(ColumnProperty, value);
     }
-    
-    public new static readonly AttachedProperty<int> RowProperty = Grid.RowProperty;
-    
+
     public new static int GetRow(Control element)
     {
         return element.GetValue(RowProperty);
@@ -29,13 +31,11 @@ public class VirtualKeyboard : Grid
     {
         element.SetValue(RowProperty, value);
     }
-    
-    public Subject<string> KeyClicked = new();
-    
+
     protected override void OnInitialized()
     {
         DataContext = this;
-        
+
         base.OnInitialized();
     }
 }

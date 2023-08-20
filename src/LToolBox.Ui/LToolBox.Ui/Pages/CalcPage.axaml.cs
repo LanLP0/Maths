@@ -5,7 +5,6 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
-using Avalonia.Platform;
 using Common;
 using LCalc;
 using LToolBox.Ui.Extension;
@@ -18,12 +17,12 @@ namespace LToolBox.Ui.Pages;
 public partial class CalcPage : UserControl
 {
     private const int MaxHistoryCount = 20;
-    
-    private CalcPageViewModel _vm = null!;
     private readonly bool _isDesktop;
+    private readonly HistoryPageViewModel _historyVm = new();
     private double _prevAns = double.NaN;
     private CalcResult _result;
-    private HistoryPageViewModel _historyVm = new();
+
+    private CalcPageViewModel _vm = null!;
 
     public CalcPage()
     {
@@ -61,10 +60,10 @@ public partial class CalcPage : UserControl
         MainInput.ShowCaret();
         if (OskInput.IsVisible)
             OskInput.Focus();
-        
+
         if (_historyVm.ChosenHistory is null)
             return;
-        
+
         SwitchToInputLayout();
 
         _vm.InputText = _historyVm.ChosenHistory.Math;
@@ -78,7 +77,7 @@ public partial class CalcPage : UserControl
     private void InputTextChanged(object? sender, EventArgs e)
     {
         SwitchToInputLayout();
-        
+
         var math = _vm.InputText;
         if (string.IsNullOrWhiteSpace(math))
             return;
@@ -120,7 +119,7 @@ public partial class CalcPage : UserControl
                 }
 
                 var before = _vm.InputText.AsSpan().Slice(0, caretIndex);
-                
+
                 var level = 0;
                 foreach (var c in before)
                 {
@@ -133,7 +132,6 @@ public partial class CalcPage : UserControl
                     if (c is ')')
                     {
                         level--;
-                        continue;
                     }
                 }
 
@@ -142,7 +140,7 @@ public partial class CalcPage : UserControl
                     AddText("(");
                     break;
                 }
-                
+
                 AddText(")");
                 break;
             case "$enter":
@@ -208,7 +206,7 @@ public partial class CalcPage : UserControl
         {
             _vm.InputText += s;
             _vm.CaretIndex += s.Length;
-            
+
             return;
         }
 
@@ -241,9 +239,9 @@ public partial class CalcPage : UserControl
     {
         if (_isDesktop)
             return;
-        
+
         SwitchToInputLayout();
-        
+
         if (MainInput.IsVisible)
         {
             KeyboardButton.Hide();
@@ -271,7 +269,7 @@ public partial class CalcPage : UserControl
 
         MainInput.MoveCaretToPoint(pos);
     }
-    
+
     private void DeleteAllButton_OnClick(object? sender, RoutedEventArgs e)
     {
         DeleteAll();
@@ -287,7 +285,7 @@ public partial class CalcPage : UserControl
         SwitchToInputLayout();
         if (string.IsNullOrEmpty(_vm.InputText))
             return;
-        
+
         var caretIndex = _vm.CaretIndex;
         if (caretIndex is 0)
             return;
@@ -299,7 +297,7 @@ public partial class CalcPage : UserControl
             _vm.CaretIndex = caretIndex;
             return;
         }
-        
+
         var first = text.Slice(0, caretIndex - 1);
         var second = text.Slice(caretIndex);
 
@@ -310,7 +308,7 @@ public partial class CalcPage : UserControl
         _vm.InputText = buffer.ToString();
         _vm.CaretIndex--;
     }
-    
+
     private void DeleteAll()
     {
         SwitchToInputLayout();
@@ -334,16 +332,16 @@ public partial class CalcPage : UserControl
         if (result.Faulted)
         {
             ErrorOutput.Text = result.Exception!.Message;
-            
+
             ResultOutput.Hide();
             ErrorOutput.Show();
-            
+
             SwitchLayout(false);
             ShowStepsButton.Hide();
-            
+
             return;
         }
-        
+
         _result = result;
 
         ResultOutput.Text = result.RenderValue();
@@ -364,7 +362,7 @@ public partial class CalcPage : UserControl
     private void AddHistory(MathHistory history)
     {
         HistoryButton.Show();
-        
+
         _historyVm.History.Insert(0, history);
         if (_historyVm.History.Count > MaxHistoryCount)
         {
@@ -378,7 +376,7 @@ public partial class CalcPage : UserControl
     {
         if (!ResultLayout.IsVisible)
             return;
-        
+
         SwitchLayout(true);
     }
 
@@ -392,7 +390,7 @@ public partial class CalcPage : UserControl
         {
             if (OskInput.IsVisible)
                 OskInput.Focus();
-            
+
             return;
         }
 
@@ -412,7 +410,6 @@ public partial class CalcPage : UserControl
     private void Page_OnKeyDown(object? sender, KeyEventArgs e)
     {
         if (ResultLayout.IsVisible)
-        {
             switch (e.Key)
             {
                 case Key.Space:
@@ -420,7 +417,7 @@ public partial class CalcPage : UserControl
                 case Key.Escape:
                 case Key.Back:
                     e.Handled = true;
-                    
+
                     SwitchLayout(true);
                     break;
                 case Key.A:
@@ -450,11 +447,11 @@ public partial class CalcPage : UserControl
                 case Key.Y:
                 case Key.Z:
                     e.Handled = true;
-                    
+
                     var key = (e.KeyModifiers & KeyModifiers.Shift) != 0
                         ? e.Key.ToString()
                         : e.Key.ToString().ToLowerInvariant();
-                    
+
                     AddText(key);
                     break;
                 case Key.NumPad0:
@@ -477,50 +474,47 @@ public partial class CalcPage : UserControl
                 case Key.D7:
                 case Key.D8:
                     e.Handled = true;
-                    
+
                     var number = e.Key.ToString()[^1];
                     AddText(number.ToString());
-                    
+
                     break;
                 case Key.D9:
                     e.Handled = true;
-                    
+
                     if ((e.KeyModifiers & KeyModifiers.Shift) != 0)
                     {
                         AddText("(");
                         return;
                     }
-                    
+
                     AddText("9");
                     break;
                 case Key.Subtract:
                 case Key.OemMinus:
                     e.Handled = true;
-                    
+
                     AddText("-");
                     break;
                 case Key.OemTilde:
                     e.Handled = true;
-                    
+
                     AddText("~");
                     break;
                 case Key.OemPipe:
                     e.Handled = true;
-                    
+
                     AddText("|");
                     break;
             }
-        }
         else
-        {
             switch (e.Key)
             {
                 case Key.Return:
                     e.Handled = true;
-                    
+
                     Submit();
                     break;
             }
-        }
     }
 }

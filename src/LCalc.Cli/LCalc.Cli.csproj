@@ -15,7 +15,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\Common.Cli\Common.Cli.csproj"/>
-        <ProjectReference Include="..\LCalc\LCalc.csproj" />
+        <ProjectReference Include="..\LCalc\LCalc.csproj"/>
     </ItemGroup>
 
     <ItemGroup>

@@ -2,8 +2,6 @@ namespace Common;
 
 internal sealed class LinkedNode<T>
 {
-    private LinkedNode<T>? _next;
-    private LinkedNode<T>? _prev;
     private T _item;
 
     public LinkedNode(T value)
@@ -11,9 +9,9 @@ internal sealed class LinkedNode<T>
         _item = value;
     }
 
-    public LinkedNode<T>? Next => _next;
+    public LinkedNode<T>? Next { get; private set; }
 
-    public LinkedNode<T>? Previous => _prev;
+    public LinkedNode<T>? Previous { get; private set; }
 
     public T Value
     {
@@ -21,54 +19,54 @@ internal sealed class LinkedNode<T>
         set => _item = value;
     }
 
+    /// <summary>Gets a reference to the value held by the node.</summary>
+    public ref T ValueRef => ref _item;
+
     public void AddPrevious(LinkedNode<T> node)
     {
-        if (_prev is not null)
+        if (Previous is not null)
         {
-            _prev._next = node;
-            node._prev = _prev;
+            Previous.Next = node;
+            node.Previous = Previous;
         }
 
-        _prev = node;
-        _prev._next = this;
+        Previous = node;
+        Previous.Next = this;
     }
 
     public void AddAfter(LinkedNode<T> node)
     {
-        if (_next is not null)
+        if (Next is not null)
         {
-            _next._prev = node;
-            node._next = _next;
+            Next.Previous = node;
+            node.Next = Next;
         }
 
-        _next = node;
-        _next._prev = this;
+        Next = node;
+        Next.Previous = this;
     }
 
     public void ReplacePrevious(LinkedNode<T> node)
     {
-        node._prev = _prev?._prev;
-        node._next = this;
-        _prev = node;
+        node.Previous = Previous?.Previous;
+        node.Next = this;
+        Previous = node;
     }
 
     public void ReplaceNext(LinkedNode<T> node)
     {
-        node._next = _next?._next;
-        node._prev = this;
-        _next = node;
+        node.Next = Next?.Next;
+        node.Previous = this;
+        Next = node;
     }
 
     public void RemoveNext()
     {
-        _next = _next?._next;
-    }
-    
-    public void RemovePrevious()
-    {
-        _prev = _prev?._prev;
+        Next = Next?.Next;
     }
 
-    /// <summary>Gets a reference to the value held by the node.</summary>
-    public ref T ValueRef => ref _item;
+    public void RemovePrevious()
+    {
+        Previous = Previous?.Previous;
+    }
 }

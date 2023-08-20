@@ -5,15 +5,12 @@ namespace LToolBox.Ui.ViewModels;
 
 public class CalcPageViewModel : NavViewModelBase
 {
+    public const string NavHeaderName = "LCalc";
+    private int _caretIndex;
     private string _inputText = string.Empty;
     private string _outputText = string.Empty;
-    private int _caretIndex;
-
-    public const string NavHeaderName = "LCalc";
     public override string NavHeader { get; } = NavHeaderName;
     public override string? IconKey { get; } = "CalculatorIcon";
-
-    public event EventHandler? InputTextChanged;
 
     public string InputText
     {
@@ -22,10 +19,10 @@ public class CalcPageViewModel : NavViewModelBase
         {
             if (_inputText == value)
                 return;
-            
+
             _inputText = value;
-            
-            this.RaisePropertyChanged(nameof(InputText));
+
+            this.RaisePropertyChanged();
             InputTextChanged?.Invoke(this, EventArgs.Empty);
         }
     }
@@ -41,4 +38,6 @@ public class CalcPageViewModel : NavViewModelBase
         get => _caretIndex;
         set => this.RaiseAndSetIfChanged(ref _caretIndex, value);
     }
+
+    public event EventHandler? InputTextChanged;
 }

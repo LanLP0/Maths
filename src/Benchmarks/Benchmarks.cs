@@ -1,5 +1,4 @@
 ﻿using BenchmarkDotNet.Attributes;
-using Common.Results;
 using LCalc;
 using LCalc.MathTree;
 

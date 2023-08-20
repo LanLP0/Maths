@@ -1,11 +1,9 @@
 using System;
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Controls.Documents;
 using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Templates;
 using Avalonia.Data;
-using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Metadata;
@@ -25,13 +23,18 @@ public class VirtualKey : TemplatedControl
     public static readonly StyledProperty<IBrush?> ButtonBackgroundProperty =
         AvaloniaProperty.Register<VirtualKey, IBrush?>(nameof(ButtonBackground));
 
+    public static readonly StyledProperty<IconSource> IconSourceProperty =
+        AvaloniaProperty.Register<VirtualKey, IconSource>(nameof(IconSource));
+
+    private VirtualKeyboard? _keyboard;
+
     [Content]
     public string Key
     {
         get => GetValue(KeyProperty);
         set => SetValue(KeyProperty, value);
     }
-    
+
     public double BoxSize
     {
         get => GetValue(BoxSizeProperty);
@@ -44,9 +47,6 @@ public class VirtualKey : TemplatedControl
         set => SetValue(ButtonBackgroundProperty, value);
     }
 
-    public static readonly StyledProperty<IconSource> IconSourceProperty =
-        AvaloniaProperty.Register<VirtualKey, IconSource>(nameof(IconSource));
-
     public IconSource IconSource
     {
         get => GetValue(IconSourceProperty);
@@ -54,8 +54,6 @@ public class VirtualKey : TemplatedControl
     }
 
     public Viewbox Inner { get; private set; }
-
-    private VirtualKeyboard? _keyboard;
 
     protected override void OnInitialized()
     {
@@ -91,15 +89,9 @@ public class VirtualKey : TemplatedControl
                 [!ContentControl.ContentProperty] = new Binding("Inner")
             };
 
-            if (ButtonBackground is not null)
-            {
-                button[!BackgroundProperty] = new Binding("ButtonBackground");
-            }
+            if (ButtonBackground is not null) button[!BackgroundProperty] = new Binding("ButtonBackground");
 
-            if (_keyboard is not null)
-            {
-                button.Click += (_, _) => _keyboard.KeyClicked.OnNext(Key);
-            }
+            if (_keyboard is not null) button.Click += (_, _) => _keyboard.KeyClicked.OnNext(Key);
 
             return button;
         });
@@ -110,7 +102,7 @@ public class VirtualKey : TemplatedControl
     protected override void OnSizeChanged(SizeChangedEventArgs e)
     {
         BoxSize = Math.Min(e.NewSize.Height, e.NewSize.Width);
-        
+
         base.OnSizeChanged(e);
     }
 }

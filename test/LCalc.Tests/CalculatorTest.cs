@@ -4,6 +4,7 @@ using VerifyTests;
 using VerifyXunit;
 using Xunit;
 using static VerifyXunit.Verifier;
+
 // ReSharper disable InconsistentNaming
 
 namespace LCalc.Tests;
@@ -13,14 +14,98 @@ public sealed class CalculatorTest
 {
     private static readonly VerifySettings _settings;
 
-    static CalculatorTest()
+    private readonly string[] Error_ShouldBe_Expected_Cases =
     {
-        _settings = new VerifySettings();
-        _settings.UseDirectory("test-results");
-        DiffRunner.MaxInstancesToLaunch(3);
-    }
+        // Function
+        "1,2",
+        "1+(2,3)",
+        "null()",
+        "sum()",
+        "avg()",
+        "abs()",
+        "cbrt()",
+        "sqrt()",
+        "ceiling()",
+        "round()",
+        "round(1.234, 6)",
+        "floor()",
+        "gcd()",
+        "gcd(1.1 2.2)",
+        "gcd(1 2.2)",
+        "lcm()",
+        "lcm(1.1 2.2)",
+        "lcm(1 2.2)",
+        "random(1 2 3)",
+        "random(1 a)",
+        "cos()",
+        "sin()",
+        "tan()",
+        "cot()",
+        "log()",
+        "|-1)",
+        "sin(,,,)",
+        // Misc
+        "",
+        "()",
+        "1)",
+        "1-",
+        "null!",
+        "-2!",
+        "2.5<<2.5",
+        "50!<<50!",
+        "2.5||2.5",
+        "100!||100!",
+        "-n",
+        "1~",
+        "1&",
+        "1+",
+        "+1",
+        "1 1",
+        "2^3^ ^",
+        "1-&a=100",
+        "&a=",
+        "&a=1&a=1",
+        "1 &fmt=error",
+        // Special number
+        "0x",
+        "0b",
+        "0o",
+        "0xfg",
+        "0b12",
+        "0o89",
+        // Custom function
+        "[t()=t()]t()",
+        "[a()=)]",
+        "[a(x x)=1]",
+        "[a(])",
+        "[a(1)]",
+        "[a()=1",
+        "[a():1]",
+        "[a()1]",
+        "[a()=1] a(2)",
+        // Sigma & CPi
+        "sigma(x, 3, 1, x*10)",
+        "sigma(x, -3, 3)",
+        "sigma(y, -3, 3, x*10)",
+        "sigma(x, -3, 3, 10)",
+        "sigma(x-1, 1, 1, x)",
+        "sigma(x, 1.1, 2, x)",
+        "sigma(x, 1, 2.1, x)",
+        "cpi(x, 3, 1, x*10)",
+        "cpi(x, -3, 3)",
+        "cpi(y, -3, 3, x*10)",
+        "cpi(x, -3, 3, 10)",
+        "cpi(x-1, 1, 1, x)",
+        "cpi(x, 1.1, 2, x)",
+        "cpi(x, 1, 2.1, x)",
+        // Solve
+        "abs(x)+1 &solve",
+        "1 &solve",
+        "x*y &solve"
+    };
 
-    private readonly string[] Result_Should_BeExpected_Cases = {
+    private readonly string[] Result_Should_BeExpected_Cases =
+    {
         // Misc
         "-1",
         "2*-1",
@@ -123,143 +208,9 @@ public sealed class CalculatorTest
         "[f(x)=x^2-2x+1] f(x) &solve",
         "x!-6 &solve"
     };
-    
-    [Fact]
-    public Task Result_Should_BeExpected()
+
+    private readonly string[] Step_ShouldBe_Expected_Cases =
     {
-        // Arrange
-        var results = new CalcTestResult[Result_Should_BeExpected_Cases.Length];
-        
-        // Act
-        for (var i = 0; i < Result_Should_BeExpected_Cases.Length; i++)
-        {
-            var c = Result_Should_BeExpected_Cases[i];
-            
-            var result = Calculator.CalcFormatted(c);
-            results[i] = new CalcTestResult
-            {
-                Math = c,
-                Output = result
-            };
-        }
-
-        // Assert
-        return Verify(results, _settings);
-    }
-
-    private readonly string[] Error_ShouldBe_Expected_Cases = {
-        // Function
-        "1,2",
-        "1+(2,3)",
-        "null()",
-        "sum()",
-        "avg()",
-        "abs()",
-        "cbrt()",
-        "sqrt()",
-        "ceiling()",
-        "round()",
-        "round(1.234, 6)",
-        "floor()",
-        "gcd()",
-        "gcd(1.1 2.2)",
-        "gcd(1 2.2)",
-        "lcm()",
-        "lcm(1.1 2.2)",
-        "lcm(1 2.2)",
-        "random(1 2 3)",
-        "random(1 a)",
-        "cos()",
-        "sin()",
-        "tan()",
-        "cot()",
-        "log()",
-        "|-1)",
-        "sin(,,,)",
-        // Misc
-        "",
-        "()",
-        "1)",
-        "1-",
-        "null!",
-        "-2!",
-        "2.5<<2.5",
-        "50!<<50!",
-        "2.5||2.5",
-        "100!||100!",
-        "-n",
-        "1~",
-        "1&",
-        "1+",
-        "+1",
-        "1 1",
-        "2^3^ ^",
-        "1-&a=100",
-        "&a=",
-        "&a=1&a=1",
-        "1 &fmt=error",
-        // Special number
-        "0x",
-        "0b",
-        "0o",
-        "0xfg",
-        "0b12",
-        "0o89",
-        // Custom function
-        "[t()=t()]t()",
-        "[a()=)]",
-        "[a(x x)=1]",
-        "[a(])",
-        "[a(1)]",
-        "[a()=1",
-        "[a():1]",
-        "[a()1]",
-        "[a()=1] a(2)",
-        // Sigma & CPi
-        "sigma(x, 3, 1, x*10)",
-        "sigma(x, -3, 3)",
-        "sigma(y, -3, 3, x*10)",
-        "sigma(x, -3, 3, 10)",
-        "sigma(x-1, 1, 1, x)",
-        "sigma(x, 1.1, 2, x)",
-        "sigma(x, 1, 2.1, x)",
-        "cpi(x, 3, 1, x*10)",
-        "cpi(x, -3, 3)",
-        "cpi(y, -3, 3, x*10)",
-        "cpi(x, -3, 3, 10)",
-        "cpi(x-1, 1, 1, x)",
-        "cpi(x, 1.1, 2, x)",
-        "cpi(x, 1, 2.1, x)",
-        // Solve
-        "abs(x)+1 &solve",
-        "1 &solve",
-        "x*y &solve"
-    };
-
-    [Fact]
-    public Task Error_ShouldBe_Expected()
-    {
-        // Arrange
-        var results = new CalcTestResult[Error_ShouldBe_Expected_Cases.Length];
-        
-        // Act
-        for (var i = 0; i < Error_ShouldBe_Expected_Cases.Length; i++)
-        {
-            var c = Error_ShouldBe_Expected_Cases[i];
-            
-            var result = Calculator.CalcFormatted(c);
-            results[i] = new CalcTestResult
-            {
-                Math = c,
-                Output = result
-            };
-        }
-
-        // Assert
-        return Verify(results, _settings);
-    }
-
-    private readonly string[] Step_ShouldBe_Expected_Cases = {
         "1+(1+1)&step",
         "[foo(a b c)=a^(b+c)]foo(2 1 (1+foo(2 1 1))) &step",
         "abs(sin(((~1>>2<<2)^2!/1000*50-40+1))) &step",
@@ -273,17 +224,70 @@ public sealed class CalculatorTest
         "1+(2+a) &a=10 &step &render"
     };
 
+    static CalculatorTest()
+    {
+        _settings = new VerifySettings();
+        _settings.UseDirectory("test-results");
+        DiffRunner.MaxInstancesToLaunch(3);
+    }
+
+    [Fact]
+    public Task Result_Should_BeExpected()
+    {
+        // Arrange
+        var results = new CalcTestResult[Result_Should_BeExpected_Cases.Length];
+
+        // Act
+        for (var i = 0; i < Result_Should_BeExpected_Cases.Length; i++)
+        {
+            var c = Result_Should_BeExpected_Cases[i];
+
+            var result = Calculator.CalcFormatted(c);
+            results[i] = new CalcTestResult
+            {
+                Math = c,
+                Output = result
+            };
+        }
+
+        // Assert
+        return Verify(results, _settings);
+    }
+
+    [Fact]
+    public Task Error_ShouldBe_Expected()
+    {
+        // Arrange
+        var results = new CalcTestResult[Error_ShouldBe_Expected_Cases.Length];
+
+        // Act
+        for (var i = 0; i < Error_ShouldBe_Expected_Cases.Length; i++)
+        {
+            var c = Error_ShouldBe_Expected_Cases[i];
+
+            var result = Calculator.CalcFormatted(c);
+            results[i] = new CalcTestResult
+            {
+                Math = c,
+                Output = result
+            };
+        }
+
+        // Assert
+        return Verify(results, _settings);
+    }
+
     [Fact]
     public Task Step_ShouldBe_Expected()
     {
         // Arrange
         var results = new CalcTestResult[Step_ShouldBe_Expected_Cases.Length];
-        
+
         // Act
         for (var i = 0; i < Step_ShouldBe_Expected_Cases.Length; i++)
         {
             var c = Step_ShouldBe_Expected_Cases[i];
-            
+
             var result = Calculator.CalcFormatted(c);
             results[i] = new CalcTestResult
             {

@@ -1,16 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
-using Avalonia.Layout;
-using Avalonia.Media;
 using LToolBox.Ui.Extension;
 using LToolBox.Ui.ViewModels;
 using MinMaxFraction.Core;
-using ReactiveUI;
 
 namespace LToolBox.Ui.Pages;
 
@@ -129,7 +124,7 @@ public sealed partial class MinMaxFracPage : UserControl
             fraction.B0, fraction.B1, fraction.B2,
             polynomial.V0.NumPart, polynomial.V1.NumPart, polynomial.V2.NumPart,
             $"Result: {deltaResult.RenderResult()}");
-        
+
         AddToHistory(history);
         Clear();
     }
@@ -156,7 +151,7 @@ public sealed partial class MinMaxFracPage : UserControl
         InputT0.Text = history.T0.ToString(CultureInfo.InvariantCulture);
         InputT1.Text = history.T1.ToString(CultureInfo.InvariantCulture);
         InputT2.Text = history.T2.ToString(CultureInfo.InvariantCulture);
-        
+
         InputB0.Text = history.B0.ToString(CultureInfo.InvariantCulture);
         InputB1.Text = history.B1.ToString(CultureInfo.InvariantCulture);
         InputB2.Text = history.B2.ToString(CultureInfo.InvariantCulture);
