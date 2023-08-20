@@ -1,19 +1,37 @@
-﻿using ReactiveUI;
+using System;
+using ReactiveUI;
 
 namespace LToolBox.Ui.ViewModels;
 
-public sealed class CalcPageViewModel : NavViewModelBase
+public class CalcPageViewModel : NavViewModelBase
 {
-    public const string NavHeaderName = "LCalc";
-    private string _math = string.Empty;
+    private string _inputText = string.Empty;
+    private string _outputText = string.Empty;
 
-    public string Math
+    public const string NavHeaderName = "LCalc";
+    public override string NavHeader { get; } = NavHeaderName;
+    public override string? IconKey { get; } = "CalculatorIcon";
+
+    public event EventHandler? InputTextChanged;
+
+    public string InputText
     {
-        get => _math;
-        set => this.RaiseAndSetIfChanged(ref _math, value);
+        get => _inputText;
+        set
+        {
+            if (_inputText == value)
+                return;
+            
+            _inputText = value;
+            
+            this.RaisePropertyChanged(nameof(InputText));
+            InputTextChanged?.Invoke(this, EventArgs.Empty);
+        }
     }
 
-    public override string NavHeader { get; } = NavHeaderName;
-
-    public override string? IconKey { get; } = "CalculatorIcon";
+    public string OutputText
+    {
+        get => _outputText;
+        set => this.RaiseAndSetIfChanged(ref _outputText, value);
+    }
 }

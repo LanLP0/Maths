@@ -62,9 +62,7 @@ public static class ThemingService
         AccentColor = color;
         AppState.Instance.AccentColor = color;
 
-        Application.Current!.Resources["OverlayBackgroundColor"] = new SolidColorBrush(color, color.A / 255.0);
-
-        var fluentStyle = (FluentAvaloniaTheme)Application.Current.Styles[0];
+        var fluentStyle = (FluentAvaloniaTheme)Application.Current!.Styles[0];
         fluentStyle.CustomAccentColor = color;
     }
 }

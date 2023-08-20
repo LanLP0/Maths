@@ -2,11 +2,17 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:LToolBox.Ui.ViewModels"
+             xmlns:ui="clr-namespace:LToolBox.Ui"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="LToolBox.Ui.Pages.MinMaxFracPage">
+    <Design.DataContext>
+        <vm:MinMaxFracPageViewModel />
+    </Design.DataContext>
+
     <DockPanel>
         <ContentControl DockPanel.Dock="Top" FontSize="20"
-                        Background="{DynamicResource OverlayBackgroundColor}"
+                        Background="{DynamicResource SystemAccentColor}"
                         BorderBrush="{DynamicResource TextControlBorderBrush}"
                         BorderThickness="0, 0, 0, 1"
                         CornerRadius="5, 5, 0, 0">
@@ -62,37 +68,34 @@
 
         <TextBlock DockPanel.Dock="Top" Name="ErrorDisplay" Margin="0 5 0 0"
                    Foreground="Red" IsVisible="False" TextWrapping="Wrap" />
+        
+        <Separator DockPanel.Dock="Top" Margin="0 2 0 5" />
 
-        <ListBox DoubleTapped="HistoryBox_OnDoubleTapped" Name="HistoryBox" AutoScrollToSelectedItem="True"
-                 Margin="0 10 0 0" DockPanel.Dock="Bottom"
-                 Background="{DynamicResource OverlayBackgroundColor}">
-
-            <ListBox.Styles>
-
-                <Style Selector="ListBoxItem">
-                    <Setter Property="CornerRadius" Value="5" />
-                </Style>
-
-            </ListBox.Styles>
-            <!-- Template for item -->
-            <!-- <ListBoxItem> -->
-            <!--     <controls:ColorZone FontSize="20" Foreground="White" Background="#30ffffff" BorderBrush="White" -->
-            <!--                         CornerRadius="5" Padding="5"> -->
-            <!--         <StackPanel Spacing="10"> -->
-            <!--             <TextBlock IsVisible="False" Text="$DATA" /> -->
-            <!--             <StackPanel Orientation="Horizontal"> -->
-            <!--                 <TextBlock VerticalAlignment="Center" Text="A  =  " /> -->
-            <!--                 <StackPanel> -->
-            <!--                     <TextBlock Text="1x^2 + 2x + 3" Margin="5 0" /> -->
-            <!--                     <Separator Foreground="White" Margin="0" /> -->
-            <!--                     <TextBlock Text="4x^2 + 5x + 6" Margin="5 0" /> -->
-            <!--                 </StackPanel> -->
-            <!--             </StackPanel> -->
-            <!--             <TextBlock Text="-71A^2 + 52A + -8 >= 0" /> -->
-            <!--             <TextBlock Text="Result: 0.219827, 0.512568" /> -->
-            <!--         </StackPanel> -->
-            <!--     </controls:ColorZone> -->
-            <!-- </ListBoxItem> -->
-        </ListBox>
+        <ScrollViewer DockPanel.Dock="Bottom">
+            <ListBox DoubleTapped="HistoryBox_OnDoubleTapped" Name="HistoryBox" AutoScrollToSelectedItem="True"
+                     Margin="0 10 0 0">
+                <ListBox.ItemTemplate>
+                    <DataTemplate DataType="ui:MinMaxFracHistory">
+                        <StackPanel Spacing="10">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock VerticalAlignment="Center" Text="A  =  " />
+                                <StackPanel>
+                                    <TextBlock Text="{Binding FracTopText}" Margin="5 0" />
+                                    <Separator Foreground="White" Margin="0" />
+                                    <TextBlock Text="{Binding FracBottomText}" Margin="5 0" />
+                                </StackPanel>
+                            </StackPanel>
+                            
+                            <TextBlock Text="{Binding PolynomialText}" />
+                            
+                            <TextBlock Text="{Binding ResultText}"
+                                       Foreground="{DynamicResource SystemAccentColor}"/>
+                            
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+                
+            </ListBox>
+        </ScrollViewer>
     </DockPanel>
 </UserControl>

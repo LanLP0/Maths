@@ -1,4 +1,7 @@
-﻿namespace LToolBox.Ui.ViewModels;
+﻿using System.Collections.Generic;
+using ReactiveUI;
+
+namespace LToolBox.Ui.ViewModels;
 
 public sealed class MinMaxFracPageViewModel : NavViewModelBase
 {

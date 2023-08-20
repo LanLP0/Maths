@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
@@ -6,17 +8,25 @@ using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
 using LToolBox.Ui.Extension;
+using LToolBox.Ui.ViewModels;
 using MinMaxFraction.Core;
+using ReactiveUI;
 
 namespace LToolBox.Ui.Pages;
 
 public sealed partial class MinMaxFracPage : UserControl
 {
     private const int HistoryLimit = 10;
+    private MinMaxFracPageViewModel _vm;
 
     public MinMaxFracPage()
     {
         InitializeComponent();
+    }
+
+    protected override void OnInitialized()
+    {
+        _vm = (MinMaxFracPageViewModel)DataContext!;
     }
 
     private void InputT0_OnKeyDown(object? sender, KeyEventArgs e)
@@ -115,14 +125,18 @@ public sealed partial class MinMaxFracPage : UserControl
         var polynomial = fraction.Calc();
         var deltaResult = polynomial.Calc();
 
-        var result = RenderResult(deltaResult, fraction);
-
-        AddToHistory(result);
+        var history = new MinMaxFracHistory(fraction.T0, fraction.T1, fraction.T2,
+            fraction.B0, fraction.B1, fraction.B2,
+            polynomial.V0.NumPart, polynomial.V1.NumPart, polynomial.V2.NumPart,
+            $"Result: {deltaResult.RenderResult()}");
+        
+        AddToHistory(history);
+        Clear();
     }
 
-    private void AddToHistory(ListBoxItem item)
+    private void AddToHistory(MinMaxFracHistory history)
     {
-        HistoryBox.Items.Insert(0, item);
+        HistoryBox.Items.Insert(0, history);
         if (HistoryBox.Items.Count <= HistoryLimit)
             return;
 
@@ -130,98 +144,30 @@ public sealed partial class MinMaxFracPage : UserControl
         HistoryBox.Items.RemoveAt(HistoryLimit);
     }
 
-    private ListBoxItem RenderResult(MMDeltaResult deltaResult, MMFraction fraction)
-    {
-        return new ListBoxItem
-        {
-            Content = new ContentControl
-            {
-                FontSize = 20,
-                CornerRadius = new CornerRadius(5),
-                Padding = new Thickness(5),
-                Content = new StackPanel
-                {
-                    Spacing = 10,
-                    Children =
-                    {
-                        new TextBlock // Store history data (fraction)
-                        {
-                            IsVisible = false,
-                            Text =
-                                $@"{fraction.T0}\{fraction.T1}\{fraction.T2}\{fraction.B0}\{fraction.B1}\{fraction.B2}"
-                        },
-                        new StackPanel
-                        {
-                            Orientation = Orientation.Horizontal,
-                            Children =
-                            {
-                                new TextBlock
-                                {
-                                    VerticalAlignment = VerticalAlignment.Center,
-                                    Text = "A  =  "
-                                },
-                                new StackPanel
-                                {
-                                    Children =
-                                    {
-                                        new TextBlock
-                                        {
-                                            Margin = new Thickness(5, 0),
-                                            Text = $"{fraction.T0}x^2 + {fraction.T1}x + {fraction.T2}"
-                                        },
-                                        new Separator
-                                        {
-                                            Foreground = Brushes.White,
-                                            Margin = new Thickness(0)
-                                        },
-                                        new TextBlock
-                                        {
-                                            Margin = new Thickness(5, 0),
-                                            Text = $"{fraction.B0}x^2 + {fraction.B1}x + {fraction.B2}"
-                                        }
-                                    }
-                                }
-                            }
-                        },
-                        new TextBlock
-                        {
-                            Text = $"{deltaResult.V0}A^2 + {deltaResult.V1}A + {deltaResult.V2} >= 0"
-                        },
-                        new TextBlock
-                        {
-                            Text = $"Result: {deltaResult.RenderResult()}"
-                        }
-                    }
-                }
-            }
-        };
-    }
-
     private void HistoryBox_OnDoubleTapped(object? sender, TappedEventArgs e)
     {
-        var historyItem = (ListBoxItem)HistoryBox.SelectedItem!;
+        var history = (MinMaxFracHistory)HistoryBox.SelectedItem!;
 
-        LoadHistory(historyItem);
+        LoadHistory(history);
     }
 
-    private void LoadHistory(ListBoxItem historyItem)
+    private void LoadHistory(MinMaxFracHistory history)
     {
-        var colorZone = (ContentControl)historyItem.Content!;
-        var stackPanel = (StackPanel)colorZone.Content!;
-        var dataTextBlock = (TextBlock)stackPanel.Children[0];
-
-        var data = dataTextBlock.Text!;
-        var datas = data.Split('\\');
-
-        InputT0.Text = datas[0];
-        InputT1.Text = datas[1];
-        InputT2.Text = datas[2];
-        InputB0.Text = datas[3];
-        InputB1.Text = datas[4];
-        InputB2.Text = datas[5];
+        InputT0.Text = history.T0.ToString(CultureInfo.InvariantCulture);
+        InputT1.Text = history.T1.ToString(CultureInfo.InvariantCulture);
+        InputT2.Text = history.T2.ToString(CultureInfo.InvariantCulture);
+        
+        InputB0.Text = history.B0.ToString(CultureInfo.InvariantCulture);
+        InputB1.Text = history.B1.ToString(CultureInfo.InvariantCulture);
+        InputB2.Text = history.B2.ToString(CultureInfo.InvariantCulture);
     }
 
     private void ClearButtonPressed(object? sender, RoutedEventArgs e)
+    {
+        Clear();
+    }
+
+    private void Clear()
     {
         ErrorDisplay.Hide();
         InputT0.Text = string.Empty;

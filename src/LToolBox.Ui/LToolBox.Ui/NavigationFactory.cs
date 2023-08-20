@@ -24,11 +24,6 @@ public sealed class NavigationFactory : INavigationPageFactory
 
         switch (target)
         {
-            case CalcPageViewModel:
-                return new CalcPage
-                {
-                    DataContext = target
-                };
             case MinMaxFracPageViewModel:
                 return new MinMaxFracPage
                 {
@@ -41,6 +36,16 @@ public sealed class NavigationFactory : INavigationPageFactory
                 };
             case StepsPageViewModel:
                 return new StepsPage
+                {
+                    DataContext = target
+                };
+            case CalcPageViewModel:
+                return new CalcPage
+                {
+                    DataContext = target
+                };
+            case HistoryPageViewModel:
+                return new HistoryPage
                 {
                     DataContext = target
                 };

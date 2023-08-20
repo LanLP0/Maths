@@ -5,34 +5,26 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              xmlns:mth="using:AvaloniaMath.Controls"
              xmlns:vmc="using:LToolBox.Ui.ViewModels.CalcPageViewModels"
-             xmlns:ctrls="using:FluentAvalonia.UI.Controls"
              x:Class="LToolBox.Ui.Pages.CalcPages.StepsPage">
 
     <Design.DataContext>
         <vmc:StepsPageViewModel />
     </Design.DataContext>
 
-    <Border Background="{DynamicResource OverlayBackgroundColor}" CornerRadius="5" Padding="5">
-        <Grid>
-            <ScrollViewer>
-                <StackPanel>
+    <DockPanel>
+        <Button DockPanel.Dock="Top" Name="ExitButton" BorderThickness="0" Background="Transparent"
+                HorizontalAlignment="Left" Foreground="{DynamicResource SystemAccentColor}"
+                Click="ExitButtonClicked" Content="&lt; Return" />
+        
+        <ScrollViewer DockPanel.Dock="Bottom">
+            <StackPanel>
 
-                    <Viewbox MaxWidth="200" HorizontalAlignment="Left">
-                        <mth:FormulaBlock Name="FormulaBlock" Formula="{Binding Formula}"
-                                          Foreground="{DynamicResource TextControlForeground}" Padding="0 5" />
-                    </Viewbox>
-                    <TextBlock Name="ResultBlock" FontSize="25" Foreground="Aqua"
-                               Text="{Binding Path=ResultText}" TextWrapping="Wrap" />
+                <mth:FormulaBlock Name="FormulaBlock" Formula="{Binding Formula}"
+                                  Foreground="{DynamicResource TextControlForeground}" Padding="0 5" />
+                <TextBlock Name="ResultBlock" Foreground="{DynamicResource SystemAccentColor}"
+                           Text="{Binding Path=ResultText}" TextWrapping="Wrap" />
 
-                </StackPanel>
-            </ScrollViewer>
-
-            <Button Name="ExitButton" VerticalAlignment="Top" HorizontalAlignment="Right" Click="ExitButtonClicked">
-                <StackPanel Orientation="Horizontal" Spacing="5">
-                    <ctrls:SymbolIcon Symbol="Cancel" FontSize="20" />
-                    <TextBlock Text="Close" VerticalAlignment="Center" />
-                </StackPanel>
-            </Button>
-        </Grid>
-    </Border>
+            </StackPanel>
+        </ScrollViewer>
+    </DockPanel>
 </UserControl>

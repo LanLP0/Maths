@@ -4,10 +4,15 @@
     <option name="projectPerEditor">
       <map>
         <entry key="src/LToolBox.Ui/LToolBox.Ui/App.axaml" value="src/LToolBox.Ui/LToolBox.Ui.Desktop/LToolBox.Ui.Desktop.csproj" />
+        <entry key="src/LToolBox.Ui/LToolBox.Ui/Controls/VirtualCalcKeyboard.axaml" value="src/LToolBox.Ui/LToolBox.Ui.Desktop/LToolBox.Ui.Desktop.csproj" />
+        <entry key="src/LToolBox.Ui/LToolBox.Ui/Controls/VirtualKey.axaml" value="src/LToolBox.Ui/LToolBox.Ui.Desktop/LToolBox.Ui.Desktop.csproj" />
+        <entry key="src/LToolBox.Ui/LToolBox.Ui/Controls/VirtualKeyBoard.axaml" value="src/LToolBox.Ui/LToolBox.Ui.Desktop/LToolBox.Ui.Desktop.csproj" />
         <entry key="src/LToolBox.Ui/LToolBox.Ui/Pages/CalcPage.axaml" value="src/LToolBox.Ui/LToolBox.Ui.Desktop/LToolBox.Ui.Desktop.csproj" />
+        <entry key="src/LToolBox.Ui/LToolBox.Ui/Pages/CalcPages/HistoryPage.axaml" value="src/LToolBox.Ui/LToolBox.Ui.Desktop/LToolBox.Ui.Desktop.csproj" />
         <entry key="src/LToolBox.Ui/LToolBox.Ui/Pages/CalcPages/StepsPage.axaml" value="src/LToolBox.Ui/LToolBox.Ui.Desktop/LToolBox.Ui.Desktop.csproj" />
         <entry key="src/LToolBox.Ui/LToolBox.Ui/Pages/MinMaxFracPage.axaml" value="src/LToolBox.Ui/LToolBox.Ui.Desktop/LToolBox.Ui.Desktop.csproj" />
         <entry key="src/LToolBox.Ui/LToolBox.Ui/Pages/SettingsPage.axaml" value="src/LToolBox.Ui/LToolBox.Ui.Desktop/LToolBox.Ui.Desktop.csproj" />
+        <entry key="src/LToolBox.Ui/LToolBox.Ui/Pages/TestPage.axaml" value="src/LToolBox.Ui/LToolBox.Ui.Desktop/LToolBox.Ui.Desktop.csproj" />
         <entry key="src/LToolBox.Ui/LToolBox.Ui/Styling/Resources.axaml" value="src/LToolBox.Ui/LToolBox.Ui.Desktop/LToolBox.Ui.Desktop.csproj" />
         <entry key="src/LToolBox.Ui/LToolBox.Ui/Views/MainView.axaml" value="src/LToolBox.Ui/LToolBox.Ui.Desktop/LToolBox.Ui.Desktop.csproj" />
         <entry key="src/LToolBox.Ui/LToolBox.Ui/Views/MainWindow.axaml" value="src/LToolBox.Ui/LToolBox.Ui.Desktop/LToolBox.Ui.Desktop.csproj" />
