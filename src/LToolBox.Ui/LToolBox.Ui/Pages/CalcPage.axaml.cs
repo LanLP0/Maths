@@ -24,6 +24,21 @@ public partial class CalcPage : UserControl
     private CalcResult _result;
     private HistoryPageViewModel _historyVm = new();
 
+    private int CaretIndex
+    {
+        get => OskInput.IsVisible ? OskInput.CaretIndex : MainInput.CaretIndex;
+        set
+        {
+            if (OskInput.IsVisible)
+            {
+                OskInput.CaretIndex = value;
+                return;
+            }
+
+            MainInput.CaretIndex = value;
+        }
+    }
+
     public CalcPage()
     {
         InitializeComponent();
@@ -46,7 +61,7 @@ public partial class CalcPage : UserControl
             MainInput.IsVisible = false;
             MainInput.IsEnabled = false;
 
-            MainInput.Focus();
+            OskInput.Focus();
         }
     }
 
@@ -69,7 +84,7 @@ public partial class CalcPage : UserControl
         _vm.InputText = _historyVm.ChosenHistory.Math;
         _vm.OutputText = _historyVm.ChosenHistory.Result;
         
-        MainInput.CaretIndex = _vm.InputText.Length;
+        CaretIndex = _vm.InputText.Length;
     }
 
     private void InputTextChanged(object? sender, EventArgs e)
@@ -112,7 +127,7 @@ public partial class CalcPage : UserControl
         switch (key)
         {
             case "$braces":
-                var caretIndex = MainInput.CaretIndex;
+                var caretIndex = CaretIndex;
                 if (caretIndex is 0)
                 {
                     AddText("(");
@@ -175,17 +190,17 @@ public partial class CalcPage : UserControl
         {
             case "$cfn":
                 AddText("[()=]");
-                MainInput.CaretIndex -= 4;
+                CaretIndex -= 4;
                 SwitchOsk();
                 break;
             case "$fncall":
                 AddText("()");
-                MainInput.CaretIndex -= 2;
+                CaretIndex -= 2;
                 SwitchOsk();
                 break;
             case "$assign":
                 AddText("&=");
-                MainInput.CaretIndex -= 1;
+                CaretIndex -= 1;
                 SwitchOsk();
                 break;
             case "$switch":
@@ -206,15 +221,15 @@ public partial class CalcPage : UserControl
         if (prevText.Length is 0)
         {
             _vm.InputText = s;
-            MainInput.CaretIndex += s.Length;
+            CaretIndex += s.Length;
 
             return;
         }
 
-        var pos = MainInput.CaretIndex;
+        var caretIndex = CaretIndex;
 
-        var first = prevText.Slice(0, pos);
-        var second = prevText.Slice(pos);
+        var first = prevText.Slice(0, caretIndex);
+        var second = prevText.Slice(caretIndex);
 
         var buffer = new ValueStringBuilder(stackalloc char[prevText.Length + s.Length]);
 
@@ -225,7 +240,7 @@ public partial class CalcPage : UserControl
         var newText = buffer.ToString();
 
         _vm.InputText = newText;
-        MainInput.CaretIndex += s.Length;
+        CaretIndex += s.Length;
     }
 
     private void KeyboardButton_OnTapped(object? sender, TappedEventArgs e)
@@ -290,8 +305,7 @@ public partial class CalcPage : UserControl
         if (string.IsNullOrEmpty(_vm.InputText))
             return;
         
-        // This will always be MainInput
-        var caretIndex = MainInput.CaretIndex;
+        var caretIndex = CaretIndex;
         if (caretIndex is 0)
             return;
 
@@ -304,7 +318,7 @@ public partial class CalcPage : UserControl
         buffer.Append(second);
 
         _vm.InputText = buffer.ToString();
-        MainInput.CaretIndex--;
+        CaretIndex--;
     }
     
     private void DeleteAll()
@@ -371,5 +385,104 @@ public partial class CalcPage : UserControl
     private void HistoryButton_OnClick(object? sender, RoutedEventArgs e)
     {
         NavigationService.NavigateFromContext(_historyVm);
+    }
+
+    private void Page_OnKeyDown(object? sender, KeyEventArgs e)
+    {
+        if (ResultLayout.IsVisible)
+        {
+            switch (e.Key)
+            {
+                case Key.Space:
+                case Key.Home:
+                case Key.Escape:
+                case Key.Back:
+                    ResultLayout.IsVisible = false;
+                    InputLayout.IsVisible = true;
+                    break;
+                case Key.A:
+                case Key.B:
+                case Key.C:
+                case Key.D:
+                case Key.E:
+                case Key.F:
+                case Key.G:
+                case Key.H:
+                case Key.I:
+                case Key.J:
+                case Key.K:
+                case Key.L:
+                case Key.M:
+                case Key.N:
+                case Key.O:
+                case Key.P:
+                case Key.Q:
+                case Key.R:
+                case Key.S:
+                case Key.T:
+                case Key.U:
+                case Key.V:
+                case Key.W:
+                case Key.X:
+                case Key.Y:
+                case Key.Z:
+                    var key = (e.KeyModifiers & KeyModifiers.Shift) != 0
+                        ? e.Key.ToString()
+                        : e.Key.ToString().ToLowerInvariant();
+                    
+                    AddText(key);
+                    break;
+                case Key.NumPad0:
+                case Key.NumPad1:
+                case Key.NumPad2:
+                case Key.NumPad3:
+                case Key.NumPad4:
+                case Key.NumPad5:
+                case Key.NumPad6:
+                case Key.NumPad7:
+                case Key.NumPad8:
+                case Key.NumPad9:
+                case Key.D0:
+                case Key.D1:
+                case Key.D2:
+                case Key.D3:
+                case Key.D4:
+                case Key.D5:
+                case Key.D6:
+                case Key.D7:
+                case Key.D8:
+                    var number = e.Key.ToString()[^1];
+                    AddText(number.ToString());
+                    break;
+                case Key.D9:
+                    if ((e.KeyModifiers & KeyModifiers.Shift) != 0)
+                    {
+                        AddText("(");
+                        return;
+                    }
+                    
+                    AddText("9");
+                    break;
+                case Key.Subtract:
+                case Key.OemMinus:
+                    AddText("-");
+                    break;
+                case Key.OemTilde:
+                    AddText("~");
+                    break;
+                case Key.OemPipe:
+                    AddText("|");
+                    break;
+            }
+        }
+        else
+        {
+            switch (e.Key)
+            {
+                case Key.Return:
+                    Submit();
+                    break;
+            }
+        }
     }
 }

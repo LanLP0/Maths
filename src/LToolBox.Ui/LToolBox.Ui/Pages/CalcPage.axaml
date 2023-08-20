@@ -6,7 +6,8 @@
              xmlns:vm="using:LToolBox.Ui.ViewModels"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              xmlns:fac="using:FluentAvalonia.UI.Controls"
-             x:Class="LToolBox.Ui.Pages.CalcPage">
+             x:Class="LToolBox.Ui.Pages.CalcPage"
+             KeyDown="Page_OnKeyDown">
     <Design.DataContext>
         <vm:CalcPageViewModel />
     </Design.DataContext>
