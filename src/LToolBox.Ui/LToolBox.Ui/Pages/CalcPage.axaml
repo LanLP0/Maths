@@ -73,7 +73,7 @@
             </Button>
             
             <Button Grid.Column="1" Name="HistoryButton" Click="HistoryButton_OnClick"
-                    Background="Transparent" BorderThickness="0">
+                    Background="Transparent" BorderThickness="0" IsVisible="False">
                 <fac:SymbolIcon Symbol="Clock" />
             </Button>
             

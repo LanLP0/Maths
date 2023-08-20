@@ -6,13 +6,11 @@ public static class VisualExtension
 {
     public static void Show(this Visual visual)
     {
-        if (!visual.IsVisible)
-            visual.IsVisible = true;
+        visual.IsVisible = true;
     }
 
     public static void Hide(this Visual visual)
     {
-        if (visual.IsVisible)
-            visual.IsVisible = false;
+        visual.IsVisible = false;
     }
 }

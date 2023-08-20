@@ -22,7 +22,8 @@
                 <mth:FormulaBlock Name="FormulaBlock" Formula="{Binding Formula}"
                                   Foreground="{DynamicResource TextControlForeground}" Padding="0 5" />
                 <TextBlock Name="ResultBlock" Foreground="{DynamicResource SystemAccentColor}"
-                           Text="{Binding Path=ResultText}" TextWrapping="Wrap" />
+                           Text="{Binding Path=ResultText}" TextWrapping="Wrap"
+                           FontSize="30"/>
 
             </StackPanel>
         </ScrollViewer>

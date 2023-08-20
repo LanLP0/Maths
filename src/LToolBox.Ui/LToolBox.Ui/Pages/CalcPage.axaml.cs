@@ -8,6 +8,7 @@ using Avalonia.Interactivity;
 using Avalonia.Platform;
 using Common;
 using LCalc;
+using LToolBox.Ui.Extension;
 using LToolBox.Ui.Services;
 using LToolBox.Ui.ViewModels;
 using LToolBox.Ui.ViewModels.CalcPageViewModels;
@@ -37,14 +38,14 @@ public partial class CalcPage : UserControl
 
         if (_isDesktop)
         {
-            OskInput.IsVisible = true;
+            OskInput.Show();
             OskInput.Focusable = true;
             OskInput.RemoveHandler(LostFocusEvent, OskInput_OnLostFocus);
-            // OskInput.AddHandler(LostFocusEvent, (_, _) => OskInput.Focus());
+            OskInput.AddHandler(LostFocusEvent, (_, _) => OskInput.Focus());
 
-            KeyboardButton.IsVisible = false;
+            KeyboardButton.Hide();
             KeyboardButton.IsEnabled = false;
-            MainInput.IsVisible = false;
+            MainInput.Hide();
             MainInput.IsEnabled = false;
         }
     }
@@ -245,23 +246,23 @@ public partial class CalcPage : UserControl
         
         if (MainInput.IsVisible)
         {
-            KeyboardButton.IsVisible = false;
-            CalculatorButton.IsVisible = true;
+            KeyboardButton.Hide();
+            CalculatorButton.Show();
 
-            OskInput.IsVisible = true;
-            MainInput.IsVisible = false;
-            MainInput.IsEnabled = false;
+            OskInput.Show();
+            MainInput.Hide();
+            MainInput.Hide();
 
             OskInput.Focus();
             return;
         }
 
-        KeyboardButton.IsVisible = true;
-        CalculatorButton.IsVisible = false;
+        KeyboardButton.Show();
+        CalculatorButton.Hide();
 
-        MainInput.IsVisible = true;
-        OskInput.IsVisible = false;
-        OskInput.IsEnabled = false;
+        MainInput.Show();
+        OskInput.Hide();
+        OskInput.Hide();
     }
 
     private void MainInput_OnPointerPressed(object? sender, PointerPressedEventArgs e)
@@ -334,10 +335,11 @@ public partial class CalcPage : UserControl
         {
             ErrorOutput.Text = result.Exception!.Message;
             
-            ResultOutput.IsVisible = false;
-            ErrorOutput.IsVisible = true;
+            ResultOutput.Hide();
+            ErrorOutput.Show();
             
             SwitchLayout(false);
+            ShowStepsButton.Hide();
             
             return;
         }
@@ -347,23 +349,31 @@ public partial class CalcPage : UserControl
         ResultOutput.Text = result.RenderValue();
         if (result.IsNumber)
             _prevAns = result.Number!.Value;
-        
-        _historyVm.History.Insert(0, new MathHistory(math, ResultOutput.Text));
-        if (_historyVm.History.Count > MaxHistoryCount)
-        {
-            var needToRemove = _historyVm.History.Count - MaxHistoryCount;
-            
-            _historyVm.History.RemoveRange(_historyVm.History.Count - needToRemove, needToRemove);
-        }
 
-        ResultOutput.IsVisible = true;
-        ErrorOutput.IsVisible = false;
+        var history = new MathHistory(math, ResultOutput.Text);
+        AddHistory(history);
+
+        ResultOutput.Show();
+        ErrorOutput.Hide();
 
         SwitchLayout(false);
 
-        ShowStepsButton.IsVisible = true;
+        ShowStepsButton.Show();
     }
-    
+
+    private void AddHistory(MathHistory history)
+    {
+        HistoryButton.Show();
+        
+        _historyVm.History.Insert(0, history);
+        if (_historyVm.History.Count > MaxHistoryCount)
+        {
+            var needToRemove = _historyVm.History.Count - MaxHistoryCount;
+
+            _historyVm.History.RemoveRange(_historyVm.History.Count - needToRemove, needToRemove);
+        }
+    }
+
     private void SwitchToInputLayout()
     {
         if (!ResultLayout.IsVisible)
