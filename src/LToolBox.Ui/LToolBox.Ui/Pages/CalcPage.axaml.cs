@@ -147,8 +147,7 @@ public partial class CalcPage : UserControl
                 Submit();
                 break;
             case "$switch":
-                Kb1Vb.IsVisible = false;
-                Kb2Vb.IsVisible = true;
+                SwitchPanel.SetContentIndex(1);
                 break;
         }
     }
@@ -179,8 +178,7 @@ public partial class CalcPage : UserControl
                 SwitchOsk();
                 break;
             case "$switch":
-                Kb2Vb.IsVisible = false;
-                Kb1Vb.IsVisible = true;
+                SwitchPanel.SetContentIndex(0);
                 break;
             case "$enter":
                 Submit();
