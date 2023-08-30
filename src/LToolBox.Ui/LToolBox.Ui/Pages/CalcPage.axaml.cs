@@ -343,8 +343,7 @@ public partial class CalcPage : UserControl
         _result = result;
 
         ResultOutput.Text = result.RenderValue();
-        if (result.IsNumber)
-            _prevAns = result.Number!.Value;
+        _prevAns = result.IsNumber ? result.Number!.Value : double.NaN;
 
         var history = new MathHistory(math, ResultOutput.Text);
         AddHistory(history);
