@@ -16,8 +16,8 @@
                 Click="ExitButtonClicked" Content="&lt; Return" Margin="0 0 0 10" />
 
         <ScrollViewer DockPanel.Dock="Bottom">
-            <ListBox Name="HistoryBox" ItemsSource="{Binding History}"
-                     DoubleTapped="HistoryBox_OnDoubleTapped" AutoScrollToSelectedItem="True">
+            <ListBox Name="HistoryBox" AutoScrollToSelectedItem="True"
+                     DoubleTapped="HistoryBox_OnDoubleTapped">
                 <ListBox.ItemTemplate>
                     <DataTemplate DataType="ui:MathHistory">
                         <Grid ColumnDefinitions="*, 5, Auto">

@@ -1,3 +1,4 @@
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
@@ -16,11 +17,12 @@ public partial class HistoryPage : UserControl
         InitializeComponent();
     }
 
-    protected override void OnInitialized()
+    protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
     {
         _vm = (HistoryPageViewModel)DataContext!;
-
-        base.OnInitialized();
+        
+        HistoryBox.ItemsSource = null;
+        HistoryBox.ItemsSource = _vm.History;
     }
 
     private void ExitButtonClicked(object? sender, RoutedEventArgs e)

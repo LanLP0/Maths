@@ -61,6 +61,11 @@ public partial class CalcPage : UserControl
         if (OskInput.IsVisible)
             OskInput.Focus();
 
+        LoadHistory();
+    }
+
+    private void LoadHistory()
+    {
         if (_historyVm.ChosenHistory is null)
             return;
 
