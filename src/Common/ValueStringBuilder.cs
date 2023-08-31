@@ -289,4 +289,9 @@ internal ref struct ValueStringBuilder
         this = default; // for safety, to avoid using pooled array if this instance is erroneously appended to again
         if (toReturn != null) ArrayPool<char>.Shared.Return(toReturn);
     }
+
+    public void Clear()
+    {
+        _pos = 0;
+    }
 }

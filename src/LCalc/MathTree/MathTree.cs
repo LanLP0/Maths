@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text;
+using Common;
 using Common.Results;
 using LCalc.Extension;
 using LCalc.Helpers;
@@ -42,7 +43,8 @@ internal sealed class MathTree
     /// <remarks>This method should only be called once</remarks>
     public Result Parse(ReadOnlySpan<char> math)
     {
-        var buffer = new StringBuilder();
+        Span<char> buf = stackalloc char[math.Length];
+        var buffer = new ValueStringBuilder(buf);
         var tokenType = TokenType.Empty;
         var isInsideCustomFunction = false;
 
@@ -70,6 +72,7 @@ internal sealed class MathTree
                         var result = ParseAndSetNode(buffer, ref tokenType, Scope);
                         if (result.Faulted)
                             return result;
+                        buffer.Clear();
                     }
 
                     buffer.Append(c);
@@ -100,6 +103,7 @@ internal sealed class MathTree
                     var result = ParseAndSetNode(buffer, ref tokenType, Scope);
                     if (result.Faulted)
                         return result;
+                    buffer.Clear();
 
                     result = AddNode(new PlusNode());
                     if (result.Faulted)
@@ -111,6 +115,7 @@ internal sealed class MathTree
                     var result = ParseAndSetNode(buffer, ref tokenType, Scope);
                     if (result.Faulted)
                         return result;
+                    buffer.Clear();
 
                     result = AddNode(new MultiplyNode());
                     if (result.Faulted)
@@ -122,6 +127,7 @@ internal sealed class MathTree
                     var result = ParseAndSetNode(buffer, ref tokenType, Scope);
                     if (result.Faulted)
                         return result;
+                    buffer.Clear();
 
                     result = AddNode(new DivideNode());
                     if (result.Faulted)
@@ -133,6 +139,7 @@ internal sealed class MathTree
                     var result = ParseAndSetNode(buffer, ref tokenType, Scope);
                     if (result.Faulted)
                         return result;
+                    buffer.Clear();
 
                     if (math.TryGetValueAt(i + 1, out var nextChar) && nextChar is '|')
                     {
@@ -180,6 +187,7 @@ internal sealed class MathTree
                         result = ParseAndSetNode(buffer, ref tokenType, Scope);
                         if (result.Faulted)
                             return result;
+                        buffer.Clear();
 
                         result = AddNode(new ModuloNode());
                         if (result.Faulted)
@@ -192,6 +200,7 @@ internal sealed class MathTree
                     result = ParseAndSetNode(buffer, ref tokenType, Scope);
                     if (result.Faulted)
                         return result;
+                    buffer.Clear();
 
                     var levelStack = _stack.CurrentLevel;
                     if (levelStack.Count is 0 || levelStack.Last().Priority is not ValueNodePriority)
@@ -215,6 +224,7 @@ internal sealed class MathTree
                     var result = ParseAndSetNode(buffer, ref tokenType, Scope);
                     if (result.Faulted)
                         return result;
+                    buffer.Clear();
 
                     var node = new MinusNode();
                     if (_stack.CurrentLevel.Count is 0)
@@ -286,6 +296,7 @@ internal sealed class MathTree
                     var result = ParseAndSetNode(buffer, ref tokenType, Scope);
                     if (result.Faulted)
                         return result;
+                    buffer.Clear();
 
                     var levelStack = _stack.CurrentLevel;
                     var node = new BitwiseNotNode();
@@ -311,6 +322,7 @@ internal sealed class MathTree
                     }
 
                     ParseAndSetNode(buffer, ref tokenType, Scope);
+                    buffer.Clear();
                     MoveDownLevel();
                     break;
                 }
@@ -319,6 +331,7 @@ internal sealed class MathTree
                     var result = ParseAndSetNode(buffer, ref tokenType, Scope);
                     if (result.Faulted)
                         return result;
+                    buffer.Clear();
 
                     if (_stack.CurrentLevel.Count is 0)
                         return Err("Invalid expression");
@@ -337,6 +350,7 @@ internal sealed class MathTree
                 {
                     spaceBeforeTokenTmp = true;
                     ParseAndSetNode(buffer, ref tokenType, Scope);
+                    buffer.Clear();
                     break;
                 }
                 case 44: // ,
@@ -351,6 +365,7 @@ internal sealed class MathTree
                     var result = ParseAndSetNode(buffer, ref tokenType, Scope);
                     if (result.Faulted)
                         return result;
+                    buffer.Clear();
 
                     if (levelStack.Count is 1)
                         return Err("No value before ','");
@@ -365,6 +380,7 @@ internal sealed class MathTree
                     var result = ParseAndSetNode(buffer, ref tokenType, Scope);
                     if (result.Faulted)
                         return result;
+                    buffer.Clear();
 
                     if (math.TryGetValueAt(i + 1, out var nextChar) && nextChar.IsLowerLetter())
                     {
@@ -388,6 +404,7 @@ internal sealed class MathTree
                         var result = ParseAndSetNode(buffer, ref tokenType, Scope);
                         if (result.Faulted)
                             return result;
+                        buffer.Clear();
                     }
 
                     if (tokenType is TokenType.Empty)
@@ -432,6 +449,7 @@ internal sealed class MathTree
                         var result = ParseAndSetNode(buffer, ref tokenType, Scope);
                         if (result.Faulted)
                             return result;
+                        buffer.Clear();
                     }
 
                     if (tokenType is TokenType.Empty)
@@ -448,6 +466,7 @@ internal sealed class MathTree
                         result = ParseAndSetNode(buffer, ref tokenType, Scope);
                         if (result.Faulted)
                             return result;
+                        buffer.Clear();
                     }
 
                     if (!math.TryGetValueAt(i + 1, out var nextChar))
@@ -495,6 +514,7 @@ internal sealed class MathTree
                     var result = ParseAndSetNode(buffer, ref tokenType, Scope);
                     if (result.Faulted)
                         return result;
+                    buffer.Clear();
 
                     if (!math.TryGetValueAt(i + 1, out c))
                         return Err("Invalid operator >");
@@ -543,6 +563,7 @@ internal sealed class MathTree
                     var result = ParseAndSetNode(buffer, ref tokenType, Scope);
                     if (result.Faulted)
                         return result;
+                    buffer.Clear();
 
                     if (!math.TryGetValueAt(i + 1, out c))
                         return Err("Invalid operator <");
@@ -591,6 +612,7 @@ internal sealed class MathTree
                     var result = ParseAndSetNode(buffer, ref tokenType, Scope);
                     if (result.Faulted)
                         return result;
+                    buffer.Clear();
 
                     if (!math.TryGetValueAt(i + 1, out c))
                     {
@@ -624,6 +646,7 @@ internal sealed class MathTree
                     var result = ParseAndSetNode(buffer, ref tokenType, Scope);
                     if (result.Faulted)
                         return result;
+                    buffer.Clear();
 
                     if (!math.TryGetValueAt(i + 1, out c))
                         return Err("Invalid operator ^");
@@ -653,12 +676,13 @@ internal sealed class MathTree
                     var result = ParseAndSetNode(buffer, ref tokenType, Scope);
                     if (result.Faulted)
                         return result;
+                    buffer.Clear();
 
                     i++;
                     if (i >= math.Length)
                         return Err("Invalid char '['");
 
-                    ReadLettersToBuffer(buffer, math, ref i);
+                    ReadLettersToBuffer(ref buffer, math, ref i);
                     if (buffer.Length is 0)
                         return Err("Custom function name cannot be empty");
 
@@ -761,6 +785,7 @@ internal sealed class MathTree
                     var result = ParseAndSetNode(buffer, ref tokenType, Scope);
                     if (result.Faulted)
                         return result;
+                    buffer.Clear();
 
                     if (!cfnNode.IsFull())
                         return Err("Missing custom function body");
@@ -801,7 +826,7 @@ internal sealed class MathTree
         return Ok();
     }
 
-    private Result ParseAndSetNode(StringBuilder buffer, scoped ref TokenType tokenType, Scope scope)
+    private Result ParseAndSetNode(scoped ValueStringBuilder buffer, scoped ref TokenType tokenType, Scope scope)
     {
         IMathNode resultNode = EmptyNode.Shared;
         switch (tokenType)
@@ -810,8 +835,7 @@ internal sealed class MathTree
                 return Ok();
             case TokenType.Number:
             case TokenType.SpecialNumber:
-                Span<char> value = stackalloc char[buffer.Length];
-                buffer.CopyTo(0, value, value.Length);
+                var value = buffer.AsSpan();
                 var result1 = ValueNode.Parse(value);
                 if (result1.Faulted)
                     return result1.Exception!;
@@ -825,8 +849,7 @@ internal sealed class MathTree
                 if (!scope.IsCalculatorOptionAllowed)
                     return Err("Calculator option not allowed");
 
-                buffer.Remove(0, 1);
-                var op = buffer.ToString();
+                var op = buffer.AsSpan().Slice(1).ToString();
 
                 switch (op)
                 {
@@ -858,9 +881,7 @@ internal sealed class MathTree
                 if (!scope.IsCalculatorOptionAllowed)
                     return Err("Calculator option not allowed");
 
-                // Remove the first &
-                Span<char> opt = stackalloc char[buffer.Length - 1];
-                buffer.CopyTo(1, opt, opt.Length);
+                var opt = buffer.AsSpan().Slice(1);
 
                 var splitPos = opt.IndexOf('=');
 
@@ -903,9 +924,7 @@ internal sealed class MathTree
                 if (!scope.IsVariableAllowed)
                     return Err("Variable not allowed");
 
-                buffer.Remove(0, 1); // Remove the &
-                Span<char> str = stackalloc char[buffer.Length];
-                buffer.CopyTo(0, str, str.Length);
+                var str = buffer.AsSpan().Slice(1);
 
                 var splitIndex = str.IndexOf('=');
                 var firstHalf = str.Slice(0, splitIndex);
@@ -1138,7 +1157,7 @@ internal sealed class MathTree
         return null;
     }
 
-    private void ReadLettersToBuffer(StringBuilder buffer, ReadOnlySpan<char> math, ref int index)
+    private void ReadLettersToBuffer(ref ValueStringBuilder buffer, ReadOnlySpan<char> math, ref int index)
     {
         for (; index < math.Length; index++)
         {
