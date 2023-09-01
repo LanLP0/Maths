@@ -89,7 +89,11 @@ public sealed partial class MainView : UserControl
         if (e.InvokedItemContainer is not NavigationViewItem nvi)
             return;
 
-        if (nvi.Tag is "theme-switch") ThemingService.SwitchThemeMode();
+        if (nvi.Tag is "theme-switch")
+        {
+            ThemingService.SwitchThemeMode();
+            return;
+        }
 
         NavigationService.NavigateFromContext(nvi.Tag, e.RecommendedNavigationTransitionInfo);
     }
@@ -98,7 +102,7 @@ public sealed partial class MainView : UserControl
     {
         var page = e.Content as Control;
         var nvmb = page!.DataContext as NavViewModelBase;
-        PageHeader.Text = nvmb!.NavHeader;
+        _vm.HeaderText = nvmb!.NavHeader;
 
         foreach (NavigationViewItem nvi in NavView.MenuItemsSource)
         {

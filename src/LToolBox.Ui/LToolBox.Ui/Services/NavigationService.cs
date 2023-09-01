@@ -8,6 +8,8 @@ public static class NavigationService
 {
     private static Frame _frame;
 
+    public static Frame Frame => _frame;
+
     public static void SetFrame(Frame f)
     {
         _frame = f;

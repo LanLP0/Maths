@@ -7,13 +7,12 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              xmlns:fac="using:FluentAvalonia.UI.Controls"
              x:Class="LToolBox.Ui.Pages.CalcPage"
-             Focusable="True"
-             KeyDown="Page_OnKeyDown">
+             Focusable="True">
     <Design.DataContext>
         <vm:CalcPageViewModel />
     </Design.DataContext>
 
-    <DockPanel>
+    <DockPanel Name="MainPanel">
         <ScrollViewer Name="ResultLayout" Height="100" Padding="5" IsVisible="False"
                       DockPanel.Dock="Top" Margin="0 0 0 10">
             <StackPanel>

@@ -16,6 +16,17 @@ namespace LToolBox.Ui.Pages;
 
 public partial class CalcPage : UserControl
 {
+    public new static readonly RoutedEvent<KeyEventArgs> KeyDownEvent =
+        RoutedEvent.Register<InputElement, KeyEventArgs>(
+            nameof(KeyDown),
+            RoutingStrategies.Tunnel);
+    
+    public new event EventHandler<KeyEventArgs>? KeyDown
+    {
+        add { AddHandler(KeyDownEvent, value); }
+        remove { RemoveHandler(KeyDownEvent, value); }
+    }
+    
     private const int MaxHistoryCount = 20;
     private readonly bool _isDesktop;
     private readonly HistoryPageViewModel _historyVm = new();
@@ -37,15 +48,9 @@ public partial class CalcPage : UserControl
 
         if (_isDesktop)
         {
-            OskInput.Show();
-            OskInput.Focusable = true;
-            OskInput.RemoveHandler(LostFocusEvent, OskInput_OnLostFocus);
-            OskInput.AddHandler(LostFocusEvent, (_, _) => OskInput.Focus());
-
+            OskInput.IsEnabled = false;
             KeyboardButton.Hide();
             KeyboardButton.IsEnabled = false;
-            MainInput.Hide();
-            MainInput.IsEnabled = false;
         }
     }
 
@@ -53,6 +58,11 @@ public partial class CalcPage : UserControl
     {
         _vm = (CalcPageViewModel)DataContext!;
         _vm.InputTextChanged += InputTextChanged;
+    }
+
+    protected override void OnLoaded(RoutedEventArgs e)
+    {
+        TopLevel.GetTopLevel(this)!.KeyDown += Page_OnKeyDown;
     }
 
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
@@ -411,6 +421,31 @@ public partial class CalcPage : UserControl
 
     private void Page_OnKeyDown(object? sender, KeyEventArgs e)
     {
+        // var text = $"{e.Key} {e.KeyModifiers}";
+        // _vm.InputText = text;
+        // return;
+        
+        if (!ReferenceEquals(NavigationService.Frame.Content, this))
+            return;
+
+        var eve = new KeyEventArgs
+        {
+            Key = e.Key,
+            KeyModifiers = e.KeyModifiers,
+            Route = RoutingStrategies.Tunnel,
+            RoutedEvent = KeyDownEvent,
+            Source = this
+        };
+        MainPanel.RaiseEvent(eve);
+        if (eve.Handled)
+            return;
+        
+        var shift = e.KeyModifiers == KeyModifiers.Shift;
+        
+        // Only process if KeyModifiers is None or Shift
+        if (!(e.KeyModifiers is 0 || shift))
+            return;
+        
         if (ResultLayout.IsVisible)
             switch (e.Key)
             {
@@ -450,7 +485,7 @@ public partial class CalcPage : UserControl
                 case Key.Z:
                     e.Handled = true;
 
-                    var key = (e.KeyModifiers & KeyModifiers.Shift) != 0
+                    var key = shift
                         ? e.Key.ToString()
                         : e.Key.ToString().ToLowerInvariant();
 
@@ -466,6 +501,12 @@ public partial class CalcPage : UserControl
                 case Key.NumPad7:
                 case Key.NumPad8:
                 case Key.NumPad9:
+                    e.Handled = true;
+
+                    var number1 = e.Key.ToString()[^1];
+                    AddText(number1.ToString());
+
+                    break;
                 case Key.D0:
                 case Key.D1:
                 case Key.D2:
@@ -473,40 +514,62 @@ public partial class CalcPage : UserControl
                 case Key.D4:
                 case Key.D5:
                 case Key.D6:
-                case Key.D7:
                 case Key.D8:
+                    if (shift)
+                        break;
+                    
                     e.Handled = true;
 
-                    var number = e.Key.ToString()[^1];
-                    AddText(number.ToString());
+                    var number2 = e.Key.ToString()[^1];
+                    AddText(number2.ToString());
 
+                    break;
+                case Key.D7:
+                    e.Handled = true;
+
+                    AddText(shift ? "&" : "7");
                     break;
                 case Key.D9:
                     e.Handled = true;
 
-                    if ((e.KeyModifiers & KeyModifiers.Shift) != 0)
-                    {
-                        AddText("(");
-                        return;
-                    }
-
-                    AddText("9");
+                    AddText(shift ? "(" : "9");
                     break;
                 case Key.Subtract:
+                    e.Handled = true;
+
+                    AddText("-");
+                    break;
                 case Key.OemMinus:
+                    if (shift)
+                        break;
+                    
                     e.Handled = true;
 
                     AddText("-");
                     break;
                 case Key.OemTilde:
+                    if (!shift)
+                        break;
+                    
                     e.Handled = true;
 
                     AddText("~");
                     break;
                 case Key.OemPipe:
+                    if (!shift)
+                        break;
+                    
                     e.Handled = true;
 
                     AddText("|");
+                    break;
+                case Key.OemPeriod:
+                    if (shift)
+                        break;
+                    
+                    e.Handled = true;
+
+                    AddText(".");
                     break;
             }
         else
@@ -516,6 +579,181 @@ public partial class CalcPage : UserControl
                     e.Handled = true;
 
                     Submit();
+                    break;
+                case Key.A:
+                case Key.B:
+                case Key.C:
+                case Key.D:
+                case Key.E:
+                case Key.F:
+                case Key.G:
+                case Key.H:
+                case Key.I:
+                case Key.J:
+                case Key.K:
+                case Key.L:
+                case Key.M:
+                case Key.N:
+                case Key.O:
+                case Key.P:
+                case Key.Q:
+                case Key.R:
+                case Key.S:
+                case Key.T:
+                case Key.U:
+                case Key.V:
+                case Key.W:
+                case Key.X:
+                case Key.Y:
+                case Key.Z:
+                    e.Handled = true;
+
+                    var key = shift
+                        ? e.Key.ToString()
+                        : e.Key.ToString().ToLowerInvariant();
+
+                    AddText(key);
+                    break;
+                case Key.NumPad0:
+                case Key.NumPad1:
+                case Key.NumPad2:
+                case Key.NumPad3:
+                case Key.NumPad4:
+                case Key.NumPad5:
+                case Key.NumPad6:
+                case Key.NumPad7:
+                case Key.NumPad8:
+                case Key.NumPad9:
+                    e.Handled = true;
+
+                    var number = e.Key.ToString()[^1];
+                    AddText(number.ToString());
+
+                    break;
+                case Key.D2:
+                case Key.D3:
+                case Key.D4:
+                    if (shift)
+                        break;
+                    
+                    e.Handled = true;
+
+                    var number2 = e.Key.ToString()[^1];
+                    AddText(number2.ToString());
+
+                    break;
+                case Key.D1:
+                    e.Handled = true;
+
+                    AddText(shift ? "!" : "1");
+                    break;
+                case Key.D5:
+                    e.Handled = true;
+
+                    AddText(shift ? "%" : "5");
+                    break;
+                case Key.D6:
+                    e.Handled = true;
+
+                    AddText(shift ? "^" : "6");
+                    break;
+                case Key.D7:
+                    e.Handled = true;
+
+                    AddText(shift ? "&" : "7");
+                    break;
+                case Key.D8:
+                    e.Handled = true;
+
+                    AddText(shift ? "*" : "8");
+                    break;
+                case Key.D9:
+                    e.Handled = true;
+
+                    AddText(shift ? "(" : "9");
+                    break;
+                case Key.D0:
+                    e.Handled = true;
+
+                    AddText(shift ? ")" : "0");
+                    break;
+                case Key.OemComma:
+                    e.Handled = true;
+
+                    AddText(shift ? "<" : ",");
+                    break;
+                case Key.OemPeriod:
+                    e.Handled = true;
+
+                    AddText(shift ? ">" : ".");
+                    break;
+                case Key.Subtract:
+                    e.Handled = true;
+
+                    AddText("-");
+                    break;
+                case Key.OemMinus:
+                    if (shift)
+                        break;
+                    
+                    e.Handled = true;
+
+                    AddText("-");
+                    break;
+                case Key.OemTilde:
+                    if (!shift)
+                        break;
+                    
+                    e.Handled = true;
+
+                    AddText("~");
+                    break;
+                case Key.OemPipe:
+                    if (!shift)
+                        break;
+                    
+                    e.Handled = true;
+
+                    AddText("|");
+                    break;
+                case Key.Oem2: // The `?/` key
+                    if (!shift)
+                        break;
+                    
+                    e.Handled = true;
+
+                    AddText("/");
+                    break;
+                case Key.Back: // Backspace
+                    e.Handled = true;
+                    
+                    DeleteOne();
+                    break;
+                case Key.Delete:
+                    e.Handled = true;
+                    if (!shift)
+                    {
+                        if (_vm.CaretIndex >= _vm.InputText.Length)
+                            break;
+                        
+                        _vm.CaretIndex++;
+                        DeleteOne();
+                        break;
+                    }
+                    
+                    DeleteAll();
+                    break;
+                case Key.Left:
+                    if (_vm.CaretIndex <= 0)
+                        break;
+
+                    _vm.CaretIndex--;
+                    break;
+                case Key.Right:
+                    if (_vm.CaretIndex >= _vm.InputText.Length)
+                        break;
+                    
+                    _vm.CaretIndex++;
                     break;
             }
     }
