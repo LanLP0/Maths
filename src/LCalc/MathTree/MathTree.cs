@@ -791,7 +791,9 @@ internal sealed class MathTree
                         return Err("Missing custom function body");
 
                     var fn = cfnNode.ToCustomFunction(Scope.CustomFunctions!);
-                    Scope.CustomFunctions!.Add(fn);
+                    var rs = Scope.CustomFunctions!.Add(fn);
+                    if (rs.Faulted)
+                        return rs;
 
                     _stack.MoveUp();
                     isInsideCustomFunction = false;
