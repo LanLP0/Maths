@@ -318,5 +318,13 @@
   {
     Math: x*y &solve,
     Output: Error: Too many unknowns
+  },
+  {
+    Math: 1>=2 &solve,
+    Output: Error: Invalid solve syntax
+  },
+  {
+    Math: 1==2==3 &solve,
+    Output: Error: Invalid solve syntax
   }
 ]

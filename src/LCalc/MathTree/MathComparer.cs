@@ -91,8 +91,24 @@ internal sealed class MathComparer : IMathNode
 
     public Result SetupForSolving(Scope scope, out string unknown)
     {
-        unknown = string.Empty;
-        return Err("Compare is not allowed in solve mode");
+        if (_compareOps is not [CompareOp.Equal] || _args.Count is not 2)
+        {
+            unknown = string.Empty;
+            return Err("Invalid solve syntax");
+        }
+
+        var rs = _args[0].SetupForSolving(scope, out unknown);
+        if (rs.Faulted)
+            return rs;
+        
+        if (unknown == string.Empty)
+            return _args[1].SetupForSolving(scope, out unknown);
+
+        _args[1].SetupForSolving(scope, out var unknown1);
+        if (unknown1 != string.Empty && unknown1 != unknown)
+            return Err("Too many unknowns");
+
+        return rs;
     }
 
     bool IMathNode.AddNode(IMathNode node)
@@ -110,9 +126,23 @@ internal sealed class MathComparer : IMathNode
         throw new NotImplementedException();
     }
 
+    // Used only in the solver
     Result<double> IMathNode.Calc(Scope scope)
     {
-        throw new NotImplementedException();
+        if (!scope.GetSolveOpt())
+            throw new InvalidOperationException();
+
+        var rs = _args[0].Calc(scope);
+        if (rs.Faulted)
+            return rs;
+        
+        var num1 = rs.Value;
+
+        rs = _args[1].Calc(scope);
+        if (rs.Faulted)
+            return rs;
+
+        return num1 - rs.Value;
     }
 
     public Result GenerateMissingValueError()

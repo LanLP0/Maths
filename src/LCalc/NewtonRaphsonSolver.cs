@@ -64,14 +64,16 @@ internal static class NewtonRaphsonSolver
 
     public static Result<double> SolveFor(MathTree.MathTree tree, string unknown)
     {
+        var scope = tree.Scope;
+        var node = tree.GetTopNode();
         var f = new Function(x =>
         {
-            tree.Scope.Variables.OverrideAdd(unknown, x);
-            var result = tree.Calc();
+            scope.Variables.OverrideAdd(unknown, x);
+            var result = node.Calc(scope);
             if (result.Faulted)
                 return result.Exception!;
 
-            return result.Number!.Value;
+            return result.Value;
         });
 
         var x = Solve(f, 0);

@@ -362,5 +362,9 @@
   {
     Math: x!-6 &solve,
     Output: Result: 3
+  },
+  {
+    Math: sqrt((x+1))+1==4x^2+sqrt((3x)) &solve,
+    Output: Result: 1/2
   }
 ]

@@ -101,7 +101,9 @@ public sealed class CalculatorTest
         // Solve
         "abs(x)+1 &solve",
         "1 &solve",
-        "x*y &solve"
+        "x*y &solve",
+        "1>=2 &solve",
+        "1==2==3 &solve"
     };
 
     private readonly string[] Result_Should_BeExpected_Cases =
@@ -206,7 +208,8 @@ public sealed class CalculatorTest
         "x^5-2x+1 &solve",
         "x+1 &solve",
         "[f(x)=x^2-2x+1] f(x) &solve",
-        "x!-6 &solve"
+        "x!-6 &solve",
+        "sqrt((x+1))+1==4x^2+sqrt((3x)) &solve"
     };
 
     private readonly string[] Step_ShouldBe_Expected_Cases =
