@@ -16,6 +16,9 @@ namespace LToolBox.Ui.Pages;
 
 public partial class CalcPage : UserControl
 {
+    // Used to indicate caret pos
+    private const char ZeroWidthUnicode = '​';
+    
     public new static readonly RoutedEvent<KeyEventArgs> KeyDownEvent =
         RoutedEvent.Register<InputElement, KeyEventArgs>(
             nameof(KeyDown),
@@ -43,9 +46,9 @@ public partial class CalcPage : UserControl
         Kb2.KeyClicked.Subscribe(Observer.Create<string>(Kb2_KeyClicked));
 
         // TODO: Windows Phones & Linux Phones
-        _isDesktop = OperatingSystem.IsWindows() || OperatingSystem.IsLinux() || OperatingSystem.IsMacOS() ||
-            OperatingSystem.IsMacCatalyst();
-        // _isDesktop = false;
+        // _isDesktop = OperatingSystem.IsWindows() || OperatingSystem.IsLinux() || OperatingSystem.IsMacOS() ||
+        //     OperatingSystem.IsMacCatalyst();
+        _isDesktop = false;
 
         if (_isDesktop)
         {
@@ -179,18 +182,41 @@ public partial class CalcPage : UserControl
         switch (key)
         {
             case "$cfn":
-                AddText("[()=]");
-                _vm.CaretIndex -= 4;
+                if (_isDesktop)
+                {
+                    AddText("[()=]");
+                    _vm.CaretIndex -= 4;
+                    SwitchOsk();
+                    break;
+                }
+                
+                AddText($"[({ZeroWidthUnicode})={ZeroWidthUnicode}]");
+                _vm.CaretIndex -= 6;
                 SwitchOsk();
                 break;
             case "$fncall":
-                AddText("()");
-                _vm.CaretIndex -= 2;
+                if (_isDesktop)
+                {
+                    AddText("()");
+                    _vm.CaretIndex -= 2;
+                    SwitchOsk();
+                    break;
+                }
+                AddText($"({ZeroWidthUnicode})");
+                _vm.CaretIndex -= 3;
                 SwitchOsk();
                 break;
             case "$assign":
-                AddText("&=");
-                _vm.CaretIndex -= 1;
+                if (_isDesktop)
+                {
+                    AddText("&=");
+                    _vm.CaretIndex--;
+                    SwitchOsk();
+                    break;
+                }
+                
+                AddText($"&={ZeroWidthUnicode}");
+                _vm.CaretIndex -= 2;
                 SwitchOsk();
                 break;
             case "$left":
@@ -264,7 +290,23 @@ public partial class CalcPage : UserControl
 
     private void OskInput_OnLostFocus(object? sender, RoutedEventArgs e)
     {
-        SwitchOsk();
+        var pos = _vm.InputText.IndexOf(ZeroWidthUnicode);
+        if (pos is -1)
+        {
+            SwitchOsk();
+            return;
+        }
+
+        _vm.CaretIndex = pos + 1;
+        DeleteOne(false);
+        var nextPos = _vm.InputText.IndexOf(ZeroWidthUnicode, pos);
+        if (nextPos is -1)
+        {
+            SwitchOsk();
+            return;
+        }
+
+        OskInput.Focus();
     }
 
     private void SwitchOsk()
@@ -312,9 +354,11 @@ public partial class CalcPage : UserControl
         DeleteOne();
     }
 
-    private void DeleteOne()
+    private void DeleteOne(bool switchToInput = true)
     {
-        SwitchToInputLayout();
+        if (switchToInput)
+            SwitchToInputLayout();
+        
         if (string.IsNullOrEmpty(_vm.InputText))
             return;
 
@@ -343,9 +387,9 @@ public partial class CalcPage : UserControl
 
     private void DeleteAll()
     {
-        SwitchToInputLayout();
         _vm.InputText = string.Empty;
         _vm.OutputText = string.Empty;
+        SwitchToInputLayout();
     }
 
     private void Submit()
