@@ -17,16 +17,16 @@
                       DockPanel.Dock="Top" Margin="0 0 0 10">
             <StackPanel>
 
-                <TextBlock Name="MathOutput" TextAlignment="Right" FontSize="15"
+                <TextBlock Name="MathOutput" TextAlignment="Left" FontSize="15"
                            TextWrapping="NoWrap" TextTrimming="CharacterEllipsis"
                            Text="{Binding OutputText}" />
 
-                <TextBlock Name="ResultOutput" TextAlignment="Right" FontSize="30"
+                <TextBlock Name="ResultOutput" TextAlignment="Left" FontSize="30"
                            TextWrapping="Wrap" IsVisible="False"
                            Text="{Binding OutputText}"
                            Foreground="{DynamicResource SystemAccentColor}" />
 
-                <TextBlock Name="ErrorOutput" TextAlignment="Right" FontSize="30"
+                <TextBlock Name="ErrorOutput" TextAlignment="Left" FontSize="30"
                            TextWrapping="Wrap" Foreground="Red" IsVisible="False"
                            Text="{Binding OutputText}" />
             </StackPanel>
@@ -35,14 +35,14 @@
         <ScrollViewer Name="InputLayout" Height="100" Padding="5" DockPanel.Dock="Top" Margin="0 0 0 10">
             <StackPanel>
 
-                <TextBlock Name="ImmediateOutput" TextAlignment="Right" FontSize="15"
+                <TextBlock Name="ImmediateOutput" TextAlignment="Left" FontSize="15"
                            Text="{Binding OutputText}" TextWrapping="NoWrap"
                            Foreground="{DynamicResource SystemAccentColor}" />
 
                 <TextBox Name="OskInput" IsVisible="False" TextWrapping="Wrap" FontSize="30"
                          LostFocus="OskInput_OnLostFocus" BorderThickness="0"
                          Text="{Binding InputText}"
-                         TextAlignment="Right"
+                         TextAlignment="Left"
                          CaretIndex="{Binding CaretIndex, Mode=TwoWay}" />
 
                 <Border Padding="{StaticResource TextControlThemePadding}"
@@ -50,7 +50,7 @@
                     <TextPresenter Name="MainInput" Focusable="True" TextWrapping="Wrap" FontSize="30"
                                    CaretBrush="{DynamicResource TextControlForeground}"
                                    Text="{Binding InputText}"
-                                   TextAlignment="Right"
+                                   TextAlignment="Left"
                                    CaretIndex="{Binding CaretIndex, Mode=TwoWay}" />
                 </Border>
             </StackPanel>
