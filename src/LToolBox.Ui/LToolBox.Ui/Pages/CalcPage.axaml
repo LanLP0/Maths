@@ -167,36 +167,36 @@
                                      Key="|" IconSource="{StaticResource OrIcon}" />
 
                     <ctrl:VirtualKey ctrl:VirtualKeyboard.Column="0" ctrl:VirtualKeyboard.Row="2"
-                                     Key="1" IconSource="{StaticResource OneIcon}" />
+                                     Key="x" IconSource="{StaticResource XIcon}" />
                     <ctrl:VirtualKey ctrl:VirtualKeyboard.Column="2" ctrl:VirtualKeyboard.Row="2"
-                                     Key="2" IconSource="{StaticResource TwoIcon}" />
+                                     Key="y" IconSource="{StaticResource YIcon}" />
                     <ctrl:VirtualKey ctrl:VirtualKeyboard.Column="4" ctrl:VirtualKeyboard.Row="2"
-                                     Key="3" IconSource="{StaticResource ThreeIcon}" />
+                                     Key="z" IconSource="{StaticResource ZIcon}" />
                     <ctrl:VirtualKey ctrl:VirtualKeyboard.Column="6" ctrl:VirtualKeyboard.Row="2"
                                      Key=">" IconSource="{StaticResource GreaterThanIcon}" />
 
                     <ctrl:VirtualKey ctrl:VirtualKeyboard.Column="0" ctrl:VirtualKeyboard.Row="4"
-                                     Key="4" IconSource="{StaticResource FourIcon}" />
+                                     Key="$left" IconSource="{StaticResource LeftArrowIcon}" />
                     <ctrl:VirtualKey ctrl:VirtualKeyboard.Column="2" ctrl:VirtualKeyboard.Row="4"
-                                     Key="5" IconSource="{StaticResource FiveIcon}" />
+                                     Key="0" IconSource="{StaticResource ZeroIcon}" />
                     <ctrl:VirtualKey ctrl:VirtualKeyboard.Column="4" ctrl:VirtualKeyboard.Row="4"
-                                     Key="6" IconSource="{StaticResource SixIcon}" />
+                                     Key="$right" IconSource="{StaticResource RightArrowIcon}" />
                     <ctrl:VirtualKey ctrl:VirtualKeyboard.Column="6" ctrl:VirtualKeyboard.Row="4"
                                      Key="=" IconSource="{StaticResource EqualIcon}" />
 
                     <ctrl:VirtualKey ctrl:VirtualKeyboard.Column="0" ctrl:VirtualKeyboard.Row="6"
-                                     Key="7" IconSource="{StaticResource SevenIcon}" />
+                                     Key="$home" IconSource="{StaticResource RightCollapseArrowIcon}" />
                     <ctrl:VirtualKey ctrl:VirtualKeyboard.Column="2" ctrl:VirtualKeyboard.Row="6"
-                                     Key="8" IconSource="{StaticResource EightIcon}" />
+                                     Key=" " IconSource="{StaticResource SpaceKeyIcon}" />
                     <ctrl:VirtualKey ctrl:VirtualKeyboard.Column="4" ctrl:VirtualKeyboard.Row="6"
-                                     Key="9" IconSource="{StaticResource NineIcon}" />
+                                     Key="$end" IconSource="{StaticResource LeftCollapseArrowIcon}" />
                     <ctrl:VirtualKey ctrl:VirtualKeyboard.Column="6" ctrl:VirtualKeyboard.Row="6"
                                      Key="&lt;" IconSource="{StaticResource LessThanIcon}" />
 
                     <ctrl:VirtualKey ctrl:VirtualKeyboard.Column="0" ctrl:VirtualKeyboard.Row="8"
                                      Key="$switch" IconSource="{StaticResource SwitchIcon}" />
                     <ctrl:VirtualKey ctrl:VirtualKeyboard.Column="2" ctrl:VirtualKeyboard.Row="8"
-                                     Key="0" IconSource="{StaticResource ZeroIcon}" />
+                                     Key="!" IconSource="{StaticResource BangIcon}" />
                     <ctrl:VirtualKey ctrl:VirtualKeyboard.Column="4" ctrl:VirtualKeyboard.Row="8"
                                      Key="&amp;" IconSource="{StaticResource AndIcon}" />
                     <ctrl:VirtualKey ctrl:VirtualKeyboard.Column="6" ctrl:VirtualKeyboard.Row="8"

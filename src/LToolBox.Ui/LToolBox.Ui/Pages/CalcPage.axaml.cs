@@ -20,13 +20,13 @@ public partial class CalcPage : UserControl
         RoutedEvent.Register<InputElement, KeyEventArgs>(
             nameof(KeyDown),
             RoutingStrategies.Tunnel);
-    
+
     public new event EventHandler<KeyEventArgs>? KeyDown
     {
         add { AddHandler(KeyDownEvent, value); }
         remove { RemoveHandler(KeyDownEvent, value); }
     }
-    
+
     private const int MaxHistoryCount = 20;
     private readonly bool _isDesktop;
     private readonly HistoryPageViewModel _historyVm = new();
@@ -45,6 +45,7 @@ public partial class CalcPage : UserControl
         // TODO: Windows Phones & Linux Phones
         _isDesktop = OperatingSystem.IsWindows() || OperatingSystem.IsLinux() || OperatingSystem.IsMacOS() ||
             OperatingSystem.IsMacCatalyst();
+        // _isDesktop = false;
 
         if (_isDesktop)
         {
@@ -191,6 +192,24 @@ public partial class CalcPage : UserControl
                 AddText("&=");
                 _vm.CaretIndex -= 1;
                 SwitchOsk();
+                break;
+            case "$left":
+                if (_vm.CaretIndex <= 0)
+                    break;
+
+                _vm.CaretIndex--;
+                break;
+            case "$right":
+                if (_vm.CaretIndex >= _vm.InputText.Length)
+                    break;
+
+                _vm.CaretIndex++;
+                break;
+            case "$home":
+                _vm.CaretIndex = 0;
+                break;
+            case "$end":
+                _vm.CaretIndex = _vm.InputText.Length;
                 break;
             case "$switch":
                 SwitchPanel.SetContentIndex(0);
@@ -424,7 +443,7 @@ public partial class CalcPage : UserControl
         // var text = $"{e.Key} {e.KeyModifiers}";
         // _vm.InputText = text;
         // return;
-        
+
         if (!ReferenceEquals(NavigationService.Frame.Content, this))
             return;
 
@@ -439,13 +458,13 @@ public partial class CalcPage : UserControl
         MainPanel.RaiseEvent(eve);
         if (eve.Handled)
             return;
-        
+
         var shift = e.KeyModifiers == KeyModifiers.Shift;
-        
+
         // Only process if KeyModifiers is None or Shift
         if (!(e.KeyModifiers is 0 || shift))
             return;
-        
+
         if (ResultLayout.IsVisible)
             switch (e.Key)
             {
@@ -517,7 +536,7 @@ public partial class CalcPage : UserControl
                 case Key.D8:
                     if (shift)
                         break;
-                    
+
                     e.Handled = true;
 
                     var number2 = e.Key.ToString()[^1];
@@ -542,7 +561,7 @@ public partial class CalcPage : UserControl
                 case Key.OemMinus:
                     if (shift)
                         break;
-                    
+
                     e.Handled = true;
 
                     AddText("-");
@@ -550,7 +569,7 @@ public partial class CalcPage : UserControl
                 case Key.OemTilde:
                     if (!shift)
                         break;
-                    
+
                     e.Handled = true;
 
                     AddText("~");
@@ -558,7 +577,7 @@ public partial class CalcPage : UserControl
                 case Key.OemPipe:
                     if (!shift)
                         break;
-                    
+
                     e.Handled = true;
 
                     AddText("|");
@@ -566,7 +585,7 @@ public partial class CalcPage : UserControl
                 case Key.OemPeriod:
                     if (shift)
                         break;
-                    
+
                     e.Handled = true;
 
                     AddText(".");
@@ -635,7 +654,7 @@ public partial class CalcPage : UserControl
                 case Key.D4:
                     if (shift)
                         break;
-                    
+
                     e.Handled = true;
 
                     var number2 = e.Key.ToString()[^1];
@@ -695,7 +714,7 @@ public partial class CalcPage : UserControl
                 case Key.OemMinus:
                     if (shift)
                         break;
-                    
+
                     e.Handled = true;
 
                     AddText("-");
@@ -703,7 +722,7 @@ public partial class CalcPage : UserControl
                 case Key.OemTilde:
                     if (!shift)
                         break;
-                    
+
                     e.Handled = true;
 
                     AddText("~");
@@ -711,7 +730,7 @@ public partial class CalcPage : UserControl
                 case Key.OemPipe:
                     if (!shift)
                         break;
-                    
+
                     e.Handled = true;
 
                     AddText("|");
@@ -719,14 +738,14 @@ public partial class CalcPage : UserControl
                 case Key.Oem2: // The `?/` key
                     if (!shift)
                         break;
-                    
+
                     e.Handled = true;
 
                     AddText("/");
                     break;
                 case Key.Back: // Backspace
                     e.Handled = true;
-                    
+
                     DeleteOne();
                     break;
                 case Key.Delete:
@@ -735,12 +754,12 @@ public partial class CalcPage : UserControl
                     {
                         if (_vm.CaretIndex >= _vm.InputText.Length)
                             break;
-                        
+
                         _vm.CaretIndex++;
                         DeleteOne();
                         break;
                     }
-                    
+
                     DeleteAll();
                     break;
                 case Key.Left:
@@ -752,7 +771,7 @@ public partial class CalcPage : UserControl
                 case Key.Right:
                     if (_vm.CaretIndex >= _vm.InputText.Length)
                         break;
-                    
+
                     _vm.CaretIndex++;
                     break;
             }
