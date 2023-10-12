@@ -24,6 +24,7 @@
     <ui:FontIconSource x:Key="XIcon" Glyph="x" FontFamily="{StaticResource NotoSansMonoFont}" />
     <ui:FontIconSource x:Key="YIcon" Glyph="y" FontFamily="{StaticResource NotoSansMonoFont}" />
     <ui:FontIconSource x:Key="ZIcon" Glyph="z" FontFamily="{StaticResource NotoSansMonoFont}" />
+    <ui:FontIconSource x:Key="AnsIcon" Glyph="ans" FontFamily="{StaticResource NotoSansMonoFont}" />
     <ui:FontIconSource x:Key="LeftArrowIcon" Glyph="&#xE7EA;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
     <ui:FontIconSource x:Key="RightArrowIcon" Glyph="&#xEA62;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
     <ui:PathIconSource x:Key="RightCollapseArrowIcon"

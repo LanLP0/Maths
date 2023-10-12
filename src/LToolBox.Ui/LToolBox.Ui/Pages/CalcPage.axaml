@@ -178,7 +178,7 @@
                     <ctrl:VirtualKey ctrl:VirtualKeyboard.Column="0" ctrl:VirtualKeyboard.Row="4"
                                      Key="$left" IconSource="{StaticResource LeftArrowIcon}" />
                     <ctrl:VirtualKey ctrl:VirtualKeyboard.Column="2" ctrl:VirtualKeyboard.Row="4"
-                                     Key="0" IconSource="{StaticResource ZeroIcon}" />
+                                     Key="ans" IconSource="{StaticResource AnsIcon}" />
                     <ctrl:VirtualKey ctrl:VirtualKeyboard.Column="4" ctrl:VirtualKeyboard.Row="4"
                                      Key="$right" IconSource="{StaticResource RightArrowIcon}" />
                     <ctrl:VirtualKey ctrl:VirtualKeyboard.Column="6" ctrl:VirtualKeyboard.Row="4"
