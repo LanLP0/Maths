@@ -945,7 +945,6 @@ internal sealed class MathTree
                 throw new UnreachableException();
         }
 
-        buffer.Clear();
         tokenType = TokenType.Empty;
         return AddNode(resultNode);
     }
