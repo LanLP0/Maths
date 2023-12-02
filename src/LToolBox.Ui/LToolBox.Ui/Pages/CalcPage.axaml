@@ -22,13 +22,9 @@
                            Text="{Binding OutputText}" />
 
                 <TextBlock Name="ResultOutput" TextAlignment="Left" FontSize="30"
-                           TextWrapping="Wrap" IsVisible="False"
+                           TextWrapping="Wrap"
                            Text="{Binding OutputText}"
                            Foreground="{DynamicResource SystemAccentColor}" />
-
-                <TextBlock Name="ErrorOutput" TextAlignment="Left" FontSize="30"
-                           TextWrapping="Wrap" Foreground="Red" IsVisible="False"
-                           Text="{Binding OutputText}" />
             </StackPanel>
         </ScrollViewer>
 
@@ -36,8 +32,14 @@
             <StackPanel>
 
                 <TextBlock Name="ImmediateOutput" TextAlignment="Left" FontSize="15"
+                           IsVisible="{Binding ImmediateOutputVisible}"
                            Text="{Binding OutputText}" TextWrapping="NoWrap"
                            Foreground="{DynamicResource SystemAccentColor}" />
+                
+                <TextBlock Name="ImmediateErrorOutput" TextAlignment="Left" FontSize="15"
+                           IsVisible="{Binding ImmediateErrorOutputVisible}"
+                           Text="{Binding OutputText}" TextWrapping="NoWrap"
+                           Foreground="Red" />
 
                 <TextBox Name="OskInput" IsVisible="False" TextWrapping="Wrap" FontSize="30"
                          LostFocus="OskInput_OnLostFocus" BorderThickness="0"

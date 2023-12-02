@@ -18,21 +18,12 @@ public partial class CalcPage : UserControl
 {
     // Used to indicate caret pos
     private const char ZeroWidthUnicode = '​';
-    
-    public new static readonly RoutedEvent<KeyEventArgs> KeyDownEvent =
-        RoutedEvent.Register<InputElement, KeyEventArgs>(
-            nameof(KeyDown),
-            RoutingStrategies.Tunnel);
-
-    public new event EventHandler<KeyEventArgs>? KeyDown
-    {
-        add { AddHandler(KeyDownEvent, value); }
-        remove { RemoveHandler(KeyDownEvent, value); }
-    }
-
     private const int MaxHistoryCount = 20;
+    
     private readonly bool _isDesktop;
+    private bool _isTextInputEventBeingHandled = false;
     private readonly HistoryPageViewModel _historyVm = new();
+    
     private double _prevAns = double.NaN;
     private CalcResult _result;
 
@@ -46,8 +37,8 @@ public partial class CalcPage : UserControl
         Kb2.KeyClicked.Subscribe(Observer.Create<string>(Kb2_KeyClicked));
 
         // TODO: Windows Phones & Linux Phones
-        _isDesktop = OperatingSystem.IsWindows() || OperatingSystem.IsLinux() || OperatingSystem.IsMacOS() ||
-            OperatingSystem.IsMacCatalyst();
+        // _isDesktop = OperatingSystem.IsWindows() || OperatingSystem.IsLinux() || OperatingSystem.IsMacOS() ||
+        //     OperatingSystem.IsMacCatalyst();
 
         if (_isDesktop)
         {
@@ -65,7 +56,9 @@ public partial class CalcPage : UserControl
 
     protected override void OnLoaded(RoutedEventArgs e)
     {
-        TopLevel.GetTopLevel(this)!.KeyDown += Page_OnKeyDown;
+        var topLevel = TopLevel.GetTopLevel(this)!;
+        topLevel.TextInput += Page_OnTextInput;
+        topLevel.KeyDown += Page_OnKeyDown;
     }
 
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
@@ -109,6 +102,12 @@ public partial class CalcPage : UserControl
             _vm.OutputText = result.RenderValue();
         }).Wait(TimeSpan.FromMilliseconds(100));
     }
+    
+    // TODO Kb1 & Kb2 KeyClicked
+    // Simplify cases by only make them use a single string
+    // which contains the text and cursor position marked by
+    // the {ZeroWidthUnicode}, which the first one is the
+    // initial cursor position.   (Create method)
 
     private void Kb1_KeyClicked(string key)
     {
@@ -388,6 +387,7 @@ public partial class CalcPage : UserControl
     {
         _vm.InputText = string.Empty;
         _vm.OutputText = string.Empty;
+        
         SwitchToInputLayout();
     }
 
@@ -397,25 +397,20 @@ public partial class CalcPage : UserControl
         if (string.IsNullOrWhiteSpace(math))
             return;
 
-        _vm.InputText = string.Empty;
-        _vm.OutputText = math;
-
         const CalculatorOption option = CalculatorOption.LaTeX | CalculatorOption.NoLaTeXDoc | CalculatorOption.Step |
             CalculatorOption.VariableAllowed | CalculatorOption.Render |
             CalculatorOption.CompareAllowed | CalculatorOption.CalculatorOptionAllowed;
         var result = Calculator.CalcRaw(math, option, _prevAns);
         if (result.Faulted)
         {
-            ErrorOutput.Text = result.Exception!.Message;
+            _vm.OutputText = result.Exception!.Message;
 
-            ResultOutput.Hide();
-            ErrorOutput.Show();
-
-            SwitchLayout(false);
-            ShowStepsButton.Hide();
-
+            ShowImmediateErrorOutput();
             return;
         }
+        
+        _vm.InputText = string.Empty;
+        _vm.OutputText = math;
 
         _result = result;
 
@@ -425,12 +420,14 @@ public partial class CalcPage : UserControl
         var history = new MathHistory(math, ResultOutput.Text);
         AddHistory(history);
 
-        ResultOutput.Show();
-        ErrorOutput.Hide();
-
         SwitchLayout(false);
 
         ShowStepsButton.Show();
+    }
+
+    private void ShowImmediateErrorOutput()
+    {
+        _vm.ImmediateOutputVisible = false;
     }
 
     private void AddHistory(MathHistory history)
@@ -480,16 +477,81 @@ public partial class CalcPage : UserControl
     {
         NavigationService.NavigateFromContext(_historyVm);
     }
+    
+    private void Page_OnTextInput(object? sender, TextInputEventArgs e)
+    {
+        if (_isTextInputEventBeingHandled)
+            return;
 
+        _isTextInputEventBeingHandled = true;
+        
+        if (string.IsNullOrEmpty(e.Text))
+        {
+            _isTextInputEventBeingHandled = false;
+            return;
+        }
+
+        // if the user is not on this page, return
+        if (!ReferenceEquals(NavigationService.Frame.Content, this))
+        {
+            _isTextInputEventBeingHandled = false;
+            return;
+        }
+
+        if (OskInput.IsVisible)
+        {
+            _isTextInputEventBeingHandled = false;
+            return;
+        }
+
+        // Check if there's a handler for this event
+        var eve = new TextInputEventArgs
+        {
+            Text = e.Text,
+            Route = RoutingStrategies.Tunnel,
+            RoutedEvent = TextInputEvent,
+            Source = this
+        };
+        MainPanel.RaiseEvent(eve);
+        if (eve.Handled)
+        {
+            _isTextInputEventBeingHandled = false;
+            e.Handled = true;
+            return;
+        }
+
+        // If not, handle it
+
+        AddText(e.Text);
+        e.Handled = true;
+        _isTextInputEventBeingHandled = false;
+    }
+    
     private void Page_OnKeyDown(object? sender, KeyEventArgs e)
     {
+        if (_isTextInputEventBeingHandled)
+            return;
+
+        _isTextInputEventBeingHandled = true;
+        
         // var text = $"{e.Key} {e.KeyModifiers}";
         // _vm.InputText = text;
         // return;
-
+        
+        // if the user is not on this page
         if (!ReferenceEquals(NavigationService.Frame.Content, this))
+        {
+            _isTextInputEventBeingHandled = false;
             return;
+        }
 
+        if (OskInput.IsVisible)
+        {
+            _isTextInputEventBeingHandled = false;
+            return;
+        }
+
+        // Check if there's a handler for this event
         var eve = new KeyEventArgs
         {
             Key = e.Key,
@@ -500,291 +562,44 @@ public partial class CalcPage : UserControl
         };
         MainPanel.RaiseEvent(eve);
         if (eve.Handled)
+        {
+            _isTextInputEventBeingHandled = false;
+            e.Handled = true;
             return;
+        }
+
+        // If not, handle it
 
         var shift = e.KeyModifiers == KeyModifiers.Shift;
 
         // Only process if KeyModifiers is None or Shift
         if (!(e.KeyModifiers is 0 || shift))
+        {
+            _isTextInputEventBeingHandled = false;
             return;
+        }
 
         if (ResultLayout.IsVisible)
-            switch (e.Key)
+        {
+            if (e.Key is not (Key.Space or Key.Home or Key.Escape or Key.Back))
             {
-                case Key.Space:
-                case Key.Home:
-                case Key.Escape:
-                case Key.Back:
-                    e.Handled = true;
-
-                    SwitchLayout(true);
-                    break;
-                case Key.A:
-                case Key.B:
-                case Key.C:
-                case Key.D:
-                case Key.E:
-                case Key.F:
-                case Key.G:
-                case Key.H:
-                case Key.I:
-                case Key.J:
-                case Key.K:
-                case Key.L:
-                case Key.M:
-                case Key.N:
-                case Key.O:
-                case Key.P:
-                case Key.Q:
-                case Key.R:
-                case Key.S:
-                case Key.T:
-                case Key.U:
-                case Key.V:
-                case Key.W:
-                case Key.X:
-                case Key.Y:
-                case Key.Z:
-                    e.Handled = true;
-
-                    var key = shift
-                        ? e.Key.ToString()
-                        : e.Key.ToString().ToLowerInvariant();
-
-                    AddText(key);
-                    break;
-                case Key.NumPad0:
-                case Key.NumPad1:
-                case Key.NumPad2:
-                case Key.NumPad3:
-                case Key.NumPad4:
-                case Key.NumPad5:
-                case Key.NumPad6:
-                case Key.NumPad7:
-                case Key.NumPad8:
-                case Key.NumPad9:
-                    e.Handled = true;
-
-                    var number1 = e.Key.ToString()[^1];
-                    AddText(number1.ToString());
-
-                    break;
-                case Key.D0:
-                case Key.D1:
-                case Key.D2:
-                case Key.D3:
-                case Key.D4:
-                case Key.D5:
-                case Key.D6:
-                case Key.D8:
-                    if (shift)
-                        break;
-
-                    e.Handled = true;
-
-                    var number2 = e.Key.ToString()[^1];
-                    AddText(number2.ToString());
-
-                    break;
-                case Key.D7:
-                    e.Handled = true;
-
-                    AddText(shift ? "&" : "7");
-                    break;
-                case Key.D9:
-                    e.Handled = true;
-
-                    AddText(shift ? "(" : "9");
-                    break;
-                case Key.Subtract:
-                    e.Handled = true;
-
-                    AddText("-");
-                    break;
-                case Key.OemMinus:
-                    if (shift)
-                        break;
-
-                    e.Handled = true;
-
-                    AddText("-");
-                    break;
-                case Key.OemTilde:
-                    if (!shift)
-                        break;
-
-                    e.Handled = true;
-
-                    AddText("~");
-                    break;
-                case Key.OemPipe:
-                    if (!shift)
-                        break;
-
-                    e.Handled = true;
-
-                    AddText("|");
-                    break;
-                case Key.OemPeriod:
-                    if (shift)
-                        break;
-
-                    e.Handled = true;
-
-                    AddText(".");
-                    break;
+                _isTextInputEventBeingHandled = false;
+                return;
             }
+
+            e.Handled = true;
+
+            // Go back to input mode
+            SwitchLayout(true);
+        }
         else
+        {
             switch (e.Key)
             {
                 case Key.Return:
                     e.Handled = true;
 
                     Submit();
-                    break;
-                case Key.A:
-                case Key.B:
-                case Key.C:
-                case Key.D:
-                case Key.E:
-                case Key.F:
-                case Key.G:
-                case Key.H:
-                case Key.I:
-                case Key.J:
-                case Key.K:
-                case Key.L:
-                case Key.M:
-                case Key.N:
-                case Key.O:
-                case Key.P:
-                case Key.Q:
-                case Key.R:
-                case Key.S:
-                case Key.T:
-                case Key.U:
-                case Key.V:
-                case Key.W:
-                case Key.X:
-                case Key.Y:
-                case Key.Z:
-                    e.Handled = true;
-
-                    var key = shift
-                        ? e.Key.ToString()
-                        : e.Key.ToString().ToLowerInvariant();
-
-                    AddText(key);
-                    break;
-                case Key.NumPad0:
-                case Key.NumPad1:
-                case Key.NumPad2:
-                case Key.NumPad3:
-                case Key.NumPad4:
-                case Key.NumPad5:
-                case Key.NumPad6:
-                case Key.NumPad7:
-                case Key.NumPad8:
-                case Key.NumPad9:
-                    e.Handled = true;
-
-                    var number = e.Key.ToString()[^1];
-                    AddText(number.ToString());
-
-                    break;
-                case Key.D2:
-                case Key.D3:
-                case Key.D4:
-                    if (shift)
-                        break;
-
-                    e.Handled = true;
-
-                    var number2 = e.Key.ToString()[^1];
-                    AddText(number2.ToString());
-
-                    break;
-                case Key.D1:
-                    e.Handled = true;
-
-                    AddText(shift ? "!" : "1");
-                    break;
-                case Key.D5:
-                    e.Handled = true;
-
-                    AddText(shift ? "%" : "5");
-                    break;
-                case Key.D6:
-                    e.Handled = true;
-
-                    AddText(shift ? "^" : "6");
-                    break;
-                case Key.D7:
-                    e.Handled = true;
-
-                    AddText(shift ? "&" : "7");
-                    break;
-                case Key.D8:
-                    e.Handled = true;
-
-                    AddText(shift ? "*" : "8");
-                    break;
-                case Key.D9:
-                    e.Handled = true;
-
-                    AddText(shift ? "(" : "9");
-                    break;
-                case Key.D0:
-                    e.Handled = true;
-
-                    AddText(shift ? ")" : "0");
-                    break;
-                case Key.OemComma:
-                    e.Handled = true;
-
-                    AddText(shift ? "<" : ",");
-                    break;
-                case Key.OemPeriod:
-                    e.Handled = true;
-
-                    AddText(shift ? ">" : ".");
-                    break;
-                case Key.Subtract:
-                    e.Handled = true;
-
-                    AddText("-");
-                    break;
-                case Key.OemMinus:
-                    if (shift)
-                        break;
-
-                    e.Handled = true;
-
-                    AddText("-");
-                    break;
-                case Key.OemTilde:
-                    if (!shift)
-                        break;
-
-                    e.Handled = true;
-
-                    AddText("~");
-                    break;
-                case Key.OemPipe:
-                    if (!shift)
-                        break;
-
-                    e.Handled = true;
-
-                    AddText("|");
-                    break;
-                case Key.Oem2: // The `?/` key
-                    if (!shift)
-                        break;
-
-                    e.Handled = true;
-
-                    AddText("/");
                     break;
                 case Key.Back: // Backspace
                     e.Handled = true;
@@ -818,5 +633,8 @@ public partial class CalcPage : UserControl
                     _vm.CaretIndex++;
                     break;
             }
+        }
+        
+        _isTextInputEventBeingHandled = false;
     }
 }
