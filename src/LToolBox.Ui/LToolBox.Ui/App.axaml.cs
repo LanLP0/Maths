@@ -73,9 +73,6 @@ public sealed class App : Application
 
         Avalonia.Logging.Logger.Sink = new AvaloniaLogger();
         LoggerConfiguration.WriteTo.Trace();
-#if DEBUG
-        LoggerConfiguration.WriteTo.Debug();
-#endif
 
         Logger = LoggerConfiguration.CreateLogger();
     }
