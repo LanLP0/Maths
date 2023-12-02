@@ -6,10 +6,16 @@ using LCalc.MathTree.Nodes;
 
 namespace Benchmarks;
 
-// [MemoryDiagnoser]
+[MemoryDiagnoser]
 [MaxIterationCount(50)]
 public class MiscBenchmarks
 {
+    [Benchmark]
+    public Result ResultOk()
+    {
+        return ResultHelpers.Ok();
+    }
+    
     // [Params(1.123, 1230.1, 1020304050.321)]
     // public double Num1 { get; set; }
     //
@@ -46,19 +52,19 @@ public class MiscBenchmarks
     //     return Num1 % Num2;
     // }
 
-    private IMathNode _node;
-    private Scope _scope;
-
-    [GlobalSetup]
-    public void Setup()
-    {
-        _scope = new Scope(false);
-        _node = new ValueNode(1);
-    }
-
-    [Benchmark]
-    public Result<double> Calc()
-    {
-        return _node.Calc(_scope);
-    }
+    // private IMathNode _node;
+    // private Scope _scope;
+    //
+    // [GlobalSetup]
+    // public void Setup()
+    // {
+    //     _scope = new Scope(false);
+    //     _node = new ValueNode(1);
+    // }
+    //
+    // [Benchmark]
+    // public Result<double> Calc()
+    // {
+    //     return _node.Calc(_scope);
+    // }
 }
