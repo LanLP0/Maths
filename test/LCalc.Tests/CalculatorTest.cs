@@ -9,6 +9,7 @@ using static VerifyXunit.Verifier;
 
 namespace LCalc.Tests;
 
+/// <remarks>Note: All tests should be run in DEBUG</remarks>
 [UsesVerify]
 public sealed class CalculatorTest
 {
@@ -64,6 +65,9 @@ public sealed class CalculatorTest
         "2^3^ ^",
         "1-&a=100",
         "&a=",
+        "&a='",
+        "&foo=",
+        "&foo='",
         "&a=1&a=1",
         "1 &fmt=error",
         // Special number

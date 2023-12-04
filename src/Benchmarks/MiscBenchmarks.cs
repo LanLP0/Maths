@@ -10,30 +10,30 @@ namespace Benchmarks;
 [MaxIterationCount(50)]
 public class MiscBenchmarks
 {
-    [Params("1",
-        "1233211 + 227633 * 6555 + 999 / (99+1)",
-        "sin(cos(tan(9)))",
-        "abs(sin(((~1>>2<<2)^2!/1000*50-40+1)))",
-        "[a()=1]a()",
-        "[a()=1][b()=1][c()=1][d()=1][e()=1][f()=1][g()=1][h()=1][j()=1][q()=1][k()=1]a()",
-        "sigma(x, 1, 1000000, x)"
-    )]
-    // ReSharper disable once MemberCanBePrivate.Global
-    public string Math { get; set; } = null!;
-
-    [Benchmark(Baseline = true)]
-    public void MathTreeParse()
-    {
-        var tree = new MathTree();
-        tree.Parse(Math);
-    }
-    
-    [Benchmark]
-    public void NewParser()
-    {
-        var parser = new ExpParser();
-        parser.Parse(Math);
-    }
+    // [Params("1",
+    //     "1233211 + 227633 * 6555 + 999 / (99+1)",
+    //     "sin(cos(tan(9)))",
+    //     "abs(sin(((~1>>2<<2)^2!/1000*50-40+1)))",
+    //     "[a()=1]a()",
+    //     "[a()=1][b()=1][c()=1][d()=1][e()=1][f()=1][g()=1][h()=1][j()=1][q()=1][k()=1]a()",
+    //     "sigma(x, 1, 1000000, x)"
+    // )]
+    // // ReSharper disable once MemberCanBePrivate.Global
+    // public string Math { get; set; } = null!;
+    //
+    // [Benchmark(Baseline = true)]
+    // public void MathTreeParse()
+    // {
+    //     var tree = new MathTree();
+    //     tree.Parse(Math);
+    // }
+    //
+    // [Benchmark]
+    // public void NewParser()
+    // {
+    //     var parser = new ExpParser();
+    //     parser.Parse(Math);
+    // }
 
     // [Benchmark]
     // public Result ResultOk()

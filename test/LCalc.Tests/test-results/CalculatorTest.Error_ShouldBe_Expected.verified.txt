@@ -165,7 +165,7 @@
   },
   {
     Math: +1,
-    Output: Error: Missing value before operator +
+    Output: Result: 1
   },
   {
     Math: 1 1,
@@ -184,6 +184,18 @@
     Output: Error: Missing variable/option value
   },
   {
+    Math: &a=',
+    Output: Error: Invalid variable/option value
+  },
+  {
+    Math: &foo=,
+    Output: Error: Missing variable/option value
+  },
+  {
+    Math: &foo=',
+    Output: Error: Invalid variable/option value
+  },
+  {
     Math: &a=1&a=1,
     Output: Error: Variable 'a' had already been set
   },
@@ -193,15 +205,15 @@
   },
   {
     Math: 0x,
-    Output: Error: 0x is not a number
+    Output: Error: Unknown variable 'x'
   },
   {
     Math: 0b,
-    Output: Error: 0b is not a number
+    Output: Error: Unknown variable 'b'
   },
   {
     Math: 0o,
-    Output: Error: 0o is not a number
+    Output: Error: Unknown variable 'o'
   },
   {
     Math: 0xfg,
@@ -233,7 +245,7 @@
   },
   {
     Math: [a(1)],
-    Output: Error: Invalid character in custom function arg space '1'
+    Output: Error: Invalid custom function syntax
   },
   {
     Math: [a()=1,
