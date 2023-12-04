@@ -51,4 +51,9 @@ internal sealed class EmptyNode : IMathNode
         unknown = string.Empty;
         return Ok();
     }
+
+    public IMathNode? GetLastNode()
+    {
+        return null;
+    }
 }

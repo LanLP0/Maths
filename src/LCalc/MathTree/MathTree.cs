@@ -175,7 +175,6 @@ internal sealed class MathTree
 
                     fnNode.Name = "abs";
                     MoveUpLevel();
-
                     break;
                 }
                 case 37: // %
@@ -203,14 +202,32 @@ internal sealed class MathTree
                     buffer.Clear();
 
                     var levelStack = _stack.CurrentLevel;
-                    if (levelStack.Count is 0 || levelStack.Last().Priority is not ValueNodePriority)
+                    if (levelStack.Count is 0)
                         return Err("Invalid operator '%'");
+                    
+                    var lastNode = levelStack.Last();
+                    if (lastNode is ValueNode valueNode)
+                    {
+                        valueNode.Value /= 100;
+                        break;
+                    }
+                    
+                    if (lastNode is not VariableNode variableNode)
+                        return Err("Invalid operator '%'");
+                    
+                    var node = new DivideNode();
+                    node.AddNode(variableNode);
+                    node.AddNode(new ValueNode(100));
+                    node.Priority = ValueNodePriority;
 
-                    var divNode = new DivideNode();
-                    divNode.Priority = ValueNodePriority;
-                    AddFnNode(levelStack, divNode);
-                    AddValueNode(levelStack, new ValueNode(100));
-
+                    if (levelStack.Count is 1)
+                    {
+                        levelStack[0] = node;
+                        break;
+                    }
+                    
+                    levelStack[^2].ChangeLastNodeTo(node);
+                    levelStack[^1] = node;
                     break;
                 }
                 case 45: // -
@@ -790,7 +807,7 @@ internal sealed class MathTree
                     if (!cfnNode.IsFull())
                         return Err("Missing custom function body");
 
-                    var fn = cfnNode.ToCustomFunction(Scope.CustomFunctions!);
+                    var fn = cfnNode.MakeCustomFunction(Scope.CustomFunctions!);
                     var rs = Scope.CustomFunctions!.Add(fn);
                     if (rs.Faulted)
                         return rs;
@@ -801,7 +818,7 @@ internal sealed class MathTree
                 }
                 default:
                 {
-                    return Err($"Invalid character '{math[i]}'");
+                    return Err($"Invalid character '{c}'");
                 }
             }
 
@@ -1118,7 +1135,7 @@ internal sealed class MathTree
         return Ok();
     }
 
-    private Result<bool> AddToCompare(CompareOp? op = null)
+    private Result<bool> AddToCompare(CompareOp op)
     {
         if (!Scope.IsCompareAllowed)
             return Err<bool>("Compare not allowed");
@@ -1137,8 +1154,7 @@ internal sealed class MathTree
         _comparer ??= new MathComparer();
 
         _comparer.AddNode(node);
-        if (op.HasValue)
-            _comparer.AddOp(op.Value);
+        _comparer.AddOp(op);
         return true;
     }
 

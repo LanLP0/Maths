@@ -105,4 +105,9 @@ internal sealed class BitwiseNotNode : IMathNode
         unknown = string.Empty;
         return GenerateMissingValueError();
     }
+
+    public IMathNode? GetLastNode()
+    {
+        return _arg;
+    }
 }

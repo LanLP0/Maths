@@ -10,6 +10,13 @@ internal sealed class FunctionCallNode : IMathNode
 {
     private readonly List<IMathNode> _args = new();
 
+    public int ArgCount => _args.Count;
+
+    /// <summary>
+    /// Skip over a slot (after a comma)
+    /// </summary>
+    public bool SkipOverSlot { get; set; }
+
     public FunctionCallNode(string name)
     {
         Name = name;
@@ -90,6 +97,7 @@ internal sealed class FunctionCallNode : IMathNode
     {
         _args.Add(node);
 
+        SkipOverSlot = false;
         return true;
     }
 
@@ -193,6 +201,14 @@ internal sealed class FunctionCallNode : IMathNode
         }
 
         return Ok();
+    }
+
+    public IMathNode? GetLastNode()
+    {
+        if (_args.Count is 0 || SkipOverSlot)
+            return null;
+
+        return _args[^1];
     }
 
     private Result RenderAbs(StringBuilder buffer, int selectedLevel, Scope scope, int nodeLevel, bool showTree,

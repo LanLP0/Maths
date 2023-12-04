@@ -113,4 +113,9 @@ internal sealed class FactorialNode : IMathNode
         unknown = string.Empty;
         return GenerateMissingValueError();
     }
+
+    public IMathNode? GetLastNode()
+    {
+        return _arg;
+    }
 }

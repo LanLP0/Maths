@@ -29,4 +29,6 @@ internal interface IMathNode
     public Result<int> GetDepth();
 
     public Result SetupForSolving(Scope scope, out string unknown);
+
+    public IMathNode? GetLastNode();
 }

@@ -7,18 +7,18 @@ namespace LCalc.MathTree.Nodes;
 
 internal sealed class ValueNode : IMathNode
 {
-    private readonly double _value;
+    public double Value { get; set; }
 
     internal ValueNode(double value)
     {
-        _value = value;
+        Value = value;
     }
 
     public int Priority { get; set; } = MathTree.ValueNodePriority;
 
     public Result<double> Calc(Scope scope)
     {
-        return _value;
+        return Value;
     }
 
     public bool AddNode(IMathNode node)
@@ -44,7 +44,7 @@ internal sealed class ValueNode : IMathNode
     public Result RenderStep(StringBuilder buffer, int selectedLevel, Scope scope, int nodeLevel = 1,
         bool showTree = false, bool latex = false)
     {
-        buffer.Append(_value);
+        buffer.Append(Value);
         return Ok();
     }
 
@@ -57,6 +57,11 @@ internal sealed class ValueNode : IMathNode
     {
         unknown = string.Empty;
         return Ok();
+    }
+
+    public IMathNode? GetLastNode()
+    {
+        return null;
     }
 
     public static Result<ValueNode> Parse(ReadOnlySpan<char> value)

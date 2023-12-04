@@ -78,4 +78,9 @@ internal sealed class VariableNode : IMathNode
         unknown = string.Empty;
         return Ok();
     }
+
+    public IMathNode? GetLastNode()
+    {
+        return null;
+    }
 }

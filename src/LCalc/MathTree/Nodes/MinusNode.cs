@@ -160,4 +160,12 @@ internal sealed class MinusNode : IMathNode
 
         return rs;
     }
+
+    public IMathNode? GetLastNode()
+    {
+        if (_arg2 is not null)
+            return _arg2;
+
+        return _arg1;
+    }
 }

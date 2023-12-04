@@ -65,7 +65,12 @@ internal sealed class CustomFunctionNode : IMathNode
         throw new UnreachableException();
     }
 
-    public CustomFunction.CustomFunction ToCustomFunction(CustomFunctionCollection customFunctions)
+    public IMathNode? GetLastNode()
+    {
+        return _node;
+    }
+
+    public CustomFunction.CustomFunction MakeCustomFunction(CustomFunctionCollection customFunctions)
     {
         var scope = new Scope(false);
         scope.Variables = _variables;

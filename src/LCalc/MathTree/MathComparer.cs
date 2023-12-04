@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System.Data;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text;
 using Common.Results;
@@ -113,17 +114,22 @@ internal sealed class MathComparer : IMathNode
 
     bool IMathNode.AddNode(IMathNode node)
     {
-        throw new NotImplementedException();
+        throw new UnreachableException();
     }
 
     public bool IsFull()
     {
-        throw new NotImplementedException();
+        throw new UnreachableException();
     }
 
     public void ChangeLastNodeTo(IMathNode node)
     {
-        throw new NotImplementedException();
+        throw new UnreachableException();
+    }
+
+    public IMathNode GetLastNode()
+    {
+        throw new RowNotInTableException();
     }
 
     // Used only in the solver
@@ -147,7 +153,7 @@ internal sealed class MathComparer : IMathNode
 
     public Result GenerateMissingValueError()
     {
-        throw new NotImplementedException();
+        throw new UnreachableException();
     }
 
     internal Result<bool> Calc(Scope scope)
