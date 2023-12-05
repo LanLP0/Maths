@@ -14,6 +14,7 @@ internal sealed class MathTree
 {
     // The order of operation
     // Lower is more likely to interact
+    // Higher is harder to step in
     public const int SpecialNodePriority = -1;
     public const int PlusMinusNodePriority = 0;
     public const int MulDivModNodePriority = 1;
@@ -42,6 +43,7 @@ internal sealed class MathTree
         var levelRoot = new LinkedNode<IMathNode?>(null);
         var spaceBeforeToken = false;
         var isInsideCustomFunction = false;
+        var isInsideComputedVariable = false;
 
         for (var i = 0; i < count; i++)
         {
@@ -439,8 +441,12 @@ internal sealed class MathTree
 
                         if (isInsideCustomFunction)
                             return Err("Cannot set variable/option inside custom function");
+                        
+                        if (isInsideComputedVariable)
+                            return Err("Cannot set variable/option inside computed variable");
 
-                        var length = 1 + chunks[i + 1].Length;
+                        var nameChunk = chunks[i + 1];
+                        var length = 1 + nameChunk.Length;
                         var skip = 1;
                         if (i + 2 < count)
                         {
@@ -467,8 +473,11 @@ internal sealed class MathTree
                                 }
                                 else if (next3FirstChar is '(')
                                 {
-                                    // TODO compute in variable assignment
-                                    throw new NotImplementedException();
+                                    MoveDownAndClear(ref levelRoot);
+                                    levelRoot.Value = new ComputedVariableNode(nameChunk.GetSpan(math).ToString());
+                                    i += 3;
+                                    isInsideComputedVariable = true;
+                                    break;
                                 }
                                 else
                                 {
@@ -539,6 +548,13 @@ internal sealed class MathTree
                 }
                 case ')': // Brace right
                 {
+                    switch (levelRoot.Value)
+                    {
+                        case ComputedVariableNode:
+                            isInsideComputedVariable = false;
+                            break;
+                    }
+                    
                     result = MoveUp(ref levelRoot);
                     if (result.Faulted)
                         return result;
@@ -550,7 +566,7 @@ internal sealed class MathTree
                     if (!Scope.IsCustomFunctionAllowed)
                         return Err("Custom function is not allowed");
 
-                    if (isInsideCustomFunction)
+                    if (isInsideCustomFunction || isInsideComputedVariable)
                         return Err("Invalid char '['");
 
                     i++;
@@ -737,8 +753,6 @@ internal sealed class MathTree
     /// <summary>
     /// Same as move up but with implicit braces insertion
     /// </summary>
-    /// <param name="levelRoot"></param>
-    /// <returns></returns>
     private Result MoveUpForgiving(scoped ref LinkedNode<IMathNode?> levelRoot)
     {
         var prevLevel = levelRoot;
@@ -749,8 +763,14 @@ internal sealed class MathTree
             return Err("Invalid expression");
 
         var node = prevLevel.Value;
-        if (node is CustomFunctionNode)
-            return Err("Invalid amount of braces in custom function");
+        if (node.Priority is SpecialNodePriority)
+            switch (node)
+            {
+                case CustomFunctionNode:
+                    return Err("Invalid amount of braces in custom function");
+                case ComputedVariableNode variable:
+                    return SetVariable(variable);
+            }
 
         if (node is FunctionCallNode fnNode)
         {
@@ -773,6 +793,7 @@ internal sealed class MathTree
         return AddNode(levelRoot, node, true);
     }
 
+    // When an ')' occurred
     private Result MoveUp(scoped ref LinkedNode<IMathNode?> levelRoot)
     {
         var prevLevel = levelRoot;
@@ -783,8 +804,14 @@ internal sealed class MathTree
             return Err("Invalid expression");
 
         var node = prevLevel.Value;
-        if (node is CustomFunctionNode)
-            return Err("Invalid amount of braces in custom function");
+        if (node.Priority is SpecialNodePriority)
+            switch (node)
+            {
+                case CustomFunctionNode:
+                    return Err("Invalid amount of braces in custom function");
+                case ComputedVariableNode variable:
+                    return SetVariable(variable);
+            }
 
         if (node is FunctionCallNode fnNode)
         {
@@ -936,6 +963,15 @@ internal sealed class MathTree
 
         lastNotFull.AddNode(node);
         return true;
+    }
+
+    private Result SetVariable(ComputedVariableNode variable)
+    {
+        var result = variable.Calc(Scope);
+        if (result.Faulted)
+            return result;
+
+        return Scope.SetVariable(variable.Name, result.Value);
     }
 
     private Result SetVariable(SpanSegment<char> segment, ReadOnlySpan<char> math)
@@ -1108,10 +1144,7 @@ internal sealed class MathTree
         if (GetCharacterType(c) is CharacterType.Number or CharacterType.Letter)
             return true;
 
-        if (c is '(')
-            return true;
-
-        return false;
+        return c is '(';
     }
     
     public CalcResult Calc()

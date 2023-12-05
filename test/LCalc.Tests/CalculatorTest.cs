@@ -70,6 +70,10 @@ public sealed class CalculatorTest
         "&foo='",
         "&a=1&a=1",
         "1 &fmt=error",
+        // Computed variable
+        "a&a=()",
+        "a&a=([",
+        "a&a=(&b=1",
         // Special number
         "0x",
         "0b",
@@ -139,6 +143,10 @@ public sealed class CalculatorTest
         "1-&a=70a",
         "a3&a=2",
         "a3&a=-2",
+        // Computed variable
+        "a &b=2 &a=(b^3)",
+        "a&a=(abs(-15))",
+        "a&a=(1+(2^(3-4",
         // Special value
         "25%",
         "-0x1e240",

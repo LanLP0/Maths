@@ -27,8 +27,9 @@ Calculator.RenderExpression()  Render an expression
 > `args` The arguments
 
 > **__Arguments__**  
-> `&{name}={number}`  Set a variable's value  
-> `&{name}` or `&{name}={text}`  Set calculator argument  
+> `&{name}={number}` Set a variable's value  
+> `&{name}=({expression})` Set a variable's value using an expression  
+> `&{name}` or `&{name}={text}` Set calculator argument  
 > `&step` Add solving steps  
 > `&tree` Like &step but wrap every node with a `()`  
 > `&raw` See raw value  

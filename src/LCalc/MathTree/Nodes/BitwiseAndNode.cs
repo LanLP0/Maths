@@ -42,7 +42,7 @@ internal sealed class BitwiseAndNode : IMathNode
             return true;
         }
 
-        if (_arg2 != null)
+        if (_arg2 is not null)
             return false;
 
         _arg2 = node;
@@ -51,7 +51,7 @@ internal sealed class BitwiseAndNode : IMathNode
 
     public bool IsFull()
     {
-        return _arg2 != null;
+        return _arg2 is not null;
     }
 
     public void ChangeLastNodeTo(IMathNode node)

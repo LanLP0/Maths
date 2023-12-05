@@ -204,6 +204,18 @@
     Output: Error: Unknown format: error
   },
   {
+    Math: a&a=(),
+    Output: Error: Missing expression in variable assignment
+  },
+  {
+    Math: a&a=([,
+    Output: Error: Invalid char '['
+  },
+  {
+    Math: a&a=(&b=1,
+    Output: Error: Cannot set variable/option inside computed variable
+  },
+  {
     Math: 0x,
     Output: Error: Unknown variable 'x'
   },

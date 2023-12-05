@@ -100,6 +100,18 @@
     Output: Result: -8
   },
   {
+    Math: a &b=2 &a=(b^3),
+    Output: Result: 8
+  },
+  {
+    Math: a&a=(abs(-15)),
+    Output: Result: 15
+  },
+  {
+    Math: a&a=(1+(2^(3-4,
+    Output: Result: 1.5
+  },
+  {
     Math: 25%,
     Output: Result: 0.25
   },
