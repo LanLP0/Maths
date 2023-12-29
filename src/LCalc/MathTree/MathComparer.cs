@@ -101,7 +101,7 @@ internal sealed class MathComparer : IMathNode
         var rs = _args[0].SetupForSolving(scope, out unknown);
         if (rs.Faulted)
             return rs;
-        
+
         if (unknown == string.Empty)
             return _args[1].SetupForSolving(scope, out unknown);
 
@@ -141,7 +141,7 @@ internal sealed class MathComparer : IMathNode
         var rs = _args[0].Calc(scope);
         if (rs.Faulted)
             return rs;
-        
+
         var num1 = rs.Value;
 
         rs = _args[1].Calc(scope);

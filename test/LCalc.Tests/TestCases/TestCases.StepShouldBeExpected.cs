@@ -1,4 +1,5 @@
 // ReSharper disable InconsistentNaming
+
 namespace LCalc.Tests.TestCases;
 
 public static partial class TestCases

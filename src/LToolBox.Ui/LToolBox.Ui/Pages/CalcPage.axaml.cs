@@ -19,10 +19,10 @@ public partial class CalcPage : UserControl
     // Used to indicate caret pos
     private const char ZeroWidthUnicode = '​';
     private const int MaxHistoryCount = 20;
-    
-    private readonly bool _isDesktop;
-    private bool _isTextInputEventBeingHandled = false;
     private readonly HistoryPageViewModel _historyVm = new();
+
+    private readonly bool _isDesktop;
+    private bool _isTextInputEventBeingHandled;
 
     private double _prevAns = double.NaN;
     private CalcResult _result;
@@ -102,7 +102,7 @@ public partial class CalcPage : UserControl
             _vm.OutputText = result.RenderValue();
         }).Wait(TimeSpan.FromMilliseconds(100));
     }
-    
+
     // TODO Kb1 & Kb2 KeyClicked
     // Simplify cases by only make them use a single string
     // which contains the text and cursor position marked by
@@ -146,10 +146,7 @@ public partial class CalcPage : UserControl
                         continue;
                     }
 
-                    if (c is ')')
-                    {
-                        level--;
-                    }
+                    if (c is ')') level--;
                 }
 
                 if (level <= 0)
@@ -187,7 +184,7 @@ public partial class CalcPage : UserControl
                     SwitchOsk();
                     break;
                 }
-                
+
                 AddText($"[({ZeroWidthUnicode})={ZeroWidthUnicode}]");
                 _vm.CaretIndex -= 6;
                 SwitchOsk();
@@ -200,6 +197,7 @@ public partial class CalcPage : UserControl
                     SwitchOsk();
                     break;
                 }
+
                 AddText($"({ZeroWidthUnicode})");
                 _vm.CaretIndex -= 3;
                 SwitchOsk();
@@ -212,7 +210,7 @@ public partial class CalcPage : UserControl
                     SwitchOsk();
                     break;
                 }
-                
+
                 AddText($"&={ZeroWidthUnicode}");
                 _vm.CaretIndex -= 2;
                 SwitchOsk();
@@ -356,7 +354,7 @@ public partial class CalcPage : UserControl
     {
         if (switchToInput)
             SwitchToInputLayout();
-        
+
         if (string.IsNullOrEmpty(_vm.InputText))
             return;
 
@@ -387,7 +385,7 @@ public partial class CalcPage : UserControl
     {
         _vm.InputText = string.Empty;
         _vm.OutputText = string.Empty;
-        
+
         SwitchToInputLayout();
     }
 
@@ -408,7 +406,7 @@ public partial class CalcPage : UserControl
             ShowImmediateErrorOutput();
             return;
         }
-        
+
         _result = result;
         _prevAns = result.IsNumber ? result.Number!.Value : double.NaN;
         _vm.OutputText = result.RenderValue();
@@ -473,14 +471,14 @@ public partial class CalcPage : UserControl
     {
         NavigationService.NavigateFromContext(_historyVm);
     }
-    
+
     private void Page_OnTextInput(object? sender, TextInputEventArgs e)
     {
         if (_isTextInputEventBeingHandled)
             return;
 
         _isTextInputEventBeingHandled = true;
-        
+
         if (string.IsNullOrEmpty(e.Text))
         {
             _isTextInputEventBeingHandled = false;
@@ -522,18 +520,18 @@ public partial class CalcPage : UserControl
         e.Handled = true;
         _isTextInputEventBeingHandled = false;
     }
-    
+
     private void Page_OnKeyDown(object? sender, KeyEventArgs e)
     {
         if (_isTextInputEventBeingHandled)
             return;
 
         _isTextInputEventBeingHandled = true;
-        
+
         // var text = $"{e.Key} {e.KeyModifiers}";
         // _vm.InputText = text;
         // return;
-        
+
         // if the user is not on this page
         if (!ReferenceEquals(NavigationService.Frame.Content, this))
         {
@@ -630,7 +628,7 @@ public partial class CalcPage : UserControl
                     break;
             }
         }
-        
+
         _isTextInputEventBeingHandled = false;
     }
 }

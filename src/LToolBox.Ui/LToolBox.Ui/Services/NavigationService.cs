@@ -6,27 +6,25 @@ namespace LToolBox.Ui.Services;
 
 public static class NavigationService
 {
-    private static Frame _frame;
-
-    public static Frame Frame => _frame;
+    public static Frame Frame { get; private set; }
 
     public static void SetFrame(Frame f)
     {
-        _frame = f;
+        Frame = f;
     }
 
     public static bool GoBack()
     {
-        if (!_frame.CanGoBack)
+        if (!Frame.CanGoBack)
             return false;
 
-        _frame.GoBack();
+        Frame.GoBack();
         return true;
     }
 
     public static void NavigateFromContext(object dataContext, NavigationTransitionInfo transitionInfo = null)
     {
-        _frame.NavigateFromObject(dataContext,
+        Frame.NavigateFromObject(dataContext,
             new FrameNavigationOptions
             {
                 IsNavigationStackEnabled = true,

@@ -6,19 +6,19 @@ namespace LCalc.MathTree.Nodes;
 
 internal sealed class ComputedVariableNode : IMathNode
 {
-    private readonly string _name;
-    private IMathNode? _child = null;
-    
-    public int Priority { get; set; } = MathTree.SpecialNodePriority;
-    public string Name => _name;
+    private IMathNode? _child;
 
     public ComputedVariableNode(string name)
     {
-        _name = name;
+        Name = name;
     }
 
+    public string Name { get; }
+
+    public int Priority { get; set; } = MathTree.SpecialNodePriority;
+
     /// <summary>
-    /// Compute the value of the variable
+    ///     Compute the value of the variable
     /// </summary>
     /// <param name="scope"></param>
     /// <returns></returns>
@@ -55,7 +55,8 @@ internal sealed class ComputedVariableNode : IMathNode
         return Err("Missing expression in variable assignment");
     }
 
-    public Result RenderStep(StringBuilder buffer, int selectedLevel, Scope scope, int nodeLevel = 1, bool showTree = false,
+    public Result RenderStep(StringBuilder buffer, int selectedLevel, Scope scope, int nodeLevel = 1,
+        bool showTree = false,
         bool latex = false)
     {
         throw new UnreachableException();

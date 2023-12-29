@@ -7,12 +7,12 @@ namespace LCalc.MathTree.Nodes;
 
 internal sealed class ValueNode : IMathNode
 {
-    public double Value { get; set; }
-
     internal ValueNode(double value)
     {
         Value = value;
     }
+
+    public double Value { get; set; }
 
     public int Priority { get; set; } = MathTree.ValueNodePriority;
 

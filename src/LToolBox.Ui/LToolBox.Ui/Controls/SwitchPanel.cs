@@ -19,15 +19,14 @@ public sealed class SwitchPanel : TemplatedControl
         get => GetValue(ContentProperty);
         set => SetValue(ContentProperty, value);
     }
-    
-    [Content]
-    public List<Control> Controls { get; set; } = new();
+
+    [Content] public List<Control> Controls { get; set; } = new();
 
     protected override void OnInitialized()
     {
         DataContext = this;
         Content = Controls.Count > 0 ? Controls[0] : null;
-        
+
         Template = new FuncControlTemplate((_, _) =>
         {
             return new ContentPresenter

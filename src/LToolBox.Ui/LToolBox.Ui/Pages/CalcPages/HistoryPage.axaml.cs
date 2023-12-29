@@ -20,7 +20,7 @@ public partial class HistoryPage : UserControl
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
     {
         _vm = (HistoryPageViewModel)DataContext!;
-        
+
         HistoryBox.ItemsSource = null;
         HistoryBox.ItemsSource = _vm.History;
     }

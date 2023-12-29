@@ -6,18 +6,17 @@ namespace LToolBox.Ui.ViewModels;
 
 public class CalcPageViewModel : NavViewModelBase
 {
+    public const string NavHeaderName = "LCalc";
     private int _caretIndex;
+    private bool _displayRaw = AppState.Instance.LCalc_DisplayRaw;
+    private bool _immediateOutputVisible = true;
     private string _inputText = string.Empty;
     private string _outputText = string.Empty;
-    private bool _immediateOutputVisible = true;
-    private bool _displayRaw = AppState.Instance.LCalc_DisplayRaw;
-
-    public const string NavHeaderName = "LCalc";
     public override string NavHeader { get; } = NavHeaderName;
     public override string? IconKey { get; } = "CalculatorIcon";
 
     /// <summary>
-    /// Whether to display the result without the formatting or with it 
+    ///     Whether to display the result without the formatting or with it
     /// </summary>
     public bool DisplayRaw
     {
@@ -30,8 +29,6 @@ public class CalcPageViewModel : NavViewModelBase
                 ClearOutputFormatting();
         }
     }
-
-    public event EventHandler? InputTextChanged;
 
     public string InputText
     {
@@ -72,7 +69,7 @@ public class CalcPageViewModel : NavViewModelBase
         {
             if (_immediateOutputVisible == value)
                 return;
-            
+
             this.RaisePropertyChanging();
             this.RaisePropertyChanging(nameof(ImmediateErrorOutputVisible));
             _immediateOutputVisible = value;
@@ -89,14 +86,16 @@ public class CalcPageViewModel : NavViewModelBase
         set => this.RaiseAndSetIfChanged(ref _caretIndex, value);
     }
 
+    public event EventHandler? InputTextChanged;
+
     /// <summary>
-    /// Parse the output again to remove any formatting
+    ///     Parse the output again to remove any formatting
     /// </summary>
     private void ClearOutputFormatting()
     {
         if (string.IsNullOrWhiteSpace(_outputText))
             return;
-        
+
         this.RaisePropertyChanging(nameof(OutputText));
         _outputText = Calculator.CalcRaw(_outputText).WithFormat(Format.Raw).RenderValue();
         this.RaisePropertyChanged(nameof(OutputText));

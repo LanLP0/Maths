@@ -35,7 +35,7 @@
                            IsVisible="{Binding ImmediateOutputVisible}"
                            Text="{Binding OutputText}" TextWrapping="NoWrap"
                            Foreground="{DynamicResource SystemAccentColor}" />
-                
+
                 <TextBlock Name="ImmediateErrorOutput" TextAlignment="Left" FontSize="15"
                            IsVisible="{Binding ImmediateErrorOutputVisible}"
                            Text="{Binding OutputText}" TextWrapping="NoWrap"
@@ -82,7 +82,7 @@
                     Background="Transparent" BorderThickness="0" IsVisible="False">
                 <fac:SymbolIcon Symbol="AlignLeft" />
             </Button>
-            
+
             <ToggleButton Grid.Column="3" Name="DisplayRaw" Content="Raw"
                           IsChecked="{Binding DisplayRaw}" Focusable="False"
                           Theme="{StaticResource TransparentToggleButton}" />

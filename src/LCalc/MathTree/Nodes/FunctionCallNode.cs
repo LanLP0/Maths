@@ -10,17 +10,17 @@ internal sealed class FunctionCallNode : IMathNode
 {
     private readonly List<IMathNode> _args = new();
 
-    public int ArgCount => _args.Count;
-
-    /// <summary>
-    /// Skip over a slot (after a comma)
-    /// </summary>
-    public bool SkipOverSlot { get; set; }
-
     public FunctionCallNode(string name)
     {
         Name = name;
     }
+
+    public int ArgCount => _args.Count;
+
+    /// <summary>
+    ///     Skip over a slot (after a comma)
+    /// </summary>
+    public bool SkipOverSlot { get; set; }
 
     public string Name { get; set; }
 

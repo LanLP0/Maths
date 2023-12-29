@@ -5,8 +5,8 @@ namespace LToolBox.Ui.ViewModels;
 
 public sealed class MainViewViewModel : ViewModelBase
 {
-    private NavigationViewItem _selectedItem;
     private string _headerText;
+    private NavigationViewItem _selectedItem;
 
     public NavigationViewItem SelectedItem
     {

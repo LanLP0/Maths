@@ -1,8 +1,4 @@
-﻿using System.Text;
-using BenchmarkDotNet.Running;
-using Benchmarks;
-using LCalc;
-using LCalc.MathTree;
+﻿using BenchmarkDotNet.Running;
 
 // var l = new LCalcBenchmarks();
 //

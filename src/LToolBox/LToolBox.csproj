@@ -22,13 +22,13 @@
     </ItemGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Debug'">
-        <PackageReference Include="Serilog" Version="3.1.1" />
-        <PackageReference Include="Serilog.Sinks.Console" Version="5.0.1" />
+        <PackageReference Include="Serilog" Version="3.1.1"/>
+        <PackageReference Include="Serilog.Sinks.Console" Version="5.0.1"/>
     </ItemGroup>
 
     <ItemGroup>
         <PackageReference Include="RadLine" Version="0.6.0"/>
-        <PackageReference Include="Spectre.Console.Cli" Version="0.48.0" />
+        <PackageReference Include="Spectre.Console.Cli" Version="0.48.0"/>
     </ItemGroup>
 
 </Project>

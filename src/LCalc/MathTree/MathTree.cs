@@ -1,7 +1,4 @@
-﻿using System.Diagnostics;
-using System.Runtime.InteropServices;
-using System.Text;
-using Common;
+﻿using Common;
 using Common.Results;
 using LCalc.Extension;
 using LCalc.Helpers;
@@ -160,11 +157,11 @@ internal sealed class MathTree
                             {
                                 // This is also a special number
                                 chunk = new SpanSegment<char>(chunk.Start, 1 + nextChunk.Length);
-                                
+
                                 parseResult = ValueNode.Parse(chunk.GetSpan(math));
                                 if (parseResult.Faulted)
                                     return parseResult;
-                                
+
                                 result = AddNode(levelRoot, parseResult.Value!, spaceBeforeToken);
                                 if (result.Faulted)
                                     return result;
@@ -441,7 +438,7 @@ internal sealed class MathTree
 
                         if (isInsideCustomFunction)
                             return Err("Cannot set variable/option inside custom function");
-                        
+
                         if (isInsideComputedVariable)
                             return Err("Cannot set variable/option inside computed variable");
 
@@ -455,7 +452,7 @@ internal sealed class MathTree
                             {
                                 if (i + 3 >= count)
                                     return Err("Missing variable/option value");
-                                
+
                                 var next3 = chunks[i + 3];
                                 var next3FirstChar = next3.GetFirst(math);
                                 if (GetCharacterType(next3FirstChar) is CharacterType.Letter
@@ -554,7 +551,7 @@ internal sealed class MathTree
                             isInsideComputedVariable = false;
                             break;
                     }
-                    
+
                     result = MoveUp(ref levelRoot);
                     if (result.Faulted)
                         return result;
@@ -751,7 +748,7 @@ internal sealed class MathTree
     }
 
     /// <summary>
-    /// Same as move up but with implicit braces insertion
+    ///     Same as move up but with implicit braces insertion
     /// </summary>
     private Result MoveUpForgiving(scoped ref LinkedNode<IMathNode?> levelRoot)
     {
@@ -780,9 +777,7 @@ internal sealed class MathTree
             if (fnNode.Name.StartsWith('$'))
             {
                 if (fnNode.Name is "$abs")
-                {
                     fnNode.Name = "abs";
-                }
                 else
                     return Err($"Invalid {fnNode.Name.Substring(1)} syntax");
             }
@@ -897,7 +892,6 @@ internal sealed class MathTree
         var lastNode = levelRoot.Value!;
 
         if (node is ExponentNode)
-        {
             for (;;)
             {
                 if (lastNode is not ExponentNode)
@@ -909,7 +903,6 @@ internal sealed class MathTree
                 secondToLastNode = lastNode;
                 lastNode = nodeTmp;
             }
-        }
 
         for (;;)
         {
@@ -1146,7 +1139,7 @@ internal sealed class MathTree
 
         return c is '(';
     }
-    
+
     public CalcResult Calc()
     {
         if (_comparer is not null)

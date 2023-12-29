@@ -1,4 +1,5 @@
 ﻿// ReSharper disable InconsistentNaming
+
 using Avalonia.Media;
 using LToolBox.Ui.Services;
 using LToolBox.Ui.ViewModels;
