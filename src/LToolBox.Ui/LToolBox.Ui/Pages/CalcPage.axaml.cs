@@ -23,7 +23,7 @@ public partial class CalcPage : UserControl
     private readonly bool _isDesktop;
     private bool _isTextInputEventBeingHandled = false;
     private readonly HistoryPageViewModel _historyVm = new();
-    
+
     private double _prevAns = double.NaN;
     private CalcResult _result;
 
@@ -409,15 +409,11 @@ public partial class CalcPage : UserControl
             return;
         }
         
-        _vm.InputText = string.Empty;
-        _vm.OutputText = math;
-
         _result = result;
-
-        ResultOutput.Text = result.RenderValue();
         _prevAns = result.IsNumber ? result.Number!.Value : double.NaN;
+        _vm.OutputText = result.RenderValue();
 
-        var history = new MathHistory(math, ResultOutput.Text);
+        var history = new MathHistory(math, _vm.OutputText);
         AddHistory(history);
 
         SwitchLayout(false);

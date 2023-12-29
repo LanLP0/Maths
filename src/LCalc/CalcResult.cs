@@ -127,6 +127,12 @@ public struct CalcResult
         }
     }
 
+    public CalcResult WithFormat(Format format)
+    {
+        Format = format;
+        return this;
+    }
+
     internal static CalcResult Err(string message)
     {
         return new CalcResult(new Exception(message), default);

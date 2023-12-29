@@ -19,7 +19,7 @@
 
                 <TextBlock Name="MathOutput" TextAlignment="Left" FontSize="15"
                            TextWrapping="NoWrap" TextTrimming="CharacterEllipsis"
-                           Text="{Binding OutputText}" />
+                           Text="{Binding InputText}" />
 
                 <TextBlock Name="ResultOutput" TextAlignment="Left" FontSize="30"
                            TextWrapping="Wrap"
@@ -58,7 +58,7 @@
             </StackPanel>
         </ScrollViewer>
 
-        <Grid Height="30" ColumnDefinitions="Auto, Auto, Auto, *, Auto, Auto" DockPanel.Dock="Top">
+        <Grid Height="30" ColumnDefinitions="Auto, Auto, Auto, Auto, *, Auto, Auto" DockPanel.Dock="Top">
             <Button Grid.Column="0" Name="KeyboardButton" Tapped="KeyboardButton_OnTapped"
                     Background="Transparent" BorderThickness="0">
                 <Viewbox>
@@ -82,8 +82,12 @@
                     Background="Transparent" BorderThickness="0" IsVisible="False">
                 <fac:SymbolIcon Symbol="AlignLeft" />
             </Button>
+            
+            <ToggleButton Grid.Column="3" Name="DisplayRaw" Content="Raw"
+                          IsChecked="{Binding DisplayRaw}" Focusable="False"
+                          Theme="{StaticResource TransparentToggleButton}" />
 
-            <Button Grid.Column="4" Name="DeleteAllButton" Click="DeleteAllButton_OnClick"
+            <Button Grid.Column="5" Name="DeleteAllButton" Click="DeleteAllButton_OnClick"
                     Background="Transparent" BorderThickness="0"
                     Focusable="False">
                 <Viewbox>
@@ -91,7 +95,7 @@
                 </Viewbox>
             </Button>
 
-            <Button Grid.Column="5" Name="DeleteButton" Click="DeleteButton_OnClick"
+            <Button Grid.Column="6" Name="DeleteButton" Click="DeleteButton_OnClick"
                     Background="Transparent" BorderThickness="0"
                     Focusable="False">
                 <Viewbox>

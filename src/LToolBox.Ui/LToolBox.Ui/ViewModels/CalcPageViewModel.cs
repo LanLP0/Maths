@@ -1,4 +1,5 @@
 using System;
+using LCalc;
 using ReactiveUI;
 
 namespace LToolBox.Ui.ViewModels;
@@ -9,11 +10,27 @@ public class CalcPageViewModel : NavViewModelBase
     private string _inputText = string.Empty;
     private string _outputText = string.Empty;
     private bool _immediateOutputVisible = true;
-    
+    private bool _displayRaw = AppState.Instance.LCalc_DisplayRaw;
+
     public const string NavHeaderName = "LCalc";
     public override string NavHeader { get; } = NavHeaderName;
     public override string? IconKey { get; } = "CalculatorIcon";
-    
+
+    /// <summary>
+    /// Whether to display the result without the formatting or with it 
+    /// </summary>
+    public bool DisplayRaw
+    {
+        get => _displayRaw;
+        set
+        {
+            _displayRaw = value;
+            AppState.Instance.LCalc_DisplayRaw = value;
+            if (_displayRaw)
+                ClearOutputFormatting();
+        }
+    }
+
     public event EventHandler? InputTextChanged;
 
     public string InputText
@@ -41,6 +58,8 @@ public class CalcPageViewModel : NavViewModelBase
 
             this.RaisePropertyChanging();
             _outputText = value;
+            if (DisplayRaw)
+                ClearOutputFormatting();
             this.RaisePropertyChanged();
             ImmediateOutputVisible = true;
         }
@@ -68,5 +87,18 @@ public class CalcPageViewModel : NavViewModelBase
     {
         get => _caretIndex;
         set => this.RaiseAndSetIfChanged(ref _caretIndex, value);
+    }
+
+    /// <summary>
+    /// Parse the output again to remove any formatting
+    /// </summary>
+    private void ClearOutputFormatting()
+    {
+        if (string.IsNullOrWhiteSpace(_outputText))
+            return;
+        
+        this.RaisePropertyChanging(nameof(OutputText));
+        _outputText = Calculator.CalcRaw(_outputText).WithFormat(Format.Raw).RenderValue();
+        this.RaisePropertyChanged(nameof(OutputText));
     }
 }
