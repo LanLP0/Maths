@@ -37,8 +37,8 @@ public partial class CalcPage : UserControl
         Kb2.KeyClicked.Subscribe(Observer.Create<string>(Kb2_KeyClicked));
 
         // TODO: Windows Phones & Linux Phones
-        // _isDesktop = OperatingSystem.IsWindows() || OperatingSystem.IsLinux() || OperatingSystem.IsMacOS() ||
-        //     OperatingSystem.IsMacCatalyst();
+        _isDesktop = OperatingSystem.IsWindows() || OperatingSystem.IsLinux() || OperatingSystem.IsMacOS() ||
+            OperatingSystem.IsMacCatalyst();
 
         if (_isDesktop)
         {
