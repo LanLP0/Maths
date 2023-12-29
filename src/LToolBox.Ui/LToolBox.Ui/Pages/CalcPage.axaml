@@ -193,7 +193,7 @@
                     <ctrl:VirtualKey ctrl:VirtualKeyboard.Column="0" ctrl:VirtualKeyboard.Row="6"
                                      Key="$home" IconSource="{StaticResource RightCollapseArrowIcon}" />
                     <ctrl:VirtualKey ctrl:VirtualKeyboard.Column="2" ctrl:VirtualKeyboard.Row="6"
-                                     Key=" " IconSource="{StaticResource SpaceKeyIcon}" />
+                                     Key="," IconSource="{StaticResource CommaKeyIcon}" />
                     <ctrl:VirtualKey ctrl:VirtualKeyboard.Column="4" ctrl:VirtualKeyboard.Row="6"
                                      Key="$end" IconSource="{StaticResource LeftCollapseArrowIcon}" />
                     <ctrl:VirtualKey ctrl:VirtualKeyboard.Column="6" ctrl:VirtualKeyboard.Row="6"
