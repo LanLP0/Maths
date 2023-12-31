@@ -1050,7 +1050,7 @@ internal sealed class MathTree
         return Ok();
     }
 
-    public void SplitIntoChunks(ReadOnlySpan<char> math,
+    private static void SplitIntoChunks(ReadOnlySpan<char> math,
         ref Span<SpanSegment<char>> output, out int count)
     {
         count = 0;
@@ -1132,7 +1132,7 @@ internal sealed class MathTree
         }
     }
 
-    private bool IsValue(char c)
+    private static bool IsValue(char c)
     {
         if (GetCharacterType(c) is CharacterType.Number or CharacterType.Letter)
             return true;
