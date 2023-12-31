@@ -19,7 +19,7 @@ public sealed class CalculatorTest
     {
         _settings = new VerifySettings();
         _settings.UseDirectory("test-results");
-        DiffRunner.MaxInstancesToLaunch(3);
+        DiffRunner.MaxInstancesToLaunch(1);
     }
 
     [Fact]

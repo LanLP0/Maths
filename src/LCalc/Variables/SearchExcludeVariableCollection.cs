@@ -1,25 +1,27 @@
-﻿using System.Collections;
+using System.Collections;
 
 namespace LCalc.Variables;
 
 /// <summary>
-///     Used to efficiently override a single variable
+/// Used to search for a variable in a collection but exclude one variable name
 /// </summary>
-internal sealed class SingleVariableCollection : IVariableCollection
+internal sealed class SearchExcludeVariableCollection : IVariableCollection
 {
-    private IVariableCollection? _linkedCollection;
+    private IVariableCollection _variableCollection;
+    /// <summary>
+    /// The name to exclude
+    /// </summary>
+    private string _name;
 
-    public SingleVariableCollection(Variable variable, IVariableCollection? linkedCollection)
+    public SearchExcludeVariableCollection(string name, IVariableCollection variableCollection)
     {
-        Variable = variable;
-        _linkedCollection = linkedCollection;
+        _name = name;
+        _variableCollection = variableCollection;
     }
-
-    public Variable Variable { get; }
 
     public IEnumerator<Variable> GetEnumerator()
     {
-        yield return Variable;
+        throw new NotImplementedException();
     }
 
     IEnumerator IEnumerable.GetEnumerator()
@@ -27,8 +29,7 @@ internal sealed class SingleVariableCollection : IVariableCollection
         return GetEnumerator();
     }
 
-    public int Count => 1;
-
+    public int Count { get; }
     public bool Contains(Variable variable)
     {
         return Contains(variable.Name);
@@ -36,13 +37,10 @@ internal sealed class SingleVariableCollection : IVariableCollection
 
     public bool Contains(string name)
     {
-        if (name == Variable.Name)
-            return true;
-
-        if (_linkedCollection is null)
+        if (name == _name)
             return false;
 
-        return _linkedCollection.Contains(name);
+        return _variableCollection.Contains(name);
     }
 
     public bool TryAdd(string name, double value)
@@ -67,17 +65,7 @@ internal sealed class SingleVariableCollection : IVariableCollection
 
     public bool TryGet(string name, out double result)
     {
-        if (Variable.Name == name)
-        {
-            result = Variable.Value;
-            return true;
-        }
-
-        if (_linkedCollection is not null && _linkedCollection.TryGet(name, out result))
-            return true;
-
-        result = double.NaN;
-        return false;
+        throw new NotImplementedException();
     }
 
     public int Remove(string name)
@@ -87,6 +75,6 @@ internal sealed class SingleVariableCollection : IVariableCollection
 
     public void Link(IVariableCollection? variableCollection)
     {
-        _linkedCollection = variableCollection;
+        throw new NotImplementedException();
     }
 }

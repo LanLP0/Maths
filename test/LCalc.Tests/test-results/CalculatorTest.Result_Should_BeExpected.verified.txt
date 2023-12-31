@@ -260,6 +260,14 @@
     Output: Result: 1.098612
   },
   {
+    Math: sigma(1 4 x*10),
+    Output: Result: 100
+  },
+  {
+    Math: cpi(1 4 x*10),
+    Output: Result: 240000
+  },
+  {
     Math: sigma(x 1 4 x*10),
     Output: Result: 100
   },

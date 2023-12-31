@@ -16,13 +16,20 @@ internal static class CalculatorHelpers
 
     public static Result<double> CalcSigma(List<IMathNode> maths, Scope scope)
     {
-        if (maths.Count is not 4)
-            return Err("sigma() takes exactly 4 arguments");
+        if (maths.Count is not (3 or 4))
+            return Err("sigma() takes 3 or 4 arguments");
 
-        if (maths[0] is not VariableNode variable)
-            return Err("sigma(): First argument must be a variable");
+        string? variable = null;
+        if (maths.Count is 4)
+        {
+            if (maths[0] is not VariableNode variable2)
+                return Err($"sigma(): First argument is not a variable");
+            
+            variable = variable2.Name;
+        }
 
-        var start = maths[1].Calc(scope);
+        var index = variable is null ? 0 : 1;
+        var start = maths[index++].Calc(scope);
         if (start.Faulted)
             return start;
 
@@ -30,7 +37,7 @@ internal static class CalculatorHelpers
         if (!startVal.IsInt())
             return Err("sigma(): Start must be an integer");
 
-        var end = maths[2].Calc(scope);
+        var end = maths[index++].Calc(scope);
         if (end.Faulted)
             return end;
 
@@ -41,19 +48,41 @@ internal static class CalculatorHelpers
         if (endVal < startVal)
             return Err("sigma(): End cannot be less than start");
 
-        var fn = maths[3];
+        var fn = maths[index];
 
         // Setup variable
-        var ogVarCollection = scope.Variables;
-        var variable1 = new Variable(variable.Name, 0);
-        scope.Variables = new SingleVariableCollection(variable1, ogVarCollection);
+        var ogVariableCollection = scope.Variables;
+        if (variable is null)
+        {
+            // Find variable
+            var setupResult = fn.SetupForSolving(scope, out var unknown);
+            if (setupResult.Faulted)
+                return setupResult;
 
-        var setupResult = fn.SetupForSolving(scope, out var unknown);
-        if (setupResult.Faulted)
-            return setupResult;
+            if (unknown == string.Empty)
+                return Err("sigma(): No variable found");
 
-        if (unknown != variable.Name)
-            return Err("sigma(): Invalid variable name");
+            variable = unknown;
+        }
+        else
+        {
+            // Check if variable is used in fn
+            scope.Variables = new SearchExcludeVariableCollection(variable, ogVariableCollection);
+            
+            var setupResult = fn.SetupForSolving(scope, out var unknown);
+            if (setupResult.Faulted)
+                return setupResult;
+
+            if (unknown != variable)
+                return Err($"sigma(): Variable '{variable}' is not used in function");
+            
+            // Revert
+            scope.Variables = ogVariableCollection;
+        }
+        
+        // Create variable
+        var variable1 = new Variable(variable, 0.0);
+        scope.Variables = new SingleVariableCollection(variable1, ogVariableCollection);
 
         var result = 0.0;
         for (; startVal <= endVal; startVal++)
@@ -67,19 +96,26 @@ internal static class CalculatorHelpers
             result += runResult.Value;
         }
 
-        scope.Variables = ogVarCollection;
+        scope.Variables = ogVariableCollection;
         return result;
     }
-
+    
     public static Result<double> CalcCPi(List<IMathNode> maths, Scope scope)
     {
-        if (maths.Count is not 4)
-            return Err("cpi() takes exactly 4 arguments");
+        if (maths.Count is not (3 or 4))
+            return Err("cpi() takes 3 or 4 arguments");
 
-        if (maths[0] is not VariableNode variable)
-            return Err("cpi(): First argument must be a variable");
+        string? variable = null;
+        if (maths.Count is 4)
+        {
+            if (maths[0] is not VariableNode variable2)
+                return Err($"cpi(): First argument is not a variable");
+            
+            variable = variable2.Name;
+        }
 
-        var start = maths[1].Calc(scope);
+        var index = variable is null ? 0 : 1;
+        var start = maths[index++].Calc(scope);
         if (start.Faulted)
             return start;
 
@@ -87,7 +123,7 @@ internal static class CalculatorHelpers
         if (!startVal.IsInt())
             return Err("cpi(): Start must be an integer");
 
-        var end = maths[2].Calc(scope);
+        var end = maths[index++].Calc(scope);
         if (end.Faulted)
             return end;
 
@@ -98,19 +134,41 @@ internal static class CalculatorHelpers
         if (endVal < startVal)
             return Err("cpi(): End cannot be less than start");
 
-        var fn = maths[3];
+        var fn = maths[index];
 
         // Setup variable
-        var ogVarCollection = scope.Variables;
-        var variable1 = new Variable(variable.Name, 0);
-        scope.Variables = new SingleVariableCollection(variable1, ogVarCollection);
+        var ogVariableCollection = scope.Variables;
+        if (variable is null)
+        {
+            // Find variable
+            var setupResult = fn.SetupForSolving(scope, out var unknown);
+            if (setupResult.Faulted)
+                return setupResult;
 
-        var setupResult = fn.SetupForSolving(scope, out var unknown);
-        if (setupResult.Faulted)
-            return setupResult;
+            if (unknown == string.Empty)
+                return Err("cpi(): No variable found");
 
-        if (unknown != variable.Name)
-            return Err("cpi(): Invalid variable name");
+            variable = unknown;
+        }
+        else
+        {
+            // Check if variable is used in fn
+            scope.Variables = new SearchExcludeVariableCollection(variable, ogVariableCollection);
+            
+            var setupResult = fn.SetupForSolving(scope, out var unknown);
+            if (setupResult.Faulted)
+                return setupResult;
+
+            if (unknown != variable)
+                return Err($"cpi(): Variable '{variable}' is not used in function");
+            
+            // Revert
+            scope.Variables = ogVariableCollection;
+        }
+        
+        // Create variable
+        var variable1 = new Variable(variable, 0.0);
+        scope.Variables = new SingleVariableCollection(variable1, ogVariableCollection);
 
         var result = 1.0;
         for (; startVal <= endVal; startVal++)
@@ -124,7 +182,7 @@ internal static class CalculatorHelpers
             result *= runResult.Value;
         }
 
-        scope.Variables = ogVarCollection;
+        scope.Variables = ogVariableCollection;
         return result;
     }
 

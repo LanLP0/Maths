@@ -79,6 +79,9 @@ public static partial class TestCases
         "tan(1)",
         "cot(38)",
         "log(3)",
+        // sigma() & cpi()
+        "sigma(1 4 x*10)", // Implicit variable
+        "cpi(1 4 x*10)",
         "sigma(x 1 4 x*10)",
         "cpi(x 1 4 x*10)",
         // Custom function

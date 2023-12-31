@@ -281,19 +281,19 @@
   },
   {
     Math: sigma(x, -3, 3),
-    Output: Error: sigma() takes exactly 4 arguments
+    Output: Error: Unknown variable 'x'
   },
   {
     Math: sigma(y, -3, 3, x*10),
-    Output: Error: sigma(): Invalid variable name
+    Output: Error: sigma(): Variable 'y' is not used in function
   },
   {
     Math: sigma(x, -3, 3, 10),
-    Output: Error: sigma(): Invalid variable name
+    Output: Error: sigma(): Variable 'x' is not used in function
   },
   {
     Math: sigma(x-1, 1, 1, x),
-    Output: Error: sigma(): First argument must be a variable
+    Output: Error: sigma(): First argument is not a variable
   },
   {
     Math: sigma(x, 1.1, 2, x),
@@ -309,19 +309,19 @@
   },
   {
     Math: cpi(x, -3, 3),
-    Output: Error: cpi() takes exactly 4 arguments
+    Output: Error: Unknown variable 'x'
   },
   {
     Math: cpi(y, -3, 3, x*10),
-    Output: Error: cpi(): Invalid variable name
+    Output: Error: cpi(): Variable 'y' is not used in function
   },
   {
     Math: cpi(x, -3, 3, 10),
-    Output: Error: cpi(): Invalid variable name
+    Output: Error: cpi(): Variable 'x' is not used in function
   },
   {
     Math: cpi(x-1, 1, 1, x),
-    Output: Error: cpi(): First argument must be a variable
+    Output: Error: cpi(): First argument is not a variable
   },
   {
     Math: cpi(x, 1.1, 2, x),
