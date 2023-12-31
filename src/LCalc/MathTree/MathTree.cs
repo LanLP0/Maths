@@ -648,7 +648,7 @@ internal sealed class MathTree
                         break;
                     }
 
-                    if (chunks[i].GetFirst(math) is not ('=' or ' '))
+                    if (chunks.Length <= i || chunks[i].GetFirst(math) is not ('=' or ' '))
                         return Err("Invalid custom function syntax");
 
                     MoveDown(ref levelRoot);
