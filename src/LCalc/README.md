@@ -66,7 +66,7 @@ Calculator.RenderExpression()  Render an expression
 > ```
 
 > **__Functions__**  
-> Use: `functionName([arg][,] [arg...])`  
+> Use: `functionName([args...])`  
 > `abs({value})` `|{value}|` Absolute value  
 > `clamp({value})` `ceiling({value})` `round({value} [digits])` Rounding numbers  
 > `cos({deg})` `sin({deg})` `tan({deg})` `cot({deg})` Trigonometric  
