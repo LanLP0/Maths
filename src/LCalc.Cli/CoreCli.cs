@@ -12,15 +12,18 @@ public static class CoreCli
         var buffer = new StringBuilder();
 
         var prevAns = double.NaN;
+        var history = new List<string>();
         for (;;)
         {
             var input = AnsiConsole.Console.Ask<string>("[white]Expression:[/]", clear: false, newLine: false,
-                highlighter: highlighter);
+                highlighter: highlighter, history: history)!;
 
             if (input is "q")
                 return;
 
-            var result = Calculator.CalcRaw(input!, prevAns: prevAns);
+            AddToHistory(history, input);
+
+            var result = Calculator.CalcRaw(input, prevAns: prevAns);
 
             if (result.ContainSteps)
             {
@@ -39,6 +42,15 @@ public static class CoreCli
             if (result.IsDouble)
                 prevAns = result.Number!.Value;
         }
+    }
+
+    private static void AddToHistory(List<string> history, string input)
+    {
+        history.Insert(0, input);
+        
+        // Cap off at 10 history indexes
+        if (history.Count > 10)
+            history.RemoveAt(history.Count - 1);
     }
 
     private static string GetResultText(CalcResult result)

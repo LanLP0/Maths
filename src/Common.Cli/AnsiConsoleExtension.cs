@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
+using Common.Cli.LineEditorCommands;
 using RadLine;
 using Spectre.Console;
 
@@ -18,11 +19,13 @@ public static class AnsiConsoleExtension
     /// <param name="clear">Clear the prompt afterward</param>
     /// <param name="newLine">Add a newline at the start</param>
     /// <param name="highlighter">The highlighter</param>
+    /// <param name="history">The history entries</param>
     /// <typeparam name="T">The prompt result type</typeparam>
     /// <returns>The prompt result</returns>
     public static T? Ask<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] T>(
         this IAnsiConsole console, string prompt, bool optional = false, string initialText = "",
-        Validator<T?>? validators = null, bool clear = true, bool newLine = true, IHighlighter? highlighter = null)
+        Validator<T?>? validators = null, bool clear = true, bool newLine = true, IHighlighter? highlighter = null,
+        IReadOnlyList<string>? history = null)
     {
         if (newLine)
             console.WriteLine();
@@ -34,6 +37,13 @@ public static class AnsiConsoleExtension
             Text = initialText,
             Highlighter = highlighter
         };
+
+        if (history is not null && history.Count > 0)
+        {
+            var historyCommand = new HistoryCommand(history);
+            editor.KeyBindings.Add(ConsoleKey.UpArrow, () => historyCommand.GoUp());
+            editor.KeyBindings.Add(ConsoleKey.DownArrow, () => historyCommand.GoDown());
+        }
 
         var converter = TypeDescriptor.GetConverter(typeof(T));
         var hasErrorLine = false;
@@ -114,7 +124,7 @@ public static class AnsiConsoleExtension
 
         while (true)
         {
-            var rawKey = console.Input.ReadKey(true);
+            var rawKey = console.ReadKey(true);
             if (rawKey is null) continue;
 
             var key = rawKey.Value;
