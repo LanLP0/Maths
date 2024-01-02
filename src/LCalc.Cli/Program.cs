@@ -24,6 +24,6 @@ internal sealed class Program
 
         AnsiConsole.MarkupLine("Press [Yellow]Ctrl-C[/] to exit");
 
-        Cli.RunLoop();
+        CoreCli.RunLoop();
     }
 }

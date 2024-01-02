@@ -4,7 +4,7 @@ using Spectre.Console;
 
 namespace LCalc.Cli;
 
-public static class Cli
+public static class CoreCli
 {
     public static void RunLoop()
     {
@@ -14,8 +14,6 @@ public static class Cli
         var prevAns = double.NaN;
         for (;;)
         {
-            buffer.Clear();
-
             var input = AnsiConsole.Console.Ask<string>("[white]Expression:[/]", clear: false, newLine: false,
                 highlighter: highlighter);
 
@@ -36,6 +34,7 @@ public static class Cli
             buffer.Append(result.RenderValue());
 
             AnsiConsole.MarkupLine(buffer.ToString());
+            buffer.Clear();
 
             if (result.IsDouble)
                 prevAns = result.Number!.Value;
