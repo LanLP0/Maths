@@ -59,6 +59,7 @@ public class VirtualKey : TemplatedControl
     {
         DataContext = this;
         Focusable = false;
+        BorderThickness = new Thickness(1);
 
         _keyboard = this.FindAncestorOfType<VirtualKeyboard>();
 
@@ -87,9 +88,10 @@ public class VirtualKey : TemplatedControl
                 Background = Brushes.Transparent,
                 HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Center,
-                [!WidthProperty] = new Binding("BoxSize"),
-                [!HeightProperty] = new Binding("BoxSize"),
-                [!ContentControl.ContentProperty] = new Binding("Inner")
+                [!WidthProperty] = new Binding(nameof(BoxSize)),
+                [!HeightProperty] = new Binding(nameof(BoxSize)),
+                [!ContentControl.ContentProperty] = new Binding(nameof(Inner)),
+                [!BorderThicknessProperty] = new Binding(nameof(BorderThickness))
             };
 
             if (ButtonBackground is not null) button[!BackgroundProperty] = new Binding("ButtonBackground");

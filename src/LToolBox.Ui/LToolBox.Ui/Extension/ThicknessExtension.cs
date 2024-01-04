@@ -5,6 +5,14 @@ namespace LToolBox.Ui.Extension;
 
 public static class ThicknessExtension
 {
+    /// <summary>
+    /// Change a single value
+    /// </summary>
+    /// <param name="thickness">The thickness to change</param>
+    /// <param name="value">The value to change to</param>
+    /// <param name="side">left-top-right-bottom</param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentOutOfRangeException"></exception>
     public static Thickness ChangeSingle(this Thickness thickness, double value, int side)
     {
         thickness.Deconstruct(out var left, out var top, out var right, out var bottom);
