@@ -4,7 +4,7 @@ namespace LCalc.Tests.TestCases;
 
 public static partial class TestCases
 {
-    public static readonly string[] Step_ShouldBe_Expected =
+    public static readonly string[] Render_ShouldBe_Expected =
     {
         "1+(1+1)&step",
         "[foo(a b c)=a^(b+c)]foo(2 1 (1+foo(2 1 1))) &step",

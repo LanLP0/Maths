@@ -71,10 +71,10 @@ public sealed class CalculatorTest
     }
 
     [Fact]
-    public Task Step_ShouldBe_Expected()
+    public Task Render_ShouldBe_Expected()
     {
         // Arrange
-        var cases = TestCases.TestCases.Step_ShouldBe_Expected;
+        var cases = TestCases.TestCases.Render_ShouldBe_Expected;
         var results = new CalcTestResult[cases.Length];
 
         // Act
