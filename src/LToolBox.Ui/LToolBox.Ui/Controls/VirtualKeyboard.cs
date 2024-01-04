@@ -1,6 +1,8 @@
 using System.Reactive.Subjects;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
+using LToolBox.Ui.Extension;
 
 namespace LToolBox.Ui.Controls;
 
@@ -35,6 +37,23 @@ public class VirtualKeyboard : Grid
     protected override void OnInitialized()
     {
         DataContext = this;
+        
+        // Disable outer border
+        foreach (var child in Children)
+        {
+            var c = (TemplatedControl)child;
+            if (GetColumn(child) is 0)
+                c.BorderThickness = c.BorderThickness.ChangeSingle(0, 1);
+            
+            if (GetColumn(child) == ColumnDefinitions.Count - 1)
+                c.BorderThickness = c.BorderThickness.ChangeSingle(0, 3);
+            
+            if (GetRow(child) is 0)
+                c.BorderThickness = c.BorderThickness.ChangeSingle(0, 2);
+            
+            if (GetRow(child) == RowDefinitions.Count - 1)
+                c.BorderThickness = c.BorderThickness.ChangeSingle(0, 4);
+        }
 
         base.OnInitialized();
     }

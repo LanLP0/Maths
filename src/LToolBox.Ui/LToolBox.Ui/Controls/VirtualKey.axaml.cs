@@ -79,9 +79,12 @@ public class VirtualKey : TemplatedControl
             var button = new Button
             {
                 Focusable = false,
-                CornerRadius = new CornerRadius(int.MaxValue),
+                CornerRadius = new CornerRadius(0),
+                // BorderBrush = Brushes.Transparent,
                 Padding = new Thickness(20),
-                Margin = new Thickness(10),
+                Margin = new Thickness(0),
+                // Background = new SolidColorBrush(Colors.Gray, 0.1),
+                Background = Brushes.Transparent,
                 HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Center,
                 [!WidthProperty] = new Binding("BoxSize"),
