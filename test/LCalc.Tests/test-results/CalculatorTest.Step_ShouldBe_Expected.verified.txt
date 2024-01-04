@@ -87,6 +87,53 @@ cpi(x, floor(sqrt(6)), ceiling(cbrt(999)), x ^ x)
 Result: 2.1577941222941857E+44
   },
   {
+    Math: sigma(x, 1, 100, x^2-2*x+1) &step,
+    Output:
+sigma(x, 1, 100, x ^ 2 - 2 * x + 1)
+Result: 328350
+  },
+  {
+    Math: sigma(1, 100, -1*x) &latex,
+    Output:
+\sum_{x=1}^{100}(-1 \times x)\\
+\sum_{x=1}^{100}(-1 \times x)
+Result: -5050
+  },
+  {
+    Math: cpi(floor(sqrt(6)), ceiling(cbrt(999)), x^x) &latex,
+    Output:
+\prod_{x=\lfloor \sqrt{6}\rfloor }^{\lceil \sqrt[3]{999}\rceil }x ^ {x}\\
+\prod_{x=\lfloor 2.449489742783178\rfloor }^{\lceil 9.99666555493786\rceil }x ^ {x}\\
+\prod_{x=2}^{10}x ^ {x}
+Result: 2.1577941222941857E+44
+  },
+  {
+    Math: cpi(floor(sqrt(6)), ceiling(cbrt(999)), x^x) &latexdoc,
+    Output:
+\documentclass{article}
+\usepackage{amsmath}
+\begin{document}
+\begin{gather*}
+\prod_{x=\lfloor \sqrt{6}\rfloor }^{\lceil \sqrt[3]{999}\rceil }x ^ {x}\\
+\prod_{x=\lfloor 2.449489742783178\rfloor }^{\lceil 9.99666555493786\rceil }x ^ {x}\\
+\prod_{x=2}^{10}x ^ {x}
+\end{gather*}
+\end{document}
+Result: 2.1577941222941857E+44
+  },
+  {
+    Math: cpi(floor(sqrt(6)), ceiling(cbrt(999)), x^x) &render,
+    Output:
+cpi(x, floor(sqrt(6)), ceiling(cbrt(999)), x ^ x)
+Result: 2.1577941222941857E+44
+  },
+  {
+    Math: sigma(1, 100, x^2-2*x+1) &step,
+    Output:
+sigma(x, 1, 100, x ^ 2 - 2 * x + 1)
+Result: 328350
+  },
+  {
     Math: 1+(2+a) &a=10 &step &render,
     Output:
 1 + (2 + a)

@@ -261,26 +261,39 @@ internal sealed class FunctionCallNode : IMathNode
     {
         var args = CollectionsMarshal.AsSpan(_args);
 
+        string variableName;
+        int index;
+        if (args.Length is 4) // This will always has the variable as the first argument
+        {
+            variableName = (args[0] as VariableNode)!.Name;
+            index = 1;
+        }
+        else // Grab the variable from the function (index 2)
+        {
+            args[2].SetupForSolving(scope, out variableName);
+            index = 0;
+        }
+
         if (latex)
         {
             buffer.Append(isSigma ? @"\sum_{" : @"\prod_{");
-            buffer.Append((args[0] as VariableNode)!.Name);
+            buffer.Append(variableName);
             buffer.Append('=');
         }
         else
         {
             buffer.Append(isSigma ? "sigma(" : "cpi(");
-            buffer.Append((args[0] as VariableNode)!.Name);
+            buffer.Append(variableName);
             buffer.Append(", ");
         }
 
-        var result = args[1].RenderStep(buffer, selectedLevel, scope, nodeLevel, showTree, latex);
+        var result = args[index++].RenderStep(buffer, selectedLevel, scope, nodeLevel, showTree, latex);
         if (result.Faulted)
             return result;
 
         buffer.Append(latex ? @"}^{" : ", ");
 
-        result = args[2].RenderStep(buffer, selectedLevel, scope, nodeLevel, showTree, latex);
+        result = args[index++].RenderStep(buffer, selectedLevel, scope, nodeLevel, showTree, latex);
         if (result.Faulted)
             return result;
 
@@ -289,11 +302,11 @@ internal sealed class FunctionCallNode : IMathNode
         else
             buffer.Append(", ");
 
-        if (latex && args[3] is not (ExponentNode or BitwiseNotNode))
-            args[3].Priority = MathTree.ValueNodePriority;
+        if (latex && args[index] is not (ExponentNode or BitwiseNotNode))
+            args[index].Priority = MathTree.ValueNodePriority;
 
-        // This shouldn't be calculated and sometime should be put in brackets
-        result = args[3].RenderStep(buffer, -1, scope, 0, showTree, latex);
+        // This shouldn't be calculated and sometime should be put in braces
+        result = args[index].RenderStep(buffer, -1, scope, 0, showTree, latex);
 
         if (!latex)
             buffer.Append(')');

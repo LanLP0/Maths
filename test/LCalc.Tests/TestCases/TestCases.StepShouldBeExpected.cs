@@ -16,6 +16,13 @@ public static partial class TestCases
         "cpi(x, floor(sqrt(6)), ceiling(cbrt(999)), x^x) &latex",
         "cpi(x, floor(sqrt(6)), ceiling(cbrt(999)), x^x) &latexdoc",
         "cpi(x, floor(sqrt(6)), ceiling(cbrt(999)), x^x) &render",
+        "sigma(x, 1, 100, x^2-2*x+1) &step",
+        // Implicit variable
+        "sigma(1, 100, -1*x) &latex",
+        "cpi(floor(sqrt(6)), ceiling(cbrt(999)), x^x) &latex",
+        "cpi(floor(sqrt(6)), ceiling(cbrt(999)), x^x) &latexdoc",
+        "cpi(floor(sqrt(6)), ceiling(cbrt(999)), x^x) &render",
+        "sigma(1, 100, x^2-2*x+1) &step",
         "1+(2+a) &a=10 &step &render"
     };
 }
