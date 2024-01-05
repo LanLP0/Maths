@@ -27,12 +27,9 @@ public sealed class SwitchPanel : TemplatedControl
         DataContext = this;
         Content = Controls.Count > 0 ? Controls[0] : null;
 
-        Template = new FuncControlTemplate((_, _) =>
+        Template = new FuncControlTemplate((_, _) => new ContentPresenter
         {
-            return new ContentPresenter
-            {
-                [!ContentPresenter.ContentProperty] = new Binding("Content")
-            };
+            [!ContentPresenter.ContentProperty] = new Binding(nameof(Content))
         });
     }
 

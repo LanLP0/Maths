@@ -94,7 +94,7 @@ public class VirtualKey : TemplatedControl
                 [!BorderThicknessProperty] = new Binding(nameof(BorderThickness))
             };
 
-            if (ButtonBackground is not null) button[!BackgroundProperty] = new Binding("ButtonBackground");
+            if (ButtonBackground is not null) button[!BackgroundProperty] = new Binding(nameof(ButtonBackground));
 
             if (_keyboard is not null) button.Click += (_, _) => _keyboard.KeyClicked.OnNext(Key);
 
