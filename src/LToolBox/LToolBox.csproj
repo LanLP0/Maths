@@ -27,7 +27,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Avalonia.Svg" Version="11.0.0.9" />
         <PackageReference Include="RadLine" Version="0.6.0"/>
         <PackageReference Include="Spectre.Console.Cli" Version="0.48.0"/>
     </ItemGroup>
