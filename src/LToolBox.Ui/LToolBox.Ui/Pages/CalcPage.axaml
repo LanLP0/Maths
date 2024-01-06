@@ -168,7 +168,7 @@
                     <ctrl:VirtualKey ctrl:VirtualKeyboard.Column="1" ctrl:VirtualKeyboard.Row="0"
                                      Key="$fncall" IconSource="{StaticResource FxIcon}" />
                     <ctrl:VirtualKey ctrl:VirtualKeyboard.Column="2" ctrl:VirtualKeyboard.Row="0"
-                                     Key="$assign" IconSource="{StaticResource XEquYIcon}" />
+                                     Key="$assign" IconSource="{StaticResource AssignIcon}" />
                     <ctrl:VirtualKey ctrl:VirtualKeyboard.Column="3" ctrl:VirtualKeyboard.Row="0"
                                      Key="|" IconSource="{StaticResource OrIcon}" />
 
