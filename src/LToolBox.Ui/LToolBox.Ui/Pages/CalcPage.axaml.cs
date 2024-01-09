@@ -93,12 +93,6 @@ public partial class CalcPage : UserControl
         }).Wait(TimeSpan.FromMilliseconds(100));
     }
 
-    // TODO Kb1 & Kb2 KeyClicked
-    // Simplify cases by only make them use a single string
-    // which contains the text and cursor position marked by
-    // the {ZeroWidthUnicode}, which the first one is the
-    // initial cursor position.   (Create method)
-
     private void Kb1_KeyClicked(string key)
     {
         if (!key.StartsWith('$'))

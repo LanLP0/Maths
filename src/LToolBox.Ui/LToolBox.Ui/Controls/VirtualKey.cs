@@ -18,9 +18,6 @@ public class VirtualKey : TemplatedControl
     public static readonly StyledProperty<string> KeyProperty =
         AvaloniaProperty.Register<VirtualKey, string>(nameof(Key));
 
-    // public static readonly StyledProperty<double> BoxSizeProperty =
-    //     AvaloniaProperty.Register<VirtualKey, double>(nameof(BoxSize));
-
     public static readonly StyledProperty<IBrush?> ButtonBackgroundProperty =
         AvaloniaProperty.Register<VirtualKey, IBrush?>(nameof(ButtonBackground));
 
@@ -35,12 +32,6 @@ public class VirtualKey : TemplatedControl
         get => GetValue(KeyProperty);
         set => SetValue(KeyProperty, value);
     }
-
-    // public double BoxSize
-    // {
-    //     get => GetValue(BoxSizeProperty);
-    //     private set => SetValue(BoxSizeProperty, value);
-    // }
 
     public IBrush? ButtonBackground
     {
@@ -82,15 +73,11 @@ public class VirtualKey : TemplatedControl
             {
                 Focusable = false,
                 CornerRadius = new CornerRadius(0),
-                // BorderBrush = Brushes.Transparent,
                 Padding = new Thickness(20),
                 Margin = new Thickness(0),
-                // Background = new SolidColorBrush(Colors.Gray, 0.1),
                 Background = Brushes.Transparent,
                 HorizontalAlignment = HorizontalAlignment.Stretch,
                 VerticalAlignment = VerticalAlignment.Stretch,
-                // [!WidthProperty] = new Binding(nameof(Width)).WithSource(this),
-                // [!HeightProperty] = new Binding(nameof(Height)).WithSource(this),
                 [!ContentControl.ContentProperty] = new Binding(nameof(Inner)).WithSource(this)
             };
 
@@ -105,11 +92,4 @@ public class VirtualKey : TemplatedControl
 
         base.OnInitialized();
     }
-
-    // protected override void OnSizeChanged(SizeChangedEventArgs e)
-    // {
-    //     BoxSize = Math.Min(e.NewSize.Height, e.NewSize.Width);
-    //
-    //     base.OnSizeChanged(e);
-    // }
 }
