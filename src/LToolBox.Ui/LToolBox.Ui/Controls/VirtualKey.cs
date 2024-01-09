@@ -56,11 +56,6 @@ public class VirtualKey : TemplatedControl
 
     public Viewbox Inner { get; private set; }
 
-    public VirtualKey()
-    {
-        BorderThickness = new Thickness(1);
-    }
-
     protected override void OnInitialized()
     {
         Focusable = false;
