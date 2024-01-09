@@ -38,13 +38,6 @@ public class VirtualKeyboard : Grid
         element.SetValue(RowProperty, value);
     }
 
-    protected override void OnInitialized()
-    {
-        DataContext = this;
-
-        base.OnInitialized();
-    }
-
     protected override void OnLoaded(RoutedEventArgs e)
     {
         DisableOuterBorder();
@@ -54,21 +47,22 @@ public class VirtualKeyboard : Grid
     {
         foreach (var child in Children)
         {
-            var c = (TemplatedControl)child;
+            if (child is not VirtualKey vk)
+                return;
 
             var column = GetColumn(child);
             if (column is 0)
-                c.BorderThickness = c.BorderThickness.ChangeSingle(0, 1);
+                vk.BorderThickness = vk.BorderThickness.ChangeSingle(0, 1);
 
             if (column == ColumnDefinitions.Count - 1)
-                c.BorderThickness = c.BorderThickness.ChangeSingle(0, 3);
+                vk.BorderThickness = vk.BorderThickness.ChangeSingle(0, 3);
 
             var row = GetRow(child);
             if (row is 0)
-                c.BorderThickness = c.BorderThickness.ChangeSingle(0, 2);
+                vk.BorderThickness = vk.BorderThickness.ChangeSingle(0, 2);
 
             if (row == RowDefinitions.Count - 1)
-                c.BorderThickness = c.BorderThickness.ChangeSingle(0, 4);
+                vk.BorderThickness = vk.BorderThickness.ChangeSingle(0, 4);
         }
     }
 }

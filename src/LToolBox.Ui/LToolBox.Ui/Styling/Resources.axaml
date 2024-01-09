@@ -2,14 +2,50 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:ui="using:FluentAvalonia.UI.Controls">
     <FontFamily x:Key="NotoSansMonoFont">avares://LToolBox.Ui/Assets/Fonts#Noto Sans Mono</FontFamily>
+    <FontFamily x:Key="RomanSerifFont">avares://LToolBox.Ui/Assets/Fonts#RomanSerif</FontFamily>
+    <FontFamily x:Key="3270NerdFontMono">avares://LToolBox.Ui/Assets/Fonts#3270 Nerd Font Mono</FontFamily>
 
     <ui:SymbolIconSource x:Key="CalculatorIcon" Symbol="CalculatorFilled" />
     <ui:PathIconSource x:Key="DivideIcon"
                        Data="M 18,10 H 6 a 2,2 0 0 0 0,4 h 12 a 2,2 0 0 0 0,-4 z m -3.75,8 A 2.25,2.25 0 0 1 12,20.25 2.25,2.25 0 0 1 9.75,18 2.25,2.25 0 0 1 12,15.75 2.25,2.25 0 0 1 14.25,18 Z m 0,-12 A 2.25,2.25 0 0 1 12,8.25 2.25,2.25 0 0 1 9.75,6 2.25,2.25 0 0 1 12,3.75 2.25,2.25 0 0 1 14.25,6 Z" />
     <ui:SymbolIconSource x:Key="SettingsIcon" Symbol="SettingsFilled" />
     <ui:SymbolIconSource x:Key="DarkThemeIcon" Symbol="DarkTheme" />
+    
+    <!-- Brushes -->
+    <SolidColorBrush x:Key="Transparent20" Color="#14000000" />
+    <SolidColorBrush x:Key="Transparent40" Color="#28000000" />
+    <SolidColorBrush x:Key="Transparent60" Color="#3c000000" />
+    <SolidColorBrush x:Key="Transparent80" Color="#50000000" />
 
-    <!-- Calc osk icons -->
+    <!-- Keyboard icons -->
+    <ui:FontIconSource x:Key="AKeyIcon" Glyph="a" FontFamily="{StaticResource NotoSansMonoFont}" />
+    <ui:FontIconSource x:Key="BKeyIcon" Glyph="b" FontFamily="{StaticResource NotoSansMonoFont}" />
+    <ui:FontIconSource x:Key="CKeyIcon" Glyph="c" FontFamily="{StaticResource NotoSansMonoFont}" />
+    <ui:FontIconSource x:Key="DKeyIcon" Glyph="d" FontFamily="{StaticResource NotoSansMonoFont}" />
+    <ui:FontIconSource x:Key="EKeyIcon" Glyph="e" FontFamily="{StaticResource NotoSansMonoFont}" />
+    <ui:FontIconSource x:Key="FKeyIcon" Glyph="f" FontFamily="{StaticResource NotoSansMonoFont}" />
+    <ui:FontIconSource x:Key="GKeyIcon" Glyph="g" FontFamily="{StaticResource NotoSansMonoFont}" />
+    <ui:FontIconSource x:Key="HKeyIcon" Glyph="h" FontFamily="{StaticResource NotoSansMonoFont}" />
+    <ui:FontIconSource x:Key="IKeyIcon" Glyph="i" FontFamily="{StaticResource NotoSansMonoFont}" />
+    <ui:FontIconSource x:Key="JKeyIcon" Glyph="j" FontFamily="{StaticResource NotoSansMonoFont}" />
+    <ui:FontIconSource x:Key="KKeyIcon" Glyph="k" FontFamily="{StaticResource NotoSansMonoFont}" />
+    <ui:FontIconSource x:Key="LKeyIcon" Glyph="l" FontFamily="{StaticResource NotoSansMonoFont}" />
+    <ui:FontIconSource x:Key="MKeyIcon" Glyph="m" FontFamily="{StaticResource NotoSansMonoFont}" />
+    <ui:FontIconSource x:Key="NKeyIcon" Glyph="n" FontFamily="{StaticResource NotoSansMonoFont}" />
+    <ui:FontIconSource x:Key="OKeyIcon" Glyph="o" FontFamily="{StaticResource NotoSansMonoFont}" />
+    <ui:FontIconSource x:Key="PKeyIcon" Glyph="p" FontFamily="{StaticResource NotoSansMonoFont}" />
+    <ui:FontIconSource x:Key="QKeyIcon" Glyph="q" FontFamily="{StaticResource NotoSansMonoFont}" />
+    <ui:FontIconSource x:Key="RKeyIcon" Glyph="r" FontFamily="{StaticResource NotoSansMonoFont}" />
+    <ui:FontIconSource x:Key="SKeyIcon" Glyph="s" FontFamily="{StaticResource NotoSansMonoFont}" />
+    <ui:FontIconSource x:Key="TKeyIcon" Glyph="t" FontFamily="{StaticResource NotoSansMonoFont}" />
+    <ui:FontIconSource x:Key="UKeyIcon" Glyph="u" FontFamily="{StaticResource NotoSansMonoFont}" />
+    <ui:FontIconSource x:Key="VKeyIcon" Glyph="v" FontFamily="{StaticResource NotoSansMonoFont}" />
+    <ui:FontIconSource x:Key="WKeyIcon" Glyph="w" FontFamily="{StaticResource NotoSansMonoFont}" />
+    <ui:FontIconSource x:Key="XKeyIcon" Glyph="x" FontFamily="{StaticResource NotoSansMonoFont}" />
+    <ui:FontIconSource x:Key="YKeyIcon" Glyph="y" FontFamily="{StaticResource NotoSansMonoFont}" />
+    <ui:FontIconSource x:Key="ZKeyIcon" Glyph="z" FontFamily="{StaticResource NotoSansMonoFont}" />
+
+    <!-- Calc icons -->
     <ui:FontIconSource x:Key="OneIcon" Glyph="1" FontFamily="{StaticResource NotoSansMonoFont}" />
     <ui:FontIconSource x:Key="TwoIcon" Glyph="2" FontFamily="{StaticResource NotoSansMonoFont}" />
     <ui:FontIconSource x:Key="ThreeIcon" Glyph="3" FontFamily="{StaticResource NotoSansMonoFont}" />
@@ -21,51 +57,55 @@
     <ui:FontIconSource x:Key="NineIcon" Glyph="9" FontFamily="{StaticResource NotoSansMonoFont}" />
     <ui:FontIconSource x:Key="ZeroIcon" Glyph="0" FontFamily="{StaticResource NotoSansMonoFont}" />
     <ui:FontIconSource x:Key="DotIcon" Glyph="." FontFamily="{StaticResource NotoSansMonoFont}" />
-    <ui:FontIconSource x:Key="XIcon" Glyph="x" FontFamily="{StaticResource NotoSansMonoFont}" />
-    <ui:FontIconSource x:Key="YIcon" Glyph="y" FontFamily="{StaticResource NotoSansMonoFont}" />
-    <ui:FontIconSource x:Key="ZIcon" Glyph="z" FontFamily="{StaticResource NotoSansMonoFont}" />
+    <ui:FontIconSource x:Key="PiIcon" Glyph="󰏿" FontFamily="{StaticResource 3270NerdFontMono}" />
     <ui:FontIconSource x:Key="AnsIcon" Glyph="ans" FontFamily="{StaticResource NotoSansMonoFont}" />
     <ui:FontIconSource x:Key="LeftArrowIcon" Glyph="&#xE7EA;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
     <ui:FontIconSource x:Key="RightArrowIcon" Glyph="&#xEA62;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
-    <ui:PathIconSource x:Key="RightCollapseArrowIcon"
-                       Data="M 5 4 A 1 1 0 0 0 4 5 L 4 19 A 1 1 0 0 0 5 20 A 1 1 0 0 0 6 19 L 6 5 A 1 1 0 0 0 5 4 z M 13.046875 7.0644531 A 1 1 0 0 0 12.289062 7.3007812 L 8.3046875 11.285156 A 1 1 0 0 0 8.2890625 11.300781 A 1 1 0 0 0 8.2773438 11.314453 A 1 1 0 0 0 8.1035156 11.574219 A 1 1 0 0 0 8.0664062 11.667969 A 1 1 0 0 0 8.0019531 11.988281 A 1 1 0 0 0 8 12.001953 A 1 1 0 0 0 8 12.005859 A 1 1 0 0 0 8.0703125 12.353516 A 1 1 0 0 0 8.09375 12.408203 A 1 1 0 0 0 8.2890625 12.710938 L 12.289062 16.710938 A 1 1 0 0 0 13 17 A 1 1 0 0 0 13.699219 15.289062 L 11.410156 13 L 19 13 A 1 1 0 0 0 19 11 L 11.410156 11 L 13.699219 8.7109375 A 1 1 0 0 0 13.046875 7.0644531 z" />
-    <ui:PathIconSource x:Key="LeftCollapseArrowIcon"
-                       Data="M 19 4 A 1 1 0 0 0 18 5 L 18 19 A 1 1 0 0 0 19 20 A 1 1 0 0 0 20 19 L 20 5 A 1 1 0 0 0 19 4 z M 11.160156 7.0664062 A 1 1 0 0 0 10.289062 8.7109375 L 12.585938 11 L 5 11 A 1 1 0 0 0 5 13 L 12.585938 13 L 10.289062 15.289062 A 1 1 0 0 0 11 17 A 1 1 0 0 0 11.699219 16.710938 L 15.695312 12.714844 L 15.699219 12.710938 A 1 1 0 0 0 15.720703 12.6875 A 1 1 0 0 0 15.902344 12.416016 A 1 1 0 0 0 15.933594 12.337891 A 1 1 0 0 0 15.988281 12.060547 A 1 1 0 0 0 15.988281 11.9375 A 1 1 0 0 0 15.9375 11.685547 A 1 1 0 0 0 15.884766 11.558594 A 1 1 0 0 0 15.748047 11.353516 A 1 1 0 0 0 15.660156 11.261719 L 11.699219 7.3007812 A 1 1 0 0 0 11.160156 7.0664062 z" />
-    <ui:FontIconSource x:Key="CommaKeyIcon" Glyph="," FontFamily="{StaticResource NotoSansMonoFont}" />
-    <ui:FontIconSource x:Key="PowerIcon" Glyph="^" Foreground="{DynamicResource SystemAccentColor}"
+    <ui:FontIconSource x:Key="CommaKeyIcon" Glyph="," />
+    <ui:FontIconSource x:Key="PowerIcon" Glyph="^"
                        FontFamily="{StaticResource NotoSansMonoFont}" />
-    <ui:FontIconSource x:Key="ModuloIcon" Glyph="%" Foreground="{DynamicResource SystemAccentColor}"
+    <ui:FontIconSource x:Key="PowerTwoIcon" Glyph="^2"
                        FontFamily="{StaticResource NotoSansMonoFont}" />
-    <ui:FontIconSource x:Key="PlusIcon" Glyph="+" Foreground="{DynamicResource SystemAccentColor}"
+    <ui:FontIconSource x:Key="ModuloIcon" Glyph="%"
                        FontFamily="{StaticResource NotoSansMonoFont}" />
-    <ui:FontIconSource x:Key="MinusIcon" Glyph="-" Foreground="{DynamicResource SystemAccentColor}"
+    <ui:FontIconSource x:Key="PlusIcon" Glyph="+"
                        FontFamily="{StaticResource NotoSansMonoFont}" />
-    <ui:FontIconSource x:Key="MultiplyIcon" Glyph="*" Foreground="{DynamicResource SystemAccentColor}"
+    <ui:FontIconSource x:Key="MinusIcon" Glyph="-"
                        FontFamily="{StaticResource NotoSansMonoFont}" />
-    <ui:FontIconSource x:Key="Divide1Icon" Glyph="/" Foreground="{DynamicResource SystemAccentColor}"
+    <ui:FontIconSource x:Key="MultiplyIcon" Glyph="*"
                        FontFamily="{StaticResource NotoSansMonoFont}" />
-    <ui:FontIconSource x:Key="BangIcon" Glyph="!" Foreground="{DynamicResource SystemAccentColor}"
+    <ui:FontIconSource x:Key="Divide1Icon" Glyph="/"
                        FontFamily="{StaticResource NotoSansMonoFont}" />
-    <ui:FontIconSource x:Key="AndIcon" Glyph="&amp;" Foreground="{DynamicResource SystemAccentColor}"
+    <ui:FontIconSource x:Key="FactorialIcon" Glyph="!"
                        FontFamily="{StaticResource NotoSansMonoFont}" />
-    <ui:FontIconSource x:Key="OrIcon" Glyph="|" Foreground="{DynamicResource SystemAccentColor}"
+    <ui:FontIconSource x:Key="AndIcon" Glyph="&amp;"
                        FontFamily="{StaticResource NotoSansMonoFont}" />
-    <ui:FontIconSource x:Key="GreaterThanIcon" Glyph=">" Foreground="{DynamicResource SystemAccentColor}"
+    <ui:FontIconSource x:Key="OrIcon" Glyph="|"
                        FontFamily="{StaticResource NotoSansMonoFont}" />
-    <ui:FontIconSource x:Key="EqualIcon" Glyph="=" Foreground="{DynamicResource SystemAccentColor}"
+    <ui:FontIconSource x:Key="GreaterThanIcon" Glyph=">"
                        FontFamily="{StaticResource NotoSansMonoFont}" />
-    <ui:FontIconSource x:Key="LessThanIcon" Glyph="&lt;" Foreground="{DynamicResource SystemAccentColor}"
+    <ui:FontIconSource x:Key="EqualIcon" Glyph="="
+                       FontFamily="{StaticResource NotoSansMonoFont}" />
+    <ui:FontIconSource x:Key="LessThanIcon" Glyph="&lt;"
                        FontFamily="{StaticResource NotoSansMonoFont}" />
     <ui:SymbolIconSource x:Key="SwitchIcon" Symbol="Switch" Foreground="{DynamicResource SystemAccentColor}" />
-    <ui:FontIconSource x:Key="BracesIcon" Glyph="()" Foreground="{DynamicResource SystemAccentColor}"
+    <ui:FontIconSource x:Key="BracesIcon" Glyph="()"
                        FontFamily="{StaticResource NotoSansMonoFont}" />
-    <ui:PathIconSource x:Key="CustomFunctionIcon" Foreground="{DynamicResource SystemAccentColor}"
-                       Data="M -4.6333208 -7.4847698 L -4.6333208 2.4996052 L -3.2578325 2.4996052 L -3.2578325 2.0938435 L -4.2275591 2.0938435 L -4.2275591 -7.0775432 L -3.2578325 -7.0775432 L -3.2578325 -7.4847698 L -4.6333208 -7.4847698 z M 5.4741011 -7.4847698 L 5.4741011 -7.0775432 L 6.4438277 -7.0775432 L 6.4438277 2.0938435 L 5.4741011 2.0938435 L 5.4741011 2.4996052 L 6.8334761 2.4996052 L 6.8334761 -7.4847698 L 5.4741011 -7.4847698 z M -0.38527391 -7.0306682 C -1.0727732 -7.0306682 -1.9321489 -6.4994172 -1.9321489 -5.4369182 L -1.9321489 -4.2972698 L -2.7143755 -4.2972698 L -2.7143755 -3.9837932 L -1.9321489 -3.9837932 L -1.9321489 -0.74941824 C -1.9321489 -0.31191867 -2.0420128 -0.3128948 -2.6982622 -0.3128948 L -2.6982622 0.0005817625 C -2.3076376 -0.015043222 -1.8388869 -0.0316448 -1.5732622 -0.0316448 C -1.1670126 -0.0316448 -0.6982618 -0.030668206 -0.30763719 0.0005817625 L -0.30763719 -0.3128948 L -0.51125047 -0.3128948 C -1.2456247 -0.3128948 -1.2612505 -0.42227016 -1.2612505 -0.7816448 L -1.2612505 -3.9837932 L -0.13625047 -3.9837932 L -0.13625047 -4.2972698 L -1.2920122 -4.2972698 L -1.2920122 -5.4530315 C -1.2920122 -6.3280306 -0.82277347 -6.8124065 -0.38527391 -6.8124065 C -0.35402394 -6.8124065 -0.19777377 -6.8128947 -0.057148912 -6.7347698 C -0.1665238 -6.7035198 -0.35451219 -6.5628945 -0.35451219 -6.3128948 C -0.35451219 -6.094145 -0.19777363 -5.8910198 0.083476088 -5.8910198 C 0.36472581 -5.8910198 0.51999953 -6.0931685 0.51999953 -6.3275432 C 0.51999953 -6.7025429 0.14597556 -7.0306682 -0.38527391 -7.0306682 z M 0.17136671 -4.2972698 L 0.17136671 -3.9837932 C 0.87449101 -3.9837932 0.87449218 -3.9837926 1.3432417 -3.3744182 L 2.3276167 -2.0941448 L 1.3901167 -0.90615652 C 0.92136718 -0.3280321 0.32761651 -0.3128948 0.12449171 -0.3128948 L 0.12449171 0.0005817625 C 0.37449146 -0.015043222 0.68796854 -0.0316448 0.95359328 -0.0316448 C 1.234843 -0.0316448 1.6567185 -0.015043222 1.8910933 0.0005817625 L 1.8910933 -0.3128948 C 1.6723435 -0.34414477 1.6098433 -0.46865668 1.6098433 -0.62490652 C 1.6098433 -0.8436563 1.8910939 -1.1717822 2.5004683 -1.8905315 L 3.2651167 -0.89004324 C 3.3432416 -0.78066835 3.46873 -0.62441818 3.46873 -0.56191824 C 3.46873 -0.46816833 3.375468 -0.3128948 3.1098433 -0.3128948 L 3.1098433 0.0005817625 C 3.406718 -0.015043222 3.9692185 -0.0316448 4.1879683 -0.0316448 C 4.453593 -0.0316448 4.843242 -0.015043222 5.1401167 0.0005817625 L 5.1401167 -0.3128948 C 4.6088672 -0.3128948 4.4213665 -0.32803182 4.2026167 -0.62490652 L 2.859355 -2.3431682 C 3.1562297 -2.7181679 3.530742 -3.2025435 3.7807417 -3.4681682 C 4.0932414 -3.8275429 4.4999805 -3.9837932 4.96873 -3.9837932 L 4.96873 -4.2972698 C 4.7031053 -4.2816448 4.406718 -4.2650432 4.1410933 -4.2650432 C 3.8442186 -4.2650432 3.3124799 -4.2816448 3.18748 -4.2972698 L 3.18748 -3.9837932 C 3.4062298 -3.9681683 3.4848433 -3.8436563 3.4848433 -3.6717815 C 3.4848433 -3.5155317 3.3749799 -3.3900432 3.328105 -3.3275432 L 2.71873 -2.5467815 L 1.9379683 -3.5619182 C 1.8442184 -3.6556681 1.8442183 -3.6722699 1.8442183 -3.7347698 C 1.8442183 -3.8910196 1.9994919 -3.9837932 2.1869917 -3.9837932 L 2.1869917 -4.2972698 C 1.936992 -4.2816448 1.2807415 -4.2650432 1.1088667 -4.2650432 C 0.90574192 -4.2650432 0.43699145 -4.2816448 0.17136671 -4.2972698 z" />
-    <ui:PathIconSource x:Key="FxIcon" Foreground="{DynamicResource SystemAccentColor}"
-                       Data="M 6.2444332 -7.4847698 C 6.1350583 -7.4847698 5.2444326 -6.796292 4.6506832 -5.5306682 C 4.1506837 -4.4369193 4.0266598 -3.3280307 4.0266598 -2.4999065 C 4.0266598 -1.7186573 4.1360353 -0.51601866 4.6829098 0.6246052 C 5.2922842 1.843354 6.1350583 2.4996052 6.2444332 2.4996052 C 6.3069332 2.4996052 6.3381832 2.4693317 6.3381832 2.3912068 C 6.3381832 2.3599568 6.3386713 2.343355 6.1667965 2.1714802 C 4.9324227 0.92148145 4.6038082 -0.96865805 4.6038082 -2.4999065 C 4.6038082 -4.2342798 4.9792977 -5.969146 6.2136715 -7.2035198 C 6.3386714 -7.3285197 6.3381832 -7.3436566 6.3381832 -7.3749065 C 6.3381832 -7.4530314 6.3069332 -7.4847698 6.2444332 -7.4847698 z M 12.83916 -7.4847698 C 12.77666 -7.4847698 12.730761 -7.4374065 12.730761 -7.3749065 C 12.730761 -7.3436566 12.730762 -7.3280313 12.918261 -7.1405315 C 13.902635 -6.1561575 14.465136 -4.5780294 14.465136 -2.4999065 C 14.465136 -0.78115824 14.10576 0.96835645 12.871386 2.2183552 C 12.730761 2.3433551 12.730761 2.3599568 12.730761 2.3912068 C 12.730761 2.4537067 12.77666 2.4996052 12.83916 2.4996052 C 12.93291 2.4996052 13.840137 1.8125922 14.418261 0.54696848 C 14.933886 -0.54678042 15.042285 -1.6561574 15.042285 -2.4999065 C 15.042285 -3.2655308 14.932909 -4.4691459 14.386035 -5.6097698 C 13.792285 -6.8285186 12.93291 -7.4847698 12.83916 -7.4847698 z M 2.655566 -7.0306682 C 1.9680667 -7.0306682 1.108691 -6.4994172 1.108691 -5.4369182 L 1.108691 -4.2972698 L 0.32792932 -4.2972698 L 0.32792932 -3.9837932 L 1.108691 -3.9837932 L 1.108691 -0.74941824 C 1.108691 -0.31191867 1.0002919 -0.3128948 0.3440426 -0.3128948 L 0.3440426 0.0005817625 C 0.73466721 -0.015043222 1.2034179 -0.0316448 1.4690426 -0.0316448 C 1.8752922 -0.0316448 2.344043 -0.030668206 2.7346676 0.0005817625 L 2.7346676 -0.3128948 L 2.5310543 -0.3128948 C 1.7966801 -0.3128948 1.7810543 -0.42227016 1.7810543 -0.7816448 L 1.7810543 -3.9837932 L 2.9060543 -3.9837932 L 2.9060543 -4.2972698 L 1.7502926 -4.2972698 L 1.7502926 -5.4530315 C 1.7502926 -6.3280306 2.2180665 -6.8124065 2.655566 -6.8124065 C 2.686816 -6.8124065 2.8430662 -6.8128947 2.983691 -6.7347698 C 2.8743162 -6.7035198 2.6877926 -6.5628945 2.6877926 -6.3128948 C 2.6877926 -6.094145 2.8430663 -5.8910198 3.124316 -5.8910198 C 3.4055658 -5.8910198 3.5623043 -6.0931685 3.5623043 -6.3275432 C 3.5623043 -6.7025429 3.1868155 -7.0306682 2.655566 -7.0306682 z M 7.0837887 -4.2972698 L 7.0837887 -3.9837932 C 7.786913 -3.9837932 7.7869142 -3.9837926 8.2556637 -3.3744182 L 9.2400387 -2.0941448 L 8.3025387 -0.90615652 C 7.8337892 -0.3280321 7.2400385 -0.3128948 7.0369137 -0.3128948 L 7.0369137 0.0005817625 C 7.2869134 -0.015043222 7.5989257 -0.0316448 7.8645504 -0.0316448 C 8.1458001 -0.0316448 8.5676757 -0.015043222 8.8020504 0.0005817625 L 8.8020504 -0.3128948 C 8.5833006 -0.34414477 8.5208004 -0.46865668 8.5208004 -0.62490652 C 8.5208004 -0.8436563 8.802051 -1.1717822 9.4114254 -1.8905315 L 10.177539 -0.89004324 C 10.255664 -0.78066835 10.381152 -0.62441818 10.381152 -0.56191824 C 10.381152 -0.46816833 10.286425 -0.3128948 10.0208 -0.3128948 L 10.0208 0.0005817625 C 10.317675 -0.015043222 10.880176 -0.0316448 11.098925 -0.0316448 C 11.36455 -0.0316448 11.755664 -0.015043222 12.052539 0.0005817625 L 12.052539 -0.3128948 C 11.521289 -0.3128948 11.333788 -0.32803182 11.115039 -0.62490652 L 9.771777 -2.3431682 C 10.068652 -2.7181679 10.443164 -3.2025435 10.693164 -3.4681682 C 11.005663 -3.8275429 11.412402 -3.9837932 11.881152 -3.9837932 L 11.881152 -4.2972698 C 11.615527 -4.2816448 11.317675 -4.2650432 11.05205 -4.2650432 C 10.755176 -4.2650432 10.224902 -4.2816448 10.099902 -4.2972698 L 10.099902 -3.9837932 C 10.318652 -3.9681683 10.3958 -3.8436563 10.3958 -3.6717815 C 10.3958 -3.5155317 10.287402 -3.3900432 10.240527 -3.3275432 L 9.631152 -2.5467815 L 8.8489254 -3.5619182 C 8.7551755 -3.6556681 8.7551754 -3.6722699 8.7551754 -3.7347698 C 8.7551754 -3.8910196 8.9119139 -3.9837932 9.0994137 -3.9837932 L 9.0994137 -4.2972698 C 8.8494139 -4.2816448 8.1931635 -4.2650432 8.0212887 -4.2650432 C 7.8181639 -4.2650432 7.3494134 -4.2816448 7.0837887 -4.2972698 z" />
-    <ui:PathIconSource x:Key="AssignIcon" Foreground="{DynamicResource SystemAccentColor}"
-                       Data="M 0.17167932 -4.2972698 L 0.17167932 -3.9837932 C 0.87480362 -3.9837932 0.87480479 -3.9837926 1.3435543 -3.3744182 L 2.3279293 -2.0941448 L 1.3904293 -0.90615652 C 0.92167979 -0.3280321 0.32792912 -0.3128948 0.12480432 -0.3128948 L 0.12480432 0.0005817625 C 0.37480407 -0.015043222 0.68681631 -0.0316448 0.95244104 -0.0316448 C 1.2336908 -0.0316448 1.6555663 -0.015043222 1.889941 0.0005817625 L 1.889941 -0.3128948 C 1.6711913 -0.34414477 1.608691 -0.46865668 1.608691 -0.62490652 C 1.608691 -0.8436563 1.8899417 -1.1717822 2.499316 -1.8905315 L 3.2654293 -0.89004324 C 3.3435542 -0.78066835 3.4690426 -0.62441817 3.4690426 -0.56191824 C 3.4690426 -0.46816833 3.3743158 -0.3128948 3.108691 -0.3128948 L 3.108691 0.0005817625 C 3.4055657 -0.015043222 3.9680663 -0.0316448 4.186816 -0.0316448 C 4.4524408 -0.0316448 4.8435546 -0.015043222 5.1404293 0.0005817625 L 5.1404293 -0.3128948 C 4.6091799 -0.3128948 4.4216791 -0.32803182 4.2029293 -0.62490652 L 2.8596676 -2.3431682 C 3.1565423 -2.7181679 3.5310546 -3.2025435 3.7810543 -3.4681682 C 4.093554 -3.8275429 4.5002931 -3.9837932 4.9690426 -3.9837932 L 4.9690426 -4.2972698 C 4.7034179 -4.2816448 4.4055658 -4.2650432 4.139941 -4.2650432 C 3.8430663 -4.2650432 3.3127925 -4.2816448 3.1877926 -4.2972698 L 3.1877926 -3.9837932 C 3.4065424 -3.9681683 3.483691 -3.8436563 3.483691 -3.6717815 C 3.483691 -3.5155317 3.3752926 -3.3900432 3.3284176 -3.3275432 L 2.7190426 -2.5467815 L 1.936816 -3.5619182 C 1.8430661 -3.6556681 1.843066 -3.6722699 1.843066 -3.7347698 C 1.843066 -3.8910196 1.9998045 -3.9837932 2.1873043 -3.9837932 L 2.1873043 -4.2972698 C 1.9373046 -4.2816448 1.2810542 -4.2650432 1.1091793 -4.2650432 C 0.90605453 -4.2650432 0.43730406 -4.2816448 0.17167932 -4.2972698 z M 13.192675 -4.2972698 L 13.192675 -3.9837932 C 13.67705 -3.9837932 13.865039 -3.9847695 14.005664 -3.6410198 L 15.505664 0.0005817625 C 15.443164 0.12558164 15.30205 0.45321862 15.255175 0.59384348 C 15.036426 1.1407179 14.754686 1.8287068 14.114062 1.8287068 C 14.067187 1.8287068 13.832812 1.8287066 13.645312 1.6412068 C 13.957812 1.6099568 14.036425 1.3912066 14.036425 1.2193318 C 14.036425 0.96933201 13.848925 0.8121052 13.61455 0.8121052 C 13.411426 0.8121052 13.192675 0.9371055 13.192675 1.2339802 C 13.192675 1.6871047 13.614063 2.0469685 14.114062 2.0469685 C 14.739062 2.0469685 15.145312 1.4683546 15.379687 0.9058552 L 17.146289 -3.3436565 C 17.396288 -3.9842809 17.911426 -3.9837932 18.067675 -3.9837932 L 18.067675 -4.2972698 C 17.833301 -4.2816448 17.55205 -4.2650432 17.317675 -4.2650432 C 17.145801 -4.2650432 16.676562 -4.2816448 16.457812 -4.2972698 L 16.457812 -3.9837932 C 16.770312 -3.9837932 16.926562 -3.811918 16.926562 -3.5619182 C 16.926562 -3.4525433 16.911914 -3.4378947 16.865039 -3.3128948 L 15.848437 -0.8753948 L 14.755664 -3.5472698 C 14.708789 -3.6566447 14.692675 -3.6878948 14.692675 -3.7347698 C 14.692675 -3.9847695 15.052051 -3.9837932 15.255175 -3.9837932 L 15.255175 -4.2972698 C 14.989551 -4.2816448 14.332812 -4.2650432 14.160937 -4.2650432 C 13.895312 -4.2650432 13.48955 -4.2816448 13.192675 -4.2972698 z M 6.146777 -3.6556682 C 6.0061521 -3.6556682 5.818652 -3.6566446 5.818652 -3.4535198 C 5.818652 -3.26602 6.0061521 -3.2660198 6.146777 -3.2660198 L 12.099902 -3.2660198 C 12.256152 -3.2660198 12.44414 -3.26602 12.44414 -3.4535198 C 12.44414 -3.6566446 12.25664 -3.6556682 12.116015 -3.6556682 L 6.146777 -3.6556682 z M 6.146777 -1.7191448 C 6.0061521 -1.7191448 5.818652 -1.7191446 5.818652 -1.5316448 C 5.818652 -1.32852 6.0061521 -1.3280315 6.146777 -1.3280315 L 12.116015 -1.3280315 C 12.25664 -1.3280315 12.44414 -1.32852 12.44414 -1.5316448 C 12.44414 -1.7191446 12.256152 -1.7191448 12.099902 -1.7191448 L 6.146777 -1.7191448 z" />
-    <ui:PathIconSource x:Key="EnterIcon"
+    <ui:FontIconSource x:Key="CustomFunctionIcon" Glyph="[f()]"
+                       FontFamily="{StaticResource RomanSerifFont}" />
+    <ui:FontIconSource x:Key="FunctionIcon" Glyph="f(x)"
+                       FontFamily="{StaticResource RomanSerifFont}" />
+    <ui:FontIconSource x:Key="AssignIcon" Glyph="&amp;x="
+                       FontFamily="{StaticResource RomanSerifFont}" />
+    <ui:FontIconSource x:Key="SinIcon" Glyph="sin"
+                       FontFamily="{StaticResource NotoSansMonoFont}" />
+    <ui:FontIconSource x:Key="CosIcon" Glyph="cos"
+                       FontFamily="{StaticResource NotoSansMonoFont}" />
+    <ui:FontIconSource x:Key="TanIcon" Glyph="tan"
+                       FontFamily="{StaticResource NotoSansMonoFont}" />
+    <ui:PathIconSource x:Key="SquareRootIcon"
+                       Data="M8,30c-0.416,0-0.7896-0.2578-0.9365-0.6489L4.3071,22H3c-0.5522,0-1-0.4478-1-1s0.4478-1,1-1h2c0.417,0,0.79,0.2588,0.9365,0.6489l1.9702,5.2539l7.1377-23.1968C15.1733,2.2861,15.561,2,16,2h13c0.5522,0,1,0.4478,1,1s-0.4478,1-1,1H16.7388L8.9556,29.2939c-0.1255,0.4092-0.4976,0.6929-0.9253,0.7056C8.02,30,8.0098,30,8,30z" />
+    <ui:PathIconSource x:Key="EnterIcon" Foreground="{DynamicResource SystemAccentColor}"
                        Data="M19.5,6C19.223877,6,19,6.223877,19,6.5V11c-0.0009155,0.828064-0.671936,1.4990845-1.5,1.5H5.7069702l2.6464844-2.6464844c0.1871948-0.1937866,0.1871948-0.5009766,0-0.6947021C8.1616211,8.9602051,7.8450928,8.9546509,7.6464844,9.1465454l-3.5,3.5c-0.000061,0-0.0001221,0.000061-0.0001221,0.0001221c-0.1951904,0.1951904-0.1951294,0.5117188,0.0001221,0.7068481l3.5,3.5C7.7401123,16.9474487,7.8673706,17.0001831,8,17c0.1325684,0,0.2597046-0.0526733,0.3533936-0.1464233c0.1953125-0.1952515,0.1953125-0.5118408,0.0001221-0.7070923L5.7069702,13.5H17.5c1.380188-0.0012817,2.4987183-1.119812,2.5-2.5V6.5C20,6.223877,19.776123,6,19.5,6z" />
     <ui:PathIconSource x:Key="KeyboardIcon"
                        Data="M20 5H4c-1.1 0-1.99.9-1.99 2L2 17c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm-9 3h2v2h-2V8zm0 3h2v2h-2v-2zM8 8h2v2H8V8zm0 3h2v2H8v-2zm-1 2H5v-2h2v2zm0-3H5V8h2v2zm8 7H9c-.55 0-1-.45-1-1s.45-1 1-1h6c.55 0 1 .45 1 1s-.45 1-1 1zm1-4h-2v-2h2v2zm0-3h-2V8h2v2zm3 3h-2v-2h2v2zm0-3h-2V8h2v2z" />
@@ -73,6 +113,4 @@
                        Data="m 6.546875,-1 -7.875,9 7.875,9 h 13.423828 c 1.148111,0.03297 2.107352,-0.646921 2.556641,-1.458984 0.449288,-0.812064 0.547369,-1.71582 0.46875,-2.53711 L 23,13.099609 V 2.0214844 C 23.035837,0.34652725 21.653745,-1.0357162 19.978516,-1 Z m 0.90625,2 h 12.556641 0.01172 C 20.495839,0.98988667 21.01014,1.5045741 21,1.9785156 v 0.011719 11.1582036 l 0.0039,0.04687 c 0.04633,0.484005 -0.04775,1.053765 -0.226562,1.376953 C 20.598534,14.895453 20.49374,15.013338 20.029297,15 H 20.013672 7.453125 l -6.125,-7 z M 11,4 a 1,1 0 0 0 -0.707031,0.2929687 1,1 0 0 0 0,1.4140625 L 12.585938,8 10.292969,10.292969 a 1,1 0 0 0 0,1.414062 1,1 0 0 0 1.414062,0 L 14,9.4140625 16.292969,11.707031 a 1,1 0 0 0 1.414062,0 1,1 0 0 0 0,-1.414062 L 15.414063,8 17.707031,5.7070312 a 1,1 0 0 0 0,-1.4140625 1,1 0 0 0 -1.414062,0 L 14,6.5859375 11.707031,4.2929687 A 1,1 0 0 0 11,4 Z" />
     <ui:PathIconSource x:Key="DeleteAllIcon" Foreground="Red"
                        Data="M24.2,12.193,23.8,24.3a3.988,3.988,0,0,1-4,3.857H12.2a3.988,3.988,0,0,1-4-3.853L7.8,12.193a1,1,0,0,1,2-.066l.4,12.11a2,2,0,0,0,2,1.923h7.6a2,2,0,0,0,2-1.927l.4-12.106a1,1,0,0,1,2,.066Zm1.323-4.029a1,1,0,0,1-1,1H7.478a1,1,0,0,1,0-2h3.1a1.276,1.276,0,0,0,1.273-1.148,2.991,2.991,0,0,1,2.984-2.694h2.33a2.991,2.991,0,0,1,2.984,2.694,1.276,1.276,0,0,0,1.273,1.148h3.1A1,1,0,0,1,25.522,8.164Zm-11.936-1h4.828a3.3,3.3,0,0,1-.255-.944,1,1,0,0,0-.994-.9h-2.33a1,1,0,0,0-.994.9A3.3,3.3,0,0,1,13.586,7.164Zm1.007,15.151V13.8a1,1,0,0,0-2,0v8.519a1,1,0,0,0,2,0Zm4.814,0V13.8a1,1,0,0,0-2,0v8.519a1,1,0,0,0,2,0Z" />
-
-    <Thickness x:Key="CornerRadius1">5</Thickness>
 </ResourceDictionary>
