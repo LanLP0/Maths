@@ -9,6 +9,7 @@ using Avalonia.Media;
 using Avalonia.Metadata;
 using Avalonia.VisualTree;
 using FluentAvalonia.UI.Controls;
+using LToolBox.Ui.Extension;
 
 namespace LToolBox.Ui.Controls;
 
@@ -16,9 +17,6 @@ public class VirtualKey : TemplatedControl
 {
     public static readonly StyledProperty<string> KeyProperty =
         AvaloniaProperty.Register<VirtualKey, string>(nameof(Key));
-
-    public static readonly StyledProperty<double> BoxSizeProperty =
-        AvaloniaProperty.Register<VirtualKey, double>(nameof(BoxSize));
 
     public static readonly StyledProperty<IBrush?> ButtonBackgroundProperty =
         AvaloniaProperty.Register<VirtualKey, IBrush?>(nameof(ButtonBackground));
@@ -33,12 +31,6 @@ public class VirtualKey : TemplatedControl
     {
         get => GetValue(KeyProperty);
         set => SetValue(KeyProperty, value);
-    }
-
-    public double BoxSize
-    {
-        get => GetValue(BoxSizeProperty);
-        private set => SetValue(BoxSizeProperty, value);
     }
 
     public IBrush? ButtonBackground
@@ -57,8 +49,9 @@ public class VirtualKey : TemplatedControl
 
     protected override void OnInitialized()
     {
-        DataContext = this;
         Focusable = false;
+        HorizontalAlignment = HorizontalAlignment.Stretch;
+        VerticalAlignment = VerticalAlignment.Stretch;
 
         _keyboard = this.FindAncestorOfType<VirtualKeyboard>();
 
@@ -79,30 +72,24 @@ public class VirtualKey : TemplatedControl
             var button = new Button
             {
                 Focusable = false,
-                CornerRadius = new CornerRadius(int.MaxValue),
+                CornerRadius = new CornerRadius(0),
                 Padding = new Thickness(20),
-                Margin = new Thickness(10),
-                HorizontalAlignment = HorizontalAlignment.Center,
-                VerticalAlignment = VerticalAlignment.Center,
-                [!WidthProperty] = new Binding("BoxSize"),
-                [!HeightProperty] = new Binding("BoxSize"),
-                [!ContentControl.ContentProperty] = new Binding("Inner")
+                Margin = new Thickness(0),
+                Background = Brushes.Transparent,
+                HorizontalAlignment = HorizontalAlignment.Stretch,
+                VerticalAlignment = VerticalAlignment.Stretch,
+                [!ContentControl.ContentProperty] = new Binding(nameof(Inner)).WithSource(this)
             };
 
-            if (ButtonBackground is not null) button[!BackgroundProperty] = new Binding("ButtonBackground");
+            if (ButtonBackground is not null)
+                button[!BackgroundProperty] = new Binding(nameof(ButtonBackground)).WithSource(this);
 
-            if (_keyboard is not null) button.Click += (_, _) => _keyboard.KeyClicked.OnNext(Key);
+            if (_keyboard is not null)
+                button.Click += (_, _) => _keyboard.KeyClicked.OnNext(Key);
 
             return button;
         });
 
         base.OnInitialized();
-    }
-
-    protected override void OnSizeChanged(SizeChangedEventArgs e)
-    {
-        BoxSize = Math.Min(e.NewSize.Height, e.NewSize.Width);
-
-        base.OnSizeChanged(e);
     }
 }
