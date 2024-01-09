@@ -20,7 +20,9 @@ jobs:
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 8.0.x
+    - name: Setup
+      run: cd test/LCalc.Tests
     - name: Restore dependencies
       run: dotnet restore
     - name: Test
-      run: cd test/LCalc.Tests && dotnet test --verbosity normal
+      run: dotnet test --verbosity normal
