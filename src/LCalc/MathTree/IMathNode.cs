@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using Common.Maths;
 using Common.Results;
 
 namespace LCalc.MathTree;
@@ -23,7 +24,7 @@ internal interface IMathNode
     public Result GenerateMissingValueError();
 
     /// <remarks>Note: Run Calc before to catch errors</remarks>
-    public Result RenderStep(StringBuilder buffer, int selectedLevel, Scope scope, int nodeLevel = 1,
+    public Result RenderStep(StringBuilder buffer, int selectedLevel, Scope scope, Format format, int nodeLevel = 1,
         bool showTree = false, bool latex = false);
 
     public Result<int> GetDepth();

@@ -20,6 +20,7 @@ public static partial class TestCases
         "1/2",
         "1/4",
         "1/8",
+        "1/16",
         "1/3",
         "((1))",
         "0123",

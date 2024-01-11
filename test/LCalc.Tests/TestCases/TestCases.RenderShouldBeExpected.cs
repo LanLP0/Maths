@@ -11,7 +11,11 @@ public static partial class TestCases
         "abs(sin(((~1>>2<<2)^2!/1000*50-40+1))) &step",
         "abs(sin(((~1>>2<<2)^2!/1000*50-40+1))) &tree",
         "abs(1+(2+3))==2+4!= (1+(2+(3+4))) &step",
-        "1-|2-(3+(4 &render &step", // Implicit braces
+        // Format
+        "|1/3|+|1/8|+|1/143| &step",
+        "|1/3|+|1/8|+|1/143| &step &raw",
+        // Implicit braces
+        "1-|2-(3+(4 &render &step",
         "sigma(x, 1, 100, -1*x) &latex",
         "cpi(x, floor(sqrt(6)), ceiling(cbrt(999)), x^x) &latex",
         "cpi(x, floor(sqrt(6)), ceiling(cbrt(999)), x^x) &latexdoc",

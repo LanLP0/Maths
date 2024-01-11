@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using Common.Maths;
 using Common.Results;
 
 namespace LCalc.MathTree.Nodes;
@@ -72,7 +73,7 @@ internal sealed class ModuloNode : IMathNode
         return Err("Missing value after operator %");
     }
 
-    public Result RenderStep(StringBuilder buffer, int selectedLevel, Scope scope, int nodeLevel = 1,
+    public Result RenderStep(StringBuilder buffer, int selectedLevel, Scope scope, Format format, int nodeLevel = 1,
         bool showTree = false, bool latex = false)
     {
         if (!IsFull())
@@ -84,20 +85,20 @@ internal sealed class ModuloNode : IMathNode
 
         if (nodeLevel == selectedLevel)
         {
-            buffer.Append(Calc(scope).Value);
+            buffer.Append(Calc(scope).Value.Format(format));
             return Ok();
         }
 
         if (isEncased || showTree)
             buffer.Append('(');
 
-        var result = _arg1!.RenderStep(buffer, selectedLevel, scope, nodeLevel, showTree, latex);
+        var result = _arg1!.RenderStep(buffer, selectedLevel, scope, format, nodeLevel, showTree, latex);
         if (result.Faulted)
             return result;
 
-        buffer.Append(latex ? " \\mathbin{\\%} " : " % ");
+        buffer.Append(latex ? @" \mathbin{\%} " : " % ");
 
-        result = _arg2!.RenderStep(buffer, selectedLevel, scope, nodeLevel, showTree, latex);
+        result = _arg2!.RenderStep(buffer, selectedLevel, scope, format, nodeLevel, showTree, latex);
         if (result.Faulted)
             return result;
 

@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using Common.Maths;
 using Common.Results;
 using LCalc.Helpers;
 
@@ -74,7 +75,7 @@ internal sealed class LeftShiftNode : IMathNode
     }
 
 
-    public Result RenderStep(StringBuilder buffer, int selectedLevel, Scope scope, int nodeLevel = 1,
+    public Result RenderStep(StringBuilder buffer, int selectedLevel, Scope scope, Format format, int nodeLevel = 1,
         bool showTree = false, bool latex = false)
     {
         if (!IsFull())
@@ -86,20 +87,20 @@ internal sealed class LeftShiftNode : IMathNode
 
         if (nodeLevel == selectedLevel)
         {
-            buffer.Append(Calc(scope).Value);
+            buffer.Append(Calc(scope).Value.Format(format));
             return Ok();
         }
 
         if (isEncased || showTree)
             buffer.Append('(');
 
-        var result = _arg1!.RenderStep(buffer, selectedLevel, scope, nodeLevel, showTree, latex);
+        var result = _arg1!.RenderStep(buffer, selectedLevel, scope, format, nodeLevel, showTree, latex);
         if (result.Faulted)
             return result;
 
         buffer.Append(latex ? " <\\!< " : " << ");
 
-        result = _arg2!.RenderStep(buffer, selectedLevel, scope, nodeLevel, showTree, latex);
+        result = _arg2!.RenderStep(buffer, selectedLevel, scope, format, nodeLevel, showTree, latex);
         if (result.Faulted)
             return result;
 

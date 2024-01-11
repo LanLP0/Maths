@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Text;
+using Common.Maths;
 using Common.Results;
 
 namespace LCalc.MathTree.Nodes;
@@ -44,7 +45,7 @@ internal sealed class VariableNode : IMathNode
         throw new UnreachableException();
     }
 
-    public Result RenderStep(StringBuilder buffer, int selectedLevel, Scope scope, int nodeLevel = 1,
+    public Result RenderStep(StringBuilder buffer, int selectedLevel, Scope scope, Format format, int nodeLevel = 1,
         bool showTree = false, bool latex = false)
     {
         // This allow for variable to be rendered in sigma() or cpi()
@@ -54,11 +55,7 @@ internal sealed class VariableNode : IMathNode
             return Ok();
         }
 
-        var result = Calc(scope);
-        if (result.Faulted)
-            return result;
-
-        buffer.Append(result.Value);
+        buffer.Append(Calc(scope).Value.Format(format));
         return Ok();
     }
 

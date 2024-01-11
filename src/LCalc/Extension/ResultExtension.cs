@@ -1,4 +1,5 @@
-﻿using Common.Results;
+﻿using Common.Maths;
+using Common.Results;
 
 namespace LCalc.Extension;
 

@@ -1,6 +1,8 @@
+using Common.Maths;
+
 namespace LCalc.Extension;
 
-public static class FormatExtension
+internal static class FormatExtension
 {
     public static bool IsValid(this Format format)
     {

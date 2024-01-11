@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using Common.Maths;
 using Common.Results;
 
 namespace LCalc.MathTree.Nodes;
@@ -74,7 +75,7 @@ internal sealed class MinusNode : IMathNode
     }
 
 
-    public Result RenderStep(StringBuilder buffer, int selectedLevel, Scope scope, int nodeLevel = 1,
+    public Result RenderStep(StringBuilder buffer, int selectedLevel, Scope scope, Format format, int nodeLevel = 1,
         bool showTree = false, bool latex = false)
     {
         if (!IsFull())
@@ -86,7 +87,7 @@ internal sealed class MinusNode : IMathNode
 
         if (nodeLevel == selectedLevel)
         {
-            buffer.Append(Calc(scope).Value);
+            buffer.Append(Calc(scope).Value.Format(format));
             return Ok();
         }
 
@@ -97,7 +98,7 @@ internal sealed class MinusNode : IMathNode
         if (_arg1 is EmptyNode)
         {
             buffer.Append('-');
-            result = _arg2!.RenderStep(buffer, selectedLevel, scope, nodeLevel, showTree, latex);
+            result = _arg2!.RenderStep(buffer, selectedLevel, scope, format, nodeLevel, showTree, latex);
             if (result.Faulted)
                 return result;
 
@@ -107,13 +108,13 @@ internal sealed class MinusNode : IMathNode
             return Ok();
         }
 
-        result = _arg1!.RenderStep(buffer, selectedLevel, scope, nodeLevel, showTree, latex);
+        result = _arg1!.RenderStep(buffer, selectedLevel, scope, format, nodeLevel, showTree, latex);
         if (result.Faulted)
             return result;
 
         buffer.Append(" - ");
 
-        result = _arg2!.RenderStep(buffer, selectedLevel, scope, nodeLevel, showTree, latex);
+        result = _arg2!.RenderStep(buffer, selectedLevel, scope, format, nodeLevel, showTree, latex);
         if (result.Faulted)
             return result;
 

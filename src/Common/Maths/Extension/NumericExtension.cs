@@ -36,9 +36,54 @@ internal static class NumericExtension
         return Math.PI / 180 * angle;
     }
 
-    public static string Humanize(this double num)
+    public static string Format(this double value, Format format)
     {
-        switch (num)
+        switch (format)
+        {
+            case Common.Maths.Format.Raw:
+                value = Math.Round(value, 6);
+                return value.ToString(CultureInfo.InvariantCulture);
+            case Common.Maths.Format.Hex:
+                var isNeg = value < 0;
+
+                value = Math.Round(Math.Abs(value));
+                if (value > long.MaxValue)
+                    return (isNeg ? "-" : "") + "0x..fffffff";
+                var l = (long)value;
+
+                return (isNeg ? "-0x" : "0x") + Convert.ToString(l, 16);
+            case Common.Maths.Format.Octal:
+                var isNeg1 = value < 0;
+
+                value = Math.Round(Math.Abs(value));
+                if (value > long.MaxValue)
+                    return (isNeg1 ? "-" : "") + "0o..7777777";
+                var l1 = (long)value;
+
+                return (isNeg1 ? "-0o" : "0o") + Convert.ToString(l1, 8);
+            case Common.Maths.Format.Binary:
+                var isNeg2 = value < 0;
+
+                value = Math.Round(Math.Abs(value));
+                if (value > int.MaxValue)
+                    return (isNeg2 ? "-" : "") + "0b..1111111";
+                var i = (int)value;
+
+                return (isNeg2 ? "-0b" : "0b") + Convert.ToString(i, 2);
+            default:
+                return value.Humanize();
+        }
+    }
+
+    public static string ToStringRounded(this double value)
+    {
+        value = Math.Round(value, 3);
+        return value.ToString(CultureInfo.InvariantCulture);
+    }
+
+    public static string Humanize(this double value)
+    {
+        switch (value)
         {
             case double.NaN:
                 return "NaN";
@@ -48,30 +93,33 @@ internal static class NumericExtension
                 return "-∞";
         }
 
-        var num1 = Math.Abs(num);
-        double denominator = 1;
+        var abs = Math.Abs(value);
+        var denominator = 1;
         for (var i = 0; i < 4; i++)
         {
-            if (num1.IsInt()) break;
+            if (abs.IsInt()) break;
 
-            num1 *= 10;
+            abs *= 10;
             denominator *= 10;
         }
 
-        if (denominator <= 100)
-            return num.ToString(CultureInfo.InvariantCulture);
+        if (denominator <= 1000)
+            return value.ToString(CultureInfo.InvariantCulture);
 
-        var approx = Rational.Approximate(num, 10E-8);
+        var approx = Rational.Approximate(abs / 10000, 10E-8);
         if (approx.FractionPart.Denominator >= 1000)
         {
-            num = Math.Round(num, 6);
-            return num.ToString(CultureInfo.InvariantCulture);
+            value = Math.Round(value, 6);
+            return value.ToString(CultureInfo.InvariantCulture);
         }
+
+        if (value < 0)
+            approx = -approx;
 
         if (!approx.FractionPart.IsZero)
             return approx.ToString();
 
-        num = Math.Round(num, 6);
-        return num.ToString(CultureInfo.InvariantCulture);
+        value = Math.Round(value, 6);
+        return value.ToString(CultureInfo.InvariantCulture);
     }
 }

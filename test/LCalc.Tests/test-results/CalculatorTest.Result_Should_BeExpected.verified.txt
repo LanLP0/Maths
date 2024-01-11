@@ -49,7 +49,11 @@
   },
   {
     Math: 1/8,
-    Output: Result: 1/8
+    Output: Result: 0.125
+  },
+  {
+    Math: 1/16,
+    Output: Result: 1/16
   },
   {
     Math: 1/3,

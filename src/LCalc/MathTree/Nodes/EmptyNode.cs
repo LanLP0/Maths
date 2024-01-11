@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Text;
+using Common.Maths;
 using Common.Results;
 
 namespace LCalc.MathTree.Nodes;
@@ -35,7 +36,7 @@ internal sealed class EmptyNode : IMathNode
         throw new UnreachableException();
     }
 
-    public Result RenderStep(StringBuilder buffer, int selectedLevel, Scope scope, int nodeLevel = 1,
+    public Result RenderStep(StringBuilder buffer, int selectedLevel, Scope scope, Format format, int nodeLevel = 1,
         bool showTree = false, bool latex = false)
     {
         return Ok();

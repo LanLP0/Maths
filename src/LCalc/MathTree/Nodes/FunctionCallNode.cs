@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text;
+using Common.Maths;
 using Common.Results;
 using LCalc.Helpers;
 
@@ -123,39 +124,35 @@ internal sealed class FunctionCallNode : IMathNode
         throw new UnreachableException();
     }
 
-    public Result RenderStep(StringBuilder buffer, int selectedLevel, Scope scope, int nodeLevel = 1,
+    public Result RenderStep(StringBuilder buffer, int selectedLevel, Scope scope, Format format, int nodeLevel = 1,
         bool showTree = false, bool latex = false)
     {
         nodeLevel++;
         if (nodeLevel == selectedLevel)
         {
-            var result = Calc(scope);
-            if (result.Faulted)
-                return result;
-
-            buffer.Append(result.Value);
+            buffer.Append(Calc(scope).Value.Format(format));
             return Ok();
         }
 
         if (!latex)
             return Name switch
             {
-                "abs" => RenderAbs(buffer, selectedLevel, scope, nodeLevel, showTree, latex),
-                "sigma" => RenderSigmaCpi(buffer, selectedLevel, scope, nodeLevel, showTree, latex, true),
-                "cpi" => RenderSigmaCpi(buffer, selectedLevel, scope, nodeLevel, showTree, latex, false),
-                _ => RenderNormal(buffer, selectedLevel, scope, nodeLevel, showTree, latex)
+                "abs" => RenderAbs(buffer, selectedLevel, scope, nodeLevel, showTree, latex, format),
+                "sigma" => RenderSigmaCpi(buffer, selectedLevel, scope, nodeLevel, showTree, latex, true, format),
+                "cpi" => RenderSigmaCpi(buffer, selectedLevel, scope, nodeLevel, showTree, latex, false, format),
+                _ => RenderNormal(buffer, selectedLevel, scope, nodeLevel, showTree, latex, format)
             };
 
         return Name switch
         {
-            "abs" => RenderAbs(buffer, selectedLevel, scope, nodeLevel, showTree, latex),
-            "sqrt" => RenderSqrtCbrt(buffer, selectedLevel, scope, nodeLevel, showTree, true),
-            "cbrt" => RenderSqrtCbrt(buffer, selectedLevel, scope, nodeLevel, showTree, false),
-            "ceiling" => RenderCeilingFloor(buffer, selectedLevel, scope, nodeLevel, showTree, true),
-            "floor" => RenderCeilingFloor(buffer, selectedLevel, scope, nodeLevel, showTree, false),
-            "sigma" => RenderSigmaCpi(buffer, selectedLevel, scope, nodeLevel, showTree, latex, true),
-            "cpi" => RenderSigmaCpi(buffer, selectedLevel, scope, nodeLevel, showTree, latex, false),
-            _ => RenderNormal(buffer, selectedLevel, scope, nodeLevel, showTree, latex)
+            "abs" => RenderAbs(buffer, selectedLevel, scope, nodeLevel, showTree, latex, format),
+            "sqrt" => RenderSqrtCbrt(buffer, selectedLevel, scope, nodeLevel, showTree, true, format),
+            "cbrt" => RenderSqrtCbrt(buffer, selectedLevel, scope, nodeLevel, showTree, false, format),
+            "ceiling" => RenderCeilingFloor(buffer, selectedLevel, scope, nodeLevel, showTree, true, format),
+            "floor" => RenderCeilingFloor(buffer, selectedLevel, scope, nodeLevel, showTree, false, format),
+            "sigma" => RenderSigmaCpi(buffer, selectedLevel, scope, nodeLevel, showTree, latex, true, format),
+            "cpi" => RenderSigmaCpi(buffer, selectedLevel, scope, nodeLevel, showTree, latex, false, format),
+            _ => RenderNormal(buffer, selectedLevel, scope, nodeLevel, showTree, latex, format)
         };
     }
 
@@ -212,13 +209,13 @@ internal sealed class FunctionCallNode : IMathNode
     }
 
     private Result RenderAbs(StringBuilder buffer, int selectedLevel, Scope scope, int nodeLevel, bool showTree,
-        bool latex)
+        bool latex, Format format)
     {
         var arg = _args[0];
 
         buffer.Append('|');
 
-        var result = arg.RenderStep(buffer, selectedLevel, scope, nodeLevel, showTree, latex);
+        var result = arg.RenderStep(buffer, selectedLevel, scope, format, nodeLevel, showTree, latex);
         if (result.Faulted)
             return result;
 
@@ -227,13 +224,13 @@ internal sealed class FunctionCallNode : IMathNode
     }
 
     private Result RenderSqrtCbrt(StringBuilder buffer, int selectedLevel, Scope scope, int nodeLevel,
-        bool showTree, bool isSqrt)
+        bool showTree, bool isSqrt, Format format)
     {
         var arg = _args[0];
 
         buffer.Append(isSqrt ? @"\sqrt{" : @"\sqrt[3]{");
 
-        var result = arg.RenderStep(buffer, selectedLevel, scope, nodeLevel, showTree, true);
+        var result = arg.RenderStep(buffer, selectedLevel, scope, format, nodeLevel, showTree, true);
         if (result.Faulted)
             return result;
 
@@ -242,13 +239,13 @@ internal sealed class FunctionCallNode : IMathNode
     }
 
     private Result RenderCeilingFloor(StringBuilder buffer, int selectedLevel, Scope scope, int nodeLevel,
-        bool showTree, bool isCeiling)
+        bool showTree, bool isCeiling, Format format)
     {
         var arg = _args[0];
 
         buffer.Append(isCeiling ? @"\lceil " : @"\lfloor ");
 
-        var result = arg.RenderStep(buffer, selectedLevel, scope, nodeLevel, showTree, true);
+        var result = arg.RenderStep(buffer, selectedLevel, scope, format, nodeLevel, showTree, true);
         if (result.Faulted)
             return result;
 
@@ -257,7 +254,7 @@ internal sealed class FunctionCallNode : IMathNode
     }
 
     private Result RenderSigmaCpi(StringBuilder buffer, int selectedLevel, Scope scope, int nodeLevel, bool showTree,
-        bool latex, bool isSigma)
+        bool latex, bool isSigma, Format format)
     {
         var args = CollectionsMarshal.AsSpan(_args);
 
@@ -287,13 +284,13 @@ internal sealed class FunctionCallNode : IMathNode
             buffer.Append(", ");
         }
 
-        var result = args[index++].RenderStep(buffer, selectedLevel, scope, nodeLevel, showTree, latex);
+        var result = args[index++].RenderStep(buffer, selectedLevel, scope, format, nodeLevel, showTree, latex);
         if (result.Faulted)
             return result;
 
         buffer.Append(latex ? @"}^{" : ", ");
 
-        result = args[index++].RenderStep(buffer, selectedLevel, scope, nodeLevel, showTree, latex);
+        result = args[index++].RenderStep(buffer, selectedLevel, scope, format, nodeLevel, showTree, latex);
         if (result.Faulted)
             return result;
 
@@ -306,7 +303,7 @@ internal sealed class FunctionCallNode : IMathNode
             args[index].Priority = MathTree.ValueNodePriority;
 
         // This shouldn't be calculated and sometime should be put in braces
-        result = args[index].RenderStep(buffer, -1, scope, 0, showTree, latex);
+        result = args[index].RenderStep(buffer, -1, scope, format, 0, showTree, latex);
 
         if (!latex)
             buffer.Append(')');
@@ -314,7 +311,7 @@ internal sealed class FunctionCallNode : IMathNode
     }
 
     private Result RenderNormal(StringBuilder buffer, int selectedLevel, Scope scope, int nodeLevel, bool showTree,
-        bool latex)
+        bool latex, Format format)
     {
         buffer.Append(Name);
         buffer.Append('(');
@@ -322,7 +319,7 @@ internal sealed class FunctionCallNode : IMathNode
         var args = CollectionsMarshal.AsSpan(_args);
         for (var i = 0; i < args.Length; i++)
         {
-            var result = args[i].RenderStep(buffer, selectedLevel, scope, nodeLevel, showTree, latex);
+            var result = args[i].RenderStep(buffer, selectedLevel, scope, format, nodeLevel, showTree, latex);
             if (result.Faulted)
                 return result;
 

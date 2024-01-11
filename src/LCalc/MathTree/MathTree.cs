@@ -1,4 +1,5 @@
 ﻿using Common;
+using Common.Maths;
 using Common.Results;
 using LCalc.Extension;
 using LCalc.Helpers;
@@ -430,11 +431,11 @@ internal sealed class MathTree
                     MoveUp(ref levelRoot);
                     break;
                 }
-                case '&': // Variable / bw and
+                case '&': // Variable set / bw and
                 {
                     if (math.TryGetValueAt(chunk.Start + 1, out var nextChar) && nextChar.IsLowerLetter())
                     {
-                        // Variable
+                        // Variable set
 
                         if (isInsideCustomFunction)
                             return Err("Cannot set variable/option inside custom function");
@@ -491,6 +492,8 @@ internal sealed class MathTree
                         i += skip;
                         break;
                     }
+                    
+                    // And node
 
                     result = AddNode(levelRoot, new BitwiseAndNode(), spaceBeforeToken);
                     if (result.Faulted)
@@ -1134,10 +1137,7 @@ internal sealed class MathTree
 
     private static bool IsValue(char c)
     {
-        if (GetCharacterType(c) is CharacterType.Number or CharacterType.Letter)
-            return true;
-
-        return c is '(';
+        return char.IsLetterOrDigit(c) || c is '(';
     }
 
     public CalcResult Calc()

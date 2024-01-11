@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using Common.Maths;
 
 namespace LCalc;
 
@@ -78,9 +79,6 @@ public struct CalcResult
         }
 
         var result = Number!.Value;
-        var raw = Format is Format.Raw;
-        if (raw)
-            result = Math.Round(result, 6);
 
         if (ContainSteps)
             return $"{Steps}{Environment.NewLine}Result: {RenderNumber(result)}";
@@ -90,41 +88,7 @@ public struct CalcResult
 
     private string RenderNumber(double result)
     {
-        switch (Format)
-        {
-            case Format.Raw:
-                result = Math.Round(result, 6);
-                return result.ToString(CultureInfo.InvariantCulture);
-            case Format.Hex:
-                var isNeg = result < 0;
-
-                result = Math.Round(Math.Abs(result));
-                if (result > long.MaxValue)
-                    return (isNeg ? "-" : "") + "0x..fffffff";
-                var l = (long)result;
-
-                return (isNeg ? "-0x" : "0x") + Convert.ToString(l, 16);
-            case Format.Octal:
-                var isNeg1 = result < 0;
-
-                result = Math.Round(Math.Abs(result));
-                if (result > long.MaxValue)
-                    return (isNeg1 ? "-" : "") + "0o..7777777";
-                var l1 = (long)result;
-
-                return (isNeg1 ? "-0o" : "0o") + Convert.ToString(l1, 8);
-            case Format.Binary:
-                var isNeg2 = result < 0;
-
-                result = Math.Round(Math.Abs(result));
-                if (result > int.MaxValue)
-                    return (isNeg2 ? "-" : "") + "0b..1111111";
-                var i = (int)result;
-
-                return (isNeg2 ? "-0b" : "0b") + Convert.ToString(i, 2);
-            default:
-                return result.Humanize();
-        }
+        return result.Format(Format);
     }
 
     public CalcResult WithFormat(Format format)

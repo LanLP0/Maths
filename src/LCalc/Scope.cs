@@ -1,4 +1,5 @@
-﻿using Common.Results;
+﻿using Common.Maths;
+using Common.Results;
 using LCalc.CustomFunction;
 using LCalc.Variables;
 

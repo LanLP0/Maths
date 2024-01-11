@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using Common.Maths;
 using Common.Results;
 using LCalc.Extension;
 using LCalc.MathTree;
@@ -115,11 +116,16 @@ public static class Calculator
     /// </summary>
     /// <param name="math">The expression</param>
     /// <param name="latex">Where to render in latex format or not</param>
+    /// <param name="format">The format to use for values</param>
     /// <returns></returns>
-    public static string? RenderExpression(ReadOnlySpan<char> math, bool latex = false)
+    public static string? RenderExpression(ReadOnlySpan<char> math, bool latex = false, Format format = Format.Human)
     {
+        if (!format.IsValid())
+            throw new ArgumentException("Invalid format", nameof(format));
+        
         var tree = new MathTree.MathTree();
         tree.Parse(math);
+        tree.Scope.Format = format;
 
         return RenderExpression(tree, latex);
     }
@@ -128,7 +134,7 @@ public static class Calculator
     {
         var buffer = new StringBuilder();
 
-        var result = tree.GetTopNode().RenderStep(buffer, -1, tree.Scope, 0, false, latex);
+        var result = tree.GetTopNode().RenderStep(buffer, -1, tree.Scope, tree.Scope.Format, 0, false, latex);
         if (result.Faulted)
             return null;
 
@@ -170,7 +176,7 @@ public static class Calculator
 
         for (var i = maxDepth.Value + 1; i > 1; i--)
         {
-            var result = root.RenderStep(buffer, i, tree.Scope, 1, treeOpt, latex);
+            var result = root.RenderStep(buffer, i, tree.Scope, tree.Scope.Format, 1, treeOpt, latex);
             if (result.Faulted)
                 return result;
 
@@ -206,7 +212,7 @@ public static class Calculator
             buffer.Append(@"\\");
         buffer.Append(Environment.NewLine);
 
-        root.RenderStep(buffer, 1, tree.Scope, 1, treeOpt, latex);
+        root.RenderStep(buffer, 1, tree.Scope, tree.Scope.Format, 1, treeOpt, latex);
 
         // Check for duplicates
         if (CheckLastTwo(buffer, latex, out var s))

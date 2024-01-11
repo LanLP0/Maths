@@ -1,4 +1,4 @@
-namespace LCalc;
+namespace Common.Maths;
 
 public enum Format
 {

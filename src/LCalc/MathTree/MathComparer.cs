@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text;
+using Common.Maths;
 using Common.Results;
 
 namespace LCalc.MathTree;
@@ -15,7 +16,7 @@ internal sealed class MathComparer : IMathNode
 
     public int Priority { get; set; } = MathTree.SpecialNodePriority;
 
-    public Result RenderStep(StringBuilder buffer, int selectedLevel, Scope scope, int nodeLevel = 1,
+    public Result RenderStep(StringBuilder buffer, int selectedLevel, Scope scope, Format format, int nodeLevel = 1,
         bool showTree = false, bool latex = false)
     {
         var args = CollectionsMarshal.AsSpan(_args);
@@ -26,7 +27,7 @@ internal sealed class MathComparer : IMathNode
                 var arg = args[i];
                 if (arg.Priority is not MathTree.ValueNodePriority)
                 {
-                    var result = arg.RenderStep(buffer, selectedLevel, scope, nodeLevel, showTree, latex);
+                    var result = arg.RenderStep(buffer, selectedLevel, scope, format, nodeLevel, showTree, latex);
                     if (result.Faulted)
                         return result;
                 }
@@ -37,7 +38,7 @@ internal sealed class MathComparer : IMathNode
             }
             else
             {
-                var result = args[i].RenderStep(buffer, selectedLevel, scope, nodeLevel, showTree, latex);
+                var result = args[i].RenderStep(buffer, selectedLevel, scope, format, nodeLevel, showTree, latex);
                 if (result.Faulted)
                     return result;
             }
