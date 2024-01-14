@@ -25,6 +25,28 @@ internal sealed class App : Command<Settings>
 
     public override int Execute(CommandContext context, Settings settings)
     {
+        if (!settings.Focus)
+            return ExecuteCore(settings);
+
+        Console.CancelKeyPress += (_, e) => Environment.Exit(0);
+
+        if (!AnsiConsole.Profile.Capabilities.AlternateBuffer)
+        {
+            AnsiConsole.Clear();
+            return ExecuteCore(settings);
+        }
+
+        var exitCode = 0;
+        AnsiConsole.AlternateScreen(() =>
+        {
+            exitCode = ExecuteCore(settings);
+        });
+
+        return exitCode;
+    }
+    
+    private int ExecuteCore(Settings settings)
+    {
         var console = AnsiConsole.Console;
 
         _tools = new Tool[]
@@ -99,7 +121,11 @@ internal sealed class App : Command<Settings>
             return 0;
         }
 
-        for (;;) PromptTool();
+        for (;;)
+        {
+            PromptTool();
+            AnsiConsole.Clear();
+        }
     }
 
     private static void PromptTool()
@@ -164,4 +190,9 @@ public sealed class Settings : CommandSettings
     [CommandOption("-q|--quit")]
     [DefaultValue(false)]
     public bool Quit { get; init; }
+    
+    [Description("Clear the console")]
+    [CommandOption("-f|--focus")]
+    [DefaultValue(false)]
+    public bool Focus { get; init; }
 }
