@@ -59,12 +59,7 @@ internal static class Maths
         if (value % 2 is 0)
             return false;
 
-        var root = (int)Math.Sqrt(value);
-        for (var a = 3; a <= root; a += 2)
-            if (value % a is 0)
-                return false;
-
-        return true;
+        return IsPrimeInternal(value);
     }
 
     public static double FastGcd(double a, double b)
