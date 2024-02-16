@@ -41,7 +41,7 @@
                     <ctrl:VirtualKey ctrl:VirtualKeyboard.Column="1" ctrl:VirtualKeyboard.Row="3"
                                      Key="&amp;" IconSource="{StaticResource AndIcon}" />
                     <ctrl:VirtualKey ctrl:VirtualKeyboard.Column="1" ctrl:VirtualKeyboard.Row="4"
-                                     Key="$assign" IconSource="{StaticResource AssignIcon}" />
+                                     Key=" " IconSource="{StaticResource SpaceIcon}" />
 
                     <ctrl:VirtualKey ctrl:VirtualKeyboard.Column="2" ctrl:VirtualKeyboard.Row="0"
                                      Key="&lt;" IconSource="{StaticResource LessThanIcon}" />
@@ -52,7 +52,7 @@
                     <ctrl:VirtualKey ctrl:VirtualKeyboard.Column="2" ctrl:VirtualKeyboard.Row="3"
                                      Key="!" IconSource="{StaticResource FactorialIcon}" />
                     <ctrl:VirtualKey ctrl:VirtualKeyboard.Column="2" ctrl:VirtualKeyboard.Row="4"
-                                     Key="," IconSource="{StaticResource CommaKeyIcon}" />
+                                     Key=", " IconSource="{StaticResource CommaKeyIcon}" />
 
                     <ctrl:VirtualKey ctrl:VirtualKeyboard.Column="3" ctrl:VirtualKeyboard.Row="0"
                                      Key="x" IconSource="{StaticResource XKeyIcon}" />

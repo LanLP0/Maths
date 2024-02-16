@@ -95,8 +95,8 @@
                        FontFamily="{StaticResource RomanSerifFont}" />
     <ui:FontIconSource x:Key="FunctionIcon" Glyph="f(x)"
                        FontFamily="{StaticResource RomanSerifFont}" />
-    <ui:FontIconSource x:Key="AssignIcon" Glyph="&amp;x="
-                       FontFamily="{StaticResource RomanSerifFont}" />
+    <ui:FontIconSource x:Key="SpaceIcon" Glyph="&#xE75D;"
+                       FontFamily="{StaticResource SymbolThemeFontFamily}" />
     <ui:FontIconSource x:Key="SinIcon" Glyph="sin"
                        FontFamily="{StaticResource NotoSansMonoFont}" />
     <ui:FontIconSource x:Key="CosIcon" Glyph="cos"

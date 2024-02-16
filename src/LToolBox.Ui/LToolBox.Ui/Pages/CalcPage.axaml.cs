@@ -141,10 +141,10 @@ public partial class CalcPage : UserControl
 
                 AddText(")");
                 break;
-            case "$assign":
-                AddText($"&{ZeroWidthUnicode}=");
-                _vm.CaretIndex -= 2;
-                break;
+            // case "$assign":
+            //     AddText($"&{ZeroWidthUnicode}=");
+            //     _vm.CaretIndex -= 2;
+            //     break;
             case "$sin":
             case "$cos":
             case "$tan":
