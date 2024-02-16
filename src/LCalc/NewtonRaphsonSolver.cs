@@ -9,7 +9,7 @@ internal static class NewtonRaphsonSolver
     private const double Epsilon = 1E-10;
 
     /// <summary>
-    ///     The approximate of derivative of func()
+    ///     The approximated derivative of func()
     /// </summary>
     private static Result<double> Derivative(Function f, double fx, double x, double h)
     {
