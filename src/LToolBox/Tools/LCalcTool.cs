@@ -19,7 +19,7 @@ internal sealed class LCalcTool : Tool
 
     public override void Execute()
     {
-        CoreCli.RunLoop();
+        LCalcCli.RunLoop();
     }
 
     private static string GetResultText(CalcResult result)

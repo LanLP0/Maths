@@ -51,12 +51,7 @@ internal sealed class App : Command<Settings>
 
         _tools = new Tool[]
         {
-            new ComplexCalcTool(
-                console
-#if DEBUG
-                , Logger
-#endif
-            ),
+            new ComplexCalcTool(console),
             new LCalcTool(console),
             new MinMaxFracTool(console),
             new PolynomialTool(console),
@@ -117,18 +112,22 @@ internal sealed class App : Command<Settings>
 
         if (settings.Quit)
         {
-            PromptTool();
+            PromptToolAndRun();
             return 0;
         }
 
         for (;;)
         {
-            PromptTool();
+            PromptToolAndRun();
+            if (!settings.Focus)
+                continue;
+
+            AnsiConsole.Console.ReadKey(true);
             AnsiConsole.Clear();
         }
     }
 
-    private static void PromptTool()
+    private static void PromptToolAndRun()
     {
         AnsiConsole.Markup(_prompt);
         var help = false;

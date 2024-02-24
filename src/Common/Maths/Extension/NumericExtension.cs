@@ -1,4 +1,5 @@
 using System.Globalization;
+using System.Numerics;
 using Common.Results;
 using Rationals;
 
@@ -79,6 +80,23 @@ internal static class NumericExtension
     {
         value = Math.Round(value, 3);
         return value.ToString(CultureInfo.InvariantCulture);
+    }
+
+    public static string Humanize(this Complex value)
+    {
+        if (value.Imaginary == 0)
+            return value.Real.Humanize();
+
+        var realText = value.Real.Humanize();
+        var imgText = Math.Abs(value.Imaginary).Humanize();
+        var sb = new ValueStringBuilder(realText.Length + imgText.Length + 2);
+        
+        sb.Append(realText);
+        sb.Append(value.Imaginary < 0 ? '-' : '+');
+        sb.Append(imgText);
+        sb.Append('i');
+        
+        return sb.ToString();
     }
 
     public static string Humanize(this double value)

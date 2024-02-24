@@ -1,5 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
+using System.Numerics;
 using Common.Cli;
 using Common.Maths;
 using Common.Maths.Extension;
@@ -19,9 +20,23 @@ internal sealed class PolynomialTool : Tool
 
     public override void Execute()
     {
-        double a = 0, b = 0, c = 0;
-        var pos = 0;
-        RenderExp(a, b, c, pos);
+        int degree;
+        Console.Markup("Degree [blue](2-5)[/]: ");
+        for (;;)
+        {
+            var input = Console.ReadKey(true)!.Value.KeyChar;
+            if (input is < '2' or > '5')
+                continue;
+            
+            degree = input - '2' + 2;
+            break;
+        }
+        Console.WriteLine();
+
+        // {5, 0, 2} -> "p : x -> 5 + 0 x^1 + 2 x^2"
+        var coefficients = new double[degree + 1];
+        var pos = degree;
+        RenderExp(coefficients, pos);
 
         for (;;)
         {
@@ -29,8 +44,8 @@ internal sealed class PolynomialTool : Tool
 
             switch (input)
             {
-                case { Key: ConsoleKey.LeftArrow }:
-                case { Key: ConsoleKey.H }: // Move left
+                case { Key: ConsoleKey.RightArrow }:
+                case { Key: ConsoleKey.L }: // Move right
                 {
                     if (pos is 0)
                         continue;
@@ -38,10 +53,10 @@ internal sealed class PolynomialTool : Tool
                     pos--;
                     break;
                 }
-                case { Key: ConsoleKey.RightArrow }:
-                case { Key: ConsoleKey.L }: // Move right
+                case { Key: ConsoleKey.LeftArrow }:
+                case { Key: ConsoleKey.H }: // Move left
                 {
-                    if (pos >= 2)
+                    if (pos >= coefficients.Length)
                         continue;
 
                     pos++;
@@ -74,7 +89,7 @@ internal sealed class PolynomialTool : Tool
                     if (!val.HasValue)
                         continue;
 
-                    ChangeValueAndMoveNext(ref pos, val, ref a, ref b, ref c);
+                    ChangeValueAndMoveNext(ref pos, val.Value, coefficients);
 
                     break;
                 }
@@ -85,7 +100,7 @@ internal sealed class PolynomialTool : Tool
                     if (!val.HasValue)
                         continue;
 
-                    ChangeValueAndMoveNext(ref pos, val, ref a, ref b, ref c);
+                    ChangeValueAndMoveNext(ref pos, val.Value, coefficients);
 
                     break;
                 }
@@ -97,87 +112,55 @@ internal sealed class PolynomialTool : Tool
                 }
                 case { Key: ConsoleKey.Enter }:
                 {
-                    if (a is 0 && b is 0 && c is 0)
+                    if (coefficients.All(x => x is 0))
                         continue;
 
-                    break;
+                    goto BreakLoop;
                 }
                 default:
                     continue;
             }
 
-            if (input.Key is ConsoleKey.Enter)
-                break;
-
-            RenderExp(a, b, c, pos);
+            RenderExp(coefficients, pos);
         }
-
+        
+        BreakLoop:
+        
         Console.WriteLine();
         Console.Markup("[white]Result:[/] ");
-        switch (Polynomial.Calc2(a, b, c, out var result1, out var result2))
-        {
-            case -1:
-            {
-                Console.Write("Infinite results");
-                break;
-            }
-            case 0:
-            {
-                Console.Write("No result");
-                break;
-            }
-            case 1:
-            {
-                Console.Write(result1!.Value.Humanize());
-                break;
-            }
-            case 2:
-            {
-                Console.Write(result1!.Value.Humanize());
-                Console.Write(", ");
-                Console.Write(result2!.Value.Humanize());
-                break;
-            }
-        }
 
-        Console.WriteLine();
+        var roots = ComputeRoot(coefficients);
+
+        var resultText = string.Join(", ", roots.Select(root => root.Humanize()));
+        Console.WriteLine(resultText);
     }
 
-    private static void ChangeValueAndMoveNext(ref int pos, [DisallowNull] int? val, ref double a, ref double b,
-        ref double c)
+    private Complex[] ComputeRoot(double[] coefficients)
     {
-        switch (pos)
-        {
-            case 0:
-            {
-                a = val.Value;
-                break;
-            }
-            case 1:
-            {
-                b = val.Value;
-                break;
-            }
-            default:
-            {
-                c = val.Value;
-                break;
-            }
-        }
-
-        if (pos < 2)
-            pos++;
+        var polynomial = new MathNet.Numerics.Polynomial(coefficients);
+        return polynomial.Roots();
     }
 
-    private void RenderExp(double a, double b, double c, int pos)
+    private static void ChangeValueAndMoveNext(ref int pos, int val, double[] coefficients)
+    {
+        coefficients[pos] = val;
+
+        if (pos > 0)
+            pos--;
+    }
+
+    private void RenderExp(double[] coefficients, int pos)
     {
         Console.ClearLine();
 
-        RenderVariable(a, 2, pos is 0);
-        Console.Write(" + ");
-        RenderVariable(b, 1, pos is 1);
-        Console.Write(" + ");
-        RenderVariable(c, 0, pos is 2);
+        for (var i = coefficients.Length - 1; i > 0; i--)
+        {
+            RenderVariable(coefficients[i], i, pos == i);
+            Console.Write(" + ");
+        }
+
+        RenderVariable(coefficients[0], 0, pos == 0);
+        Console.Write(" = 0");
     }
 
     private void RenderVariable(double val, int power, bool isSelected)

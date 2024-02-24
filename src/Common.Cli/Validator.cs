@@ -23,6 +23,12 @@ public sealed class Validator<T> : ICollection<Func<T, string?>>
     {
         _validators.Add(item);
     }
+    
+    public Validator<T> AddChained(Func<T, string?> item)
+    {
+        _validators.Add(item);
+        return this;
+    }
 
     public void Clear()
     {

@@ -79,7 +79,7 @@ internal sealed class ComplexCalcTool : Tool
                 }
                 case '^':
                 {
-                    var pow = Console.Ask("Power by:", validators: _powValidator, newLine: false, clear: false);
+                    var pow = Console.Ask("Power by:", validator: _powValidator, newLine: false, clear: false);
                     if (!pow.HasValue)
                         return;
 
@@ -112,10 +112,6 @@ internal sealed class ComplexCalcTool : Tool
 
             Console.WriteLine("Result:");
             RenderExpression(ex, -1);
-#if DEBUG
-            Console.WriteLine();
-            _logger.Debug("{@ex}", ex);
-#endif
 
             Console.WriteLine();
         }
@@ -280,9 +276,6 @@ internal sealed class ComplexCalcTool : Tool
 
                     Console.WriteLine();
                     result = result.Condense();
-#if DEBUG
-                    _logger.Debug("{@resultEx}", result);
-#endif
                     return result;
                 }
                 default:
@@ -299,16 +292,8 @@ internal sealed class ComplexCalcTool : Tool
         Console.Markup(expression.ToMarkupColorString(selectedPos));
         Console.MoveCursorToStart();
     }
-#if DEBUG
-    private readonly ILogger _logger;
-
-    public ComplexCalcTool(IAnsiConsole console, ILogger logger) : base(console)
-    {
-        _logger = logger;
-    }
-#else
+    
     public ComplexCalcTool(IAnsiConsole console) : base(console)
     {
     }
-#endif
 }

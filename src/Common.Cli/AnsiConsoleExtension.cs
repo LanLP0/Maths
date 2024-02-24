@@ -15,16 +15,16 @@ public static class AnsiConsoleExtension
     /// <param name="prompt">The prompt markup text</param>
     /// <param name="optional"></param>
     /// <param name="initialText">The initial text that will be shown</param>
-    /// <param name="validators">The validators</param>
+    /// <param name="validator">The validators</param>
     /// <param name="clear">Clear the prompt afterward</param>
-    /// <param name="newLine">Add a newline at the start</param>
+    /// <param name="newLine">Whether to add a newline at the start</param>
     /// <param name="highlighter">The highlighter</param>
     /// <param name="history">The history entries</param>
     /// <typeparam name="T">The prompt result type</typeparam>
     /// <returns>The prompt result</returns>
     public static T? Ask<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] T>(
         this IAnsiConsole console, string prompt, bool optional = false, string initialText = "",
-        Validator<T?>? validators = null, bool clear = true, bool newLine = true, IHighlighter? highlighter = null,
+        Validator<T?>? validator = null, bool clear = true, bool newLine = true, IHighlighter? highlighter = null,
         IReadOnlyList<string>? history = null)
     {
         if (newLine)
@@ -91,7 +91,7 @@ public static class AnsiConsoleExtension
             {
                 var result = (T?)converter.ConvertFromInvariantString(input);
 
-                if (validators is not null && !validators.RunUntilError(result, out var errorLine))
+                if (validator is not null && !validator.RunUntilError(result, out var errorLine))
                 {
                     hasErrorLine = true;
                     console.ClearLine();

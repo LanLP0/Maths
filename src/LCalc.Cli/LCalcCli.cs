@@ -4,7 +4,7 @@ using Spectre.Console;
 
 namespace LCalc.Cli;
 
-public static class CoreCli
+public static class LCalcCli
 {
     public static void RunLoop()
     {
