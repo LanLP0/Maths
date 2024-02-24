@@ -36,10 +36,11 @@ public sealed partial class MainView : UserControl
         {
             new CalcPageViewModel(),
             new MinMaxFracPageViewModel(),
+            new PolynomialPageViewModel(),
             new SettingsPageViewModel()
         };
 
-        var menuItems = new List<NavigationViewItemBase>(2);
+        var menuItems = new List<NavigationViewItemBase>(3);
         var footerItems = new List<NavigationViewItemBase>(2);
 
         object? target = null;

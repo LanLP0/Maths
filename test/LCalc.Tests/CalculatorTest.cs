@@ -10,7 +10,6 @@ using static VerifyXunit.Verifier;
 namespace LCalc.Tests;
 
 /// <remarks>Note: All tests should be run in DEBUG</remarks>
-[UsesVerify]
 public sealed class CalculatorTest
 {
     private static readonly VerifySettings _settings;

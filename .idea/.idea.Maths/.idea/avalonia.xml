@@ -11,6 +11,7 @@
         <entry key="src/LToolBox.Ui/LToolBox.Ui/Pages/CalcPages/HistoryPage.axaml" value="src/LToolBox.Ui/LToolBox.Ui.Desktop/LToolBox.Ui.Desktop.csproj" />
         <entry key="src/LToolBox.Ui/LToolBox.Ui/Pages/CalcPages/StepsPage.axaml" value="src/LToolBox.Ui/LToolBox.Ui.Desktop/LToolBox.Ui.Desktop.csproj" />
         <entry key="src/LToolBox.Ui/LToolBox.Ui/Pages/MinMaxFracPage.axaml" value="src/LToolBox.Ui/LToolBox.Ui.Desktop/LToolBox.Ui.Desktop.csproj" />
+        <entry key="src/LToolBox.Ui/LToolBox.Ui/Pages/PolynomialPage.axaml" value="src/LToolBox.Ui/LToolBox.Ui.Desktop/LToolBox.Ui.Desktop.csproj" />
         <entry key="src/LToolBox.Ui/LToolBox.Ui/Pages/SettingsPage.axaml" value="src/LToolBox.Ui/LToolBox.Ui.Desktop/LToolBox.Ui.Desktop.csproj" />
         <entry key="src/LToolBox.Ui/LToolBox.Ui/Pages/TestPage.axaml" value="src/LToolBox.Ui/LToolBox.Ui.Desktop/LToolBox.Ui.Desktop.csproj" />
         <entry key="src/LToolBox.Ui/LToolBox.Ui/Styling/Resources.axaml" value="src/LToolBox.Ui/LToolBox.Ui.Desktop/LToolBox.Ui.Desktop.csproj" />

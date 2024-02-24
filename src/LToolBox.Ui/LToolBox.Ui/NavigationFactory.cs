@@ -24,13 +24,8 @@ public sealed class NavigationFactory : INavigationPageFactory
 
         switch (target)
         {
-            case MinMaxFracPageViewModel:
-                return new MinMaxFracPage
-                {
-                    DataContext = target
-                };
-            case SettingsPageViewModel:
-                return new SettingsPage
+            case CalcPageViewModel:
+                return new CalcPage
                 {
                     DataContext = target
                 };
@@ -39,13 +34,23 @@ public sealed class NavigationFactory : INavigationPageFactory
                 {
                     DataContext = target
                 };
-            case CalcPageViewModel:
-                return new CalcPage
+            case HistoryPageViewModel:
+                return new HistoryPage
                 {
                     DataContext = target
                 };
-            case HistoryPageViewModel:
-                return new HistoryPage
+            case MinMaxFracPageViewModel:
+                return new MinMaxFracPage
+                {
+                    DataContext = target
+                };
+            case PolynomialPageViewModel:
+                return new PolynomialPage
+                {
+                    DataContext = target
+                };
+            case SettingsPageViewModel:
+                return new SettingsPage
                 {
                     DataContext = target
                 };
