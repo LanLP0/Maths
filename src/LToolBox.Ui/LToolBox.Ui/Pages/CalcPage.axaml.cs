@@ -93,7 +93,14 @@ public partial class CalcPage : UserControl
         }).Wait(TimeSpan.FromMilliseconds(100));
     }
 
-    private void Kb1_KeyClicked(string key)
+    private void Kb1_KeyClicked(string key) =>
+        KeyboardKeyClicked(key, 1);
+    
+    private void Kb2_KeyClicked(string key) =>
+        KeyboardKeyClicked(key, 2);
+    
+    
+    private void KeyboardKeyClicked(string key, int keyboardId)
     {
         if (!key.StartsWith('$'))
         {
@@ -103,7 +110,45 @@ public partial class CalcPage : UserControl
 
         switch (key)
         {
+            case "$sqbraces":
+            {
+                var caretIndex = _vm.CaretIndex;
+                if (caretIndex is 0)
+                {
+                    AddText("[");
+                    break;
+                }
+
+                var before = _vm.InputText.AsSpan().Slice(0, caretIndex);
+
+                var isNearestBracketOpen = false;
+                for (var i = before.Length - 1; i >= 0; i--)
+                {
+                    var c = before[i];
+                    if (c is ']')
+                    {
+                        isNearestBracketOpen = false;
+                        break;
+                    }
+
+                    if (c is '[')
+                    {
+                        isNearestBracketOpen = true;
+                        break;
+                    }
+                }
+
+                if (isNearestBracketOpen)
+                {
+                    AddText("]");
+                    break;
+                }
+
+                AddText("[");
+                break;
+            }
             case "$braces":
+            {
                 var caretIndex = _vm.CaretIndex;
                 if (caretIndex is 0)
                 {
@@ -141,6 +186,7 @@ public partial class CalcPage : UserControl
 
                 AddText(")");
                 break;
+            }
             // case "$assign":
             //     AddText($"&{ZeroWidthUnicode}=");
             //     _vm.CaretIndex -= 2;
@@ -155,30 +201,19 @@ public partial class CalcPage : UserControl
                 break;
             }
             case "$enter":
+            {
                 Submit();
                 break;
+            }
             case "$switch":
-                SwitchPanel.SetContentIndex(1);
-                break;
-        }
-    }
+            {
+                var target = keyboardId;
+                if (target >= 2)
+                    target = 0;
 
-    private void Kb2_KeyClicked(string key)
-    {
-        if (!key.StartsWith('$'))
-        {
-            AddText(key);
-            return;
-        }
-
-        switch (key)
-        {
-            case "$switch":
-                SwitchPanel.SetContentIndex(0);
+                SwitchPanel.SetContentIndex(target);
                 break;
-            case "$enter":
-                Submit();
-                break;
+            }
         }
     }
 

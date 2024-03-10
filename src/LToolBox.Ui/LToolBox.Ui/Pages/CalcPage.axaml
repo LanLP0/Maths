@@ -59,11 +59,11 @@
                     <ctrl:VirtualKey ctrl:VirtualKeyboard.Column="3" ctrl:VirtualKeyboard.Row="1"
                                      Key="y" IconSource="{StaticResource YKeyIcon}" />
                     <ctrl:VirtualKey ctrl:VirtualKeyboard.Column="3" ctrl:VirtualKeyboard.Row="2"
-                                     Key="z" IconSource="{StaticResource ZKeyIcon}" />
-                    <ctrl:VirtualKey ctrl:VirtualKeyboard.Column="3" ctrl:VirtualKeyboard.Row="3"
                                      Key="a" IconSource="{StaticResource AKeyIcon}" />
-                    <ctrl:VirtualKey ctrl:VirtualKeyboard.Column="3" ctrl:VirtualKeyboard.Row="4"
+                    <ctrl:VirtualKey ctrl:VirtualKeyboard.Column="3" ctrl:VirtualKeyboard.Row="3"
                                      Key="b" IconSource="{StaticResource BKeyIcon}" />
+                    <ctrl:VirtualKey ctrl:VirtualKeyboard.Column="3" ctrl:VirtualKeyboard.Row="4"
+                                     Key="$sqbraces" IconSource="{StaticResource SquareBraces}" />
 
                     <ctrl:VirtualKey ctrl:VirtualKeyboard.Column="4" ctrl:VirtualKeyboard.Row="0"
                                      Key="^" IconSource="{StaticResource PowerIcon}"

@@ -90,7 +90,10 @@
                        FontFamily="{StaticResource NotoSansMonoFont}" />
     <ui:FontIconSource x:Key="LessThanIcon" Glyph="&lt;"
                        FontFamily="{StaticResource NotoSansMonoFont}" />
-    <ui:SymbolIconSource x:Key="SwitchIcon" Symbol="Switch" Foreground="{DynamicResource SystemAccentColor}" />
+    <ui:SymbolIconSource x:Key="SwitchIcon" Symbol="Switch"
+                         Foreground="{DynamicResource SystemAccentColor}" />
+    <ui:FontIconSource x:Key="SquareBraces" Glyph="[]"
+                       FontFamily="{StaticResource NotoSansMonoFont}" />
     <ui:FontIconSource x:Key="BracesIcon" Glyph="()"
                        FontFamily="{StaticResource NotoSansMonoFont}" />
     <ui:FontIconSource x:Key="CustomFunctionIcon" Glyph="[f()]"
