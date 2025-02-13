@@ -86,6 +86,18 @@ public static class Calculator
             scope.SetVariable("ans", prevAns);
 
         var calcResult = tree.Calc();
+        
+        // We still want to render even if the result fail
+        if (scope.GetRenderOpt())
+        {
+            var expressionText = RenderExpression(tree, scope.GetLaTeXOpt());
+
+            if (expressionText is null)
+                return calcResult;
+
+            return calcResult.WithSteps(expressionText);
+        }
+        
         if (calcResult.Faulted)
             return calcResult;
 
@@ -96,16 +108,6 @@ public static class Calculator
                 return result1.Exception!.ToCalcResult();
 
             return calcResult.WithSteps(result1.Value!);
-        }
-
-        if (scope.GetRenderOpt())
-        {
-            var expressionText = RenderExpression(tree, scope.GetLaTeXOpt());
-
-            if (expressionText is null)
-                return calcResult;
-
-            return calcResult.WithSteps(expressionText);
         }
 
         return calcResult;
