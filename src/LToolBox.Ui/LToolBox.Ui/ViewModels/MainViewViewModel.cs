@@ -6,9 +6,9 @@ namespace LToolBox.Ui.ViewModels;
 public sealed class MainViewViewModel : ViewModelBase
 {
     private string _headerText;
-    private NavigationViewItem _selectedItem;
+    private FANavigationViewItem _selectedItem;
 
-    public NavigationViewItem SelectedItem
+    public FANavigationViewItem SelectedItem
     {
         get => _selectedItem;
         set => this.RaiseAndSetIfChanged(ref _selectedItem, value);

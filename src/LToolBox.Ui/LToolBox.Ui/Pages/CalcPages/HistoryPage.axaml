@@ -5,11 +5,8 @@
              xmlns:ui="clr-namespace:LToolBox.Ui"
              xmlns:vm="clr-namespace:LToolBox.Ui.ViewModels.CalcPageViewModels"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="LToolBox.Ui.Pages.CalcPages.HistoryPage">
-    <Design.DataContext>
-        <vm:HistoryPageViewModel />
-    </Design.DataContext>
-
+             x:Class="LToolBox.Ui.Pages.CalcPages.HistoryPage"
+             x:DataType="vm:HistoryPageViewModel">
     <DockPanel>
         <Button DockPanel.Dock="Top" Name="ExitButton" BorderThickness="0" Background="Transparent"
                 HorizontalAlignment="Left" Foreground="{DynamicResource SystemAccentColor}"

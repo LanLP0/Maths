@@ -4,14 +4,12 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:ui="using:FluentAvalonia.UI.Controls"
              xmlns:vm="using:LToolBox.Ui.ViewModels"
+             xmlns:viewModels="clr-namespace:LToolBox.Ui.ViewModels"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="LToolBox.Ui.Views.MainView"
-             SizeChanged="OnSizeChanged">
-    <Design.DataContext>
-        <vm:MainViewViewModel />
-    </Design.DataContext>
-
-    <ui:NavigationView AlwaysShowHeader="True"
+             SizeChanged="OnSizeChanged"
+             x:DataType="viewModels:MainViewViewModel">
+    <ui:FANavigationView AlwaysShowHeader="True"
                        PaneTitle="LToolBox"
                        PaneDisplayMode="LeftCompact"
                        Name="NavView"
@@ -23,8 +21,8 @@
             <TextBlock DockPanel.Dock="Top" Name="PageHeader" Text="{Binding HeaderText}"
                        TextAlignment="Center"
                        FontSize="25" />
-            <ui:Frame DockPanel.Dock="Bottom" Name="FrameView" Padding="10" Navigated="OnFrameViewNavigated" />
+            <ui:FAFrame DockPanel.Dock="Bottom" Name="FrameView" Padding="10" Navigated="OnFrameViewNavigated" />
         </DockPanel>
-    </ui:NavigationView>
+    </ui:FANavigationView>
 
 </UserControl>

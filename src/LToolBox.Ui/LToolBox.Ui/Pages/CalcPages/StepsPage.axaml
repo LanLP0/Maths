@@ -5,12 +5,8 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              xmlns:mth="using:AvaloniaMath.Controls"
              xmlns:vmc="using:LToolBox.Ui.ViewModels.CalcPageViewModels"
-             x:Class="LToolBox.Ui.Pages.CalcPages.StepsPage">
-
-    <Design.DataContext>
-        <vmc:StepsPageViewModel />
-    </Design.DataContext>
-
+             x:Class="LToolBox.Ui.Pages.CalcPages.StepsPage"
+             x:DataType="vmc:StepsPageViewModel">
     <DockPanel>
         <Button DockPanel.Dock="Top" Name="ExitButton" BorderThickness="0" Background="Transparent"
                 HorizontalAlignment="Left" Foreground="{DynamicResource SystemAccentColor}"

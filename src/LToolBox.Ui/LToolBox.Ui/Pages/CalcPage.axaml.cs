@@ -234,11 +234,8 @@ public partial class CalcPage : UserControl
         if (IsResultLayoutActive())
         {
             var c = s[0];
-            if (!char.IsLetterOrDigit(c))
-                return;
-
-            // If this is a value, clear prev text
-            _vm.InputText = string.Empty;
+            if (char.IsLetterOrDigit(c))
+                _vm.InputText = string.Empty; // If this is a value, clear prev text
         }
 
         SwitchToInputLayout();

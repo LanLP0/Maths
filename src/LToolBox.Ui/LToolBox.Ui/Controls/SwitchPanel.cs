@@ -31,7 +31,7 @@ public sealed class SwitchPanel : TemplatedControl
 
         Template = new FuncControlTemplate((_, _) => new ContentPresenter
         {
-            [!ContentPresenter.ContentProperty] = new Binding(nameof(Content)).WithSource(this)
+            [!ContentPresenter.ContentProperty] = CompiledBinding.Create((SwitchPanel pnl) => pnl.Content, this),
         });
     }
 

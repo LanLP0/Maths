@@ -5,34 +5,30 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="LToolBox.Ui.Pages.SettingsPage"
              xmlns:ui="using:FluentAvalonia.UI.Controls"
-             xmlns:vm="using:LToolBox.Ui.ViewModels">
-
-    <Design.DataContext>
-        <vm:SettingsPageViewModel />
-    </Design.DataContext>
-
+             xmlns:vm="using:LToolBox.Ui.ViewModels"
+             x:DataType="vm:SettingsPageViewModel">
     <ScrollViewer>
         <StackPanel Spacing="10">
 
-            <ui:SettingsExpander Header="App Theme"
+            <ui:FASettingsExpander Header="App Theme"
                                  IconSource="DarkTheme"
                                  Description="Change the current app theme">
 
-                <ui:SettingsExpander.Footer>
+                <ui:FASettingsExpander.Footer>
                     <ComboBox SelectedItem="{Binding CurrentAppTheme}"
                               ItemsSource="{Binding AppThemes}"
                               MinWidth="150" />
-                </ui:SettingsExpander.Footer>
-            </ui:SettingsExpander>
+                </ui:FASettingsExpander.Footer>
+            </ui:FASettingsExpander>
 
-            <ui:SettingsExpander Header="Accent Color"
+            <ui:FASettingsExpander Header="Accent Color"
                                  IconSource="ColorLine"
                                  Description="Set a Accent Color">
 
-                <ui:SettingsExpander.Footer>
+                <ui:FASettingsExpander.Footer>
                     <ColorPicker Color="{Binding AccentColor}" />
-                </ui:SettingsExpander.Footer>
-            </ui:SettingsExpander>
+                </ui:FASettingsExpander.Footer>
+            </ui:FASettingsExpander>
 
         </StackPanel>
     </ScrollViewer>

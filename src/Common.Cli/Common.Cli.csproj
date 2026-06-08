@@ -8,8 +8,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="RadLine" Version="0.7.0" />
-        <PackageReference Include="Spectre.Console.Cli" Version="0.48.0"/>
+        <PackageReference Include="RadLine" Version="0.10.0" />
+        <PackageReference Include="Spectre.Console.Cli" Version="0.55.0" />
     </ItemGroup>
 
     <ItemGroup>

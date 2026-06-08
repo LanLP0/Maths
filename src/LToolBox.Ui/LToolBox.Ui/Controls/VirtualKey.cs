@@ -21,8 +21,8 @@ public class VirtualKey : TemplatedControl
     public static readonly StyledProperty<IBrush?> ButtonBackgroundProperty =
         AvaloniaProperty.Register<VirtualKey, IBrush?>(nameof(ButtonBackground));
 
-    public static readonly StyledProperty<IconSource> IconSourceProperty =
-        AvaloniaProperty.Register<VirtualKey, IconSource>(nameof(IconSource));
+    public static readonly StyledProperty<FAIconSource> IconSourceProperty =
+        AvaloniaProperty.Register<VirtualKey, FAIconSource>(nameof(IconSource));
 
     private VirtualKeyboard? _keyboard;
 
@@ -39,7 +39,7 @@ public class VirtualKey : TemplatedControl
         set => SetValue(ButtonBackgroundProperty, value);
     }
 
-    public IconSource IconSource
+    public FAIconSource IconSource
     {
         get => GetValue(IconSourceProperty);
         set => SetValue(IconSourceProperty, value);
@@ -59,7 +59,7 @@ public class VirtualKey : TemplatedControl
         {
             HorizontalAlignment = HorizontalAlignment.Center,
             VerticalAlignment = VerticalAlignment.Center,
-            Child = new IconSourceElement
+            Child = new FAIconSourceElement
             {
                 HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Center,
@@ -78,11 +78,11 @@ public class VirtualKey : TemplatedControl
                 Background = Brushes.Transparent,
                 HorizontalAlignment = HorizontalAlignment.Stretch,
                 VerticalAlignment = VerticalAlignment.Stretch,
-                [!ContentControl.ContentProperty] = new Binding(nameof(Inner)).WithSource(this)
+                [!ContentControl.ContentProperty] = CompiledBinding.Create((VirtualKey vk) => vk.Inner, this)
             };
 
             if (ButtonBackground is not null)
-                button[!BackgroundProperty] = new Binding(nameof(ButtonBackground)).WithSource(this);
+                button[!BackgroundProperty] = CompiledBinding.Create((VirtualKey vk) => vk.Inner, this);
 
             if (_keyboard is not null)
                 button.Click += (_, _) => _keyboard.KeyClicked.OnNext(Key);

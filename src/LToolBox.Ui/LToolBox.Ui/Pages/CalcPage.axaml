@@ -7,10 +7,8 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              xmlns:fac="using:FluentAvalonia.UI.Controls"
              x:Class="LToolBox.Ui.Pages.CalcPage"
+             x:DataType="vm:CalcPageViewModel"
              Focusable="True">
-    <Design.DataContext>
-        <vm:CalcPageViewModel />
-    </Design.DataContext>
 
     <DockPanel Name="MainPanel">
 
@@ -242,12 +240,12 @@
 
             <Button Grid.Column="0" Name="HistoryButton" Click="HistoryButton_OnClick"
                     Background="Transparent" BorderThickness="0" IsVisible="False">
-                <fac:SymbolIcon Symbol="Clock" />
+                <fac:FASymbolIcon Symbol="Clock" />
             </Button>
 
             <Button Grid.Column="1" Name="ShowStepsButton" Click="ShowStepsButtonClicked"
                     Background="Transparent" BorderThickness="0" IsVisible="False">
-                <fac:SymbolIcon Symbol="AlignLeft" />
+                <fac:FASymbolIcon Symbol="AlignLeft" />
             </Button>
 
             <ToggleButton Grid.Column="2" Name="DisplayRaw" Content="Raw"
@@ -258,7 +256,7 @@
                     Background="Transparent" BorderThickness="0"
                     Focusable="False">
                 <Viewbox>
-                    <fac:IconSourceElement IconSource="{StaticResource DeleteAllIcon}" />
+                    <fac:FAIconSourceElement IconSource="{StaticResource DeleteAllIcon}" />
                 </Viewbox>
             </Button>
 
@@ -266,7 +264,7 @@
                     Background="Transparent" BorderThickness="0"
                     Focusable="False">
                 <Viewbox>
-                    <fac:IconSourceElement IconSource="{StaticResource DeleteIcon}" />
+                    <fac:FAIconSourceElement IconSource="{StaticResource DeleteIcon}" />
                 </Viewbox>
             </Button>
         </Grid>

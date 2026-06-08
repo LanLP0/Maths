@@ -1,7 +1,9 @@
-﻿using Android.App;
+﻿using System;
+using Android.App;
 using Android.Content;
 using Android.Content.PM;
 using Android.OS;
+using Android.Runtime;
 using Android.Util;
 using Avalonia;
 using Avalonia.Android;
@@ -15,7 +17,7 @@ namespace LToolBox.Ui.Android;
     Icon = "@drawable/icon",
     MainLauncher = true,
     ConfigurationChanges = ConfigChanges.Orientation | ConfigChanges.ScreenSize | ConfigChanges.UiMode)]
-public sealed class MainActivity : AvaloniaMainActivity<App>
+public sealed class MainActivity : AvaloniaMainActivity
 {
     public const string LogTag = "LToolBox.Ui";
 
@@ -24,20 +26,6 @@ public sealed class MainActivity : AvaloniaMainActivity<App>
         Log.Debug(LogTag, "App Finish");
         App.SuspendHelper.SaveState();
         base.Finish();
-    }
-
-    protected override AppBuilder CustomizeAppBuilder(AppBuilder builder)
-    {
-        App.LoggerConfiguration.WriteTo.Sink<LogCatSink>();
-
-        var cfg = GetPreferences(FileCreationMode.Private);
-        App.SetSuspensionDriver(new AndroidSuspensionDriver(cfg));
-
-        // App.SetSuspensionDriver(new MobileSuspensionDriver());
-
-        return base.CustomizeAppBuilder(builder)
-            .WithInterFont()
-            .UseReactiveUI();
     }
 
     protected override void OnRestart()
@@ -54,12 +42,16 @@ public sealed class MainActivity : AvaloniaMainActivity<App>
         base.OnDestroy();
     }
 
-    protected override void OnCreate(Bundle savedInstanceState)
+    protected override void OnCreate(Bundle? savedInstanceState)
     {
         Log.Debug(LogTag, "App Create");
-
+        
         if (savedInstanceState is null)
+        {
+            if (App.SuspensionDriver is AndroidSuspensionDriver asd)
+                asd.SetConfig(GetPreferences(FileCreationMode.Private));
             App.SuspendHelper.OnCreate();
+        }
         else
             App.SuspendHelper.OnResume();
 

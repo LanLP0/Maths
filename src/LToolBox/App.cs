@@ -23,29 +23,29 @@ internal sealed class App : Command<Settings>
         .CreateLogger();
 #endif
 
-    public override int Execute(CommandContext context, Settings settings)
+    protected override int Execute(CommandContext context, Settings settings, CancellationToken cancellationToken)
     {
         if (!settings.Focus)
-            return ExecuteCore(settings);
+            return ExecuteCore(settings, cancellationToken);
 
-        Console.CancelKeyPress += (_, e) => Environment.Exit(0);
+        // Console.CancelKeyPress += (_, e) => Environment.Exit(0);
 
         if (!AnsiConsole.Profile.Capabilities.AlternateBuffer)
         {
             AnsiConsole.Clear();
-            return ExecuteCore(settings);
+            return ExecuteCore(settings, cancellationToken);
         }
 
         var exitCode = 0;
         AnsiConsole.AlternateScreen(() =>
         {
-            exitCode = ExecuteCore(settings);
+            exitCode = ExecuteCore(settings, cancellationToken);
         });
 
         return exitCode;
     }
     
-    private int ExecuteCore(Settings settings)
+    private int ExecuteCore(Settings settings, CancellationToken cancellationToken)
     {
         var console = AnsiConsole.Console;
 
@@ -112,27 +112,29 @@ internal sealed class App : Command<Settings>
 
         if (settings.Quit)
         {
-            PromptToolAndRun();
+            PromptToolAndRun(cancellationToken);
             return 0;
         }
 
-        for (;;)
+        while (!cancellationToken.IsCancellationRequested)
         {
-            PromptToolAndRun();
+            PromptToolAndRun(cancellationToken);
             if (!settings.Focus)
                 continue;
 
             AnsiConsole.Console.ReadKey(true);
             AnsiConsole.Clear();
         }
+
+        return 0;
     }
 
-    private static void PromptToolAndRun()
+    private static void PromptToolAndRun(CancellationToken cancellationToken)
     {
         AnsiConsole.Markup(_prompt);
         var help = false;
 
-        for (;;)
+        while (!cancellationToken.IsCancellationRequested)
         {
             var input = Console.ReadKey(true);
 
@@ -157,6 +159,8 @@ internal sealed class App : Command<Settings>
                 }
                 case -1: // Unknown key
                 {
+                    if (cancellationToken.IsCancellationRequested)
+                        return;
                     continue;
                 }
             }

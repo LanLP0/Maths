@@ -8,7 +8,7 @@ using LToolBox.Ui.ViewModels.CalcPageViewModels;
 
 namespace LToolBox.Ui;
 
-public sealed class NavigationFactory : INavigationPageFactory
+public sealed class NavigationFactory : IFANavigationPageFactory
 {
     public Control GetPage(Type srcType)
     {

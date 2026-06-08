@@ -6,9 +6,9 @@ namespace LToolBox.Ui.Services;
 
 public static class NavigationService
 {
-    public static Frame Frame { get; private set; }
+    public static FAFrame Frame { get; private set; }
 
-    public static void SetFrame(Frame f)
+    public static void SetFrame(FAFrame f)
     {
         Frame = f;
     }
@@ -22,13 +22,13 @@ public static class NavigationService
         return true;
     }
 
-    public static void NavigateFromContext(object dataContext, NavigationTransitionInfo transitionInfo = null)
+    public static void NavigateFromContext(object dataContext, FANavigationTransitionInfo? transitionInfo = null)
     {
         Frame.NavigateFromObject(dataContext,
-            new FrameNavigationOptions
+            new FAFrameNavigationOptions
             {
                 IsNavigationStackEnabled = true,
-                TransitionInfoOverride = transitionInfo ?? new SuppressNavigationTransitionInfo()
+                TransitionInfoOverride = transitionInfo ?? new FASuppressNavigationTransitionInfo()
             });
     }
 }

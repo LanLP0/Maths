@@ -12,7 +12,7 @@ namespace LToolBox.Ui;
 
 public sealed class App : Application
 {
-    private static ISuspensionDriver? _suspensionDriver;
+    public static ISuspensionDriver? SuspensionDriver;
     public static LoggerConfiguration LoggerConfiguration { get; } = new();
     public static Logger? Logger { get; private set; }
 
@@ -20,15 +20,19 @@ public sealed class App : Application
 
     public static void SetSuspensionDriver(ISuspensionDriver suspensionDriver)
     {
-        if (_suspensionDriver is not null)
+        if (SuspensionDriver is not null)
             return;
 
-        _suspensionDriver = suspensionDriver;
+        SuspensionDriver = suspensionDriver;
     }
 
     public override void Initialize()
     {
         InitializeLogger();
+        
+#if DEBUG
+        this.AttachDeveloperTools();
+#endif
 
         AvaloniaXamlLoader.Load(this);
     }
@@ -42,6 +46,8 @@ public sealed class App : Application
 
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             desktop.MainWindow = new MainWindow();
+        else if (ApplicationLifetime is IActivityApplicationLifetime activityApplicationLifetime)
+            activityApplicationLifetime.MainViewFactory = () => new MainView();
         else if (ApplicationLifetime is ISingleViewApplicationLifetime singleViewPlatform)
             singleViewPlatform.MainView = new MainView();
 
@@ -51,10 +57,10 @@ public sealed class App : Application
     private void InitializeSuspensionDriver()
     {
         // If the platform is not supported
-        _suspensionDriver ??= new DummySuspensionDriver();
+        SuspensionDriver ??= new DummySuspensionDriver();
 
         RxApp.SuspensionHost.CreateNewAppState = () => new AppState();
-        RxApp.SuspensionHost.SetupDefaultSuspendResume(_suspensionDriver);
+        RxApp.SuspensionHost.SetupDefaultSuspendResume(SuspensionDriver);
         if (ApplicationLifetime is IControlledApplicationLifetime lt)
         {
             lt.Exit += (_, _) => SuspendHelper.SaveState();

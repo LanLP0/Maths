@@ -2,16 +2,23 @@
     <PropertyGroup>
         <OutputType>Exe</OutputType>
         <TargetFramework>net10.0-android</TargetFramework>
-        <SupportedOSPlatformVersion>34</SupportedOSPlatformVersion>
+        <SupportedOSPlatformVersion>36</SupportedOSPlatformVersion>
         <Nullable>enable</Nullable>
         <ApplicationId>com.LanLP.LToolBox.Ui</ApplicationId>
         <ApplicationVersion>1</ApplicationVersion>
-        <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
+        <ApplicationDisplayVersion>1.0.0.0</ApplicationDisplayVersion>
         <AndroidPackageFormat>apk</AndroidPackageFormat>
-        <!--<AndroidEnableProfiledAot>True</AndroidEnableProfiledAot>-->
-        <!--<RunAOTCompilation>True</RunAOTCompilation>-->
-        <!-- <EnableLLVM>True</EnableLLVM> -->
-        <!--<EmbedAssembliesIntoApk>True</EmbedAssembliesIntoApk>-->
+
+<!--        <AndroidKeyStore>true</AndroidKeyStore>-->
+<!--        <AndroidSigningKeyStore>ltb.keystore</AndroidSigningKeyStore>-->
+<!--        <AndroidSigningKeyAlias>LToolBox</AndroidSigningKeyAlias>-->
+<!--        <AndroidSigningKeyPass>env:ANDROID_SIGNING_PASSWORD</AndroidSigningKeyPass>-->
+<!--        <AndroidSigningStorePass>env:ANDROID_SIGNING_PASSWORD</AndroidSigningStorePass>-->
+        
+<!--        <AndroidEnableProfiledAot>true</AndroidEnableProfiledAot>-->
+<!--        <RunAOTCompilation>True</RunAOTCompilation>-->
+<!--         <EnableLLVM>True</EnableLLVM> -->
+<!--        <EmbedAssembliesIntoApk>True</EmbedAssembliesIntoApk>-->
     </PropertyGroup>
 
     <ItemGroup>

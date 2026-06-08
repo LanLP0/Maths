@@ -5,11 +5,8 @@
              xmlns:vm="clr-namespace:LToolBox.Ui.ViewModels"
              xmlns:ui="clr-namespace:LToolBox.Ui"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="LToolBox.Ui.Pages.PolynomialPage">
-    <Design.DataContext>
-        <vm:PolynomialPageViewModel />
-    </Design.DataContext>
-
+             x:Class="LToolBox.Ui.Pages.PolynomialPage"
+             x:DataType="vm:PolynomialPageViewModel">
     <DockPanel>
         <ContentControl DockPanel.Dock="Top" FontSize="20"
                         Background="{DynamicResource SystemAccentColor}"
@@ -21,32 +18,32 @@
 
                     <StackPanel Name="InputGroup5" Orientation="Horizontal">
                         <TextBox x:Name="Input5" KeyDown="Input5_OnKeyDown"
-                                 Watermark="0" />
+                                 PlaceholderText="0" />
                         <TextBlock Text="x^5 + " />
                     </StackPanel>
 
                     <StackPanel Name="InputGroup4" Orientation="Horizontal">
                         <TextBox x:Name="Input4" KeyDown="Input4_OnKeyDown"
-                                 Watermark="0" />
+                                 PlaceholderText="0" />
                         <TextBlock Text="x^4 + " />
                     </StackPanel>
 
                     <StackPanel Name="InputGroup3" Orientation="Horizontal">
                         <TextBox x:Name="Input3" KeyDown="Input3_OnKeyDown"
-                                 Watermark="0" />
+                                 PlaceholderText="0" />
                         <TextBlock Text="x^3 + " />
                     </StackPanel>
 
                     <TextBox x:Name="Input2" KeyDown="Input2_OnKeyDown"
-                             Watermark="0" />
+                             PlaceholderText="0" />
                     <TextBlock Text="x^2 + " />
 
                     <TextBox x:Name="Input1" KeyDown="Input1_OnKeyDown"
-                             Watermark="0" />
+                             PlaceholderText="0" />
                     <TextBlock Text="x + " />
 
                     <TextBox x:Name="Input0" KeyDown="Input0_OnKeyDown"
-                             Watermark="0" />
+                             PlaceholderText="0" />
 
                     <TextBlock Text=" = 0" />
                 </StackPanel>

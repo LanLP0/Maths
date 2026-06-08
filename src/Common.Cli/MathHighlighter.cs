@@ -1,32 +1,76 @@
-﻿using Common.Extensions;
+﻿using System.Diagnostics;
+using System.Text;
+using Common.Extensions;
 using RadLine;
 using Spectre.Console;
+using Spectre.Console.Rendering;
 
 namespace Common.Cli;
 
 public sealed class MathHighlighter : IHighlighter
 {
-    private static readonly Style White = new(Color.White);
-    private static readonly Style Blue = new(Color.Blue);
-    private static readonly Style Yellow = new(Color.Yellow);
+    private static readonly Style BracesStyle = new(Color.Blue);
+    private static readonly Style TokenStyle = new(Color.Aqua);
+    private static readonly Style TextStyle = new(Color.DarkOliveGreen1);
 
-    private static readonly string[] _keys =
-    {
+    private static readonly string[] Tokens =
+    [
         "+", "-", "*", "/", "^", "%", "!",
         "|", "&", "~", ">", "<", "=", "[", "]"
-    };
+    ];
 
-    public Style? Highlight(string token)
+    public IRenderable BuildHighlightedText(string text)
     {
-        if (token is "(" or ")")
-            return White;
+        var paragraph = new Paragraph();
 
-        if (token.LettersOnly())
-            return Yellow;
+        foreach (var token in StringTokenizer.Tokenize(text))
+        {
+            // if (double.TryParse(token, out _))
+            //     paragraph.Append(token, NumberStyle);
+            if (token.All(char.IsAsciiLetter))
+                paragraph.Append(token, TextStyle);
+            else if (Tokens.Contains(token))
+                paragraph.Append(token, TokenStyle);
+            else if (token is "(" or ")")
+                paragraph.Append(token, BracesStyle);
+            else
+                paragraph.Append(token);
+        }
+        
+        return paragraph;
+    }
+    
+    private static class StringTokenizer
+    {
+        public static IEnumerable<string> Tokenize(string text)
+        {
+            var buffer = new StringBuilder();
+            foreach (var character in text)
+            {
+                if (char.IsLetterOrDigit(character))
+                {
+                    buffer.Append(character);
+                }
+                // else if (character == '.' && int.TryParse(buffer.ToString(), out _))
+                // {
+                //     buffer.Append(character);
+                // }
+                else
+                {
+                    if (buffer.Length > 0)
+                    {
+                        yield return buffer.ToString();
+                        buffer.Clear();
+                    }
 
-        if (_keys.Contains(token))
-            return Blue;
+                    yield return new string(character, 1);
+                }
+            }
 
-        return null;
+            if (buffer.Length > 0)
+            {
+                yield return buffer.ToString();
+            }
+        }
     }
 }

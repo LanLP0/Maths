@@ -4,3 +4,4 @@ obj/
 **/BenchmarkDotNet.Artifacts
 *.received.*
 *.received/
+.env

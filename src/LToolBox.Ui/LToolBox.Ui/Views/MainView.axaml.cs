@@ -5,6 +5,7 @@ using FluentAvalonia.UI.Controls;
 using FluentAvalonia.UI.Navigation;
 using LToolBox.Ui.Services;
 using LToolBox.Ui.ViewModels;
+using NavigationEventArgs = FluentAvalonia.UI.Navigation.FANavigationEventArgs;
 
 namespace LToolBox.Ui.Views;
 
@@ -40,13 +41,13 @@ public sealed partial class MainView : UserControl
             new SettingsPageViewModel()
         };
 
-        var menuItems = new List<NavigationViewItemBase>(3);
-        var footerItems = new List<NavigationViewItemBase>(2);
+        var menuItems = new List<FANavigationViewItemBase>(3);
+        var footerItems = new List<FANavigationViewItemBase>(2);
 
         object? target = null;
         foreach (var page in pages)
         {
-            var nvi = new NavigationViewItem
+            var nvi = new FANavigationViewItem
             {
                 Content = page.NavHeader,
                 Tag = page
@@ -57,7 +58,7 @@ public sealed partial class MainView : UserControl
                 menuItems.Add(nvi);
 
             if (page.IconKey is not null)
-                nvi.IconSource = (IconSource)this.FindResource(page.IconKey)!;
+                nvi.IconSource = (FAIconSource)this.FindResource(page.IconKey)!;
 
             // Restore previous page
             if (page.NavHeader == AppState.Instance.PageName)
@@ -65,11 +66,11 @@ public sealed partial class MainView : UserControl
         }
 
         // Quick option to switch theme mode
-        footerItems.Insert(0, new NavigationViewItem
+        footerItems.Insert(0, new FANavigationViewItem
         {
             Content = "Switch Theme",
             Tag = "theme-switch",
-            IconSource = (IconSource)this.FindResource("DarkThemeIcon")!,
+            IconSource = (FAIconSource)this.FindResource("DarkThemeIcon")!,
             SelectsOnInvoked = false
         });
 
@@ -80,14 +81,14 @@ public sealed partial class MainView : UserControl
         NavigationService.NavigateFromContext(target);
     }
 
-    private void OnNavigationViewBackRequested(object sender, NavigationViewBackRequestedEventArgs e)
+    private void OnNavigationViewBackRequested(object sender, FANavigationViewBackRequestedEventArgs e)
     {
         FrameView.GoBack();
     }
 
-    private void OnNavigationViewItemInvoked(object sender, NavigationViewItemInvokedEventArgs e)
+    private void OnNavigationViewItemInvoked(object sender, FANavigationViewItemInvokedEventArgs e)
     {
-        if (e.InvokedItemContainer is not NavigationViewItem nvi)
+        if (e.InvokedItemContainer is not FANavigationViewItem nvi)
             return;
 
         if (nvi.Tag is "theme-switch")
@@ -105,7 +106,7 @@ public sealed partial class MainView : UserControl
         var nvmb = page!.DataContext as NavViewModelBase;
         _vm.HeaderText = nvmb!.NavHeader;
 
-        foreach (NavigationViewItem nvi in NavView.MenuItemsSource)
+        foreach (FANavigationViewItem nvi in NavView.MenuItemsSource)
         {
             if (nvi.Tag != nvmb)
                 continue;
@@ -114,7 +115,7 @@ public sealed partial class MainView : UserControl
             return;
         }
 
-        foreach (NavigationViewItem nvi in NavView.FooterMenuItemsSource)
+        foreach (FANavigationViewItem nvi in NavView.FooterMenuItemsSource)
         {
             if (nvi.Tag != nvmb)
                 continue;
@@ -129,7 +130,7 @@ public sealed partial class MainView : UserControl
     private void OnSizeChanged(object? sender, SizeChangedEventArgs e)
     {
         NavView.PaneDisplayMode = e.NewSize.Width < 400
-            ? NavigationViewPaneDisplayMode.LeftMinimal
-            : NavigationViewPaneDisplayMode.LeftCompact;
+            ? FANavigationViewPaneDisplayMode.LeftMinimal
+            : FANavigationViewPaneDisplayMode.LeftCompact;
     }
 }

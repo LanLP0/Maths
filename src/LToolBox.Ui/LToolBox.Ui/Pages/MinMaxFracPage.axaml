@@ -5,11 +5,8 @@
              xmlns:vm="clr-namespace:LToolBox.Ui.ViewModels"
              xmlns:ui="clr-namespace:LToolBox.Ui"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="LToolBox.Ui.Pages.MinMaxFracPage">
-    <Design.DataContext>
-        <vm:MinMaxFracPageViewModel />
-    </Design.DataContext>
-
+             x:Class="LToolBox.Ui.Pages.MinMaxFracPage"
+             x:DataType="vm:MinMaxFracPageViewModel">
     <DockPanel>
         <ContentControl DockPanel.Dock="Top" FontSize="20"
                         Background="{DynamicResource SystemAccentColor}"
@@ -25,13 +22,13 @@
                         <StackPanel Orientation="Horizontal" Margin="10 5" Spacing="5">
 
                             <TextBox KeyDown="InputT0_OnKeyDown" Classes="filled" Name="InputT0" Width="60"
-                                     Watermark="0" />
+                                     PlaceholderText="0" />
                             <TextBlock Text="x^2  +  " VerticalAlignment="Center" />
                             <TextBox KeyDown="InputT1_OnKeyDown" Classes="filled" Name="InputT1" Width="60"
-                                     Watermark="0" />
+                                     PlaceholderText="0" />
                             <TextBlock Text="x  +  " VerticalAlignment="Center" />
                             <TextBox KeyDown="InputT2_OnKeyDown" Classes="filled" Name="InputT2" Width="60"
-                                     Watermark="0" />
+                                     PlaceholderText="0" />
 
                         </StackPanel>
 
@@ -40,13 +37,13 @@
                         <StackPanel Orientation="Horizontal" Margin="10 5" Spacing="5">
 
                             <TextBox KeyDown="InputB0_OnKeyDown" Classes="filled" Name="InputB0" Width="60"
-                                     Watermark="0" />
+                                     PlaceholderText="0" />
                             <TextBlock Text="x^2  +  " VerticalAlignment="Center" />
                             <TextBox KeyDown="InputB1_OnKeyDown" Classes="filled" Name="InputB1" Width="60"
-                                     Watermark="0" />
+                                     PlaceholderText="0" />
                             <TextBlock Text="x  +  " VerticalAlignment="Center" />
                             <TextBox KeyDown="InputB2_OnKeyDown" Classes="filled" Name="InputB2" Width="60"
-                                     Watermark="0" />
+                                     PlaceholderText="0" />
 
                         </StackPanel>
                     </StackPanel>
