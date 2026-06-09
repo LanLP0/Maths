@@ -6,7 +6,7 @@ using Avalonia.Interactivity;
 using Avalonia.LogicalTree;
 using Avalonia.Styling;
 using Avalonia.Threading;
-using LToolBox.Ui.Extension;
+using LToolBox.Ui.Utils.Extension;
 
 namespace LToolBox.Ui.Controls;
 

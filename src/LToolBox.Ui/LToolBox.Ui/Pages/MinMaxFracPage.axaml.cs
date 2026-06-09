@@ -3,7 +3,7 @@ using System.Globalization;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
-using LToolBox.Ui.Extension;
+using LToolBox.Ui.Utils.Extension;
 using LToolBox.Ui.ViewModels;
 using MinMaxFraction.Core;
 

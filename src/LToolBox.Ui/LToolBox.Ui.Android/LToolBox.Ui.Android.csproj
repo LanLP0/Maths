@@ -15,8 +15,8 @@
 <!--        <AndroidSigningKeyPass>env:ANDROID_SIGNING_PASSWORD</AndroidSigningKeyPass>-->
 <!--        <AndroidSigningStorePass>env:ANDROID_SIGNING_PASSWORD</AndroidSigningStorePass>-->
         
-<!--        <AndroidEnableProfiledAot>true</AndroidEnableProfiledAot>-->
-<!--        <RunAOTCompilation>True</RunAOTCompilation>-->
+        <AndroidEnableProfiledAot>false</AndroidEnableProfiledAot>
+        <RunAOTCompilation>false</RunAOTCompilation>
 <!--         <EnableLLVM>True</EnableLLVM> -->
 <!--        <EmbedAssembliesIntoApk>True</EmbedAssembliesIntoApk>-->
     </PropertyGroup>
@@ -29,6 +29,7 @@
 
     <ItemGroup>
         <PackageReference Include="Avalonia.Android" Version="$(AvaloniaVersion)"/>
+        <PackageReference Include="Xamarin.AndroidX.Core.SplashScreen" Version="1.2.0.2" />
     </ItemGroup>
 
     <ItemGroup>

@@ -1,7 +1,7 @@
 ﻿using System.Text;
 using Avalonia.Controls;
 
-namespace LToolBox.Ui.Extension;
+namespace LToolBox.Ui.Utils.Extension;
 
 public static class TextBoxExtension
 {

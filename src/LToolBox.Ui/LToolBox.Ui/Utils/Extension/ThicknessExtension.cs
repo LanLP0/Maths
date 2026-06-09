@@ -1,7 +1,7 @@
 using System;
 using Avalonia;
 
-namespace LToolBox.Ui.Extension;
+namespace LToolBox.Ui.Utils.Extension;
 
 public static class ThicknessExtension
 {

@@ -1,6 +1,6 @@
 using Avalonia.Data;
 
-namespace LToolBox.Ui.Extension;
+namespace LToolBox.Ui.Utils.Extension;
 
 public static class BindingExtension
 {

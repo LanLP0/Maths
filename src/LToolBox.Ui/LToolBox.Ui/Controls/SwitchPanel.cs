@@ -6,7 +6,6 @@ using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Templates;
 using Avalonia.Data;
 using Avalonia.Metadata;
-using LToolBox.Ui.Extension;
 
 namespace LToolBox.Ui.Controls;
 

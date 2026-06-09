@@ -9,7 +9,6 @@ using Avalonia.Media;
 using Avalonia.Metadata;
 using Avalonia.VisualTree;
 using FluentAvalonia.UI.Controls;
-using LToolBox.Ui.Extension;
 
 namespace LToolBox.Ui.Controls;
 

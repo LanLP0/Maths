@@ -9,7 +9,7 @@ namespace LToolBox.Ui.Android;
 
 public sealed class AndroidApp : AvaloniaAndroidApplication<App>
 {
-    public AndroidApp(IntPtr javaReference, JniHandleOwnership transfer) : base(javaReference, transfer)
+    protected AndroidApp(IntPtr javaReference, JniHandleOwnership transfer) : base(javaReference, transfer)
     {
     }
 

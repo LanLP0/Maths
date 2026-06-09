@@ -4,7 +4,7 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Common.Maths.Extension;
-using LToolBox.Ui.Extension;
+using LToolBox.Ui.Utils.Extension;
 using LToolBox.Ui.ViewModels;
 using MathNet.Numerics;
 

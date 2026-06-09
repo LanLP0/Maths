@@ -12,8 +12,8 @@ using Avalonia.Interactivity;
 using Avalonia.Utilities;
 using Common;
 using LCalc;
-using LToolBox.Ui.Extension;
 using LToolBox.Ui.Services;
+using LToolBox.Ui.Utils.Extension;
 using LToolBox.Ui.ViewModels;
 using LToolBox.Ui.ViewModels.CalcPageViewModels;
 
