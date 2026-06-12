@@ -32,26 +32,7 @@
     <configurations />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0af83a8c-e8dd-4750-bcad-971d6e98d49b" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/LToolBox.Ui/LToolBox.Ui/Utils/Converter/SolidColorBrushToColorConverter.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.Maths/.idea/AndroidProjectSystem.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.Maths/.idea/deploymentTargetSelector.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Maths/.idea/deploymentTargetSelector.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/LToolBox.Ui/LToolBox.Ui.Android/AndroidApp.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/LToolBox.Ui/LToolBox.Ui.Android/AndroidApp.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/LToolBox.Ui/LToolBox.Ui.Android/LToolBox.Ui.Android.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/LToolBox.Ui/LToolBox.Ui.Android/LToolBox.Ui.Android.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/LToolBox.Ui/LToolBox.Ui/Controls/SwitchPanel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/LToolBox.Ui/LToolBox.Ui/Controls/SwitchPanel.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/LToolBox.Ui/LToolBox.Ui/Controls/VirtualKey.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/LToolBox.Ui/LToolBox.Ui/Controls/VirtualKey.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/LToolBox.Ui/LToolBox.Ui/Controls/VirtualKeyboard.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/LToolBox.Ui/LToolBox.Ui/Controls/VirtualKeyboard.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/LToolBox.Ui/LToolBox.Ui/Extension/BindingExtension.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/LToolBox.Ui/LToolBox.Ui/Utils/Extension/BindingExtension.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/LToolBox.Ui/LToolBox.Ui/Extension/TextBoxExtension.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/LToolBox.Ui/LToolBox.Ui/Utils/Extension/TextBoxExtension.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/LToolBox.Ui/LToolBox.Ui/Extension/ThicknessExtension.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/LToolBox.Ui/LToolBox.Ui/Utils/Extension/ThicknessExtension.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/LToolBox.Ui/LToolBox.Ui/Extension/VisualExtension.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/LToolBox.Ui/LToolBox.Ui/Utils/Extension/VisualExtension.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/LToolBox.Ui/LToolBox.Ui/LToolBox.Ui.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/LToolBox.Ui/LToolBox.Ui/LToolBox.Ui.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/LToolBox.Ui/LToolBox.Ui/Pages/CalcPage.axaml.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/LToolBox.Ui/LToolBox.Ui/Pages/CalcPage.axaml.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/LToolBox.Ui/LToolBox.Ui/Pages/CalcPages/StepsPage.axaml" beforeDir="false" afterPath="$PROJECT_DIR$/src/LToolBox.Ui/LToolBox.Ui/Pages/CalcPages/StepsPage.axaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/LToolBox.Ui/LToolBox.Ui/Pages/CalcPages/StepsPage.axaml.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/LToolBox.Ui/LToolBox.Ui/Pages/CalcPages/StepsPage.axaml.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/LToolBox.Ui/LToolBox.Ui/Pages/MinMaxFracPage.axaml.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/LToolBox.Ui/LToolBox.Ui/Pages/MinMaxFracPage.axaml.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/LToolBox.Ui/LToolBox.Ui/Pages/PolynomialPage.axaml.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/LToolBox.Ui/LToolBox.Ui/Pages/PolynomialPage.axaml.cs" afterDir="false" />
-    </list>
+    <list default="true" id="0af83a8c-e8dd-4750-bcad-971d6e98d49b" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -116,61 +97,61 @@
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.0" />
-      <entry key="MS500" value="1.0" />
-      <entry key="S2" value="1.0" />
-      <entry key="S5" value="1.0" />
-      <entry key="S10" value="1.0000000000000044" />
-      <entry key="S30" value="1.0000614128090712" />
-      <entry key="S60" value="1.0228369129304336" />
-      <entry key="M2" value="1.457042664887469" />
-      <entry key="M5" value="5.500025515365031" />
-      <entry key="M10" value="20.837238205432648" />
-      <entry key="M15" value="41.37054377208296" />
-      <entry key="M30" value="98.67025855886006" />
-      <entry key="H1" value="176.03401761365257" />
-      <entry key="H2" value="268.5131608267126" />
-      <entry key="H4" value="357.50153172458926" />
-      <entry key="D1" value="479.51470521556683" />
-      <entry key="W1" value="507.15425807778007" />
+      <entry key="MS100" value="1.0003030301935727" />
+      <entry key="MS500" value="1.2889776503978476" />
+      <entry key="S2" value="2.2169490579627675" />
+      <entry key="S5" value="2.637783120567388" />
+      <entry key="S10" value="2.8095251110096333" />
+      <entry key="S30" value="2.9343010489845716" />
+      <entry key="S60" value="2.9668663411992986" />
+      <entry key="M2" value="2.983429967098878" />
+      <entry key="M5" value="3.0954686146406596" />
+      <entry key="M10" value="5.836269524558591" />
+      <entry key="M15" value="13.95338906722955" />
+      <entry key="M30" value="53.77495227045661" />
+      <entry key="H1" value="129.27898349431123" />
+      <entry key="H2" value="230.42240138598538" />
+      <entry key="H4" value="332.01206274590754" />
+      <entry key="D1" value="475.92353281281345" />
+      <entry key="W1" value="509.1524709992701" />
     </decayedCancelled>
     <decayedSelected>
       <entry key="MS100" value="0.0" />
-      <entry key="MS500" value="3.652363236703618E-298" />
-      <entry key="S2" value="6.498865890924641E-75" />
-      <entry key="S5" value="3.869449660951352E-30" />
-      <entry key="S10" value="3.682967505170791E-15" />
-      <entry key="S30" value="4.6018554451541075E-5" />
-      <entry key="S60" value="0.016995369914614027" />
-      <entry key="M2" value="0.34225410606211304" />
-      <entry key="M5" value="2.7824453825139934" />
-      <entry key="M10" value="9.688881502295382" />
-      <entry key="M15" value="18.406265000227577" />
-      <entry key="M30" value="42.91871492663378" />
-      <entry key="H1" value="76.69693481858779" />
-      <entry key="H2" value="119.11850359859625" />
-      <entry key="H4" value="162.0835975804962" />
-      <entry key="D1" value="223.35075496221415" />
-      <entry key="W1" value="237.50892057812226" />
+      <entry key="MS500" value="0.0" />
+      <entry key="S2" value="0.0" />
+      <entry key="S5" value="5.222173027114193E-134" />
+      <entry key="S10" value="4.278572694002796E-67" />
+      <entry key="S30" value="2.2454323834491845E-22" />
+      <entry key="S60" value="3.7541716554376164E-11" />
+      <entry key="M2" value="1.608571683976822E-5" />
+      <entry key="M5" value="0.05167296107387684" />
+      <entry key="M10" value="1.3203588929194063" />
+      <entry key="M15" value="4.874288575077596" />
+      <entry key="M30" value="22.086123348381193" />
+      <entry key="H1" value="55.01921624546755" />
+      <entry key="H2" value="100.88983805426386" />
+      <entry key="H4" value="149.16714087951834" />
+      <entry key="D1" value="220.28069656261133" />
+      <entry key="W1" value="237.03976829083996" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="0.029360085912937862" />
-      <entry key="MS500" value="0.4938004307226862" />
-      <entry key="S2" value="0.8382776092103139" />
-      <entry key="S5" value="0.931869604908654" />
-      <entry key="S10" value="0.9653339344023228" />
-      <entry key="S30" value="0.9884118600151781" />
-      <entry key="S60" value="1.0332374252202623" />
-      <entry key="M2" value="1.789248799356765" />
-      <entry key="M5" value="8.25687941481361" />
-      <entry key="M10" value="30.47518981979934" />
-      <entry key="M15" value="59.70906837231686" />
-      <entry key="M30" value="141.50865371327654" />
-      <entry key="H1" value="252.66062467271644" />
-      <entry key="H2" value="387.57932465273575" />
-      <entry key="H4" value="519.5509158753208" />
-      <entry key="D1" value="702.857945774161" />
-      <entry key="W1" value="744.6620468798257" />
+      <entry key="MS100" value="0.9797049160316395" />
+      <entry key="MS500" value="1.2809927242882408" />
+      <entry key="S2" value="2.2117394915765125" />
+      <entry key="S5" value="2.6351070817555042" />
+      <entry key="S10" value="2.8080657447240487" />
+      <entry key="S30" value="2.933785153751139" />
+      <entry key="S60" value="2.96660454845647" />
+      <entry key="M2" value="2.983313710091985" />
+      <entry key="M5" value="3.146613331108869" />
+      <entry key="M10" value="7.149661381291573" />
+      <entry key="M15" value="18.809721148736305" />
+      <entry key="M30" value="75.81973392589" />
+      <entry key="H1" value="184.24774507973072" />
+      <entry key="H2" value="331.26790699196374" />
+      <entry key="H4" value="481.1477155599638" />
+      <entry key="D1" value="696.1968180762069" />
+      <entry key="W1" value="746.1911097232755" />
     </decayedShown>
   </component>
   <component name="ProblemsViewState">
@@ -218,7 +199,7 @@
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
-  <component name="RunManager" selected=".NET Project.LToolBox.Ui.Desktop">
+  <component name="RunManager" selected=".NET Project.LToolBox">
     <configuration name="Benchmarks" type="DotNetProject" factoryName=".NET Project">
       <option name="EXE_PATH" value="" />
       <option name="PROGRAM_PARAMETERS" value="" />
@@ -401,7 +382,7 @@
       <workItem from="1780674899148" duration="736000" />
       <workItem from="1780675667652" duration="387000" />
       <workItem from="1780907966575" duration="15074000" />
-      <workItem from="1780993097743" duration="4826000" />
+      <workItem from="1780993097743" duration="5645000" />
     </task>
     <task id="LOCAL-00001" summary="Update Nuget &amp; rename XEqualYIcon to AssignIcon">
       <option name="closed" value="true" />
@@ -547,7 +528,15 @@
       <option name="project" value="LOCAL" />
       <updated>1780923671990</updated>
     </task>
-    <option name="localTasksCounter" value="19" />
+    <task id="LOCAL-00019" summary="code: Update">
+      <option name="closed" value="true" />
+      <created>1780998653338</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1780998653338</updated>
+    </task>
+    <option name="localTasksCounter" value="20" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -587,7 +576,8 @@
     <MESSAGE value="Move to net10.0" />
     <MESSAGE value="Update IDE Config" />
     <MESSAGE value="Update to Packages. TODO: Android publish bug" />
-    <option name="LAST_COMMIT_MESSAGE" value="Update to Packages. TODO: Android publish bug" />
+    <MESSAGE value="code: Update" />
+    <option name="LAST_COMMIT_MESSAGE" value="code: Update" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

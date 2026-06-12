@@ -15,7 +15,7 @@ public static class LCalcCli
         var history = new List<string>();
         for (;;)
         {
-            var input = AnsiConsole.Console.Ask<string>("[white]Expression:[/]", clear: false, newLine: false,
+            var input = AnsiConsole.Console.Ask<string>("[blue]Expression:[/]", clear: false, newLine: false,
                 highlighter: highlighter, history: history)!;
 
             if (input is "q")
@@ -58,6 +58,6 @@ public static class LCalcCli
         if (result.Faulted)
             return "Error:";
 
-        return "Result:";
+        return ">";
     }
 }
