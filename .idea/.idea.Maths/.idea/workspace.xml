@@ -32,7 +32,9 @@
     <configurations />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0af83a8c-e8dd-4750-bcad-971d6e98d49b" name="Changes" comment="" />
+    <list default="true" id="0af83a8c-e8dd-4750-bcad-971d6e98d49b" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/src/LToolBox.Ui/LToolBox.Ui.Android/LToolBox.Ui.Android.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/LToolBox.Ui/LToolBox.Ui.Android/LToolBox.Ui.Android.csproj" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -68,7 +70,11 @@
   }
 }</component>
   <component name="HighlightingSettingsPerFile">
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/ILViewer/2a7a052743ca4727bf5061e44c4f2b6614e00/5e/cec441f6/02000010pdb18.il" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/ILViewer/2a7a052743ca4727bf5061e44c4f2b6614e00/b5/a6f2edd8/02000012pdb20.il" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/78d307f409e6406fa6f49f1afa721cc1dbae00/21/4f71c6d9/AsyncTaskMethodBuilder`1.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/c164485c33c94cb68b45d436b7ec6549dbba00/60/efdb66c1/ReadOnlyMemory`1.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/c164485c33c94cb68b45d436b7ec6549dbba00/dc/f2830a28/MemoryExtensions.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/d067e726e1ce4376b07936c50c1de6aa13fe00/dd/39f2412e/TextBlock.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/4064c74a13b7d86fe96d2aa02661b2261cba86bd198e9aac744b13be11ee16e/LineEditorRenderer.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/5555df35c994a8dfa754f7b817a293f1c2e46f21a3adb271838327adf8a3e9a1/LineEditor.cs" root0="FORCE_HIGHLIGHTING" />
@@ -81,6 +87,7 @@
     <setting file="file://$PROJECT_DIR$/src/LToolBox.Ui/LToolBox.Ui.Android/MainActivity.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/LToolBox.Ui/LToolBox.Ui.Android/bin/Release/net8.0-android/LToolBox.Ui.Android.runtimeconfig.json" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/LToolBox.Ui/LToolBox.Ui.Browser/BrowserSuspensionDriver.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/LToolBox.Ui/LToolBox.Ui/Converters/ColorConverters.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="InvalidFacetManager">
     <ignored-facets>
@@ -97,61 +104,61 @@
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.0003030301935727" />
-      <entry key="MS500" value="1.2889776503978476" />
-      <entry key="S2" value="2.2169490579627675" />
-      <entry key="S5" value="2.637783120567388" />
-      <entry key="S10" value="2.8095251110096333" />
-      <entry key="S30" value="2.9343010489845716" />
-      <entry key="S60" value="2.9668663411992986" />
-      <entry key="M2" value="2.983429967098878" />
-      <entry key="M5" value="3.0954686146406596" />
-      <entry key="M10" value="5.836269524558591" />
-      <entry key="M15" value="13.95338906722955" />
-      <entry key="M30" value="53.77495227045661" />
-      <entry key="H1" value="129.27898349431123" />
-      <entry key="H2" value="230.42240138598538" />
-      <entry key="H4" value="332.01206274590754" />
-      <entry key="D1" value="475.92353281281345" />
-      <entry key="W1" value="509.1524709992701" />
+      <entry key="MS100" value="1.0378404309238523" />
+      <entry key="MS500" value="1.729956649712002" />
+      <entry key="S2" value="3.012069755472953" />
+      <entry key="S5" value="5.2484752892931725" />
+      <entry key="S10" value="7.275915925008735" />
+      <entry key="S30" value="9.656332911413319" />
+      <entry key="S60" value="10.77968815969404" />
+      <entry key="M2" value="11.681990118526183" />
+      <entry key="M5" value="14.132638237925953" />
+      <entry key="M10" value="21.243258861888926" />
+      <entry key="M15" value="29.65196563815511" />
+      <entry key="M30" value="63.59424796001579" />
+      <entry key="H1" value="136.13473291628182" />
+      <entry key="H2" value="242.42022577186512" />
+      <entry key="H4" value="354.0899440056062" />
+      <entry key="D1" value="517.7015033719026" />
+      <entry key="W1" value="556.2002831402026" />
     </decayedCancelled>
     <decayedSelected>
       <entry key="MS100" value="0.0" />
       <entry key="MS500" value="0.0" />
-      <entry key="S2" value="0.0" />
-      <entry key="S5" value="5.222173027114193E-134" />
-      <entry key="S10" value="4.278572694002796E-67" />
-      <entry key="S30" value="2.2454323834491845E-22" />
-      <entry key="S60" value="3.7541716554376164E-11" />
-      <entry key="M2" value="1.608571683976822E-5" />
-      <entry key="M5" value="0.05167296107387684" />
-      <entry key="M10" value="1.3203588929194063" />
-      <entry key="M15" value="4.874288575077596" />
-      <entry key="M30" value="22.086123348381193" />
-      <entry key="H1" value="55.01921624546755" />
-      <entry key="H2" value="100.88983805426386" />
-      <entry key="H4" value="149.16714087951834" />
-      <entry key="D1" value="220.28069656261133" />
-      <entry key="W1" value="237.03976829083996" />
+      <entry key="S2" value="1.0242375867289236E-194" />
+      <entry key="S5" value="2.536072719723052E-78" />
+      <entry key="S10" value="1.5980537550474598E-39" />
+      <entry key="S30" value="1.7774570000047576E-13" />
+      <entry key="S60" value="1.0741212722343769E-6" />
+      <entry key="M2" value="0.003312331875955338" />
+      <entry key="M5" value="0.4452370654957939" />
+      <entry key="M10" value="2.522745146106853" />
+      <entry key="M15" value="5.473693069493446" />
+      <entry key="M30" value="19.113486732344075" />
+      <entry key="H1" value="49.99855659881241" />
+      <entry key="H2" value="97.43073797576379" />
+      <entry key="H4" value="149.70063801585513" />
+      <entry key="D1" value="229.43636698388968" />
+      <entry key="W1" value="248.60170629625512" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="0.9797049160316395" />
-      <entry key="MS500" value="1.2809927242882408" />
-      <entry key="S2" value="2.2117394915765125" />
-      <entry key="S5" value="2.6351070817555042" />
-      <entry key="S10" value="2.8080657447240487" />
-      <entry key="S30" value="2.933785153751139" />
-      <entry key="S60" value="2.96660454845647" />
-      <entry key="M2" value="2.983313710091985" />
-      <entry key="M5" value="3.146613331108869" />
-      <entry key="M10" value="7.149661381291573" />
-      <entry key="M15" value="18.809721148736305" />
-      <entry key="M30" value="75.81973392589" />
-      <entry key="H1" value="184.24774507973072" />
-      <entry key="H2" value="331.26790699196374" />
-      <entry key="H4" value="481.1477155599638" />
-      <entry key="D1" value="696.1968180762069" />
-      <entry key="W1" value="746.1911097232755" />
+      <entry key="MS100" value="0.9831164966622504" />
+      <entry key="MS500" value="1.7156056097248165" />
+      <entry key="S2" value="3.006474795884867" />
+      <entry key="S5" value="5.243909210274888" />
+      <entry key="S10" value="7.272202029946077" />
+      <entry key="S30" value="9.64737282545617" />
+      <entry key="S60" value="10.76595437759409" />
+      <entry key="M2" value="11.672650079881068" />
+      <entry key="M5" value="14.564157940291645" />
+      <entry key="M10" value="23.74477477281783" />
+      <entry key="M15" value="35.09920236304465" />
+      <entry key="M30" value="82.66795845659146" />
+      <entry key="H1" value="186.084940137622" />
+      <entry key="H2" value="339.8065944316237" />
+      <entry key="H4" value="503.7580702014377" />
+      <entry key="D1" value="747.1299746794422" />
+      <entry key="W1" value="804.800778907194" />
     </decayedShown>
   </component>
   <component name="ProblemsViewState">
@@ -199,7 +206,7 @@
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
-  <component name="RunManager" selected=".NET Project.LToolBox">
+  <component name="RunManager" selected="Android.LToolBox.Ui.Android">
     <configuration name="Benchmarks" type="DotNetProject" factoryName=".NET Project">
       <option name="EXE_PATH" value="" />
       <option name="PROGRAM_PARAMETERS" value="" />
@@ -536,7 +543,15 @@
       <option name="project" value="LOCAL" />
       <updated>1780998653338</updated>
     </task>
-    <option name="localTasksCounter" value="20" />
+    <task id="LOCAL-00020" summary="chore: Update package versions, switch to CSharpMath.Avalonia">
+      <option name="closed" value="true" />
+      <created>1790838914584</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1790838914585</updated>
+    </task>
+    <option name="localTasksCounter" value="21" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -577,7 +592,8 @@
     <MESSAGE value="Update IDE Config" />
     <MESSAGE value="Update to Packages. TODO: Android publish bug" />
     <MESSAGE value="code: Update" />
-    <option name="LAST_COMMIT_MESSAGE" value="code: Update" />
+    <MESSAGE value="chore: Update package versions, switch to CSharpMath.Avalonia" />
+    <option name="LAST_COMMIT_MESSAGE" value="chore: Update package versions, switch to CSharpMath.Avalonia" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -596,6 +612,11 @@
         </breakpoint>
       </breakpoints>
     </breakpoint-manager>
+    <pin-to-top-manager>
+      <pinned-members>
+        <PinnedItemInfo parentTag="Type#LCalc.Scope" memberName="Variables" />
+      </pinned-members>
+    </pin-to-top-manager>
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

@@ -23,7 +23,7 @@ internal sealed class App : Command<Settings>
         .CreateLogger();
 #endif
 
-    protected override int Execute(CommandContext context, Settings settings, CancellationToken cancellationToken)
+    public override int Execute(CommandContext context, Settings settings, CancellationToken cancellationToken)
     {
         if (!settings.Focus)
             return ExecuteCore(settings, cancellationToken);
